@@ -5,7 +5,7 @@ import java.time.LocalDate
 
 @Entity
 @Table(name = "users")
-data class User (
+class User (
     var email: String,
     var firstName: String,
     var lastName: String,
