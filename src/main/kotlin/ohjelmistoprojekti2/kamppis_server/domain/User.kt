@@ -5,7 +5,7 @@ import java.time.LocalDate
 
 @Entity
 @Table(name = "users")
-class User (
+class User(
     var email: String,
     var firstName: String,
     var lastName: String,
@@ -21,7 +21,4 @@ class User (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
-    ) {
-    // default constructor for JPA
-    constructor(): this(email="", firstName="", lastName="", dateOfBirth=null)
-}
+    )

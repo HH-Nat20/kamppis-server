@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "swipes")
-class Swipe (
+class Swipe(
     @ManyToOne var swipingUser: User,
     @ManyToOne var swipedUser: User,
     var isRightSwipe: Boolean,
