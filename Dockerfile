@@ -1,22 +1,24 @@
-# Use OpenJDK 21 as base image
+# Use Java 21 as base image
 FROM eclipse-temurin:21-jdk
 
 # Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and project files
+# Copy only the Maven wrapper and configuration files
 COPY mvnw pom.xml ./
 COPY .mvn .mvn
-COPY src ./src
 
 # Ensure Maven wrapper is executable
 RUN chmod +x mvnw
 
-# Build the application
-RUN ./mvnw clean package -DskipTests
-
 # Expose the server port
 EXPOSE 8080
 
-# Run the application
-CMD ["java", "-jar", "target/*.jar"]
+# Keep the container running with live-reload support
+CMD ["./mvnw", "spring-boot:run"]
+
+# Use the following command to build the image
+# docker build -t kamppis-server .
+
+# Use the following command to run the container
+# docker run --rm -p 8080:8080 -v "$(pwd)/src:/app/src" -v "$(pwd)/target:/app/target" kamppis-server
