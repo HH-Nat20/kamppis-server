@@ -1,0 +1,11 @@
+version: '1.0'
+services:
+  spring-app:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/app/src
+      - ./target:/app/target
+    environment:
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
