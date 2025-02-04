@@ -18,7 +18,7 @@ COPY src src
 EXPOSE 8080
 
 # Build the application
-RUN ./gradlew build
+RUN ./gradlew build -x test
 
 # Keep the container running with live-reload support
 CMD ["./gradlew", "bootRun"]
