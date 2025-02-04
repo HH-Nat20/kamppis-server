@@ -3,3 +3,6 @@ GET http://localhost:8080/api/user/
 
 ### Get user with id = 1
 GET http://localhost:8080/api/user/1
+
+### Get all users from repository wit SQL
+GET http://localhost:8080/api/user/query
