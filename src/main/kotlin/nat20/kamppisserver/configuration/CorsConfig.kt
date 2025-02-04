@@ -1,4 +1,4 @@
-package ohjelmistoprojekti2.kamppis_server.configuration
+package nat20.kamppisserver.configuration
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

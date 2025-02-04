@@ -1,6 +1,6 @@
-package ohjelmistoprojekti2.kamppis_server.repository
+package nat20.kamppisserver.repository
 
-import ohjelmistoprojekti2.kamppis_server.domain.Match
+import nat20.kamppisserver.domain.Match
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param

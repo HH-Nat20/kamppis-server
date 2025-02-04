@@ -1,4 +1,4 @@
-package ohjelmistoprojekti2.kamppis_server.domain
+package nat20.kamppisserver.domain
 
 import jakarta.persistence.*
 import java.time.LocalDateTime

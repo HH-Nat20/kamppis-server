@@ -1,6 +1,6 @@
-package ohjelmistoprojekti2.kamppis_server.repository
+package nat20.kamppisserver.repository
 
-import ohjelmistoprojekti2.kamppis_server.domain.User
+import nat20.kamppisserver.domain.User
 import org.springframework.data.repository.CrudRepository
 
 interface UserRepository : CrudRepository<User, Long>

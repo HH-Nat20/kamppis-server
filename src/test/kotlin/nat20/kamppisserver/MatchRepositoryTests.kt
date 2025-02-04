@@ -1,9 +1,9 @@
-package ohjelmistoprojekti2.kamppis_server
+package nat20.kamppisserver
 
-import ohjelmistoprojekti2.kamppis_server.domain.Match
-import ohjelmistoprojekti2.kamppis_server.domain.User
-import ohjelmistoprojekti2.kamppis_server.repository.MatchRepository
-import ohjelmistoprojekti2.kamppis_server.repository.UserRepository
+import nat20.kamppisserver.domain.Match
+import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.repository.MatchRepository
+import nat20.kamppisserver.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import java.time.LocalDate

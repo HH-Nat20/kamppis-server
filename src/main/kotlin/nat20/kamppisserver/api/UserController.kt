@@ -1,7 +1,7 @@
-package ohjelmistoprojekti2.kamppis_server.api
+package nat20.kamppisserver.api
 
-import ohjelmistoprojekti2.kamppis_server.domain.User
-import ohjelmistoprojekti2.kamppis_server.repository.UserRepository
+import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping

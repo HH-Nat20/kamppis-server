@@ -1,7 +1,7 @@
-package ohjelmistoprojekti2.kamppis_server.configuration
+package nat20.kamppisserver.configuration
 
-import ohjelmistoprojekti2.kamppis_server.domain.User
-import ohjelmistoprojekti2.kamppis_server.repository.UserRepository
+import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.repository.UserRepository
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

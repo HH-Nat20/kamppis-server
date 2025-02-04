@@ -1,9 +1,9 @@
-package ohjelmistoprojekti2.kamppis_server.service
+package nat20.kamppisserver.service
 
-import ohjelmistoprojekti2.kamppis_server.domain.User
+import nat20.kamppisserver.domain.User
 import org.springframework.stereotype.Service
 
-import ohjelmistoprojekti2.kamppis_server.repository.UserRepository
+import nat20.kamppisserver.repository.UserRepository
 
 @Service
 class QueryService(val userRepository: UserRepository) {

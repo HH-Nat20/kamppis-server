@@ -1,10 +1,10 @@
-package ohjelmistoprojekti2.kamppis_server.service
+package nat20.kamppisserver.service
 
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
-import ohjelmistoprojekti2.kamppis_server.domain.Match
-import ohjelmistoprojekti2.kamppis_server.repository.MatchRepository
-import ohjelmistoprojekti2.kamppis_server.repository.UserRepository
+import nat20.kamppisserver.domain.Match
+import nat20.kamppisserver.repository.MatchRepository
+import nat20.kamppisserver.repository.UserRepository
 import org.springframework.stereotype.Service
 
 @Service

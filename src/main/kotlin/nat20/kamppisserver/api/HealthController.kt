@@ -1,4 +1,4 @@
-package ohjelmistoprojekti2.kamppis_server.api
+package nat20.kamppisserver.api
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

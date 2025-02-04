@@ -1,10 +1,10 @@
-package ohjelmistoprojekti2.kamppis_server
+package nat20.kamppisserver
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import ohjelmistoprojekti2.kamppis_server.api.UserController
-import ohjelmistoprojekti2.kamppis_server.domain.User
-import ohjelmistoprojekti2.kamppis_server.repository.UserRepository
+import nat20.kamppisserver.api.UserController
+import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.data.repository.findByIdOrNull
