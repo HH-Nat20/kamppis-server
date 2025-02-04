@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service
 import nat20.kamppisserver.repository.UserRepository
 
 @Service
-class QueryService(val userRepository: UserRepository) {
+class QueryService(private val userRepository: UserRepository) {
 
-    fun findAllUsersFromRepository(): List<User> {
-        return userRepository.findAll().toList();
+    fun findAllUsersWithSQL(): MutableIterable<User> {
+        return userRepository.findAllUsersWithSQL()
     }
 }

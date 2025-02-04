@@ -1,6 +1,13 @@
 package nat20.kamppisserver.repository
 
-import nat20.kamppisserver.domain.User
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
-interface UserRepository : CrudRepository<User, Long>
+import nat20.kamppisserver.domain.User
+
+interface UserRepository : CrudRepository<User, Long> {
+
+    @Query(value = "SELECT * FROM \"users\"", nativeQuery = true)
+    fun findAllUsersWithSQL(): MutableIterable<User>
+
+}
