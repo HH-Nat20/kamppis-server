@@ -3,9 +3,15 @@ package nat20.kamppisserver.service
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.Match
+import nat20.kamppisserver.dto.MatchRequest
 import nat20.kamppisserver.repository.MatchRepository
 import nat20.kamppisserver.repository.UserRepository
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDateTime
 
 @Service
 class MatchService(
@@ -35,6 +41,29 @@ class MatchService(
         }
 
         match.removeUser(user)
+        return matchRepository.save(match)
+    }
+
+    fun findAll(): MutableIterable<Match> {
+        return matchRepository.findAll()
+    }
+
+    fun findAllForUser(userId: Long): MutableIterable<Match> {
+        return matchRepository.findAllByUserId(userId).toMutableList()
+    }
+
+    fun findOne(matchId: Long): Match? {
+        return matchRepository.findByIdOrNull(matchId)
+    }
+
+    @Transactional
+    fun createMatch(matchRequest: MatchRequest): Match {
+        val users = userRepository.findAllById(matchRequest.userIds).toMutableSet()
+        if (users.size > 2) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "One or more users not found")
+        }
+
+        val match = Match(users = users)
         return matchRepository.save(match)
     }
 }
