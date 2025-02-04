@@ -2,7 +2,7 @@ package ohjelmistoprojekti2.kamppis_server
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import ohjelmistoprojekti2.kamppis_server.api.UserRestController
+import ohjelmistoprojekti2.kamppis_server.api.UserController
 import ohjelmistoprojekti2.kamppis_server.domain.User
 import ohjelmistoprojekti2.kamppis_server.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,8 +15,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.LocalDate
 import kotlin.test.Test
 
-@WebMvcTest(UserRestController::class)
-class UserRestControllerTests(@Autowired private val mockMvc: MockMvc) {
+@WebMvcTest(UserController::class)
+class UserControllerTests(@Autowired private val mockMvc: MockMvc) {
 
     @MockkBean
     lateinit var userRepository: UserRepository;

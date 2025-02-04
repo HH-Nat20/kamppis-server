@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/user")
-class UserRestController(private val repository: UserRepository){
+class UserController(private val repository: UserRepository){
 
     @GetMapping("/")
     fun findAll(): MutableIterable<User> = repository.findAll()
