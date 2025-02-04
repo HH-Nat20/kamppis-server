@@ -3,3 +3,14 @@ GET http://localhost:8080/api/user/
 
 ### Get user with id = 1
 GET http://localhost:8080/api/user/1
+
+### Get all users who meet search criteria
+// This requests initiates an SQL query from the database
+// The request gets the search criteria as an http request body
+// Criteria in the body are checked in the SQL query
+// Users that meet the criteria are returned
+GET http://localhost:8080/api/user/query
+Content-Type: application/json
+
+// Request Body
+{ "searchMadeByUserId" : 5 }
