@@ -1,4 +1,7 @@
 package nat20.kamppisserver.repository
 
-interface UserProfileRepository {
+import org.springframework.data.repository.CrudRepository
+import nat20.kamppisserver.domain.UserProfile
+
+interface UserProfileRepository: CrudRepository<UserProfile, Long> {
 }
