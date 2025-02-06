@@ -6,11 +6,7 @@ GET http://localhost:8080/api/user/1
 
 ### Get all users who meet search criteria
 // This requests initiates an SQL query from the database
-// The request gets the search criteria as an http request body
-// Criteria in the body are checked in the SQL query
-// Users that meet the criteria are returned
-GET http://localhost:8080/api/user/query
-Content-Type: application/json
-
-// Request Body
-{ "searchMadeByUserId" : 5 }
+// The request gets the user's id as a path variable
+// The server looks up this user's search criteria (by user's id)
+// And returns all profiles that meet the user's search criteria
+GET http://localhost:8080/api/user/2/query
