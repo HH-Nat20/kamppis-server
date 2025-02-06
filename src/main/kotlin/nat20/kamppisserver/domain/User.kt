@@ -16,9 +16,6 @@ class User(
     // .  ADD FIELDS HERE AS REQUIRED
     // .
 
-    @OneToOne(mappedBy = "user")
-    var userProfile: UserProfile? = null,
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
