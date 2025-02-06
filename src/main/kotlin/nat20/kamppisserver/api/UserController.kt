@@ -20,8 +20,8 @@ class UserController(private val repository: UserRepository, private val querySe
     fun findUserById(@PathVariable id: Long) = repository.findByIdOrNull(id)
         ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "This user does not exist")
 
-    @GetMapping("/query")
-    fun findUsersThatMeetCriteria(@RequestBody criteria: JsonNode): MutableIterable<User> {
-        return queryService.findUsersThatMeetCriteria(criteria)
+    @GetMapping("/{id}/query")
+    fun findUsersThatMeetCriteria(@PathVariable id: Long): MutableIterable<User> {
+        return queryService.findUsersThatMeetCriteria(id)
     }
 }
