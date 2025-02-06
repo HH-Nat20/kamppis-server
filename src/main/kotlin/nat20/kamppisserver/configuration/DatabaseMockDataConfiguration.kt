@@ -13,7 +13,7 @@ import java.time.LocalDate
 
 @Configuration
 @Profile("dev") // This config will only load when the dev profile is active from application.properties
-class UserConfiguration {
+class DatabaseMockDataConfiguration {
 
     @Bean
     fun databaseInitializer(userRepository: UserRepository, userProfileRepository: UserProfileRepository) = ApplicationRunner {
@@ -54,6 +54,7 @@ class UserConfiguration {
                 null
             )
         )
+
         // Save all mock users to the database
         userRepository.saveAll(users)
 
