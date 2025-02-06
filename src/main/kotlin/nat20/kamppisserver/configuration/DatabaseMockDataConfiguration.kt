@@ -23,35 +23,30 @@ class DatabaseMockDataConfiguration {
                 firstName = "Alice",
                 lastName = "Smith",
                 dateOfBirth = LocalDate.of(1990, 5, 14),
-                null
             ),
             User(
                 email = "bob.johnson@example.com",
                 firstName = "Bob",
                 lastName = "Johnson",
                 dateOfBirth = LocalDate.of(1985, 11, 22),
-                null
             ),
             User(
                 email = "charlie.davis@example.com",
                 firstName = "Charlie",
                 lastName = "Davis",
                 dateOfBirth = null, // Date of birth not provided
-                null
             ),
             User(
                 email = "diana.lee@example.com",
                 firstName = "Diana",
                 lastName = "Lee",
                 dateOfBirth = LocalDate.of(2000, 2, 3),
-                null
             ),
             User(
                 email = "eve.brown@example.com",
                 firstName = "Eve",
                 lastName = "Brown",
                 dateOfBirth = LocalDate.of(1995, 8, 19),
-                null
             )
         )
 
