@@ -9,6 +9,7 @@ import java.time.LocalDateTime
 @Table(name = "user_profiles")
 class UserProfile(
     @OneToOne
+    @JoinColumn(name = "user_id", unique = true)
     var user: User,
 
     var minAgePreference: Int? = null,
@@ -24,6 +25,7 @@ class UserProfile(
     @UpdateTimestamp
     var updatedAt: LocalDateTime? = null,
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 )

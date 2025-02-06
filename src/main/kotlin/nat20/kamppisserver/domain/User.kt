@@ -12,10 +12,12 @@ class User(
 
     // user is not required to reveal their age
     var dateOfBirth: LocalDate? = null,
-
     // .
     // .  ADD FIELDS HERE AS REQUIRED
     // .
+
+    @OneToOne(mappedBy = "user")
+    var userProfile: UserProfile? = null,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
