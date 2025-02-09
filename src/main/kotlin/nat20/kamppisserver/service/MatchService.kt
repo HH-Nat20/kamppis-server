@@ -3,6 +3,7 @@ package nat20.kamppisserver.service
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.Match
+import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.dto.MatchRequest
 import nat20.kamppisserver.repository.MatchRepository
 import nat20.kamppisserver.repository.UserRepository
@@ -65,5 +66,12 @@ class MatchService(
 
         val match = Match(users = users)
         return matchRepository.save(match)
+    }
+
+    // Overloaded method for internal use
+    @Transactional
+    fun createMatch(user1: User, user2: User): Match {
+        val users = mutableSetOf(user1, user2)
+        return matchRepository.save(Match(users = users))
     }
 }
