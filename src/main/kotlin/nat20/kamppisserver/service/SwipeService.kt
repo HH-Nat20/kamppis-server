@@ -12,6 +12,8 @@ class SwipeService(
     private val swipeRepository: SwipeRepository
 ) {
     fun swipe(swipingUser: User, swipedUser: User, isRightSwipe: Boolean): Swipe {
+
+        // TODO: forbid multiple identical swipes
         val newSwipe = Swipe(
             swipingUser = swipingUser,
             swipedUser = swipedUser,
@@ -19,6 +21,7 @@ class SwipeService(
         )
         swipeRepository.save(newSwipe)
 
+        // TODO: forbid multiple identical matches
         if (isRightSwipe && hasMutualSwipe(swipingUser, swipedUser)) {
             matchService.createMatch(swipingUser, swipedUser)
         }
@@ -26,9 +29,10 @@ class SwipeService(
     }
 
     private fun hasMutualSwipe(swipingUser: User, swipedUser: User): Boolean {
+        // Check if the swipedUser has already right-swiped the swipingUser
         return swipeRepository.existsBySwipingUserAndSwipedUserAndIsRightSwipe(
-            swipingUser = swipingUser,
-            swipedUser = swipedUser,
+            swipingUser = swipedUser, //REVERSED
+            swipedUser = swipingUser, //REVERSED
             isRightSwipe = true
         )
     }

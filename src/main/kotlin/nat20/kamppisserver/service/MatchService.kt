@@ -60,7 +60,7 @@ class MatchService(
     @Transactional
     fun createMatch(matchRequest: MatchRequest): Match {
         val users = userRepository.findAllById(matchRequest.userIds).toMutableSet()
-        if (users.size > 2) {
+        if (users.size < 2) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "One or more users not found")
         }
 
