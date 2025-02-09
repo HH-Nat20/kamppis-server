@@ -14,7 +14,7 @@ class ValidationService {
      * and hyphens (-). False otherwise.
      */
     fun isValidString(string: String): Boolean =
-        string.matches(Regex("^[a-zA-Z'-]+$"))
+        string.matches(Regex("^[a-zA-Z' -]+$"))
 
     /**
      * Validates e-mails.
