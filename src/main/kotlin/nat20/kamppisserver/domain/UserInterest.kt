@@ -2,6 +2,10 @@ package nat20.kamppisserver.domain
 
 import jakarta.persistence.*
 
+/**
+ * Entity class for UserInterest.
+ * @ManyToOne relationship to User and Interest.
+ */
 @Entity
 @Table(name = "user_interests")
 class UserInterest(
@@ -18,6 +22,10 @@ class UserInterest(
     var id: Long? = null,
 )
 
+/**
+ * Entity class for Interest.
+ * @OneToMany relationship to UserInterest.
+ */
 @Entity
 @Table
 class Interest(

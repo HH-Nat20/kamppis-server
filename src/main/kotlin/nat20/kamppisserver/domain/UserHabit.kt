@@ -2,6 +2,10 @@ package nat20.kamppisserver.domain
 
 import jakarta.persistence.*
 
+/**
+ * Entity class for UserHabit.
+ * @ManyToOne relationship to User and Habit.
+ */
 @Entity
 @Table(name = "user_habits")
 class UserHabit(
@@ -18,6 +22,10 @@ class UserHabit(
     var id: Long? = null,
 )
 
+/**
+ * Entity class for Habit.
+ * @OneToMany relationship to UserHabit.
+ */
 @Entity
 @Table
 class Habit(
