@@ -29,8 +29,8 @@ class SwipeControllerTests @Autowired constructor(
 
     @Test
     fun `should create a swipe successfully`() {
-        val user1 = User(email = "alice@example.com", firstName = "Alice", lastName = "Wonderland", id = 1L)
-        val user2 = User(email = "bob@example.com", firstName = "Bob", lastName = "Builder", id = 2L)
+        val user1 = User(email = "alice@example.com", id = 1L)
+        val user2 = User(email = "bob@example.com", id = 2L)
 
         val swipeRequest = SwipeRequest(
             swipingUserId = 1,

@@ -29,16 +29,12 @@ class UserControllerTests(@Autowired private val mockMvc: MockMvc) {
     fun `List all users`() {
         val bobJohnson = User(
             email = "bob.johnson@example.com",
-            firstName = "Bob",
-            lastName = "Johnson",
-            dateOfBirth = LocalDate.of(1985, 11, 22)
         )
+
         val charlieDavis = User(
             email = "charlie.davis@example.com",
-            firstName = "Charlie",
-            lastName = "Davis",
-            dateOfBirth = null // Date of birth not provided
         )
+
         every { userRepository.findAll() } returns listOf(bobJohnson, charlieDavis)
         mockMvc.perform(get("/api/user/").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk)
@@ -51,9 +47,6 @@ class UserControllerTests(@Autowired private val mockMvc: MockMvc) {
     fun `Find user by id`() {
         val bobJohnson = User(
             email = "bob.johnson@example.com",
-            firstName = "Bob",
-            lastName = "Johnson",
-            dateOfBirth = LocalDate.of(1985, 11, 22)
         )
         every { userRepository.findByIdOrNull(any()) } returns bobJohnson
         mockMvc.perform(get("/api/user/1").accept(MediaType.APPLICATION_JSON))
