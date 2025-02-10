@@ -53,7 +53,7 @@ class SwipeControllerTests @Autowired constructor(
             content = objectMapper.writeValueAsString(swipeRequest)
         }
             .andExpect {
-                status { isOk() }
+                status { isCreated() }
                 content { contentType(MediaType.APPLICATION_JSON) }
                 jsonPath("$.id") { value(1) }
                 jsonPath("$.swipingUser.email") { value("alice@example.com") }
