@@ -2,6 +2,7 @@ package nat20.kamppisserver.api
 
 import nat20.kamppisserver.domain.Swipe
 import nat20.kamppisserver.domain.SwipeRequest
+import nat20.kamppisserver.domain.SwipeResponse
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.SwipeService
@@ -21,17 +22,17 @@ class SwipeController(private val swipeService: SwipeService,
     fun findAll(): MutableIterable<Swipe> = swipeService.findAll()
 
     @PostMapping
-    fun swipe(@RequestBody swipeRequest: SwipeRequest): ResponseEntity<Swipe> {
+    fun swipe(@RequestBody swipeRequest: SwipeRequest): ResponseEntity<SwipeResponse> {
         val swipingUser: User = userRepository.findByIdOrNull(swipeRequest.swipingUserId)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${swipeRequest.swipingUserId} not found")
         val swipedUser: User = userRepository.findByIdOrNull(swipeRequest.swipedUserId)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${swipeRequest.swipedUserId} not found")
-        val swipe = swipeService.swipe(
+        val response = swipeService.swipe(
             swipingUser,
             swipedUser,
-            isRightSwipe = swipeRequest.isRightSwipe
+            swipeRequest.isRightSwipe
         )
-        return ResponseEntity.status(HttpStatus.CREATED).body(swipe)
+        return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 
 

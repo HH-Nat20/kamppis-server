@@ -23,8 +23,9 @@ class SwipeServiceTests {
         matchService = mockk(relaxed = true)
         swipeService = SwipeService(matchService, swipeRepository)
 
-        // Mock the save method to return the Swipe object itself
-        every { swipeRepository.save(any()) } answers { firstArg<Swipe>() }
+        // Mock the save method to return the Swipe object itself with id = 1
+        every { swipeRepository.save(any()) } answers {
+            (firstArg<Swipe>()).apply { id = 1L } }
     }
 
     @Test

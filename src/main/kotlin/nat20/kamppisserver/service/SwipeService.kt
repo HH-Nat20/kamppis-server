@@ -1,6 +1,8 @@
 package nat20.kamppisserver.service
 
+import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.Swipe
+import nat20.kamppisserver.domain.SwipeResponse
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.repository.SwipeRepository
 import org.springframework.stereotype.Service
@@ -10,7 +12,8 @@ class SwipeService(
     private val matchService: MatchService,
     private val swipeRepository: SwipeRepository
 ) {
-    fun swipe(swipingUser: User, swipedUser: User, isRightSwipe: Boolean): Swipe {
+    @Transactional
+    fun swipe(swipingUser: User, swipedUser: User, isRightSwipe: Boolean): SwipeResponse {
 
         // TODO: forbid multiple identical swipes
         val newSwipe = Swipe(
@@ -23,8 +26,9 @@ class SwipeService(
         // TODO: forbid multiple identical matches
         if (isRightSwipe && hasMutualSwipe(swipingUser, swipedUser)) {
             matchService.createMatch(swipingUser, swipedUser)
+            newSwipe.isMatch = true
         }
-        return newSwipe
+        return newSwipe.toSwipeResponse()
     }
 
     private fun hasMutualSwipe(swipingUser: User, swipedUser: User): Boolean {
