@@ -4,9 +4,7 @@ import jakarta.persistence.EntityNotFoundException
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.repository.UserProfileRepository
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.PathVariable
 import java.time.LocalDateTime
 
 /**
@@ -35,6 +33,19 @@ class UserProfileService(private val repository: UserProfileRepository) {
         updatedProfile.updatedAt = LocalDateTime.now()
 
         return repository.save(updatedProfile)
+    }
+
+    /**
+     * Soft deletes given User Profile.
+     *
+     * @param id the id of the profile to be deleted.
+     */
+    fun delete(id: Long) {
+        val deletedProfile = repository.findByIdOrNull(id)
+            ?: throw EntityNotFoundException("User profile with id $id not found")
+
+        deletedProfile.deletedAt = LocalDateTime.now()
+        repository.save(deletedProfile)
     }
 
 }
