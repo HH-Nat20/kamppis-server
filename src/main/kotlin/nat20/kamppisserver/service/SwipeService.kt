@@ -1,6 +1,5 @@
 package nat20.kamppisserver.service
 
-import nat20.kamppisserver.domain.Match
 import nat20.kamppisserver.domain.Swipe
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.repository.SwipeRepository
