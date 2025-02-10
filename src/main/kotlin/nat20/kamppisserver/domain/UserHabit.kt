@@ -4,14 +4,14 @@ import jakarta.persistence.*
 
 /**
  * Entity class for UserHabit.
- * @ManyToOne relationship to User and Habit.
+ * @ManyToOne relationship to UserProfile and Habit.
  */
 @Entity
 @Table(name = "user_habits")
 class UserHabit(
     @ManyToOne
-    @JoinColumn(name = "user_id", unique = true)
-    var user: User,
+    @JoinColumn(name = "user_profile_id", unique = true)
+    var userProfile: UserProfile,
 
     @ManyToOne
     @JoinColumn(name = "habit_id", unique = true)

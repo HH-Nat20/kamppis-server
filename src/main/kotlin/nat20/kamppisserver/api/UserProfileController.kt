@@ -1,6 +1,8 @@
 package nat20.kamppisserver.api
 
+import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
+import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserProfileService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/api/user-profile")
-class UserProfileController(private val service: UserProfileService) {
+class UserProfileController(private val service: UserProfileService, private val queryService: QueryService) {
 
     /**
      * Updates user profile.
@@ -36,4 +38,8 @@ class UserProfileController(private val service: UserProfileService) {
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
+    @GetMapping("/{id}/query")
+    fun findUserProfilesThatMeetCriteria(@PathVariable id: Long): MutableIterable<UserProfile> {
+        return queryService.findUserProfilesThatMeetCriteria(id)
+    }
 }

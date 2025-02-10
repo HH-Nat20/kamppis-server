@@ -14,8 +14,8 @@ class SwipeServiceTests {
     private lateinit var matchService: MatchService
     private lateinit var swipeService: SwipeService
 
-    private val userA = User(email = "a@example.com", firstName = "Alice", lastName = "Anderson")
-    private val userB = User(email = "b@example.com", firstName = "Bob", lastName = "Brown")
+    private val userA = User(email = "a@example.com")
+    private val userB = User(email = "b@example.com")
 
     @BeforeEach
     fun setup() {

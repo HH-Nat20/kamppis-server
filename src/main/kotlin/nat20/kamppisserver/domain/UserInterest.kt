@@ -4,14 +4,14 @@ import jakarta.persistence.*
 
 /**
  * Entity class for UserInterest.
- * @ManyToOne relationship to User and Interest.
+ * @ManyToOne relationship to UserProfile and Interest.
  */
 @Entity
 @Table(name = "user_interests")
 class UserInterest(
     @ManyToOne
-    @JoinColumn(name = "user_id", unique = true)
-    var user: User,
+    @JoinColumn(name = "user_profile_id", unique = true)
+    var userProfile: UserProfile,
 
     @ManyToOne
     @JoinColumn(name = "interest_id", unique = true)

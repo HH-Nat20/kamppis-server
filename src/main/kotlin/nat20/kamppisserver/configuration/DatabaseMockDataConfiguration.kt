@@ -15,38 +15,26 @@ import java.time.LocalDate
 @Profile("dev") // This config will only load when the dev profile is active from application.properties
 class DatabaseMockDataConfiguration {
 
+    /**
+     * Database initializer for adding mock data into the database
+     */
     @Bean
     fun databaseInitializer(userRepository: UserRepository, userProfileRepository: UserProfileRepository) = ApplicationRunner {
         val users = listOf(
             User(
                 email = "alice.smith@example.com",
-                firstName = "Alice",
-                lastName = "Smith",
-                dateOfBirth = LocalDate.of(1990, 5, 14),
             ),
             User(
                 email = "bob.johnson@example.com",
-                firstName = "Bob",
-                lastName = "Johnson",
-                dateOfBirth = LocalDate.of(1985, 11, 22),
             ),
             User(
                 email = "charlie.davis@example.com",
-                firstName = "Charlie",
-                lastName = "Davis",
-                dateOfBirth = null, // Date of birth not provided
             ),
             User(
                 email = "diana.lee@example.com",
-                firstName = "Diana",
-                lastName = "Lee",
-                dateOfBirth = LocalDate.of(2000, 2, 3),
             ),
             User(
                 email = "eve.brown@example.com",
-                firstName = "Eve",
-                lastName = "Brown",
-                dateOfBirth = LocalDate.of(1995, 8, 19),
             )
         )
 
@@ -56,6 +44,10 @@ class DatabaseMockDataConfiguration {
         val userProfiles = listOf(
             UserProfile(
                 user = userRepository.findById(1L).get(),
+                firstName = "Alice",
+                lastName = "Smith",
+                dateOfBirth = LocalDate.of(1990, 5, 14),
+                gender = Gender.FEMALE,
                 minAgePreference = 22,
                 maxAgePreference = 27,
                 preferredGender = Gender.NOT_IMPORTANT,
@@ -65,6 +57,10 @@ class DatabaseMockDataConfiguration {
             ),
             UserProfile(
                 user = userRepository.findById(2L).get(),
+                firstName = "Bob",
+                lastName = "Johnson",
+                dateOfBirth = LocalDate.of(1985, 11, 22),
+                gender = Gender.MALE,
                 minAgePreference = 24,
                 maxAgePreference = 37,
                 preferredGender = Gender.NOT_IMPORTANT,
@@ -74,6 +70,10 @@ class DatabaseMockDataConfiguration {
             ),
             UserProfile(
                 user = userRepository.findById(3L).get(),
+                firstName = "Charlie",
+                lastName = "Davis",
+                dateOfBirth = LocalDate.of(1998, 2, 3),
+                gender = Gender.OTHER,
                 minAgePreference = 18,
                 maxAgePreference = 26,
                 preferredGender = Gender.NOT_IMPORTANT,
@@ -83,6 +83,10 @@ class DatabaseMockDataConfiguration {
             ),
             UserProfile(
                 user = userRepository.findById(4L).get(),
+                firstName = "Diana",
+                lastName = "Lee",
+                dateOfBirth = LocalDate.of(2000, 2, 3),
+                gender = Gender.FEMALE,
                 minAgePreference = 31,
                 maxAgePreference = 38,
                 preferredGender = Gender.NOT_IMPORTANT,
@@ -92,6 +96,10 @@ class DatabaseMockDataConfiguration {
             ),
             UserProfile(
                 user = userRepository.findById(5L).get(),
+                firstName = "Eve",
+                lastName = "Brown",
+                dateOfBirth = LocalDate.of(1995, 8, 19),
+                gender = Gender.NOT_IMPORTANT,
                 minAgePreference = 40,
                 maxAgePreference = 55,
                 preferredGender = Gender.NOT_IMPORTANT,

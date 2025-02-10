@@ -9,4 +9,4 @@ GET http://localhost:8080/api/user/1
 // The request gets the user's id as a path variable
 // The server looks up this user's search criteria (by user's id)
 // And returns all profiles that meet the user's search criteria
-GET http://localhost:8080/api/user/2/query
+GET http://localhost:8080/api/user-profile/2/query

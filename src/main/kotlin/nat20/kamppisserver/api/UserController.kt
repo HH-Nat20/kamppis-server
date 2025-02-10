@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/user")
-class UserController(private val repository: UserRepository, private val queryService: QueryService) {
+class UserController(private val repository: UserRepository) {
 
     @GetMapping("/")
     fun findAll(): MutableIterable<User> = repository.findAll()
@@ -19,9 +19,4 @@ class UserController(private val repository: UserRepository, private val querySe
     @GetMapping("/{id}")
     fun findUserById(@PathVariable id: Long) = repository.findByIdOrNull(id)
         ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "This user does not exist")
-
-    @GetMapping("/{id}/query")
-    fun findUsersThatMeetCriteria(@PathVariable id: Long): MutableIterable<User> {
-        return queryService.findUsersThatMeetCriteria(id)
-    }
 }

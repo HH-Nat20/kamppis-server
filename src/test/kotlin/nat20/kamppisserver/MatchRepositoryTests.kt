@@ -24,9 +24,6 @@ class MatchRepositoryTests @Autowired constructor(
 
         val bobJohnson = User(
             email = "bob.johnson@example.com",
-            firstName = "Bob",
-            lastName = "Johnson",
-            dateOfBirth = LocalDate.of(1985, 11, 22)
         )
 
         userRepository.save(bobJohnson)
