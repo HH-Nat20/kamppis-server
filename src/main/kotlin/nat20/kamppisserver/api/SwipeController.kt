@@ -31,7 +31,7 @@ class SwipeController(private val swipeService: SwipeService,
             swipedUser,
             isRightSwipe = swipeRequest.isRightSwipe
         )
-        return ResponseEntity.ok(swipe)
+        return ResponseEntity.status(HttpStatus.CREATED).body(swipe)
     }
 
 

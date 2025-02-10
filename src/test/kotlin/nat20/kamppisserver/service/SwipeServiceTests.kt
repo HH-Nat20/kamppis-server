@@ -8,9 +8,7 @@ import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.repository.SwipeRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
 class SwipeServiceTests {
     private lateinit var swipeRepository: SwipeRepository
     private lateinit var matchService: MatchService
