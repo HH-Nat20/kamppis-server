@@ -30,7 +30,7 @@ class UserProfileController(private val service: UserProfileService) {
      * @param id the id of the profile to be deleted.
      * @return ResponseEntity with status code 204 NO CONTENT.
      */
-    @DeleteMapping("/{id")
+    @DeleteMapping("/{id}")
     fun deleteById(@PathVariable id: Long): ResponseEntity<Void> {
         service.delete(id)
         return ResponseEntity(HttpStatus.NO_CONTENT)
