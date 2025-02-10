@@ -1,7 +1,7 @@
 package nat20.kamppisserver.api
 
 import nat20.kamppisserver.domain.Match
-import nat20.kamppisserver.dto.MatchRequest
+import nat20.kamppisserver.domain.MatchRequest
 import nat20.kamppisserver.service.MatchService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

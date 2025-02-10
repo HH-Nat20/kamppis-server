@@ -31,3 +31,7 @@ class Match(
         updatedAt = LocalDateTime.now()
     }
 }
+
+data class MatchRequest(
+    val userIds: Set<Long>
+)

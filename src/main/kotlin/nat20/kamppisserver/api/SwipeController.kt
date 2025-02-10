@@ -1,8 +1,8 @@
 package nat20.kamppisserver.api
 
 import nat20.kamppisserver.domain.Swipe
+import nat20.kamppisserver.domain.SwipeRequest
 import nat20.kamppisserver.domain.User
-import nat20.kamppisserver.dto.SwipeRequest
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.SwipeService
 import org.springframework.data.repository.findByIdOrNull

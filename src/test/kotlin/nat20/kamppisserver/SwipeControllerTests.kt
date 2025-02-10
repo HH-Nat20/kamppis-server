@@ -5,8 +5,8 @@ import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import nat20.kamppisserver.api.SwipeController
 import nat20.kamppisserver.domain.Swipe
+import nat20.kamppisserver.domain.SwipeRequest
 import nat20.kamppisserver.domain.User
-import nat20.kamppisserver.dto.SwipeRequest
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.SwipeService
 import org.junit.jupiter.api.Test
