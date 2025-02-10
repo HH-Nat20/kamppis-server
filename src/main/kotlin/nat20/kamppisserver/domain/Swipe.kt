@@ -9,6 +9,12 @@ class Swipe(
     @ManyToOne var swipingUser: User,
     @ManyToOne var swipedUser: User,
     var isRightSwipe: Boolean,
-    var createdAt: LocalDateTime,
+    var createdAt: LocalDateTime = LocalDateTime.now(),
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null)
+
+data class SwipeRequest(
+    val swipingUserId: Long,
+    val swipedUserId: Long,
+    val isRightSwipe: Boolean = true
+)
