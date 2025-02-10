@@ -2,12 +2,9 @@ package nat20.kamppisserver.api
 
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.service.UserProfileService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 /**
  * REST controller for User Profile.
@@ -26,5 +23,17 @@ class UserProfileController(private val service: UserProfileService) {
     @PutMapping("/{id}")
     fun updateUserProfile(@RequestBody userProfile: UserProfile, @PathVariable id: Long): ResponseEntity<UserProfile>
         = ResponseEntity.ok(service.update(userProfile, id))
+
+    /**
+     * Soft deletes user profile.
+     *
+     * @param id the id of the profile to be deleted.
+     * @return ResponseEntity with status code 204 NO CONTENT.
+     */
+    @DeleteMapping("/{id")
+    fun deleteById(@PathVariable id: Long): ResponseEntity<Void> {
+        service.delete(id)
+        return ResponseEntity(HttpStatus.NO_CONTENT)
+    }
 
 }
