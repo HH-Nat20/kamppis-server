@@ -11,7 +11,7 @@ class ValidationService {
      *
      * @param string to be validated.
      * @return true if includes only whitelisted characters (letters, apostrophes ('),
-     * and hyphens (-). False otherwise.
+     * and hyphens (-)). False otherwise.
      */
     fun isValidString(string: String): Boolean =
         string.matches(Regex("^[a-zA-Z' -]+$"))
