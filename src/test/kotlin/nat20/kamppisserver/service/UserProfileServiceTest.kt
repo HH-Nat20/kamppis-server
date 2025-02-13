@@ -1,7 +1,5 @@
 package nat20.kamppisserver.service
 
-import io.mockk.*
-import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -10,24 +8,22 @@ import nat20.kamppisserver.domain.Gender
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.repository.UserProfileRepository
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-// TODO: import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
 import java.time.LocalDate
+// TODO: import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 
 /**
  * Test class for UserProfileService. Tests that edit and delete methods return
  * values accordingly, and throw an exception in case of invalid id:s.
 */
 @SpringBootTest
-// TODO: @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+// TODO: @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserProfileServiceTest {
 
     @Autowired
