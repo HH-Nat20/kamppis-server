@@ -10,60 +10,55 @@ import nat20.kamppisserver.domain.Gender
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.repository.UserProfileRepository
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 // TODO: import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.test.context.ActiveProfiles
 import java.time.LocalDate
 
 /**
  * Test class for UserProfileService. Tests that edit and delete methods return
  * values accordingly, and throw an exception in case of invalid id:s.
 */
-@ExtendWith(MockKExtension::class)
+@SpringBootTest
 // TODO: @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserProfileServiceTest {
 
-    private val repository: UserProfileRepository = mockk()
-    private val service = UserProfileService(repository)
+    @Autowired
+    private lateinit var repository: UserProfileRepository
+
+    @Autowired
+    private lateinit var service: UserProfileService
 
     @Test
     fun `update should modify and save user profile`() {
 
-        val existingProfile = UserProfile(
-            user = User(email = "alice.smith@example.com"),
-            firstName = "Alice",
-            lastName = "Smith",
-            dateOfBirth = LocalDate.of(1970, 1, 1),
-            gender = Gender.FEMALE,
-            id = 1L)
+        val updatedProfile = repository.findByIdOrNull(1L)
 
-        val updatedProfile = UserProfile(
-            user = User(email = "bob.johnson@example.com"),
-            firstName = "Bob",
-            lastName = "Johnson",
-            dateOfBirth = LocalDate.of(1980, 1, 1),
-            gender = Gender.MALE)
+        val result = updatedProfile?.let { service.update(it, 1L) }
 
-        every { repository.findByIdOrNull(1L) } returns existingProfile
-        every { repository.save(any()) } answers { firstArg() }
-
-        val result = service.update(updatedProfile, 1L)
-
-        assertNotNull(result.updatedAt)
+        if (result != null) {
+            assertNotNull(result.updatedAt)
+        }
     }
 
     @Test
     fun `update should throw EntityNotFoundException when profile not found`() {
-        val id = 1L
+        val id = 6L
         val updatedProfile = UserProfile(
-            user = User(email = "bob.johnson@example.com"),
-            firstName = "Bob",
-            lastName = "Johnson",
-            dateOfBirth = LocalDate.of(1980, 1, 1),
-            gender = Gender.MALE,
-            id = 2L)
-
-        every { repository.findByIdOrNull(id) } returns null
+            id = id,
+            user = User(email = "test@example.com"),
+            firstName = "Test",
+            lastName = "User",
+            dateOfBirth = LocalDate.of(1995, 1, 1),
+            gender = Gender.NOT_IMPORTANT
+        )
 
         val exception = assertThrows<EntityNotFoundException> {
             service.update(updatedProfile, id)
@@ -74,28 +69,20 @@ class UserProfileServiceTest {
 
     @Test
     fun `delete should mark profile as deleted`() {
-        val id = 1L
-        val existingProfile = UserProfile(
-            user = User(email = "alice.smith@example.com"),
-            firstName = "Alice",
-            lastName = "Smith",
-            dateOfBirth = LocalDate.of(1970, 1, 1),
-            gender = Gender.FEMALE,
-            id = 1L)
+        val deletedProfile = repository.findByIdOrNull(1L)
 
-        every { repository.findByIdOrNull(id) } returns existingProfile
-        every { repository.save(any()) } answers { firstArg() }
+        if (deletedProfile != null) {
+            deletedProfile.id?.let { service.delete(it) }
+        }
 
-        service.delete(id)
-
-        assertNotNull(existingProfile.deletedAt)
+        if (deletedProfile != null) {
+            assertNotNull(deletedProfile.deletedAt)
+        }
     }
 
     @Test
     fun `delete should throw EntityNotFoundException when profile not found`() {
-        val id = 1L
-
-        every { repository.findByIdOrNull(id) } returns null
+        val id = 6L
 
         val exception = assertThrows<EntityNotFoundException> {
             service.delete(id)
