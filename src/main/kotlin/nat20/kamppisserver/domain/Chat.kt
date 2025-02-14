@@ -5,26 +5,25 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 /**
- * Entity class for Message.
+ * Entity class for Chat.
  * @ManyToOne relationship to User.
- * @ManyToOne relationship to Chat.
+ * @ManyToOne relationship to Match.
+ * @OneToMany relationship to Message.
  */
 @Entity
-@Table(name = "messages")
-class Message(
+@Table(name = "chats")
+class Chat (
     @ManyToOne
     @JoinColumn(name = "user_id")
     var sender: User,
 
     @ManyToOne
-    @JoinColumn(name = "chat_id")
-    var chat: Chat,
+    @JoinColumn(name = "match_id")
+    var receiver: Match,
 
-    @Column(nullable = false)
-    var content: String,
-
-    @Enumerated(EnumType.STRING)
-    var status: MessageStatus = MessageStatus.CREATED,
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "message_id")
+    var messages: MutableList<Message>? = mutableListOf(),
 
     var createdAt: LocalDateTime = LocalDateTime.now(),
 
