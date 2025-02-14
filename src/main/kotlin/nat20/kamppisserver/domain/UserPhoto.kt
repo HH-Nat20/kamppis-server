@@ -13,8 +13,8 @@ import java.time.LocalDateTime
 @Table(name = "user_photos")
 class UserPhoto(
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "user_profile_id")
+    @JsonIgnore
     var userProfile: UserProfile,
 
     var name: String,

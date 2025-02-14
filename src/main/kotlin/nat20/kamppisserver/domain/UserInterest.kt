@@ -1,5 +1,6 @@
 package nat20.kamppisserver.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 
 /**
@@ -11,10 +12,12 @@ import jakarta.persistence.*
 class UserInterest(
     @ManyToOne
     @JoinColumn(name = "user_profile_id", unique = true)
+    @JsonIgnore
     var userProfile: UserProfile,
 
     @ManyToOne
     @JoinColumn(name = "interest_id", unique = true)
+    @JsonIgnore
     var interest: Interest,
 
     @Id
@@ -29,8 +32,7 @@ class UserInterest(
 @Entity
 @Table
 class Interest(
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
-    @JoinColumn(name = "interest_id")
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "interest", orphanRemoval = true)
     var userInterests: MutableList<UserInterest> = mutableListOf(),
 
     var name: String? = null,

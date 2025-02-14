@@ -24,13 +24,13 @@ class UserProfile(
     var dateOfBirth: LocalDate,
     var gender: Gender,
 
-    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "userProfile")
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "userProfile", orphanRemoval = true)
     var userPhotos: MutableList<UserPhoto>? = mutableListOf(),
 
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "userProfile", orphanRemoval = true)
     var userHabits: MutableList<UserHabit>? = mutableListOf(),
 
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "userProfile", orphanRemoval = true)
     var userInterests: MutableList<UserInterest>? = mutableListOf(),
 
     var bio: String? = null,

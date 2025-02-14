@@ -1,5 +1,6 @@
 package nat20.kamppisserver.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
@@ -10,14 +11,16 @@ import java.time.LocalDateTime
  * @ManyToOne relationship to Chat.
  */
 @Entity
-@Table(name = "messages")
+@Table
 class Message(
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     var sender: User,
 
     @ManyToOne
     @JoinColumn(name = "match_id")
+    @JsonIgnore
     var receiver: Match,
 
     @Column(nullable = false)
