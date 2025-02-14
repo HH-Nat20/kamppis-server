@@ -1,13 +1,19 @@
 package nat20.kamppisserver.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
+/**
+ * Entity class for User Photos.
+ * @ManyToOne relationship to User Profile.
+ */
 @Entity
 @Table(name = "user_photos")
 class UserPhoto(
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_profile_id")
     var userProfile: UserProfile,
 
