@@ -1,6 +1,5 @@
 package nat20.kamppisserver.api
 
-import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserProfileService

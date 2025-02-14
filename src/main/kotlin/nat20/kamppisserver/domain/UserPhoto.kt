@@ -4,26 +4,17 @@ import jakarta.persistence.*
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
-/**
- * Entity class for Chat.
- * @ManyToOne relationship to User.
- * @ManyToOne relationship to Match.
- * @OneToMany relationship to Message.
- */
 @Entity
-@Table(name = "chats")
-class Chat (
+@Table(name = "user_photos")
+class UserPhoto(
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    var sender: User,
+    @JoinColumn(name = "user_profile_id")
+    var userProfile: UserProfile,
 
-    @ManyToOne
-    @JoinColumn(name = "match_id")
-    var receiver: Match,
+    var name: String,
 
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
-    @JoinColumn(name = "message_id")
-    var messages: MutableList<Message>? = mutableListOf(),
+    // Is this photo on the user card (= True) or in the gallery (= False)?
+    var isProfilePhoto: Boolean,
 
     var createdAt: LocalDateTime = LocalDateTime.now(),
 
@@ -37,4 +28,4 @@ class Chat (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-    )
+)

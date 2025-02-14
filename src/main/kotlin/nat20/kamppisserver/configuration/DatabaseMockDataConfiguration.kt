@@ -5,6 +5,8 @@ import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.domain.Gender
+import nat20.kamppisserver.domain.UserPhoto
+import nat20.kamppisserver.repository.UserPhotoRepository
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -19,7 +21,11 @@ class DatabaseMockDataConfiguration {
      * Database initializer for adding mock data into the database
      */
     @Bean
-    fun databaseInitializer(userRepository: UserRepository, userProfileRepository: UserProfileRepository) = ApplicationRunner {
+    fun databaseInitializer(userRepository: UserRepository,
+                            userProfileRepository: UserProfileRepository,
+                            userPhotoRepository: UserPhotoRepository
+    ) = ApplicationRunner {
+
         val users = listOf(
             User(
                 email = "alice.smith@example.com",
@@ -111,5 +117,37 @@ class DatabaseMockDataConfiguration {
 
         // Save all mock user profiles to the database
         userProfileRepository.saveAll(userProfiles)
+
+        val userPhotos = listOf(
+            UserPhoto(
+                userProfile = userProfileRepository.findById(1L).get(),
+                name = "https://cdn.stocksnap.io/img-thumbs/960w/woman-portrait_CLTJPNEBUL.jpg",
+                isProfilePhoto = true,
+            ),
+            UserPhoto(
+                userProfile = userProfileRepository.findById(2L).get(),
+                name = "https://freerangestock.com/sample/169954/young-man-in-contemplative-urban-scene.jpg",
+                isProfilePhoto = true,
+            ),
+            UserPhoto(
+                userProfile = userProfileRepository.findById(3L).get(),
+                name = "https://cdn.stocksnap.io/img-thumbs/960w/business-man_IVZBYWKEFM.jpg",
+                isProfilePhoto = true,
+            ),
+            UserPhoto(
+                userProfile = userProfileRepository.findById(4L).get(),
+                name = "https://upload.wikimedia.org/wikipedia/commons/2/2d/African-Woman-Business-Woman-Young-Woman-Black-Woman-3439224.jpg",
+                isProfilePhoto = true,
+            ),
+            UserPhoto(
+                userProfile = userProfileRepository.findById(5L).get(),
+                name = "https://live.staticflickr.com/2727/4523649809_f893abca83_b.jpg",
+                isProfilePhoto = true,
+            ),
+        )
+
+        // Save photos to database
+        userPhotoRepository.saveAll(userPhotos)
+
     }
 }

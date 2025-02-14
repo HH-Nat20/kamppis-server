@@ -25,6 +25,10 @@ class UserProfile(
     var gender: Gender,
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "user_photo_id")
+    var userPhotos: MutableList<UserPhoto>? = mutableListOf(),
+
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "user_habit_id")
     var userHabits: MutableList<UserHabit>? = mutableListOf(),
 

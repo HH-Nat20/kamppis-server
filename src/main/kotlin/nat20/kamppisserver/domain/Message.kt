@@ -17,8 +17,8 @@ class Message(
     var sender: User,
 
     @ManyToOne
-    @JoinColumn(name = "chat_id")
-    var chat: Chat,
+    @JoinColumn(name = "match_id")
+    var receiver: Match,
 
     @Column(nullable = false)
     var content: String,
