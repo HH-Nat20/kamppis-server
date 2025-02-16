@@ -1,13 +1,15 @@
 package nat20.kamppisserver
 
 import org.slf4j.LoggerFactory
-import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
 @Component
-class StartupRunner : CommandLineRunner {
+class StartupRunner{
     private val logger = LoggerFactory.getLogger(StartupRunner::class.java)
 
-    override fun run(vararg args: String?) {
-        logger.info("\uD83D\uDE80 Spring Boot application has started successfully and the service is running! \uD83D\uDE80")    }
+    @EventListener(ApplicationReadyEvent::class)
+    fun onApplicationReady() {
+        logger.info("\n \uD83D\uDE80 Spring Boot application has started successfully and the service is running! \uD83D\uDE80 \n" )    }
 }
