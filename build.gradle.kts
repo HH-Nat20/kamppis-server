@@ -55,3 +55,7 @@ allOpen {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+springBoot {
+    mainClass.set("nat20.kamppisserver.KamppisServerApplication") // Replace with your main class
+}
