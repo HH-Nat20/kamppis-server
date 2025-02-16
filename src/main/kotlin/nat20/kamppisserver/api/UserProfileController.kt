@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
  * REST controller for User Profile.
  */
 @RestController
-@RequestMapping("/api/user-profile")
+@RequestMapping("/api/user-profiles")
 class UserProfileController(private val service: UserProfileService, private val queryService: QueryService) {
 
     /**

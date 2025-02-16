@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-@RequestMapping("/api/match")
+@RequestMapping("/api/matches")
 class MatchController(private val service: MatchService) {
 
-    @GetMapping("/")
+    @GetMapping("", "/")
     fun findAll(): MutableIterable<Match> = service.findAll()
 
     @GetMapping("/{id}")

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
  * by the User (sender).
  */
 @RestController
-@RequestMapping("/api/message")
+@RequestMapping("/api/messages")
 class MessageController(private val service: MessageService) {
     @PostMapping
     fun createMessage(@RequestBody message: Message): ResponseEntity<Message> {

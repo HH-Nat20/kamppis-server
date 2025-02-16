@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-@RequestMapping("/api/swipe")
+@RequestMapping("/api/swipes")
 class SwipeController(private val swipeService: SwipeService,
     private val userRepository: UserRepository
 ) {
 
-    @GetMapping("/")
+    @GetMapping("", "/")
     fun findAll(): MutableIterable<Swipe> = swipeService.findAll()
 
     @PostMapping

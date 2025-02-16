@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 class UserController(private val repository: UserRepository) {
 
-    @GetMapping("/")
+    @GetMapping("", "/")
     fun findAll(): MutableIterable<User> = repository.findAll()
 
     @GetMapping("/{id}")
