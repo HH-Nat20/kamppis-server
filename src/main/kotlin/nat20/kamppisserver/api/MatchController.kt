@@ -1,6 +1,7 @@
 package nat20.kamppisserver.api
 
 import nat20.kamppisserver.domain.Match
+import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.MatchRequest
 import nat20.kamppisserver.service.MatchService
 import org.springframework.http.HttpStatus
@@ -20,6 +21,9 @@ class MatchController(private val service: MatchService) {
             service.findAll()
         }
     }
+
+    @GetMapping("/profiles/{id}")
+    fun findAllMatchesForUser(@PathVariable id: Long): MutableIterable<UserProfile> = service.findUserProfilesThatMatchWithUser(id)
 
     @GetMapping("/{id}")
     fun findMatchById(@PathVariable id: Long) = service.findOne(id)

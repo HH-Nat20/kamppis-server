@@ -35,4 +35,5 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
         @Param("id") id: Long?,
         @Param("minAgePreference") minAgePreference: Int?,
         @Param("maxAgePreference") maxAgePreference: Int?): MutableIterable<UserProfile>
+
 }

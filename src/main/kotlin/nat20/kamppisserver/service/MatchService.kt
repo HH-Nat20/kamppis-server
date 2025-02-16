@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.Match
 import nat20.kamppisserver.domain.MatchRequest
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.repository.MatchRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -49,6 +50,11 @@ class MatchService(
 
     fun findAllForUser(userId: Long): MutableIterable<Match> {
         return matchRepository.findAllByUserId(userId).toMutableList()
+    }
+
+    fun findUserProfilesThatMatchWithUser(userId: Long): MutableIterable<UserProfile>
+    {
+        return matchRepository.findUserProfilesThatMatchWithUser(userId)
     }
 
     fun findOne(matchId: Long): Match? {
