@@ -51,7 +51,7 @@ class SwipeControllerTests @Autowired constructor(
         every { userRepository.findByIdOrNull(2L)} returns user2
         every { swipeService.swipe(any(),any(), any()) } returns swipeResponse
 
-        mockMvc.post("/api/swipe") {
+        mockMvc.post("/api/swipes") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(swipeRequest)
         }

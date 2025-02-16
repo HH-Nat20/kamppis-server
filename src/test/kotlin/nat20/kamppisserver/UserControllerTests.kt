@@ -36,7 +36,7 @@ class UserControllerTests(@Autowired private val mockMvc: MockMvc) {
         )
 
         every { userRepository.findAll() } returns listOf(bobJohnson, charlieDavis)
-        mockMvc.perform(get("/api/user/").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk)
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("\$.[0].email").value(bobJohnson.email))
@@ -49,7 +49,7 @@ class UserControllerTests(@Autowired private val mockMvc: MockMvc) {
             email = "bob.johnson@example.com",
         )
         every { userRepository.findByIdOrNull(any()) } returns bobJohnson
-        mockMvc.perform(get("/api/user/1").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/users/1").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("\$.email").value(bobJohnson.email))
