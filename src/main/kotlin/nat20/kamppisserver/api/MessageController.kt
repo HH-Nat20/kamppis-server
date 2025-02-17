@@ -1,27 +1,45 @@
 package nat20.kamppisserver.api
 
 import nat20.kamppisserver.domain.Message
-import nat20.kamppisserver.service.MessageService
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.messaging.handler.annotation.DestinationVariable
+import org.springframework.messaging.handler.annotation.MessageMapping
+import org.springframework.messaging.handler.annotation.Payload
+import org.springframework.messaging.handler.annotation.SendTo
+import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 
 /**
- * REST controller for Message.
+ * Controller for Message.
  *
- * Lacking GET all, POST, PUT, and DELETE methods. All Messages belonging to a
- * specified Chat are fetched with GET. A Message can be POST, PUT, or DELETEd
- * by the User (sender).
+ * Lacking PUT and DELETE methods and quite a lot of logic.
  */
 @RestController
-@RequestMapping("/api/messages")
-class MessageController(private val service: MessageService) {
-    @PostMapping
-    fun createMessage(@RequestBody message: Message): ResponseEntity<Message> {
-        val createdMessage = service.createMessage(message)
-        return ResponseEntity<Message>(createdMessage, HttpStatus.CREATED)
+class MessageController {
+
+    @MessageMapping("/matches/{matchId}/messages") // Listen to messages from /app/matches/{matchId}/messages
+    @SendTo("/topic/matches/{matchId}/messages") // Send content to subscribers of /topic/matches/{matchId}/messages
+    fun sendMessage(@DestinationVariable matchId: String, @Payload message: Message): Message {
+        println("Received message for match $matchId: ${message.content}")
+        return message // This will be broadcast to subscribed clients
     }
+
+    /** Still experimenting, might never be used
+    @GetMapping("/matches/{matchId}/messages")
+    fun chat(@PathVariable matchId: String, model: Model): String {
+        model.addAttribute("matchId", matchId)
+        return "chat"
+    }
+
+    @MessageMapping("/user.addUser")
+    @SendTo("/user/topic")
+    fun addUser(@Payload message: Message, headerAccessor: SimpMessageHeaderAccessor): Message {
+        // Add username in websocket session
+        headerAccessor.sessionAttributes?.put("username", message.sender)
+        return message
+    }
+    */
+
 }
