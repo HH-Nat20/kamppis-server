@@ -10,6 +10,9 @@ import jakarta.persistence.*
 class User(
     var email: String,
 
+    @Enumerated(EnumType.STRING)
+    var status: UserStatus = UserStatus.OFFLINE,
+
     /*
     * ADD FIELDS HERE AS REQUIRED
     * */

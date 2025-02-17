@@ -7,21 +7,23 @@ import java.time.LocalDateTime
 
 /**
  * Entity class for Message.
- * @ManyToOne relationship to User.
- * @ManyToOne relationship to Chat.
+ * @ManyToOne relationship to sender (User) and receiver (User).
+ * @ManyToOne relationship to Match.
  */
 @Entity
 @Table
 class Message(
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
+    @JoinColumn(name = "sender_id", nullable = false)
     var sender: User,
 
     @ManyToOne
-    @JoinColumn(name = "match_id")
-    @JsonIgnore
-    var receiver: Match,
+    @JoinColumn(name = "receiver_id", nullable = false)
+    var receiver: User,
+
+    @ManyToOne
+    @JoinColumn(name = "match_id", nullable = false)
+    var match: Match,
 
     @Column(nullable = false)
     var content: String,
