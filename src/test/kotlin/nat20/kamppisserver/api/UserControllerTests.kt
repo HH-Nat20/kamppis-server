@@ -1,8 +1,7 @@
-package nat20.kamppisserver
+package nat20.kamppisserver.api
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import nat20.kamppisserver.api.UserController
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.QueryService
@@ -13,11 +12,13 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import java.time.LocalDate
 import kotlin.test.Test
 
 @WebMvcTest(UserController::class)
-class UserControllerTests(@Autowired private val mockMvc: MockMvc) {
+class UserControllerTests {
+
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
     @MockkBean
     lateinit var userRepository: UserRepository
