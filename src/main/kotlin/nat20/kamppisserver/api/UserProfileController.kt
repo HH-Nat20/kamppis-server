@@ -15,6 +15,15 @@ import org.springframework.web.bind.annotation.*
 class UserProfileController(private val service: UserProfileService, private val queryService: QueryService) {
 
     /**
+     * Returns all user profiles.
+     * For testing purposes only.
+     *
+     * @return ResponseEntity with status code 200 OK.
+     */
+    @GetMapping
+    fun findAll(): MutableIterable<UserProfile> = service.findAll()
+
+    /**
      * Updates user profile.
      *
      * @param userProfile the profile to be updated.

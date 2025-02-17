@@ -14,6 +14,14 @@ import java.time.LocalDateTime
 class UserProfileService(private val repository: UserProfileRepository) {
 
     /**
+     * Returns all User Profiles.
+     * For testing purposes only.
+     *
+     * @return all User Profiles.
+     */
+    fun findAll(): MutableIterable<UserProfile> = repository.findAll()
+
+    /**
      * Updates given User Profile.
      *
      * @param userProfile the profile to be updated.
