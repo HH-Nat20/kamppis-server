@@ -1,10 +1,8 @@
-package nat20.kamppisserver
+package nat20.kamppisserver.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import nat20.kamppisserver.api.SwipeController
-import nat20.kamppisserver.domain.Swipe
 import nat20.kamppisserver.domain.SwipeRequest
 import nat20.kamppisserver.domain.SwipeResponse
 import nat20.kamppisserver.domain.User

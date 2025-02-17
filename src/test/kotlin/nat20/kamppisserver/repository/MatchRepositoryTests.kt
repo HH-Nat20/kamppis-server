@@ -1,12 +1,9 @@
-package nat20.kamppisserver
+package nat20.kamppisserver.repository
 
 import nat20.kamppisserver.domain.Match
 import nat20.kamppisserver.domain.User
-import nat20.kamppisserver.repository.MatchRepository
-import nat20.kamppisserver.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertNotEquals
 

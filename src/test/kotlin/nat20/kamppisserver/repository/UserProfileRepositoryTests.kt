@@ -1,14 +1,12 @@
-package nat20.kamppisserver
+package nat20.kamppisserver.repository
 
-import nat20.kamppisserver.repository.UserProfileRepository
-import nat20.kamppisserver.repository.UserRepository
+import nat20.kamppisserver.TestDatabaseMockDataConfiguration
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.User
 import org.junit.jupiter.api.TestInstance
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
