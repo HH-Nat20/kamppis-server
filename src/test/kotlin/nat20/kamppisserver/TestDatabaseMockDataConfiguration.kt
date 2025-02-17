@@ -6,7 +6,8 @@ import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.boot.ApplicationRunner
-import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import java.time.LocalDate
 
@@ -14,11 +15,11 @@ import java.time.LocalDate
  * DataInitializer for test classes. The same data can be found in
  * nat20.kamppisserver.configuration.DatabaseMockDataConfiguration.
  */
-@TestConfiguration
+@Configuration
 @Profile("test")
 class TestDatabaseMockDataConfiguration {
 
-    @Override
+    @Bean
     fun databaseInitializer(userRepository: UserRepository, userProfileRepository: UserProfileRepository) = ApplicationRunner {
         val users = listOf(
             User(
