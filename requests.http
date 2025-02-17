@@ -1,12 +1,12 @@
 ### Get all the messages
-GET http://localhost:8080/api/user/
+GET http://localhost:8080/api/users/
 
 ### Get user with id = 1
-GET http://localhost:8080/api/user/1
+GET http://localhost:8080/api/users/1
 
 ### Get all users who meet search criteria
 // This requests initiates an SQL query from the database
 // The request gets the user's id as a path variable
 // The server looks up this user's search criteria (by user's id)
 // And returns all profiles that meet the user's search criteria
-GET http://localhost:8080/api/user-profile/2/query
+GET http://localhost:8080/api/user-profiles/2/query
