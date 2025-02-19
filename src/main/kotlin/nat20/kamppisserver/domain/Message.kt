@@ -20,9 +20,9 @@ class Message(
 //    @JoinColumn(name = "receiver_id", nullable = false)
 //    var receiver: User,
 
-//    @ManyToOne
-//    @JoinColumn(name = "match_id", nullable = false)
-//    var match: Match,
+    @ManyToOne
+    @JoinColumn(name = "match_id", nullable = false)
+    var match: Match,
 
     @Column(nullable = false)
     var content: String,
@@ -30,7 +30,7 @@ class Message(
 //    @Enumerated(EnumType.STRING)
 //    var status: MessageStatus = MessageStatus.CREATED,
 //
-//    var createdAt: LocalDateTime = LocalDateTime.now(),
+    var createdAt: LocalDateTime? = LocalDateTime.now(),
 //
 //    @UpdateTimestamp
 //    var updatedAt: LocalDateTime? = null,
@@ -42,4 +42,20 @@ class Message(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-    )
+) {
+    fun toMessageDTO(): MessageDTO {
+        return MessageDTO(
+            senderEmail = sender.email,
+            matchId = match.id ?: throw IllegalStateException("Match ID is null"),
+            content = content,
+            createdAt = createdAt,
+        )
+    }
+}
+
+data class MessageDTO(
+    val senderEmail: String,
+    val matchId: Long,
+    val content: String,
+    val createdAt: LocalDateTime?,
+)

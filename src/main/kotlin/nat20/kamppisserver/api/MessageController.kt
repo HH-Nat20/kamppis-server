@@ -1,13 +1,16 @@
 package nat20.kamppisserver.api
 
 import nat20.kamppisserver.domain.Message
+import nat20.kamppisserver.domain.MessageDTO
+import nat20.kamppisserver.repository.MatchRepository
+import nat20.kamppisserver.repository.MessageRepository
 import nat20.kamppisserver.service.UserService
 //import nat20.kamppisserver.service.MessageService
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.messaging.simp.SimpMessagingTemplate
+import org.springframework.messaging.simp.annotation.SubscribeMapping
 import org.springframework.web.bind.annotation.*
 
 /**
@@ -19,7 +22,9 @@ import org.springframework.web.bind.annotation.*
 class MessageController(
 //    private val messageService: MessageService,
     private val userService: UserService,
-    private val messagingTemplate: SimpMessagingTemplate
+    private val messagingTemplate: SimpMessagingTemplate,
+    private val messageRepository: MessageRepository,
+    private val matchRepository: MatchRepository
 ) {
 
 //    @PostMapping("/matches/{matchId}/start-chat")
@@ -32,25 +37,52 @@ class MessageController(
     //@SendTo("/user/matches/{matchId}/messages") // Send content to subscribers of /user/matches/{matchId}/messages
     // SendTo requires /topic by default, but we are using /user so we need to manually set the destination
     fun sendMessage(
-        @DestinationVariable matchId: String,
-        @Payload message: Message,
-        headerAccessor: SimpMessageHeaderAccessor
-    ): Message
+        @DestinationVariable matchId: Long,
+        @Payload messageDTO: MessageDTO,
+    )
         {
-        val email = headerAccessor.getFirstNativeHeader("user-email")
-            ?: throw IllegalAccessException("Unauthorized: Missing user-email header")
-
-        val user = userService.findUserByEmail(email)
+        val user = userService.findUserByEmail(messageDTO.senderEmail)
             ?: throw IllegalAccessException("Unauthorized: User does not exist")
 
-        println("User ${user.email} sent message to match $matchId: ${message.content}")
+        val match = matchRepository.findById(matchId)
+            .orElseThrow { IllegalArgumentException("Match not found") }
 
+        val message = Message(
+            sender = user,
+            match = match,
+            content = messageDTO.content,
+        )
+        val savedMessage = messageRepository.save(message)
         // Ensure we send to the correct broker destination
         val destination = "/user/matches/$matchId/messages"
+        println(destination)
+        // Broadcast only the necessary details
+        val responseDTO = MessageDTO(
+            senderEmail = savedMessage.sender.email,
+            matchId = savedMessage.match.id!!,
+            content = savedMessage.content,
+            createdAt = savedMessage.createdAt
+        )
+        // This will be broadcast to subscribed clients
+        messagingTemplate.convertAndSend(destination, responseDTO)
+    }
 
-        messagingTemplate.convertAndSend(destination, message)
+    @SubscribeMapping("/matches/{matchId}/messages")
+    fun sendHistory(@DestinationVariable matchId: Long) {
+        println("messageHistory requested")
+        val messageHistory = messageRepository.findByMatchIdOrderByCreatedAtAsc(matchId)
+        println("messageHistory retrieved")
 
-        return message // This will be broadcast to subscribed clients
+// Convert to DTO and send previous messages to the user who just subscribed
+        messageHistory.forEach { message ->
+            val messageDTO = MessageDTO(
+                senderEmail = message.sender.email,
+                matchId = message.match.id!!,
+                content = message.content,
+                createdAt = message.createdAt
+            )
+            messagingTemplate.convertAndSend("/user/matches/$matchId/messages", messageDTO)
+        }
     }
 
     /** Still experimenting, might never be used

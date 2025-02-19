@@ -14,9 +14,11 @@
 <label for="userEmailInput">User email:</label>
 <input type="text" id="userEmailInput" placeholder="alice.smith@example.com" size="25"/>
 <button onclick="changeUser()">Change User</button>
+<br>
+<small>alice.smith@example.com, bob.johnson@example.com, charlie.davis@example.com, diana.lee@example.com, eve.brown@example.com</small>
 <br><br>
 
-<input type="number" id="matchIdInput" placeholder="Enter match ID (default 1)" />
+<input type="number" id="matchIdInput" placeholder="Enter match ID (default 1)" size="20"/>
 <button onclick="changeMatch()">Switch Room</button>
 <br><br>
 
@@ -40,7 +42,6 @@
     function connect() {
         stompClient = new Client({
             brokerURL: "ws://localhost:8080/ws",
-            connectHeaders: { "user-email": userEmail },  // Add user-email
             onConnect: (frame) => {
                 console.log("Connected: " + frame);
 
@@ -67,15 +68,17 @@
             // Unsubscribe from previous match if subscribed
             if (subscription) {
                 subscription.unsubscribe();
-                subscription = null;
             }
+
+            // Clear old messages from UI
+            const messagesList = document.getElementById("messages");
+            messagesList.innerHTML = ""
 
             matchId = newMatchId; // Update matchId
             alert(`Switched to match: ${matchId}`);
 
-            // Subscribe to the new match messages
+            // Subscribe to the new match's messages
             subscribeToMatch();
-            updateMessageDisplay(); // Show messages for new match
         }
     }
 
@@ -83,12 +86,14 @@
         if (stompClient && stompClient.connected) {
             if (subscription) {
                 subscription.unsubscribe();
-                subscription = null;
             }
+            // Clear old messages from UI
+            const messagesList = document.getElementById("messages");
+            messagesList.innerHTML = ""
+
             subscription = stompClient.subscribe(`/user/matches/${matchId}/messages`, function (message) {
                 const msg = JSON.parse(message.body);
-                saveMessage(matchId, msg);
-                showMessage(msg);
+                showMessage(msg); // Display each new message
             });
         }
     }
@@ -114,49 +119,30 @@
     function sendMessage() {
         const messageContent = document.getElementById("messageInput").value;
         if (stompClient && stompClient.connected && messageContent) {
-            const message = {
+            const messageDTO = {
                 content: messageContent,
-                sender: { email: userEmail } // Make `sender` a User object
+                senderEmail: userEmail, // Email only
+                matchId: matchId,       // Match ID for backend processing
+                createdAt: new Date().toISOString()
             };
             // Clients send messages to ("/app/matches/{matchId}/messages")
             stompClient.publish({
                 destination: `/app/matches/${matchId}/messages`,
-                body: JSON.stringify(message),
-                headers: { "user-email": userEmail } // Add custom header
-                }
-            )}
-    }
-
-    window.saveMessage = function (room, message) {
-        if (!messages[room]) messages[room] = [];
-        messages[room].push(message);
-        localStorage.setItem("chatMessages", JSON.stringify(messages)); // Store in localStorage
-    }
-
-     window.updateMessageDisplay = function () {
-        const messagesList = document.getElementById("messages");
-        messagesList.innerHTML = ""; // Clear messages
-
-        const storedMessages = messages[matchId] || [];
-        storedMessages.forEach(msg => showMessage(msg));
+                body: JSON.stringify(messageDTO)
+                });
+        }
     }
 
     function showMessage(message) {
         const messagesList = document.getElementById("messages");
         const li = document.createElement("li");
 
-        const senderEmail = message.sender?.email || "Unknown";
+        const senderEmail = message.senderEmail || "Unknown";
         const messageContent = message.content || "No content";
 
         li.appendChild(document.createTextNode(`${senderEmail}: ${messageContent}`));
         messagesList.appendChild(li);
     }
-
-    // Restore messages from localStorage on page load
-    window.onload = function () {
-        messages = JSON.parse(localStorage.getItem("chatMessages")) || {};
-        updateMessageDisplay();
-    };
 
     window.connect = connect;
     window.disconnect = disconnect;

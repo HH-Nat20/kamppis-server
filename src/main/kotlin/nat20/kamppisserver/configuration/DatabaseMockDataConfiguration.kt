@@ -151,6 +151,9 @@ class DatabaseMockDataConfiguration {
         val matches = listOf(
             Match(
                 users = mutableSetOf(userRepository.findById(1L).get(), userRepository.findById(2L).get())
+            ),
+            Match(
+                users = mutableSetOf(userRepository.findById(1L).get(), userRepository.findById(3L).get())
             )
         )
 

@@ -21,10 +21,10 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
 
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
         // Clients subscribe to messages at ("/user/matches/{matchId}/messages")
-        registry.enableSimpleBroker("/user")
+        registry.enableSimpleBroker("/user", "/topic", "/app")
 
         // Clients send messages to ("/app/matches/{matchId}/messages")
-        registry.setApplicationDestinationPrefixes("/app")
+        registry.setApplicationDestinationPrefixes("/app", "/topic", "/user")
 
         registry.setUserDestinationPrefix("/user")
     }
