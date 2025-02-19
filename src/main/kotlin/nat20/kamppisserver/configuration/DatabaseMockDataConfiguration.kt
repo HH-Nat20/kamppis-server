@@ -1,11 +1,9 @@
 package nat20.kamppisserver.configuration
 
-import nat20.kamppisserver.domain.User
-import nat20.kamppisserver.domain.UserProfile
+import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
-import nat20.kamppisserver.domain.Gender
-import nat20.kamppisserver.domain.UserPhoto
+import nat20.kamppisserver.repository.MatchRepository
 import nat20.kamppisserver.repository.UserPhotoRepository
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
@@ -23,7 +21,8 @@ class DatabaseMockDataConfiguration {
     @Bean
     fun databaseInitializer(userRepository: UserRepository,
                             userProfileRepository: UserProfileRepository,
-                            userPhotoRepository: UserPhotoRepository
+                            userPhotoRepository: UserPhotoRepository,
+                            matchRepository: MatchRepository
     ) = ApplicationRunner {
 
         val users = listOf(
@@ -148,6 +147,15 @@ class DatabaseMockDataConfiguration {
 
         // Save photos to database
         userPhotoRepository.saveAll(userPhotos)
+
+        val matches = listOf(
+            Match(
+                users = mutableSetOf(userRepository.findById(1L).get(), userRepository.findById(2L).get())
+            )
+        )
+
+        // Save matches to database
+        matchRepository.saveAll(matches)
 
     }
 }

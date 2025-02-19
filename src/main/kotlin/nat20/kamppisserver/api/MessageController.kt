@@ -1,14 +1,13 @@
 package nat20.kamppisserver.api
 
 import nat20.kamppisserver.domain.Message
-import nat20.kamppisserver.service.MessageService
+//import nat20.kamppisserver.service.MessageService
 import org.springframework.http.ResponseEntity
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
-import org.springframework.messaging.handler.annotation.SendTo
-import org.springframework.ui.Model
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor
+import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.web.bind.annotation.*
 
 /**
@@ -17,18 +16,31 @@ import org.springframework.web.bind.annotation.*
  * Lacking PUT and DELETE methods and quite a lot of logic.
  */
 @RestController
-class MessageController(private val messageService: MessageService) {
+class MessageController(
+//    private val messageService: MessageService,
+    private val messagingTemplate: SimpMessagingTemplate
+) {
 
-    @PostMapping("/matches/{matchId}/start-chat")
-    fun startChat(@PathVariable matchId: Long): ResponseEntity<Message> {
-        val message = messageService.startChat(matchId)
-        return ResponseEntity.ok(message)
-    }
+//    @PostMapping("/matches/{matchId}/start-chat")
+//    fun startChat(@PathVariable matchId: Long): ResponseEntity<Message> {
+//        val message = messageService.startChat(matchId)
+//        return ResponseEntity.ok(message)
+//    }
 
     @MessageMapping("/matches/{matchId}/messages") // Listen to messages from /app/matches/{matchId}/messages
-    @SendTo("/topic/matches/{matchId}/messages") // Send content to subscribers of /topic/matches/{matchId}/messages
-    fun sendMessage(@DestinationVariable matchId: String, @Payload message: Message): Message {
+    //@SendTo("/user/matches/{matchId}/messages") // Send content to subscribers of /user/matches/{matchId}/messages
+    // SendTo requires /topic by default, but we are using /user so we need to manually set the destination
+    fun sendMessage(
+        @DestinationVariable matchId: String,
+        @Payload message: Message,
+        headerAccessor: SimpMessageHeaderAccessor
+    ): Message
+        {
         println("Received message for match $matchId: ${message.content}")
+        // Ensure we send to the correct broker destination
+        val destination = "/user/matches/$matchId/messages"
+        messagingTemplate.convertAndSend(destination, message)
+
         return message // This will be broadcast to subscribed clients
     }
 

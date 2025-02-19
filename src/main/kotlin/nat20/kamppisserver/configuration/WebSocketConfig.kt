@@ -31,19 +31,19 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
         registry.addEndpoint("/ws") // WebSocket entry point
-            // TODO .setAllowedOrigins("http://localhost:8080")
-            .withSockJS()
+            .setAllowedOrigins("*")
+            //.withSockJS()
     }
 
-    override fun configureMessageConverters(messageConverters: MutableList<MessageConverter>): Boolean {
-        val resolver = DefaultContentTypeResolver()
-        resolver.defaultMimeType = MimeTypeUtils.APPLICATION_JSON
-        val converter = MappingJackson2MessageConverter()
-        converter.objectMapper = ObjectMapper()
-        converter.contentTypeResolver = resolver
-        messageConverters.add(converter)
-
-        return false
-    }
+//    override fun configureMessageConverters(messageConverters: MutableList<MessageConverter>): Boolean {
+//        val resolver = DefaultContentTypeResolver()
+//        resolver.defaultMimeType = MimeTypeUtils.APPLICATION_JSON
+//        val converter = MappingJackson2MessageConverter()
+//        converter.objectMapper = ObjectMapper()
+//        converter.contentTypeResolver = resolver
+//        messageConverters.add(converter)
+//
+//        return false
+//    }
 
 }
