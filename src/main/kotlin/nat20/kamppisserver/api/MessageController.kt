@@ -1,8 +1,8 @@
 package nat20.kamppisserver.api
 
 import nat20.kamppisserver.domain.Message
+import nat20.kamppisserver.service.UserService
 //import nat20.kamppisserver.service.MessageService
-import org.springframework.http.ResponseEntity
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class MessageController(
 //    private val messageService: MessageService,
+    private val userService: UserService,
     private val messagingTemplate: SimpMessagingTemplate
 ) {
 
@@ -36,9 +37,17 @@ class MessageController(
         headerAccessor: SimpMessageHeaderAccessor
     ): Message
         {
-        println("Received message for match $matchId: ${message.content}")
+        val email = headerAccessor.getFirstNativeHeader("user-email")
+            ?: throw IllegalAccessException("Unauthorized: Missing user-email header")
+
+        val user = userService.findUserByEmail(email)
+            ?: throw IllegalAccessException("Unauthorized: User does not exist")
+
+        println("User ${user.email} sent message to match $matchId: ${message.content}")
+
         // Ensure we send to the correct broker destination
         val destination = "/user/matches/$matchId/messages"
+
         messagingTemplate.convertAndSend(destination, message)
 
         return message // This will be broadcast to subscribed clients

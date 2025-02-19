@@ -7,4 +7,6 @@ import nat20.kamppisserver.domain.UserStatus
 
 interface UserRepository : JpaRepository<User, Long> {
     fun findAllByStatus(status: UserStatus): List<User>
+
+    fun findByEmail(email: String): User?
 }

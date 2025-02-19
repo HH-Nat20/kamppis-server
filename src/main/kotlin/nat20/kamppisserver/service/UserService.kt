@@ -29,4 +29,8 @@ class UserService(private val repository: UserRepository) {
         return repository.findAllByStatus(UserStatus.ONLINE)
     }
 
+    fun findUserByEmail(email: String): User? {
+        return repository.findByEmail(email)
+    }
+
 }

@@ -12,9 +12,7 @@
 <br><br>
 
 <label for="userEmailInput">User email:</label>
-<input type="text" id="userEmailInput" placeholder="alice.smith@example.com" />
-<label for="userIdInput">ID:</label>
-<input type="number" id="userIdInput" placeholder="1" maxlength="4" size="4"/>
+<input type="text" id="userEmailInput" placeholder="alice.smith@example.com" size="25"/>
 <button onclick="changeUser()">Change User</button>
 <br><br>
 
@@ -35,7 +33,6 @@
     let stompClient = null;
 
     let userEmail = "alice.smith@example.com";
-    let userId = 1;
     let matchId = 1; // Default matchId
     let subscription = null; // Store the subscription
     let messages = {}; // Store messages for each matchId
@@ -43,13 +40,12 @@
     function connect() {
         stompClient = new Client({
             brokerURL: "ws://localhost:8080/ws",
+            connectHeaders: { "user-email": userEmail },  // Add user-email
             onConnect: (frame) => {
                 console.log("Connected: " + frame);
 
                 // Subscribe to messages
-                stompClient.subscribe(`/user/matches/${matchId}/messages`, (message) => {
-                    showMessage(JSON.parse(message.body));
-                });
+                subscribeToMatch();
             },
             onDisconnect: () => console.log("Disconnected"),
             debug: (msg) => console.log(msg),
@@ -71,6 +67,7 @@
             // Unsubscribe from previous match if subscribed
             if (subscription) {
                 subscription.unsubscribe();
+                subscription = null;
             }
 
             matchId = newMatchId; // Update matchId
@@ -84,6 +81,10 @@
 
     window.subscribeToMatch = function () {
         if (stompClient && stompClient.connected) {
+            if (subscription) {
+                subscription.unsubscribe();
+                subscription = null;
+            }
             subscription = stompClient.subscribe(`/user/matches/${matchId}/messages`, function (message) {
                 const msg = JSON.parse(message.body);
                 saveMessage(matchId, msg);
@@ -95,15 +96,19 @@
     // Must explicitly attach changeUser to the global window object due to <script type="module">
     window.changeUser = function () {
         const newEmail = document.getElementById("userEmailInput").value;
-        const newId = document.getElementById("userIdInput").value;
 
-        if (newEmail && newId) {
+        if (newEmail) {
             userEmail = newEmail;
-            userId = parseInt(newId);
-            alert(`User changed to: ${userEmail} (ID: ${userId})`);
+            alert(`User changed to: ${userEmail}`);
+
+            disconnect();
+            setTimeout(connect, 500) // Small delay to ensure proper connection
+
         } else {
-            alert("Please enter a valid email and ID.");
+            alert("Please enter a valid email.");
         }
+
+
     }
 
     function sendMessage() {
@@ -111,11 +116,15 @@
         if (stompClient && stompClient.connected && messageContent) {
             const message = {
                 content: messageContent,
-                sender: { email: userEmail, id: userId } // Make `sender` a User object
+                sender: { email: userEmail } // Make `sender` a User object
             };
             // Clients send messages to ("/app/matches/{matchId}/messages")
-            stompClient.publish({ destination: `/app/matches/${matchId}/messages`, body: JSON.stringify(message) });
-        }
+            stompClient.publish({
+                destination: `/app/matches/${matchId}/messages`,
+                body: JSON.stringify(message),
+                headers: { "user-email": userEmail } // Add custom header
+                }
+            )}
     }
 
     window.saveMessage = function (room, message) {
