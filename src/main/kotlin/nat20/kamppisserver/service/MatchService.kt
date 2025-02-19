@@ -2,16 +2,14 @@ package nat20.kamppisserver.service
 
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
-import nat20.kamppisserver.domain.Match
-import nat20.kamppisserver.domain.MatchRequest
-import nat20.kamppisserver.domain.User
-import nat20.kamppisserver.domain.UserProfile
+import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.repository.MatchRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.util.*
 
 @Service
 class MatchService(
@@ -78,4 +76,21 @@ class MatchService(
         val users = mutableSetOf(user1, user2)
         return matchRepository.save(Match(users = users))
     }
+
+    /**
+     * Finds User IDs for specific Match. Used particularly for chats.
+     * @param matchId the match for which to check for users.
+     * @return tuple with two user IDs.
+     */
+    fun getUserIdsForMatch(matchId: Long): Pair<Long, Long>? {
+        val match = matchRepository.findById(matchId).orElse(null) ?: return null
+
+        val users = match.users.toList()
+        if (users.size != 2) {
+            throw IllegalStateException("A match must have exactly two users to start a chat.")
+        }
+
+        return users[0].id!! to users[1].id!!
+    }
+
 }
