@@ -11,6 +11,17 @@
 <button onclick="disconnect()">Disconnect</button>
 <br><br>
 
+<label for="userEmailInput">User email:</label>
+<input type="text" id="userEmailInput" placeholder="alice.smith@example.com" />
+<label for="userIdInput">ID:</label>
+<input type="number" id="userIdInput" placeholder="1" maxlength="4" size="4"/>
+<button onclick="changeUser()">Change User</button>
+<br><br>
+
+<input type="number" id="matchIdInput" placeholder="Enter match ID (default 1)" />
+<button onclick="changeMatch()">Switch Room</button>
+<br><br>
+
 <h3>Send a Message</h3>
 <input type="text" id="messageInput" placeholder="Type a message">
 <button onclick="sendMessage()">Send</button>
@@ -23,6 +34,12 @@
 
     let stompClient = null;
 
+    let userEmail = "alice.smith@example.com";
+    let userId = 1;
+    let matchId = 1; // Default matchId
+    let subscription = null; // Store the subscription
+    let messages = {}; // Store messages for each matchId
+
     function connect() {
         stompClient = new Client({
             brokerURL: "ws://localhost:8080/ws",
@@ -30,8 +47,8 @@
                 console.log("Connected: " + frame);
 
                 // Subscribe to messages
-                stompClient.subscribe("/user/matches/1/messages", (message) => {
-                    showMessage(JSON.parse(message.body).content);
+                stompClient.subscribe(`/user/matches/${matchId}/messages`, (message) => {
+                    showMessage(JSON.parse(message.body));
                 });
             },
             onDisconnect: () => console.log("Disconnected"),
@@ -47,24 +64,90 @@
         }
     }
 
+    window.changeMatch = function () {
+        const newMatchId = document.getElementById("matchIdInput").value;
+
+        if (newMatchId && newMatchId !== matchId) {
+            // Unsubscribe from previous match if subscribed
+            if (subscription) {
+                subscription.unsubscribe();
+            }
+
+            matchId = newMatchId; // Update matchId
+            alert(`Switched to match: ${matchId}`);
+
+            // Subscribe to the new match messages
+            subscribeToMatch();
+            updateMessageDisplay(); // Show messages for new match
+        }
+    }
+
+    window.subscribeToMatch = function () {
+        if (stompClient && stompClient.connected) {
+            subscription = stompClient.subscribe(`/user/matches/${matchId}/messages`, function (message) {
+                const msg = JSON.parse(message.body);
+                saveMessage(matchId, msg);
+                showMessage(msg);
+            });
+        }
+    }
+
+    // Must explicitly attach changeUser to the global window object due to <script type="module">
+    window.changeUser = function () {
+        const newEmail = document.getElementById("userEmailInput").value;
+        const newId = document.getElementById("userIdInput").value;
+
+        if (newEmail && newId) {
+            userEmail = newEmail;
+            userId = parseInt(newId);
+            alert(`User changed to: ${userEmail} (ID: ${userId})`);
+        } else {
+            alert("Please enter a valid email and ID.");
+        }
+    }
+
     function sendMessage() {
         const messageContent = document.getElementById("messageInput").value;
         if (stompClient && stompClient.connected && messageContent) {
             const message = {
                 content: messageContent,
-                sender: { email: "alice.smith@example.com", id: 1 } // Make `sender` a User object
+                sender: { email: userEmail, id: userId } // Make `sender` a User object
             };
             // Clients send messages to ("/app/matches/{matchId}/messages")
-            stompClient.publish({ destination: "/app/matches/1/messages", body: JSON.stringify(message) });
+            stompClient.publish({ destination: `/app/matches/${matchId}/messages`, body: JSON.stringify(message) });
         }
+    }
+
+    window.saveMessage = function (room, message) {
+        if (!messages[room]) messages[room] = [];
+        messages[room].push(message);
+        localStorage.setItem("chatMessages", JSON.stringify(messages)); // Store in localStorage
+    }
+
+     window.updateMessageDisplay = function () {
+        const messagesList = document.getElementById("messages");
+        messagesList.innerHTML = ""; // Clear messages
+
+        const storedMessages = messages[matchId] || [];
+        storedMessages.forEach(msg => showMessage(msg));
     }
 
     function showMessage(message) {
         const messagesList = document.getElementById("messages");
         const li = document.createElement("li");
-        li.appendChild(document.createTextNode(message));
+
+        const senderEmail = message.sender?.email || "Unknown";
+        const messageContent = message.content || "No content";
+
+        li.appendChild(document.createTextNode(`${senderEmail}: ${messageContent}`));
         messagesList.appendChild(li);
     }
+
+    // Restore messages from localStorage on page load
+    window.onload = function () {
+        messages = JSON.parse(localStorage.getItem("chatMessages")) || {};
+        updateMessageDisplay();
+    };
 
     window.connect = connect;
     window.disconnect = disconnect;
