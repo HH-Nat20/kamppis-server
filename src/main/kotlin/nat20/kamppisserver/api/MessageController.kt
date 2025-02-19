@@ -1,15 +1,15 @@
 package nat20.kamppisserver.api
 
 import nat20.kamppisserver.domain.Message
+import nat20.kamppisserver.service.MessageService
+import org.springframework.http.ResponseEntity
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RestController
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor
+import org.springframework.web.bind.annotation.*
 
 /**
  * Controller for Message.
@@ -17,7 +17,13 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor
  * Lacking PUT and DELETE methods and quite a lot of logic.
  */
 @RestController
-class MessageController {
+class MessageController(private val messageService: MessageService) {
+
+    @PostMapping("/matches/{matchId}/start-chat")
+    fun startChat(@PathVariable matchId: Long): ResponseEntity<Message> {
+        val message = messageService.startChat(matchId)
+        return ResponseEntity.ok(message)
+    }
 
     @MessageMapping("/matches/{matchId}/messages") // Listen to messages from /app/matches/{matchId}/messages
     @SendTo("/topic/matches/{matchId}/messages") // Send content to subscribers of /topic/matches/{matchId}/messages
