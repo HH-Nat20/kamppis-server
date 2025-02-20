@@ -46,7 +46,7 @@ class UserProfileServiceTest {
 
     @Test
     fun `update should throw EntityNotFoundException when profile not found`() {
-        val id = 6L
+        val id = 1000000L
         val updatedProfile = UserProfile(
             id = id,
             user = User(email = "test@example.com"),
@@ -78,7 +78,7 @@ class UserProfileServiceTest {
 
     @Test
     fun `delete should throw EntityNotFoundException when profile not found`() {
-        val id = 6L
+        val id = 1000000L
 
         val exception = assertThrows<EntityNotFoundException> {
             service.delete(id)
