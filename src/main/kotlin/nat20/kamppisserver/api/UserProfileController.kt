@@ -1,6 +1,7 @@
 package nat20.kamppisserver.api
 
 import nat20.kamppisserver.domain.UserProfile
+import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserProfileService
 import org.springframework.http.HttpStatus
@@ -47,7 +48,7 @@ class UserProfileController(private val service: UserProfileService, private val
     }
 
     @GetMapping("/{id}/query")
-    fun findUserProfilesThatMeetCriteria(@PathVariable id: Long): MutableIterable<UserProfile> {
+    fun findUserProfilesThatMeetCriteria(@PathVariable id: Long): MutableIterable<UserProfileDTO> {
         return queryService.findUserProfilesThatMeetCriteria(id)
     }
 }
