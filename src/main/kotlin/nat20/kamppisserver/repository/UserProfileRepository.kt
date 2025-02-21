@@ -13,9 +13,9 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
         @Param("id") id: Long?): UserProfile
 
     /* Click to see SQL QUERY explanation
-    * 1) SELECT * FROM \"users\"
-    * -> We want to find all the users (and get all their user info) that match the criteria in the query,
-    * -> so we select all users from the "users" table
+    * 1) SELECT * FROM \"user_profiles\"
+    * -> We want to find all the user profiles (and all their relevant info according to the DTO) that match the criteria in the query
+    * -> For this, we select all columns in the user profiles from the "user_profiles" table
     *
     * 2) WHERE
     * -> Here we specify the query filters
@@ -24,13 +24,18 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     * -> We don't want to include the user who made the query in the results,
     * -> so we exclude them from the returned users
     *
-    * 4) (TIMESTAMPDIFF(YEAR, \"date_of_birth\", CURDATE()) BETWEEN :minAgePreference AND :maxAgePreference)
+    * 4) (DATEDIFF(year, "date_of_birth", CURDATE()) + CASE WHEN DATEADD(year, DATEDIFF(year, "date_of_birth", CURDATE()), "date_of_birth") > CURDATE() THEN -1 ELSE 0 END) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)
     * -> We calculate user's age based on their date of birth
-    * -> We include only those users who fit min and max age preferences
+    * -> We remove 1 year if the user's has not yet had their birthday this year
+    * -> We include only those users who fit min and max age preferences (inclusive)
+    * -> If user has not set any age preferences (i.e. null), values 0 and 1000 are used to include user profiles of all ages
     *
     * More criteria and parameters will be added */
 
-    @Query(value= "SELECT * FROM \"user_profiles\" WHERE (\"id\" != :id) AND (TIMESTAMPDIFF(YEAR, \"date_of_birth\", CURDATE()) BETWEEN :minAgePreference AND :maxAgePreference)", nativeQuery = true)
+    // PostgreSQL query for when we have external database --> TODO: figure out how to use this query when connected to PostgreSQL database, and the other query when using runtime database
+    //@Query(value= "SELECT * FROM \"user_profiles\" WHERE (\"id\" != :id) AND (EXTRACT(YEAR FROM AGE(current_date, \"date_of_birth\"))) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000))", nativeQuery = true)
+
+    @Query(value= "SELECT * FROM \"user_profiles\" WHERE (\"id\" != :id) AND (DATEDIFF(YEAR, \"date_of_birth\", CURDATE()) + CASE WHEN DATEADD(YEAR, DATEDIFF(YEAR, \"date_of_birth\", CURDATE()), \"date_of_birth\") > CURDATE() THEN -1 ELSE 0 END) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)", nativeQuery = true)
     fun findUserProfilesThatMeetCriteria(
         @Param("id") id: Long?,
         @Param("minAgePreference") minAgePreference: Int?,

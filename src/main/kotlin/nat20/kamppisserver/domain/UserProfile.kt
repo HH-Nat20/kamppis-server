@@ -5,6 +5,7 @@ import nat20.kamppisserver.util.JsonStringListConverter
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 /**
  * Entity class for UserProfile.
@@ -56,4 +57,36 @@ class UserProfile(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
+)
+
+fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
+    var userProfileDTO: UserProfileDTO = UserProfileDTO(
+        userId = userProfile.user.id!!,
+        firstName = userProfile.firstName,
+        lastName = userProfile.lastName,
+        age = ChronoUnit.YEARS.between(userProfile.dateOfBirth, LocalDate.now()),
+        gender = userProfile.gender,
+        bio = userProfile.bio,
+        locations = userProfile.locations,
+        userPhotos = userProfile.userPhotos,
+        userHabits = userProfile.userHabits,
+        userInterests = userProfile.userInterests,
+        id = userProfile.id!!,
+        )
+
+    return userProfileDTO
+}
+
+data class UserProfileDTO(
+    val userId: Long,
+    val firstName: String,
+    val lastName: String,
+    val age: Long,
+    val gender: Gender,
+    val userPhotos: MutableList<UserPhoto>?,
+    val userHabits: MutableList<UserHabit>?,
+    val userInterests: MutableList<UserInterest>?,
+    val bio: String? = null,
+    val locations: List<String>,
+    val id: Long
 )
