@@ -17,6 +17,9 @@ class User(
     * ADD FIELDS HERE AS REQUIRED
     * */
 
+    @ManyToMany(mappedBy = "users") // This makes it bidirectional
+    var matches: MutableSet<Match> = mutableSetOf(),
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

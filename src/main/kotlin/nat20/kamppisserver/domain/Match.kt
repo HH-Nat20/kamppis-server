@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "matches")
 class Match(
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "matches_users",
         joinColumns = [JoinColumn(name = "match_id")],
