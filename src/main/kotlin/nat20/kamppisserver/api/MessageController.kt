@@ -60,7 +60,8 @@ class MessageController(
 
         // Check if user is part of match.users (check comment in sendHistory)
         if (match.users.none { it.id == user.id }) {
-            throw IllegalAccessException("Unauthorized: User is not a member of this match")
+            println("User ${user.email} is not a member of match $matchId, ignoring request.")
+            return
         }
 
         val message = Message(
@@ -97,7 +98,8 @@ class MessageController(
         // ! user does not implement equals, so cannot use set.contains() !
         // println("Same object? " + match.users.any { it === user }) > prints false!
         if (match.users.none { it.id == user.id }) {
-            throw IllegalAccessException("Unauthorized: User is not a member of this match")
+            println("User ${user.email} is not a member of match $matchId, ignoring request.")
+            return
         }
 
         val messageHistory = messageRepository.findByMatchIdOrderByCreatedAtAsc(matchId)
