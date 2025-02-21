@@ -91,10 +91,14 @@
             const messagesList = document.getElementById("messages");
             messagesList.innerHTML = ""
 
-            subscription = stompClient.subscribe(`/user/matches/${matchId}/messages`, function (message) {
-                const msg = JSON.parse(message.body);
-                showMessage(msg); // Display each new message
-            });
+            subscription = stompClient.subscribe(
+                `/user/matches/${matchId}/messages`,
+                (message) => {
+                    const msg = JSON.parse(message.body);
+                    showMessage(msg); // Display each new message
+            },
+                { email: userEmail} // Add user email to headers
+            );
         }
     }
 
@@ -128,7 +132,8 @@
             // Clients send messages to ("/app/matches/{matchId}/messages")
             stompClient.publish({
                 destination: `/app/matches/${matchId}/messages`,
-                body: JSON.stringify(messageDTO)
+                body: JSON.stringify(messageDTO),
+                headers: { email: userEmail } // Add user email to headers
                 });
         }
     }
