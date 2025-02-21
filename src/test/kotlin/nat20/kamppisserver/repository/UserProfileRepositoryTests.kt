@@ -10,9 +10,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
+import java.time.LocalDate
+
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 import kotlin.test.assertFalse
+
 
 /**
  * Test class for UserProfileRepository.
@@ -21,38 +25,70 @@ import kotlin.test.assertFalse
 @Import(TestDatabaseMockDataConfiguration::class)
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UserProfileRepositoryTests {
+class UserProfileRepositoryTests @Autowired constructor(
+    val userProfileRepository: UserProfileRepository,
+    val userRepository: UserRepository
+) {
 
-    @Autowired
-    private lateinit var userProfileRepository: UserProfileRepository
 
-    @Autowired
-    private lateinit var userRepository: UserRepository
+
+    /*
+    * Here we set a base date so that our tests always calculate the same age for all users regardless of when the tests are actually run
+    * If we use LocalDate.now(), tests will fail because ages will be calculated differently depending on when LocalDate.now() actually is
+    */
+    val testDate: LocalDate = LocalDate.of(2025, 2, 21)
 
     @Test
     fun `should return the correct UserProfile by User-objects id`() {
-        val user: User? = userRepository.findByIdOrNull(1L)
-        val userProfile: UserProfile = userProfileRepository.findByUserId(user?.id)
+        val user: User = userRepository.findByIdOrNull(1L)!!
+        val userProfile: UserProfile = userProfileRepository.findByUserId(user.id)
         assertEquals("Alice", userProfile.firstName)
     }
 
     @Test
     fun `query should not return the user's own profile`() {
-        val userProfile: UserProfile? = userProfileRepository.findByIdOrNull(1L)
+        val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
 
         val listOfUserProfiles: MutableIterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
-                userProfile?.user?.id,
-                userProfile?.minAgePreference,
-                userProfile?.maxAgePreference)
+                userProfile.user.id,
+                testDate,
+                userProfile.minAgePreference,
+                userProfile.maxAgePreference)
 
         assertFalse(userProfile in listOfUserProfiles)
     }
 
     @Test
     fun `query should return UserProfiles whose age fit between user's min and max age preferences`(){
-        // write test here
+        val numberOfMatchingUserProfiles: Int = 6
+        val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
+
+        val listOfUserProfiles: MutableIterable<UserProfile> =
+            userProfileRepository.findUserProfilesThatMeetCriteria(
+                userProfile.user.id,
+                testDate,
+                userProfile.minAgePreference,
+                userProfile.maxAgePreference
+            )
+
+        assertEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
     }
 
+    @Test
+    fun `query should return incorrect amount of profiles when query date is incorrect`(){
+        val incorrectDate = LocalDate.of(2022, 2, 21)
+        val numberOfMatchingUserProfiles: Int = 6 // matching profile count is counted using ages calculated on 2025-2-21
+        val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
 
+        val listOfUserProfiles: MutableIterable<UserProfile> =
+            userProfileRepository.findUserProfilesThatMeetCriteria(
+                userProfile.user.id,
+                incorrectDate,
+                userProfile.minAgePreference,
+                userProfile.maxAgePreference
+            )
+
+        assertNotEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
+    }
 }
