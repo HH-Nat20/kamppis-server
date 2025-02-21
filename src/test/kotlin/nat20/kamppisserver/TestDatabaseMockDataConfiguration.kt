@@ -105,12 +105,13 @@ class TestDatabaseMockDataConfiguration {
         // Save all mock users to the database
         userRepository.saveAll(users)
 
+        // NOTE! Ages are calculated on 2025-2-21
         val userProfiles = listOf(
             UserProfile(
                 user = userRepository.findById(1L).get(),
                 firstName = "Alice",
                 lastName = "Smith",
-                dateOfBirth = LocalDate.of(1990, 5, 14),
+                dateOfBirth = LocalDate.of(1990, 5, 14), // Age 34
                 gender = Gender.FEMALE,
                 minAgePreference = 22,
                 maxAgePreference = 27,
@@ -123,7 +124,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(2L).get(),
                 firstName = "Bob",
                 lastName = "Johnson",
-                dateOfBirth = LocalDate.of(1985, 11, 22),
+                dateOfBirth = LocalDate.of(1985, 11, 22), // Age 39
                 gender = Gender.MALE,
                 minAgePreference = 24,
                 maxAgePreference = 37,
@@ -136,7 +137,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(3L).get(),
                 firstName = "Charlie",
                 lastName = "Davis",
-                dateOfBirth = LocalDate.of(1998, 2, 3),
+                dateOfBirth = LocalDate.of(1998, 2, 3), // Age 27
                 gender = Gender.OTHER,
                 minAgePreference = 18,
                 maxAgePreference = 26,
@@ -149,7 +150,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(4L).get(),
                 firstName = "Diana",
                 lastName = "Lee",
-                dateOfBirth = LocalDate.of(2000, 2, 3),
+                dateOfBirth = LocalDate.of(2000, 2, 3), // Age 25
                 gender = Gender.FEMALE,
                 minAgePreference = 31,
                 maxAgePreference = 38,
@@ -162,7 +163,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(5L).get(),
                 firstName = "Eve",
                 lastName = "Brown",
-                dateOfBirth = LocalDate.of(1995, 8, 19),
+                dateOfBirth = LocalDate.of(1995, 8, 19), // Age 29
                 gender = Gender.NOT_IMPORTANT,
                 minAgePreference = 40,
                 maxAgePreference = 55,
@@ -175,7 +176,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(6L).get(),
                 firstName = "Frank",
                 lastName = "Miller",
-                dateOfBirth = LocalDate.of(1988, 3, 22),
+                dateOfBirth = LocalDate.of(1988, 3, 22), // Age 36
                 gender = Gender.MALE,
                 minAgePreference = 22,
                 maxAgePreference = 27,
@@ -188,7 +189,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(7L).get(),
                 firstName = "Grace",
                 lastName = "Wilson",
-                dateOfBirth = LocalDate.of(1992, 7, 15),
+                dateOfBirth = LocalDate.of(1992, 7, 15), // Age 32
                 gender = Gender.FEMALE,
                 minAgePreference = 25,
                 maxAgePreference = 30,
@@ -201,7 +202,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(8L).get(),
                 firstName = "Harry",
                 lastName = "Moore",
-                dateOfBirth = LocalDate.of(1985, 1, 10),
+                dateOfBirth = LocalDate.of(1985, 1, 10), // Age 40
                 gender = Gender.MALE,
                 minAgePreference = 20,
                 maxAgePreference = 26,
@@ -214,7 +215,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(9L).get(),
                 firstName = "Isabella",
                 lastName = "Taylor",
-                dateOfBirth = LocalDate.of(1999, 12, 5),
+                dateOfBirth = LocalDate.of(1999, 12, 5), // Age 25
                 gender = Gender.FEMALE,
                 minAgePreference = 23,
                 maxAgePreference = 28,
@@ -227,7 +228,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(10L).get(),
                 firstName = "Jack",
                 lastName = "Anderson",
-                dateOfBirth = LocalDate.of(1990, 6, 30),
+                dateOfBirth = LocalDate.of(1990, 6, 30), // Age 34
                 gender = Gender.MALE,
                 minAgePreference = 24,
                 maxAgePreference = 29,
@@ -240,7 +241,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(11L).get(),
                 firstName = "Karen",
                 lastName = "Thomas",
-                dateOfBirth = LocalDate.of(1982, 8, 20),
+                dateOfBirth = LocalDate.of(1982, 8, 20), // Age 42
                 gender = Gender.FEMALE,
                 minAgePreference = 26,
                 maxAgePreference = 32,
@@ -253,7 +254,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(12L).get(),
                 firstName = "Luke",
                 lastName = "Jackson",
-                dateOfBirth = LocalDate.of(1995, 4, 2),
+                dateOfBirth = LocalDate.of(1995, 4, 2), // Age 29
                 gender = Gender.MALE,
                 minAgePreference = 21,
                 maxAgePreference = 27,
@@ -266,7 +267,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(13L).get(),
                 firstName = "Mia",
                 lastName = "White",
-                dateOfBirth = LocalDate.of(2000, 2, 17),
+                dateOfBirth = LocalDate.of(2000, 2, 17), // Age 25
                 gender = Gender.FEMALE,
                 minAgePreference = 19,
                 maxAgePreference = 24,
@@ -279,7 +280,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(14L).get(),
                 firstName = "Nathan",
                 lastName = "Harris",
-                dateOfBirth = LocalDate.of(1987, 9, 9),
+                dateOfBirth = LocalDate.of(1987, 9, 9), // Age 37
                 gender = Gender.MALE,
                 minAgePreference = 22,
                 maxAgePreference = 28,
@@ -292,7 +293,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(15L).get(),
                 firstName = "Olivia",
                 lastName = "Martin",
-                dateOfBirth = LocalDate.of(1993, 11, 11),
+                dateOfBirth = LocalDate.of(1993, 11, 11), // Age 31
                 gender = Gender.FEMALE,
                 minAgePreference = 23,
                 maxAgePreference = 29,
@@ -305,7 +306,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(16L).get(),
                 firstName = "Peter",
                 lastName = "Thompson",
-                dateOfBirth = LocalDate.of(1980, 5, 5),
+                dateOfBirth = LocalDate.of(1980, 5, 5), // Age 44
                 gender = Gender.MALE,
                 minAgePreference = 25,
                 maxAgePreference = 30,
@@ -318,7 +319,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(17L).get(),
                 firstName = "Quinn",
                 lastName = "Garcia",
-                dateOfBirth = LocalDate.of(1998, 3, 3),
+                dateOfBirth = LocalDate.of(1998, 3, 3), // Age 26
                 gender = Gender.OTHER,
                 minAgePreference = 20,
                 maxAgePreference = 25,
@@ -331,7 +332,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(18L).get(),
                 firstName = "Rachel",
                 lastName = "Martinez",
-                dateOfBirth = LocalDate.of(1989, 10, 25),
+                dateOfBirth = LocalDate.of(1989, 10, 25), // Age 35
                 gender = Gender.FEMALE,
                 minAgePreference = 21,
                 maxAgePreference = 27,
@@ -344,7 +345,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(19L).get(),
                 firstName = "Samuel",
                 lastName = "Robinson",
-                dateOfBirth = LocalDate.of(1978, 12, 1),
+                dateOfBirth = LocalDate.of(1978, 12, 1), // Age 46
                 gender = Gender.MALE,
                 minAgePreference = 26,
                 maxAgePreference = 33,
@@ -357,7 +358,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(20L).get(),
                 firstName = "Tina",
                 lastName = "Clark",
-                dateOfBirth = LocalDate.of(1996, 7, 19),
+                dateOfBirth = LocalDate.of(1996, 7, 19), // Age 28
                 gender = Gender.FEMALE,
                 minAgePreference = 22,
                 maxAgePreference = 28,
@@ -370,7 +371,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(21L).get(),
                 firstName = "Ursula",
                 lastName = "Rodriguez",
-                dateOfBirth = LocalDate.of(1991, 1, 29),
+                dateOfBirth = LocalDate.of(1991, 1, 29), // Age 34
                 gender = Gender.FEMALE,
                 minAgePreference = 24,
                 maxAgePreference = 30,
@@ -383,7 +384,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(22L).get(),
                 firstName = "Victor",
                 lastName = "Lewis",
-                dateOfBirth = LocalDate.of(1984, 4, 14),
+                dateOfBirth = LocalDate.of(1984, 4, 14), // Age 40
                 gender = Gender.MALE,
                 minAgePreference = 25,
                 maxAgePreference = 31,
@@ -396,7 +397,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(23L).get(),
                 firstName = "Wendy",
                 lastName = "Walker",
-                dateOfBirth = LocalDate.of(1994, 6, 8),
+                dateOfBirth = LocalDate.of(1994, 6, 8), // Age 30
                 gender = Gender.FEMALE,
                 minAgePreference = 23,
                 maxAgePreference = 28,
@@ -409,7 +410,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(24L).get(),
                 firstName = "Xavier",
                 lastName = "Hall",
-                dateOfBirth = LocalDate.of(1986, 9, 30),
+                dateOfBirth = LocalDate.of(1986, 9, 30), // Age 38
                 gender = Gender.MALE,
                 minAgePreference = 20,
                 maxAgePreference = 26,
@@ -422,7 +423,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(25L).get(),
                 firstName = "Yvonne",
                 lastName = "Allen",
-                dateOfBirth = LocalDate.of(1997, 2, 22),
+                dateOfBirth = LocalDate.of(1997, 2, 22), // Age 27
                 gender = Gender.FEMALE,
                 minAgePreference = 22,
                 maxAgePreference = 27,
@@ -435,7 +436,7 @@ class TestDatabaseMockDataConfiguration {
                 user = userRepository.findById(26L).get(),
                 firstName = "Zachary",
                 lastName = "Young",
-                dateOfBirth = LocalDate.of(1983, 11, 12),
+                dateOfBirth = LocalDate.of(1983, 11, 12), // Age 41
                 gender = Gender.MALE,
                 minAgePreference = 24,
                 maxAgePreference = 29,
