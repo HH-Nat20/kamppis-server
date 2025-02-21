@@ -24,4 +24,8 @@ interface MatchRepository : JpaRepository<Match, Long> {
         @Param("id") id: Long?
     ): MutableIterable<UserProfile>
 
+    // Needed for fetching users to avoid LazyInitializationException
+    @Query("SELECT m FROM Match m JOIN FETCH m.users WHERE m.id = :matchId")
+    fun findByIdWithUsers(@Param("matchId") matchId: Long): Match?
+
 }

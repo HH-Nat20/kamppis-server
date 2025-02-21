@@ -1,12 +1,16 @@
 package nat20.kamppisserver.api
 
+import nat20.kamppisserver.domain.Match
 import nat20.kamppisserver.domain.Message
 import nat20.kamppisserver.domain.MessageDTO
+import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.repository.MatchRepository
 import nat20.kamppisserver.repository.MessageRepository
 import nat20.kamppisserver.service.UserService
+import org.springframework.data.repository.findByIdOrNull
 //import nat20.kamppisserver.service.MessageService
 import org.springframework.messaging.handler.annotation.DestinationVariable
+import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.simp.SimpMessagingTemplate
@@ -39,13 +43,26 @@ class MessageController(
     fun sendMessage(
         @DestinationVariable matchId: Long,
         @Payload messageDTO: MessageDTO,
+        @Header("email") userEmail: String
     )
         {
-        val user = userService.findUserByEmail(messageDTO.senderEmail)
+        if (messageDTO.senderEmail != userEmail) {
+            throw IllegalAccessException("Unauthorized: Email mismatch")
+        }
+
+        val user : User = userService.findUserByEmail(messageDTO.senderEmail)
             ?: throw IllegalAccessException("Unauthorized: User does not exist")
 
-        val match = matchRepository.findById(matchId)
-            .orElseThrow { IllegalArgumentException("Match not found") }
+        // If we do not fetch users as well, results in error due to lazy fetching. Read more here:
+        // https://www.baeldung.com/hibernate-initialize-proxy-exception
+        val match : Match = matchRepository.findByIdWithUsers(matchId)
+            ?: throw IllegalArgumentException("Match not found")
+
+        // Check if user is part of match.users (check comment in sendHistory)
+        if (match.users.none { it.id == user.id }) {
+            println("User ${user.email} is not a member of match $matchId, ignoring request.")
+            return
+        }
 
         val message = Message(
             sender = user,
@@ -68,10 +85,25 @@ class MessageController(
     }
 
     @SubscribeMapping("/matches/{matchId}/messages")
-    fun sendHistory(@DestinationVariable matchId: Long) {
-        println("messageHistory requested")
+    fun sendHistory(@DestinationVariable matchId: Long,
+                    @Header("email") userEmail: String) {
+
+        val user : User = userService.findUserByEmail(userEmail)
+            ?: throw IllegalAccessException("Unauthorized: User does not exist")
+
+        val match : Match = matchRepository.findByIdWithUsers(matchId)
+            ?: throw IllegalArgumentException("Match not found")
+
+        // Check if user is part of match.users
+        // ! user does not implement equals, so cannot use set.contains() !
+        // println("Same object? " + match.users.any { it === user }) > prints false!
+        if (match.users.none { it.id == user.id }) {
+            println("User ${user.email} is not a member of match $matchId, ignoring request.")
+            return
+        }
+
         val messageHistory = messageRepository.findByMatchIdOrderByCreatedAtAsc(matchId)
-        println("messageHistory retrieved")
+
 
 // Convert to DTO and send previous messages to the user who just subscribed
         messageHistory.forEach { message ->

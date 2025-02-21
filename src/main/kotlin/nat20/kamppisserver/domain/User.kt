@@ -1,5 +1,6 @@
 package nat20.kamppisserver.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 
 /**
@@ -16,6 +17,9 @@ class User(
     /*
     * ADD FIELDS HERE AS REQUIRED
     * */
+    @JsonIgnore
+    @ManyToMany(mappedBy = "users") // This makes it bidirectional
+    var matches: MutableSet<Match> = mutableSetOf(),
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
