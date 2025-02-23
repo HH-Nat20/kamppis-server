@@ -21,7 +21,7 @@ class UserProfileController(private val service: UserProfileService, private val
      *
      * @return ResponseEntity with status code 200 OK.
      */
-    @GetMapping
+    @GetMapping("", "/")
     fun findAll(): MutableIterable<UserProfile> = service.findAll()
 
     /**

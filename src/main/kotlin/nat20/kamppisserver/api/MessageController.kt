@@ -74,12 +74,7 @@ class MessageController(
         val destination = "/user/matches/$matchId/messages"
         println(destination)
         // Broadcast only the necessary details
-        val responseDTO = MessageDTO(
-            senderEmail = savedMessage.sender.email,
-            matchId = savedMessage.match.id!!,
-            content = savedMessage.content,
-            createdAt = savedMessage.createdAt
-        )
+        val responseDTO = savedMessage.toMessageDTO()
         // This will be broadcast to subscribed clients
         messagingTemplate.convertAndSend(destination, responseDTO)
     }
@@ -107,12 +102,7 @@ class MessageController(
 
 // Convert to DTO and send previous messages to the user who just subscribed
         messageHistory.forEach { message ->
-            val messageDTO = MessageDTO(
-                senderEmail = message.sender.email,
-                matchId = message.match.id!!,
-                content = message.content,
-                createdAt = message.createdAt
-            )
+            val messageDTO = message.toMessageDTO()
             messagingTemplate.convertAndSend("/user/matches/$matchId/messages", messageDTO)
         }
     }

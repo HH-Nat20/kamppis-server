@@ -45,7 +45,9 @@ class Message(
 ) {
     fun toMessageDTO(): MessageDTO {
         return MessageDTO(
+            id = id,
             senderEmail = sender.email,
+            senderId = sender.id ?: throw IllegalStateException("Sender ID is null"),
             matchId = match.id ?: throw IllegalStateException("Match ID is null"),
             content = content,
             createdAt = createdAt,
@@ -54,7 +56,9 @@ class Message(
 }
 
 data class MessageDTO(
+    val id: Long? = null,
     val senderEmail: String,
+    val senderId: Long,
     val matchId: Long,
     val content: String,
     val createdAt: LocalDateTime?,

@@ -43,6 +43,7 @@
         stompClient = new Client({
             brokerURL: "ws://localhost:8080/ws",
             //brokerURL: "ws://kamppis.hellmanstudios.fi/ws",
+            //brokerURL: "ws://95.217.239.74:8087/ws",
             onConnect: (frame) => {
                 console.log("Connected: " + frame);
 
