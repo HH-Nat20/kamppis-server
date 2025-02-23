@@ -60,7 +60,7 @@ class UserProfile(
 )
 
 fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
-    var userProfileDTO: UserProfileDTO = UserProfileDTO(
+    val userProfileDTO: UserProfileDTO = UserProfileDTO(
         userId = userProfile.user.id!!,
         firstName = userProfile.firstName,
         lastName = userProfile.lastName,
@@ -71,8 +71,8 @@ fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
         userPhotos = userProfile.userPhotos,
         userHabits = userProfile.userHabits,
         userInterests = userProfile.userInterests,
-        id = userProfile.id!!,
-        )
+        id = userProfile.id!!
+    )
 
     return userProfileDTO
 }
@@ -86,7 +86,7 @@ data class UserProfileDTO(
     val userPhotos: MutableList<UserPhoto>?,
     val userHabits: MutableList<UserHabit>?,
     val userInterests: MutableList<UserInterest>?,
-    val bio: String? = null,
+    val bio: String?,
     val locations: List<String>,
     val id: Long
 )

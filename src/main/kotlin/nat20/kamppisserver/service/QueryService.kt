@@ -6,7 +6,7 @@ import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.domain.toUserProfileDTO
 import nat20.kamppisserver.repository.UserProfileRepository
-import org.springframework.data.crossstore.ChangeSetPersister
+import java.time.LocalDate
 
 
 @Service
@@ -38,8 +38,9 @@ class QueryService(private val userProfileRepository: UserProfileRepository) {
 
         val minAgePreference: Int? = userProfile?.minAgePreference
         val maxAgePreference: Int? = userProfile?.maxAgePreference
+        val queryDate: LocalDate = LocalDate.now()
 
-        val userProfileList: MutableIterable<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(userId, minAgePreference, maxAgePreference)
+        val userProfileList: MutableIterable<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(userId, queryDate, minAgePreference, maxAgePreference)
         val userProfileDTOList: MutableList<UserProfileDTO> = mutableListOf();
 
         for (profile in userProfileList) {

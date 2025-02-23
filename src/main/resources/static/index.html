@@ -1,160 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WebSocket Test</title>
-</head>
-<body>
-<h2>WebSocket Test</h2>
-<button onclick="connect()">Connect</button>
-<button onclick="disconnect()">Disconnect</button>
-<br><br>
+  </head>
+  <body>
+    <h2>WebSocket Test</h2>
+    <button onclick="connect()">Connect</button>
+    <button onclick="disconnect()">Disconnect</button>
+    <br /><br />
 
-<label for="userEmailInput">User email:</label>
-<input type="text" id="userEmailInput" placeholder="alice.smith@example.com" size="25"/>
-<button onclick="changeUser()">Change User</button>
-<br>
-<small>alice.smith@example.com, bob.johnson@example.com, charlie.davis@example.com, diana.lee@example.com, eve.brown@example.com</small>
-<br><br>
+    <label for="userEmailInput">User email:</label>
+    <input
+      type="text"
+      id="userEmailInput"
+      placeholder="alice.smith@example.com"
+      size="25"
+    />
+    <button onclick="changeUser()">Change User</button>
+    <br />
+    <small
+      >alice.smith@example.com, bob.johnson@example.com,
+      charlie.davis@example.com, diana.lee@example.com,
+      eve.brown@example.com</small
+    >
+    <br /><br />
 
-<input type="number" id="matchIdInput" placeholder="Enter match ID (default 1)" size="20"/>
-<button onclick="changeMatch()">Switch Room</button>
-<br><br>
+    <input
+      type="number"
+      id="matchIdInput"
+      placeholder="Enter match ID (default 1)"
+      size="20"
+    />
+    <button onclick="changeMatch()">Switch Room</button>
+    <br /><br />
 
-<h3>Send a Message</h3>
-<input type="text" id="messageInput" placeholder="Type a message">
-<button onclick="sendMessage()">Send</button>
+    <h3>Send a Message</h3>
+    <input type="text" id="messageInput" placeholder="Type a message" />
+    <button onclick="sendMessage()">Send</button>
 
-<h3>Messages</h3>
-<ul id="messages"></ul>
+    <h3>Messages</h3>
+    <ul id="messages"></ul>
 
-<script type="module">
-    import { Client } from 'https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/+esm';
+    <script type="module">
+      import { Client } from "https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/+esm";
 
-    let stompClient = null;
+      let stompClient = null;
 
-    let userEmail = "alice.smith@example.com";
-    let matchId = 1; // Default matchId
-    let subscription = null; // Store the subscription
-    let messages = {}; // Store messages for each matchId
+      let userEmail = "alice.smith@example.com";
+      let matchId = 1; // Default matchId
+      let subscription = null; // Store the subscription
+      let messages = {}; // Store messages for each matchId
 
-    function connect() {
+      function connect() {
         stompClient = new Client({
-            brokerURL: "ws://localhost:8080/ws",
-            //brokerURL: "ws://kamppis.hellmanstudios.fi/ws",
-            //brokerURL: "ws://95.217.239.74:8087/ws",
-            onConnect: (frame) => {
-                console.log("Connected: " + frame);
+          //brokerURL: "ws://localhost:8080/ws",
+          brokerURL: "ws://95.217.239.74:8087/ws",
+          //brokerURL: "wss://kamppis.hellmanstudios.fi:8087/ws",
+          onConnect: (frame) => {
+            console.log("Connected: " + frame);
 
-                // Subscribe to messages
-                subscribeToMatch();
-            },
-            onDisconnect: () => console.log("Disconnected"),
-            debug: (msg) => console.log(msg),
+            // Subscribe to messages
+            subscribeToMatch();
+          },
+          onDisconnect: () => console.log("Disconnected"),
+          debug: (msg) => console.log(msg),
         });
 
         stompClient.activate();
-    }
+      }
 
-    function disconnect() {
+      function disconnect() {
         if (stompClient) {
-            stompClient.deactivate();
+          stompClient.deactivate();
         }
-    }
+      }
 
-    window.changeMatch = function () {
+      window.changeMatch = function () {
         const newMatchId = document.getElementById("matchIdInput").value;
 
         if (newMatchId && newMatchId !== matchId) {
-            // Unsubscribe from previous match if subscribed
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+          // Unsubscribe from previous match if subscribed
+          if (subscription) {
+            subscription.unsubscribe();
+          }
 
-            // Clear old messages from UI
-            const messagesList = document.getElementById("messages");
-            messagesList.innerHTML = ""
+          // Clear old messages from UI
+          const messagesList = document.getElementById("messages");
+          messagesList.innerHTML = "";
 
-            matchId = newMatchId; // Update matchId
-            alert(`Switched to match: ${matchId}`);
+          matchId = newMatchId; // Update matchId
+          alert(`Switched to match: ${matchId}`);
 
-            // Subscribe to the new match's messages
-            subscribeToMatch();
+          // Subscribe to the new match's messages
+          subscribeToMatch();
         }
-    }
+      };
 
-    window.subscribeToMatch = function () {
+      window.subscribeToMatch = function () {
         if (stompClient && stompClient.connected) {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
-            // Clear old messages from UI
-            const messagesList = document.getElementById("messages");
-            messagesList.innerHTML = ""
+          if (subscription) {
+            subscription.unsubscribe();
+          }
+          // Clear old messages from UI
+          const messagesList = document.getElementById("messages");
+          messagesList.innerHTML = "";
 
-            subscription = stompClient.subscribe(
-                `/user/matches/${matchId}/messages`,
-                (message) => {
-                    const msg = JSON.parse(message.body);
-                    showMessage(msg); // Display each new message
+          subscription = stompClient.subscribe(
+            `/user/matches/${matchId}/messages`,
+            (message) => {
+              const msg = JSON.parse(message.body);
+              showMessage(msg); // Display each new message
             },
-                { email: userEmail} // Add user email to headers
-            );
+            { email: userEmail } // Add user email to headers
+          );
         }
-    }
+      };
 
-    // Must explicitly attach changeUser to the global window object due to <script type="module">
-    window.changeUser = function () {
+      // Must explicitly attach changeUser to the global window object due to <script type="module">
+      window.changeUser = function () {
         const newEmail = document.getElementById("userEmailInput").value;
 
         if (newEmail) {
-            userEmail = newEmail;
-            alert(`User changed to: ${userEmail}`);
+          userEmail = newEmail;
+          alert(`User changed to: ${userEmail}`);
 
-            disconnect();
-            setTimeout(connect, 500) // Small delay to ensure proper connection
-
+          disconnect();
+          setTimeout(connect, 500); // Small delay to ensure proper connection
         } else {
-            alert("Please enter a valid email.");
+          alert("Please enter a valid email.");
         }
+      };
 
-
-    }
-
-    function sendMessage() {
+      function sendMessage() {
         const messageContent = document.getElementById("messageInput").value;
         if (stompClient && stompClient.connected && messageContent) {
-            const messageDTO = {
-                content: messageContent,
-                senderEmail: userEmail, // Email only
-                matchId: matchId,       // Match ID for backend processing
-                createdAt: new Date().toISOString()
-            };
-            // Clients send messages to ("/app/matches/{matchId}/messages")
-            stompClient.publish({
-                destination: `/app/matches/${matchId}/messages`,
-                body: JSON.stringify(messageDTO),
-                headers: { email: userEmail } // Add user email to headers
-                });
+          const messageDTO = {
+            content: messageContent,
+            senderEmail: userEmail, // Email only
+            matchId: matchId, // Match ID for backend processing
+            createdAt: new Date().toISOString(),
+          };
+          // Clients send messages to ("/app/matches/{matchId}/messages")
+          stompClient.publish({
+            destination: `/app/matches/${matchId}/messages`,
+            body: JSON.stringify(messageDTO),
+            headers: { email: userEmail }, // Add user email to headers
+          });
         }
-    }
+      }
 
-    function showMessage(message) {
+      function showMessage(message) {
         const messagesList = document.getElementById("messages");
         const li = document.createElement("li");
 
         const senderEmail = message.senderEmail || "Unknown";
         const messageContent = message.content || "No content";
 
-        li.appendChild(document.createTextNode(`${senderEmail}: ${messageContent}`));
+        li.appendChild(
+          document.createTextNode(`${senderEmail}: ${messageContent}`)
+        );
         messagesList.appendChild(li);
-    }
+      }
 
-    window.connect = connect;
-    window.disconnect = disconnect;
-    window.sendMessage = sendMessage;
-</script>
-
-</body>
+      window.connect = connect;
+      window.disconnect = disconnect;
+      window.sendMessage = sendMessage;
+    </script>
+  </body>
 </html>

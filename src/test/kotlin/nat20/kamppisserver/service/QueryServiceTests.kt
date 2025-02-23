@@ -1,7 +1,11 @@
 package nat20.kamppisserver.service
 
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.UserProfile
+import nat20.kamppisserver.domain.UserProfileDTO
+import nat20.kamppisserver.domain.toUserProfileDTO
 import nat20.kamppisserver.repository.UserRepository
+import nat20.kamppisserver.repository.UserProfileRepository
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.TestInstance
@@ -10,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
+import kotlin.test.assertFalse
 
 /**
  * Test class for QueryService.
@@ -17,18 +22,26 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class QueryServiceTests {
-
-    @Autowired
-    private lateinit var queryService: QueryService
-
-    @Autowired
-    private lateinit var userRepository: UserRepository
+class QueryServiceTests @Autowired constructor(
+    val queryService: QueryService,
+    val userRepository: UserRepository,
+    val userProfileRepository: UserProfileRepository
+) {
 
     @Test
     fun `should return the correct UserProfile from UserProfileRepository by User-objects id`() {
-        val user: User? = userRepository.findByIdOrNull(1L)
-        val userProfile = queryService.findUserProfileByUserId(user?.id)
+        val user: User = userRepository.findByIdOrNull(1L)!!
+        val userProfile = queryService.findUserProfileByUserId(user.id)
         assertEquals(1L, userProfile?.id)
+    }
+
+    @Test
+    fun `should not return the querying user's UserProfile`() {
+        val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
+        val userProfileDTO: UserProfileDTO = toUserProfileDTO(userProfile)
+
+        val listOfUserProfileDTOs: MutableIterable<UserProfileDTO> = queryService.findUserProfilesThatMeetCriteria(userProfile.id)
+
+        assertFalse(userProfileDTO in listOfUserProfileDTOs)
     }
 }
