@@ -4,6 +4,9 @@ GET http://localhost:8080/api/users/
 ### Get user with id = 1
 GET http://localhost:8080/api/users/1
 
+### Get all user profiles
+GET http://localhost:8080/api/user-profiles
+
 ### Get all users who meet search criteria
 // This requests initiates an SQL query from the database
 // The request gets the user's id as a path variable
