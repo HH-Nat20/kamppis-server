@@ -1,5 +1,6 @@
 package nat20.kamppisserver.repository
 
+import nat20.kamppisserver.domain.Gender
 import org.springframework.data.jpa.repository.JpaRepository
 import nat20.kamppisserver.domain.UserProfile
 import org.springframework.data.jpa.repository.Query
@@ -33,11 +34,16 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     *
     * More criteria and parameters will be added */
     
-    @Query(value= "SELECT * FROM \"user_profiles\" WHERE (\"id\" != :id) AND ((DATEDIFF(YEAR, \"date_of_birth\", :queryDate) + CASE WHEN DATEADD(YEAR, DATEDIFF(YEAR, \"date_of_birth\", :queryDate), \"date_of_birth\") > :queryDate THEN -1 ELSE 0 END) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000) )", nativeQuery = true)
+    @Query(value= "SELECT * FROM \"user_profiles\" " +
+            "WHERE (\"id\" != :id) " +
+            "AND ((DATEDIFF(YEAR, \"date_of_birth\", :queryDate) + CASE WHEN DATEADD(YEAR, DATEDIFF(YEAR, \"date_of_birth\", :queryDate), \"date_of_birth\") > :queryDate THEN -1 ELSE 0 END) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)) " +
+            "AND ((CAST(\"gender\" AS VARCHAR) IN (:preferredGenders)) OR ('NOT_IMPORTANT' IN (:preferredGenders)))",
+        nativeQuery = true)
     fun findUserProfilesThatMeetCriteria(
         @Param("id") id: Long?,
         @Param("queryDate") queryDate: LocalDate,
         @Param("minAgePreference") minAgePreference: Int?,
-        @Param("maxAgePreference") maxAgePreference: Int?): MutableIterable<UserProfile>
+        @Param("maxAgePreference") maxAgePreference: Int?,
+        @Param("preferredGenders") preferredGenders: List<String>): MutableIterable<UserProfile>
 
 }

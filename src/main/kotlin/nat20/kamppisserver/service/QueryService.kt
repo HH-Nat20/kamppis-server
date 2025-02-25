@@ -1,5 +1,6 @@
 package nat20.kamppisserver.service
 
+import nat20.kamppisserver.domain.Gender
 import org.springframework.stereotype.Service
 
 import nat20.kamppisserver.domain.UserProfile
@@ -34,13 +35,13 @@ class QueryService(private val userProfileRepository: UserProfileRepository) {
         * Finally, we pass these variables to the SQL query in UserProfileRepository */
 
         val userProfile: UserProfile? = findUserProfileByUserId(userId);
-
-
+        val queryDate: LocalDate = LocalDate.now()
         val minAgePreference: Int? = userProfile?.minAgePreference
         val maxAgePreference: Int? = userProfile?.maxAgePreference
-        val queryDate: LocalDate = LocalDate.now()
+        val preferredGenders: List<String> = userProfile?.preferredGenders!!.map {it.name}
 
-        val userProfileList: MutableIterable<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(userId, queryDate, minAgePreference, maxAgePreference)
+
+        val userProfileList: MutableIterable<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(userId, queryDate, minAgePreference, maxAgePreference, preferredGenders)
         val userProfileDTOList: MutableList<UserProfileDTO> = mutableListOf();
 
         for (profile in userProfileList) {
