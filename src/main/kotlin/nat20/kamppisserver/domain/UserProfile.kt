@@ -23,6 +23,8 @@ class UserProfile(
     var firstName: String,
     var lastName: String,
     var dateOfBirth: LocalDate,
+
+    @Enumerated(EnumType.STRING)
     var gender: Gender,
 
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "userProfile", orphanRemoval = true)
@@ -37,7 +39,10 @@ class UserProfile(
     var bio: String? = null,
     var minAgePreference: Int? = null,
     var maxAgePreference: Int? = null,
-    var preferredGender: Gender = Gender.NOT_IMPORTANT,
+
+    @ElementCollection(fetch = FetchType.EAGER, targetClass = Gender::class)
+    @Enumerated(EnumType.STRING)
+    var preferredGenders: MutableList<Gender>? = mutableListOf(Gender.NOT_IMPORTANT),
 
     @Convert(converter = JsonStringListConverter::class)
     var locations: List<String> = emptyList(),
