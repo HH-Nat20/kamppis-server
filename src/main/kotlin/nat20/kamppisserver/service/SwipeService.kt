@@ -1,5 +1,6 @@
 package nat20.kamppisserver.service
 
+import exception.DuplicateSwipeException
 import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.Swipe
 import nat20.kamppisserver.domain.SwipeResponse
@@ -15,7 +16,11 @@ class SwipeService(
     @Transactional
     fun swipe(swipingUser: User, swipedUser: User, isRightSwipe: Boolean): SwipeResponse {
 
-        // TODO: forbid multiple identical swipes
+        // Check if an identical swipe already exists
+        if (swipeRepository.existsBySwipingUserAndSwipedUserAndIsRightSwipe(swipingUser, swipedUser, isRightSwipe)) {
+            throw DuplicateSwipeException("Swipe already exists!")
+        }
+
         val newSwipe = Swipe(
             swipingUser = swipingUser,
             swipedUser = swipedUser,
@@ -23,9 +28,9 @@ class SwipeService(
         )
         swipeRepository.save(newSwipe)
 
-        // TODO: forbid multiple identical matches
+        // Identical matches are prevented in the service
         if (isRightSwipe && hasMutualSwipe(swipingUser, swipedUser)) {
-            matchService.createMatch(swipingUser, swipedUser)
+            matchService.createMatch(setOf(swipingUser, swipedUser))
             newSwipe.isMatch = true
         }
         return newSwipe.toSwipeResponse()

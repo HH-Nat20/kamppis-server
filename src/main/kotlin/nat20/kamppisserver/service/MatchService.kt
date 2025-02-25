@@ -1,15 +1,15 @@
 package nat20.kamppisserver.service
 
+import exception.DuplicateMatchException
+import exception.InvalidRequestException
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.repository.MatchRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.server.ResponseStatusException
-import java.util.*
+
 
 @Service
 class MatchService(
@@ -63,7 +63,16 @@ class MatchService(
     fun createMatch(matchRequest: MatchRequest): Match {
         val users = userRepository.findAllById(matchRequest.userIds).toMutableSet()
         if (users.size < 2) {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, "One or more users not found")
+            throw InvalidRequestException("A match must have at least two unique users")
+        }
+        if (users.size != matchRequest.userIds.size) {
+            throw EntityNotFoundException("One or more users not found")
+        }
+
+        // Check for an existing match
+        val existingMatch = matchRepository.findExactMatch(users.mapNotNull { it.id }.toSet(), users.size)
+        if (existingMatch.isNotEmpty()) {
+            throw DuplicateMatchException("This match already exists")
         }
 
         val match = Match(users = users)
@@ -72,9 +81,18 @@ class MatchService(
 
     // Overloaded method for internal use
     @Transactional
-    fun createMatch(user1: User, user2: User): Match {
-        val users = mutableSetOf(user1, user2)
-        return matchRepository.save(Match(users = users))
+    fun createMatch(users: Set<User>): Match {
+        if (users.size < 2) {
+            throw InvalidRequestException("A match must have at least two users")
+        }
+
+        // Check for an existing match with the same users
+        val existingMatch = matchRepository.findExactMatch(users.mapNotNull { it.id }.toSet(), users.size)
+        if (existingMatch.isNotEmpty()) {
+            throw DuplicateMatchException("This match already exists")
+        }
+
+        return matchRepository.save(Match(users = users.toMutableSet()))
     }
 
     /**

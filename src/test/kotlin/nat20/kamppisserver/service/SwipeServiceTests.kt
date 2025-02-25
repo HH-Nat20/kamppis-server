@@ -39,7 +39,7 @@ class SwipeServiceTests {
         swipeService.swipe(userA, userB, true)
 
         // Then
-        verify(exactly = 0) { matchService.createMatch(any(), any()) }
+        verify(exactly = 0) { matchService.createMatch(users = setOf(userA, userB)) }
     }
 
     @Test
@@ -52,7 +52,7 @@ class SwipeServiceTests {
         swipeService.swipe(userA, userB, true)
 
         // Then
-        verify(exactly = 1) { matchService.createMatch(userA, userB)  }
+        verify(exactly = 1) { matchService.createMatch(users = setOf(userA, userB))  }
     }
 
     @Test
@@ -61,7 +61,7 @@ class SwipeServiceTests {
         swipeService.swipe(userA, userB, false)
 
         // Then
-        verify(exactly = 0) { matchService.createMatch(any(), any()) }
+        verify(exactly = 0) { matchService.createMatch(users = setOf(userA, userB)) }
     }
 
 

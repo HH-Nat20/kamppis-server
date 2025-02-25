@@ -27,6 +27,10 @@ class SwipeController(private val swipeService: SwipeService,
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${swipeRequest.swipingUserId} not found")
         val swipedUser: User = userRepository.findByIdOrNull(swipeRequest.swipedUserId)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${swipeRequest.swipedUserId} not found")
+
+        if (swipingUser.id == swipedUser.id)
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "You cannot swipe yourself you silly goose!")
+
         val response = swipeService.swipe(
             swipingUser,
             swipedUser,
