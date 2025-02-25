@@ -40,7 +40,7 @@ class UserProfileService(private val repository: UserProfileRepository) {
         updatedProfile.user = userProfile.user
         updatedProfile.minAgePreference = userProfile.minAgePreference
         updatedProfile.maxAgePreference = userProfile.maxAgePreference
-        updatedProfile.preferredGender = userProfile.preferredGender
+        updatedProfile.preferredGenders = userProfile.preferredGenders
         updatedProfile.locations = userProfile.locations
         updatedProfile.bio = userProfile.bio
         updatedProfile.updatedAt = LocalDateTime.now()

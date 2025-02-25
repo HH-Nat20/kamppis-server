@@ -29,9 +29,6 @@ class UserProfileRepositoryTests @Autowired constructor(
     val userProfileRepository: UserProfileRepository,
     val userRepository: UserRepository
 ) {
-
-
-
     /*
     * Here we set a base date so that our tests always calculate the same age for all users regardless of when the tests are actually run
     * If we use LocalDate.now(), tests will fail because ages will be calculated differently depending on when LocalDate.now() actually is
@@ -48,13 +45,16 @@ class UserProfileRepositoryTests @Autowired constructor(
     @Test
     fun `query should not return the user's own profile`() {
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
+        val preferredGenders = userProfile.preferredGenders!!.map{it.name}
 
         val listOfUserProfiles: MutableIterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
                 userProfile.user.id,
                 testDate,
                 userProfile.minAgePreference,
-                userProfile.maxAgePreference)
+                userProfile.maxAgePreference,
+                preferredGenders
+            )
 
         assertFalse(userProfile in listOfUserProfiles)
     }
@@ -63,13 +63,15 @@ class UserProfileRepositoryTests @Autowired constructor(
     fun `query should return UserProfiles whose age fit between user's min and max age preferences`(){
         val numberOfMatchingUserProfiles: Int = 6
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
+        val preferredGenders = listOf("NOT_IMPORTANT")
 
         val listOfUserProfiles: MutableIterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
                 userProfile.user.id,
                 testDate,
                 userProfile.minAgePreference,
-                userProfile.maxAgePreference
+                userProfile.maxAgePreference,
+                preferredGenders
             )
 
         assertEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
@@ -80,15 +82,35 @@ class UserProfileRepositoryTests @Autowired constructor(
         val incorrectDate = LocalDate.of(2022, 2, 21)
         val numberOfMatchingUserProfiles: Int = 6 // matching profile count is counted using ages calculated on 2025-2-21
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
+        val preferredGenders = listOf("NOT_IMPORTANT")
 
         val listOfUserProfiles: MutableIterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
                 userProfile.user.id,
                 incorrectDate,
                 userProfile.minAgePreference,
-                userProfile.maxAgePreference
+                userProfile.maxAgePreference,
+                preferredGenders
             )
 
         assertNotEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
+    }
+
+    @Test
+    fun `should return profiles that match user's preferred genders`() {
+        val numberOfMatchingUserProfiles: Int = 4
+        val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
+        val preferredGenders = userProfile.preferredGenders!!.map {it.name}
+
+        val listOfUserProfiles: MutableIterable<UserProfile> =
+            userProfileRepository.findUserProfilesThatMeetCriteria(
+                userProfile.user.id,
+                testDate,
+                userProfile.minAgePreference,
+                userProfile.maxAgePreference,
+                preferredGenders
+            )
+
+        assertEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
     }
 }
