@@ -2,6 +2,8 @@ package nat20.kamppisserver.service
 
 import jakarta.persistence.EntityNotFoundException
 import nat20.kamppisserver.domain.UserProfile
+import nat20.kamppisserver.domain.UserProfileDTO
+import nat20.kamppisserver.domain.toUserProfileDTO
 import nat20.kamppisserver.repository.UserProfileRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -14,12 +16,15 @@ import java.time.LocalDateTime
 class UserProfileService(private val repository: UserProfileRepository) {
 
     /**
-     * Returns all User Profiles.
+     * Returns all User Profiles as DTOs.
      * For testing purposes only.
      *
-     * @return all User Profiles.
+     * @return all User Profiles as DTOs.
      */
-    fun findAll(): MutableIterable<UserProfile> = repository.findAll()
+    fun findAll(): List<UserProfileDTO> {
+        val userProfileList = repository.findAll()
+        return userProfileList.map {toUserProfileDTO(it)}
+    }
 
     /**
      * Updates given User Profile.
