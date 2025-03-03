@@ -32,6 +32,10 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     * -> We include only those users who fit min and max age preferences (inclusive)
     * -> If user has not set any age preferences (i.e. null), values 0 and 1000 are used to include user profiles of all ages
     *
+    * 5) (CAST("gender" AS VARCHAR) IN (:preferredGenders)) OR ('NOT_IMPORTANT' IN (:preferredGenders))
+    * -> We check if the queried profiles' gender matches the user's list of preferred genders
+    * -> We also check if the user has no gender preferences
+    *
     * More criteria and parameters will be added */
     
     @Query(value= "SELECT * FROM \"user_profiles\" " +
