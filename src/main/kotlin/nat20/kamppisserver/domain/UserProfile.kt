@@ -44,8 +44,11 @@ class UserProfile(
     @Enumerated(EnumType.STRING)
     var preferredGenders: MutableList<Gender>? = mutableListOf(Gender.NOT_IMPORTANT),
 
-    @Convert(converter = JsonStringListConverter::class)
-    var locations: List<String> = emptyList(),
+    @ElementCollection(fetch = FetchType.EAGER, targetClass = City::class)
+    @CollectionTable(name = "user_profiles_locations", joinColumns = [JoinColumn(name = "user_profile_id")])
+    @Enumerated(EnumType.STRING)
+    //@Convert(converter = JsonStringListConverter::class)
+    var locations: MutableList<City>? = mutableListOf(),
 
     /*
     * ADD FIELDS HERE AS REQUIRED
@@ -93,6 +96,6 @@ data class UserProfileDTO(
     val userHabits: MutableList<UserHabit>?,
     val userInterests: MutableList<UserInterest>?,
     val bio: String?,
-    val locations: List<String>,
+    val locations: MutableList<City>?,
     val id: Long
 )
