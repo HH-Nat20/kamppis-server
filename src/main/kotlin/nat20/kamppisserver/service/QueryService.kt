@@ -35,7 +35,8 @@ class QueryService(private val userProfileRepository: UserProfileRepository) {
         * Finally, we pass these variables to the SQL query in UserProfileRepository */
 
         val userProfile: UserProfile? = findUserProfileByUserId(userId);
-        val queryDate: LocalDate = LocalDate.now()
+        //TODO: val queryDate: LocalDate = LocalDate.now()
+        val queryDate: LocalDate = LocalDate.of(2025, 2, 21)
         val minAgePreference: Int? = userProfile?.minAgePreference
         val maxAgePreference: Int? = userProfile?.maxAgePreference
         val preferredGenders: List<String> = userProfile?.preferredGenders!!.map {it.name}
