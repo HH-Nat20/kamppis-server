@@ -15,26 +15,33 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
         @Param("id") id: Long?): UserProfile
 
     /* Click to see SQL QUERY explanation
-    * 1) SELECT * FROM \"user_profiles\"
-    * -> We want to find all the user profiles (and all their relevant info according to the DTO) that match the criteria in the query
-    * -> For this, we select all columns in the user profiles from the "user_profiles" table
+    * 1) SELECT DISTINCT up.* FROM "user_profiles" up
+    * -> We want to find all distinct user profiles (and all their relevant info according to the DTO) that match the criteria in the query
+    * -> For this, we select all columns in the user profiles from the "user_profiles" table with the alias "up"
     *
-    * 2) WHERE
+    * 2) JOIN "user_profiles_locations" upl ON up."id" = upl."user_profile_id"
+    * -> locations are stored as a list of strings, converted from enums
+    * In Spring, this creates a new table, so we join the "user_profiles_locations" table with the alias "upl to the "user_profiles" table
+    *
+    * 3) WHERE
     * -> Here we specify the query filters
     *
-    * 3) (\"id\" != :id)
+    * 4) (up."id" != :id)
     * -> We don't want to include the user who made the query in the results,
     * -> so we exclude them from the returned users
     *
-    * 4) (DATEDIFF(YEAR, "date_of_birth", :queryDate) + CASE WHEN DATEADD(YEAR, DATEDIFF(YEAR, "date_of_birth", :queryDate), "date_of_birth") > :queryDate THEN -1 ELSE 0 END) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)
+    * 5) ((DATEDIFF(YEAR, up."date_of_birth", :queryDate) + CASE WHEN DATEADD(YEAR, DATEDIFF(YEAR, up."date_of_birth", :queryDate), up."date_of_birth") > :queryDate THEN -1 ELSE 0 END) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000))
     * -> We calculate user's age based on their date of birth
     * -> We remove 1 year if the user's has not yet had their birthday this year
     * -> We include only those users who fit min and max age preferences (inclusive)
     * -> If user has not set any age preferences (i.e. null), values 0 and 1000 are used to include user profiles of all ages
     *
-    * 5) (CAST("gender" AS VARCHAR) IN (:preferredGenders)) OR ('NOT_IMPORTANT' IN (:preferredGenders))
+    * 6) ((CAST(up."gender" AS VARCHAR) IN (:preferredGenders)) OR ('NOT_IMPORTANT' IN (:preferredGenders)))
     * -> We check if the queried profiles' gender matches the user's list of preferred genders
     * -> We also check if the user has no gender preferences
+    *
+    * 7) (upl."preferred_locations" IN :preferredLocations)
+    * -> We check if any of the user profiles' preferred cities match the user's list of preferred cities
     *
     * More criteria and parameters will be added */
 
@@ -51,5 +58,4 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
         @Param("maxAgePreference") maxAgePreference: Int?,
         @Param("preferredGenders") preferredGenders: List<String>,
         @Param("preferredLocations") preferredLocations: List<String>): MutableIterable<UserProfile>
-
 }
