@@ -40,9 +40,9 @@ class QueryService(private val userProfileRepository: UserProfileRepository) {
         val minAgePreference: Int? = userProfile?.minAgePreference
         val maxAgePreference: Int? = userProfile?.maxAgePreference
         val preferredGenders: List<String> = userProfile?.preferredGenders!!.map {it.name}
+        val preferredLocations: List<String> = userProfile.locations!!.map {it.name}
 
-
-        val userProfileList: MutableIterable<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(userId, queryDate, minAgePreference, maxAgePreference, preferredGenders)
+        val userProfileList: MutableIterable<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(userId, queryDate, minAgePreference, maxAgePreference, preferredGenders, preferredLocations)
         val userProfileDTOList: MutableList<UserProfileDTO> = mutableListOf();
 
         for (profile in userProfileList) {

@@ -37,17 +37,19 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     * -> We also check if the user has no gender preferences
     *
     * More criteria and parameters will be added */
-    
-    @Query(value= "SELECT * FROM \"user_profiles\" " +
-            "WHERE (\"id\" != :id) " +
-            "AND ((DATEDIFF(YEAR, \"date_of_birth\", :queryDate) + CASE WHEN DATEADD(YEAR, DATEDIFF(YEAR, \"date_of_birth\", :queryDate), \"date_of_birth\") > :queryDate THEN -1 ELSE 0 END) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)) " +
-            "AND ((CAST(\"gender\" AS VARCHAR) IN (:preferredGenders)) OR ('NOT_IMPORTANT' IN (:preferredGenders)))",
-        nativeQuery = true)
+
+    @Query(value= "SELECT DISTINCT up.* FROM \"user_profiles\" up " +
+            "JOIN \"user_profiles_locations\" upl ON up.\"id\" = upl.\"user_profile_id\" "+
+            "WHERE (up.\"id\" != :id) " +
+            "AND ((DATEDIFF(YEAR, up.\"date_of_birth\", :queryDate) + CASE WHEN DATEADD(YEAR, DATEDIFF(YEAR, up.\"date_of_birth\", :queryDate), up.\"date_of_birth\") > :queryDate THEN -1 ELSE 0 END) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)) " +
+            "AND ((CAST(up.\"gender\" AS VARCHAR) IN (:preferredGenders)) OR ('NOT_IMPORTANT' IN (:preferredGenders))) " +
+            "AND (upl.\"locations\" IN :preferredLocations)", nativeQuery = true)
     fun findUserProfilesThatMeetCriteria(
         @Param("id") id: Long?,
         @Param("queryDate") queryDate: LocalDate,
         @Param("minAgePreference") minAgePreference: Int?,
         @Param("maxAgePreference") maxAgePreference: Int?,
-        @Param("preferredGenders") preferredGenders: List<String>): MutableIterable<UserProfile>
+        @Param("preferredGenders") preferredGenders: List<String>,
+        @Param("preferredLocations") preferredLocations: List<String>): MutableIterable<UserProfile>
 
 }
