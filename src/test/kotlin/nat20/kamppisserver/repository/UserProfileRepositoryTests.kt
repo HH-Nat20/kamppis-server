@@ -46,6 +46,7 @@ class UserProfileRepositoryTests @Autowired constructor(
     fun `query should not return the user's own profile`() {
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
         val preferredGenders = userProfile.preferredGenders!!.map{it.name}
+        val preferredLocations = userProfile.locations!!.map {it.name}
 
         val listOfUserProfiles: MutableIterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
@@ -53,7 +54,8 @@ class UserProfileRepositoryTests @Autowired constructor(
                 testDate,
                 userProfile.minAgePreference,
                 userProfile.maxAgePreference,
-                preferredGenders
+                preferredGenders,
+                preferredLocations
             )
 
         assertFalse(userProfile in listOfUserProfiles)
@@ -64,6 +66,7 @@ class UserProfileRepositoryTests @Autowired constructor(
         val numberOfMatchingUserProfiles: Int = 6
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
         val preferredGenders = listOf("NOT_IMPORTANT")
+        val locations = listOf("HELSINKI", "ESPOO", "VANTAA")
 
         val listOfUserProfiles: MutableIterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
@@ -71,7 +74,8 @@ class UserProfileRepositoryTests @Autowired constructor(
                 testDate,
                 userProfile.minAgePreference,
                 userProfile.maxAgePreference,
-                preferredGenders
+                preferredGenders,
+                locations
             )
 
         assertEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
@@ -83,6 +87,7 @@ class UserProfileRepositoryTests @Autowired constructor(
         val numberOfMatchingUserProfiles: Int = 6 // matching profile count is counted using ages calculated on 2025-2-21
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
         val preferredGenders = listOf("NOT_IMPORTANT")
+        val locations = listOf("HELSINKI", "ESPOO", "VANTAA")
 
         val listOfUserProfiles: MutableIterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
@@ -90,7 +95,8 @@ class UserProfileRepositoryTests @Autowired constructor(
                 incorrectDate,
                 userProfile.minAgePreference,
                 userProfile.maxAgePreference,
-                preferredGenders
+                preferredGenders,
+                locations
             )
 
         assertNotEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
@@ -101,6 +107,7 @@ class UserProfileRepositoryTests @Autowired constructor(
         val numberOfMatchingUserProfiles: Int = 4
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
         val preferredGenders = userProfile.preferredGenders!!.map {it.name}
+        val locations = listOf("HELSINKI", "ESPOO", "VANTAA")
 
         val listOfUserProfiles: MutableIterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
@@ -108,9 +115,33 @@ class UserProfileRepositoryTests @Autowired constructor(
                 testDate,
                 userProfile.minAgePreference,
                 userProfile.maxAgePreference,
-                preferredGenders
+                preferredGenders,
+                locations
             )
 
+        assertEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
+    }
+
+    @Test
+    fun `should return profiles that match user's preferred locations`() {
+        val numberOfMatchingUserProfiles = 23
+        val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
+        val minAgePreference = null
+        val maxAgePreference = null
+        val preferredGenders = listOf("NOT_IMPORTANT")
+
+        val listOfUserProfiles: MutableIterable<UserProfile> =
+            userProfileRepository.findUserProfilesThatMeetCriteria(
+                userProfile.user.id,
+                testDate,
+                minAgePreference,
+                maxAgePreference,
+                preferredGenders,
+                userProfile.locations!!.map {it.name}
+            )
+
+        println(listOfUserProfiles)
+        println(listOfUserProfiles.count())
         assertEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
     }
 }

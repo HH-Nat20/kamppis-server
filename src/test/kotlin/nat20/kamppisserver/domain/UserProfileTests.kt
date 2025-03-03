@@ -33,7 +33,7 @@ class UserProfileTests @Autowired constructor(
             userHabits = mutableListOf(),
             userInterests = mutableListOf(),
             bio = null,
-            locations = listOf(),
+            locations = mutableListOf(City.HELSINKI, City.ESPOO),
             id = 1
         )
 
