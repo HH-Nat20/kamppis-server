@@ -48,7 +48,7 @@ class UserProfile(
     @CollectionTable(name = "user_profiles_locations", joinColumns = [JoinColumn(name = "user_profile_id")])
     @Enumerated(EnumType.STRING)
     //@Convert(converter = JsonStringListConverter::class)
-    var locations: MutableList<City>? = mutableListOf(),
+    var preferredLocations: MutableList<City>? = mutableListOf(),
 
     /*
     * ADD FIELDS HERE AS REQUIRED
@@ -76,7 +76,7 @@ fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
         age = ChronoUnit.YEARS.between(userProfile.dateOfBirth, LocalDate.of(2025, 2, 21)),
         gender = userProfile.gender,
         bio = userProfile.bio,
-        locations = userProfile.locations,
+        preferredLocations = userProfile.preferredLocations,
         userPhotos = userProfile.userPhotos,
         userHabits = userProfile.userHabits,
         userInterests = userProfile.userInterests,
@@ -96,6 +96,6 @@ data class UserProfileDTO(
     val userHabits: MutableList<UserHabit>?,
     val userInterests: MutableList<UserInterest>?,
     val bio: String?,
-    val locations: MutableList<City>?,
+    val preferredLocations: MutableList<City>?,
     val id: Long
 )

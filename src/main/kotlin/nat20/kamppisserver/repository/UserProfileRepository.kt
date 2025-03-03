@@ -43,7 +43,7 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
             "WHERE (up.\"id\" != :id) " +
             "AND ((DATEDIFF(YEAR, up.\"date_of_birth\", :queryDate) + CASE WHEN DATEADD(YEAR, DATEDIFF(YEAR, up.\"date_of_birth\", :queryDate), up.\"date_of_birth\") > :queryDate THEN -1 ELSE 0 END) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)) " +
             "AND ((CAST(up.\"gender\" AS VARCHAR) IN (:preferredGenders)) OR ('NOT_IMPORTANT' IN (:preferredGenders))) " +
-            "AND (upl.\"locations\" IN :preferredLocations)", nativeQuery = true)
+            "AND (upl.\"preferred_locations\" IN :preferredLocations)", nativeQuery = true)
     fun findUserProfilesThatMeetCriteria(
         @Param("id") id: Long?,
         @Param("queryDate") queryDate: LocalDate,
