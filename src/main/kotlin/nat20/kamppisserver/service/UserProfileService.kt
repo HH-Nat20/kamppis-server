@@ -17,10 +17,10 @@ import java.time.LocalDateTime
 class UserProfileService(
     private val repository: UserProfileRepository,
     private val userRepository: UserRepository,
-    userProfileRepository: UserProfileRepository
+    private val userProfileRepository: UserProfileRepository
 ) {
 
-    private final val userProfileRepository: UserProfileRepository = TODO("initialize me")
+    // private final val userProfileRepository: UserProfileRepository = TODO("initialize me")
 
     /**
      * Returns all User Profiles as DTOs.

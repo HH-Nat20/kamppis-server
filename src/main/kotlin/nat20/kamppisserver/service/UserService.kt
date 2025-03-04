@@ -23,6 +23,7 @@ class UserService(private val repository: UserRepository) {
      * @param user the user to be created.
      * @return the created user.
      */
+    // TODO: Do not let users log e-mails that already exist
     fun add(user: User): User = repository.save(user)
 
     /**
