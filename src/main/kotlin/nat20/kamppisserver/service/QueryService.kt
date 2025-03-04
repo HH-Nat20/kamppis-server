@@ -56,12 +56,8 @@ class QueryService(private val userProfileRepository: UserProfileRepository) {
             maxAgePreference,
             preferredGenders,
             preferredLocations
-        ).toMutableList()
-        val userProfileDTOList: MutableList<UserProfileDTO> = mutableListOf();
-
-        for (profile in userProfileList) {
-            userProfileDTOList.add(toUserProfileDTO(profile))
-        }
+        )
+        val userProfileDTOList: MutableList<UserProfileDTO> = userProfileList.map {toUserProfileDTO(it)}.toMutableList();
 
         return userProfileDTOList;
     }
