@@ -5,6 +5,7 @@ import io.mockk.every
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.QueryService
+import nat20.kamppisserver.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.data.repository.findByIdOrNull
@@ -25,6 +26,9 @@ class UserControllerTests {
 
     @MockkBean
     lateinit var queryService: QueryService
+
+    @MockkBean
+    lateinit var userService: UserService
 
     @Test
     fun `List all users`() {
