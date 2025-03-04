@@ -59,8 +59,21 @@ class UserProfileController(private val service: UserProfileService, private val
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
+    /**
+     * Finds all the user profiles that match the user's search criteria.
+     *
+     * @param id the id of the user who initiated the query.
+     * @return ResponseEntity with list of user profiles and status code 200 OK if user profiles have been found.
+     * @return ResponseEntity with status code 204 NO_CONTENT if no user profiles have been found.
+     */
     @GetMapping("/{id}/query")
-    fun findUserProfilesThatMeetCriteria(@PathVariable id: Long): MutableIterable<UserProfileDTO> {
-        return queryService.findUserProfilesThatMeetCriteria(id)
+    fun findUserProfilesThatMeetCriteria(@PathVariable id: Long): ResponseEntity<MutableList<UserProfileDTO>> {
+        val userProfileList: MutableList<UserProfileDTO> = queryService.findUserProfilesThatMeetCriteria(id)
+
+        if (userProfileList.isEmpty()) {
+            return ResponseEntity(HttpStatus.NO_CONTENT)
+        }
+
+        return ResponseEntity(userProfileList, HttpStatus.OK)
     }
 }
