@@ -35,15 +35,4 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
             //.withSockJS()
     }
 
-//    override fun configureMessageConverters(messageConverters: MutableList<MessageConverter>): Boolean {
-//        val resolver = DefaultContentTypeResolver()
-//        resolver.defaultMimeType = MimeTypeUtils.APPLICATION_JSON
-//        val converter = MappingJackson2MessageConverter()
-//        converter.objectMapper = ObjectMapper()
-//        converter.contentTypeResolver = resolver
-//        messageConverters.add(converter)
-//
-//        return false
-//    }
-
 }

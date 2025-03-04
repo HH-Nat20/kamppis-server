@@ -15,9 +15,6 @@ class Match(
     )
     var users: MutableSet<User> = mutableSetOf(),
 
-//    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "match", orphanRemoval = true)
-//    var messages: MutableList<Message>? = mutableListOf(),
-
     var createdAt: LocalDateTime = LocalDateTime.now(),
     @UpdateTimestamp
     var updatedAt: LocalDateTime? = null,
