@@ -27,6 +27,16 @@ class UserProfileController(private val service: UserProfileService, private val
     }
 
     /**
+     * Creates new user profile.
+     *
+     * @param userProfile the profile to be created.
+     * @return ResponseEntity with status code 201 CREATED.
+     */
+    @PostMapping
+    fun addUserProfile(@RequestBody userProfile: UserProfile): ResponseEntity<UserProfileDTO>
+        = ResponseEntity.status(HttpStatus.CREATED).body(service.add(userProfile))
+
+    /**
      * Updates user profile.
      *
      * @param userProfile the profile to be updated.

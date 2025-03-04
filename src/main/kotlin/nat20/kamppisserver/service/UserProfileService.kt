@@ -5,6 +5,7 @@ import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.domain.toUserProfileDTO
 import nat20.kamppisserver.repository.UserProfileRepository
+import nat20.kamppisserver.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -13,7 +14,13 @@ import java.time.LocalDateTime
  * Service class for User Profile.
  */
 @Service
-class UserProfileService(private val repository: UserProfileRepository) {
+class UserProfileService(
+    private val repository: UserProfileRepository,
+    private val userRepository: UserRepository,
+    userProfileRepository: UserProfileRepository
+) {
+
+    private final val userProfileRepository: UserProfileRepository = TODO("initialize me")
 
     /**
      * Returns all User Profiles as DTOs.
@@ -24,6 +31,20 @@ class UserProfileService(private val repository: UserProfileRepository) {
     fun findAll(): List<UserProfileDTO> {
         val userProfileList = repository.findAll()
         return userProfileList.map {toUserProfileDTO(it)}
+    }
+
+    /**
+     * Creates new User Profile.
+     *
+     * @param userProfile the profile to be created.
+     * @return the created profile.
+     */
+    fun add(userProfile: UserProfile): UserProfileDTO {
+        userRepository.findByIdOrNull(userProfile.user.id)
+            ?: throw EntityNotFoundException("User ${userProfile.user.id} not found")
+
+        val addedUserProfile = userProfileRepository.save(userProfile)
+        return toUserProfileDTO(addedUserProfile)
     }
 
     /**
