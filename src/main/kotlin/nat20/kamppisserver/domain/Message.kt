@@ -16,10 +16,6 @@ class Message(
     @JoinColumn(name = "sender_id", nullable = false)
     var sender: User,
 
-//    @ManyToOne
-//    @JoinColumn(name = "receiver_id", nullable = false)
-//    var receiver: User,
-
     @ManyToOne
     @JoinColumn(name = "match_id", nullable = false)
     var match: Match,
@@ -27,17 +23,7 @@ class Message(
     @Column(nullable = false)
     var content: String,
 
-//    @Enumerated(EnumType.STRING)
-//    var status: MessageStatus = MessageStatus.CREATED,
-//
     var createdAt: LocalDateTime? = LocalDateTime.now(),
-//
-//    @UpdateTimestamp
-//    var updatedAt: LocalDateTime? = null,
-//
-//    @Column(name = "deleted_at")
-//    @UpdateTimestamp
-//    var deletedAt: LocalDateTime? = null,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -24,22 +24,13 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 class MessageController(
-//    private val messageService: MessageService,
     private val userService: UserService,
     private val messagingTemplate: SimpMessagingTemplate,
     private val messageRepository: MessageRepository,
     private val matchRepository: MatchRepository
 ) {
 
-//    @PostMapping("/matches/{matchId}/start-chat")
-//    fun startChat(@PathVariable matchId: Long): ResponseEntity<Message> {
-//        val message = messageService.startChat(matchId)
-//        return ResponseEntity.ok(message)
-//    }
-
-    @MessageMapping("/matches/{matchId}/messages") // Listen to messages from /app/matches/{matchId}/messages
-    //@SendTo("/user/matches/{matchId}/messages") // Send content to subscribers of /user/matches/{matchId}/messages
-    // SendTo requires /topic by default, but we are using /user so we need to manually set the destination
+    @MessageMapping("/matches/{matchId}/messages")
     fun sendMessage(
         @DestinationVariable matchId: Long,
         @Payload messageDTO: MessageDTO,
@@ -100,27 +91,11 @@ class MessageController(
         val messageHistory = messageRepository.findByMatchIdOrderByCreatedAtAsc(matchId)
 
 
-// Convert to DTO and send previous messages to the user who just subscribed
+        // Convert to DTO and send previous messages to the user who just subscribed
         messageHistory.forEach { message ->
             val messageDTO = message.toMessageDTO()
             messagingTemplate.convertAndSend("/user/matches/$matchId/messages", messageDTO)
         }
     }
-
-    /** Still experimenting, might never be used
-    @GetMapping("/matches/{matchId}/messages")
-    fun chat(@PathVariable matchId: String, model: Model): String {
-        model.addAttribute("matchId", matchId)
-        return "chat"
-    }
-
-    @MessageMapping("/user.addUser")
-    @SendTo("/user/topic")
-    fun addUser(@Payload message: Message, headerAccessor: SimpMessageHeaderAccessor): Message {
-        // Add username in websocket session
-        headerAccessor.sessionAttributes?.put("username", message.sender)
-        return message
-    }
-    */
 
 }
