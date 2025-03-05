@@ -41,13 +41,13 @@ class UserProfile(
     var maxAgePreference: Int? = null,
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Gender::class)
+    @CollectionTable(name = "user_profiles_genders", joinColumns = [JoinColumn(name = "user_profile_id")])
     @Enumerated(EnumType.STRING)
     var preferredGenders: MutableList<Gender>? = mutableListOf(Gender.NOT_IMPORTANT),
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = City::class)
     @CollectionTable(name = "user_profiles_locations", joinColumns = [JoinColumn(name = "user_profile_id")])
     @Enumerated(EnumType.STRING)
-    //@Convert(converter = JsonStringListConverter::class)
     var preferredLocations: MutableList<City>? = mutableListOf(),
 
     /*
