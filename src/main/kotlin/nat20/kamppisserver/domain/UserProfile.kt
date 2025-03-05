@@ -32,7 +32,7 @@ class UserProfile(
     @Enumerated(EnumType.STRING)
     var gender: Gender,
 
-    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "userProfile", orphanRemoval = true)
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "userProfile", orphanRemoval = true, fetch = FetchType.EAGER,)
     var userPhotos: MutableList<UserPhoto>? = mutableListOf(),
 
     var bio: String? = null,
