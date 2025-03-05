@@ -49,7 +49,7 @@ class UserProfile(
     @Enumerated(EnumType.STRING)
     var preferredLocations: MutableList<City>? = mutableListOf(),
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) // Remove EnumType.STRING if we want to compare users' maxRent values by enum ordinal values
     var maxRent: MaxRent,
 
     @Enumerated(EnumType.STRING)
