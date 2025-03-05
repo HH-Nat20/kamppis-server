@@ -77,7 +77,7 @@ fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
         gender = userProfile.gender,
         bio = userProfile.bio,
         preferredLocations = userProfile.preferredLocations,
-        userPhotos = userProfile.userPhotos,
+        userPhotos = userProfile.userPhotos?.map {it.id}?.toMutableList(),
         userHabits = userProfile.userHabits,
         userInterests = userProfile.userInterests,
         id = userProfile.id!!
@@ -92,7 +92,7 @@ data class UserProfileDTO(
     val lastName: String,
     val age: Long,
     val gender: Gender,
-    val userPhotos: MutableList<UserPhoto>?,
+    val userPhotos: MutableList<Long?>?,
     val userHabits: MutableList<UserHabit>?,
     val userInterests: MutableList<UserInterest>?,
     val bio: String?,
