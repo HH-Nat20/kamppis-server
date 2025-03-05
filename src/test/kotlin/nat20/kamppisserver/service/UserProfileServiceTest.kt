@@ -7,6 +7,8 @@ import jakarta.persistence.EntityNotFoundException
 import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
+import nat20.kamppisserver.domain.enums.MaxRent
+import nat20.kamppisserver.domain.enums.Cleanliness
 import nat20.kamppisserver.repository.UserProfileRepository
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -53,7 +55,9 @@ class UserProfileServiceTest {
             firstName = "Test",
             lastName = "User",
             dateOfBirth = LocalDate.of(1995, 1, 1),
-            gender = Gender.NOT_IMPORTANT
+            gender = Gender.NOT_IMPORTANT,
+            maxRent = MaxRent.LOW,
+            cleanliness = Cleanliness.TIDY,
         )
 
         val exception = assertThrows<EntityNotFoundException> {

@@ -1,8 +1,7 @@
 package nat20.kamppisserver.domain
 
 import nat20.kamppisserver.TestDatabaseMockDataConfiguration
-import nat20.kamppisserver.domain.enums.City
-import nat20.kamppisserver.domain.enums.Gender
+import nat20.kamppisserver.domain.enums.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import kotlin.test.Test
@@ -31,11 +30,12 @@ class UserProfileTests @Autowired constructor(
             lastName = "Smith",
             age = 34,
             gender = Gender.FEMALE,
-            userPhotos = userProfileRepository.findByIdOrNull(1L)?.userPhotos?.toMutableList(),
-            userHabits = mutableListOf(),
-            userInterests = mutableListOf(),
-            bio = null,
+            userPhotos = userProfileRepository.findByIdOrNull(1L)?.userPhotos?.map {it.id}?.toMutableList(),
             preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
+            maxRent = MaxRent.LOW,
+            cleanliness = Cleanliness.SPOTLESS,
+            lifestyle = mutableListOf(Lifestyle.EARLY_BIRD, Lifestyle.STUDENT),
+            bio = "I'm a passionate traveler who loves exploring new cultures and cuisines. When I'm not studying, you can find me hiking in nature or experimenting with new recipes in the kitchen.",
             id = 1
         )
 
