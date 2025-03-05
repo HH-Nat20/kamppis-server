@@ -2,7 +2,11 @@ package nat20.kamppisserver.domain
 
 import jakarta.persistence.*
 import nat20.kamppisserver.domain.enums.City
+import nat20.kamppisserver.domain.enums.Cleanliness
 import nat20.kamppisserver.domain.enums.Gender
+import nat20.kamppisserver.domain.enums.Lifestyle
+import nat20.kamppisserver.domain.enums.MaxRent
+
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -31,12 +35,6 @@ class UserProfile(
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "userProfile", orphanRemoval = true)
     var userPhotos: MutableList<UserPhoto>? = mutableListOf(),
 
-    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "userProfile", orphanRemoval = true)
-    var userHabits: MutableList<UserHabit>? = mutableListOf(),
-
-    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "userProfile", orphanRemoval = true)
-    var userInterests: MutableList<UserInterest>? = mutableListOf(),
-
     var bio: String? = null,
     var minAgePreference: Int? = null,
     var maxAgePreference: Int? = null,
@@ -50,6 +48,17 @@ class UserProfile(
     @CollectionTable(name = "user_profiles_locations", joinColumns = [JoinColumn(name = "user_profile_id")])
     @Enumerated(EnumType.STRING)
     var preferredLocations: MutableList<City>? = mutableListOf(),
+
+    @Enumerated(EnumType.STRING)
+    var maxRent: MaxRent,
+
+    @Enumerated(EnumType.STRING)
+    var cleanliness: Cleanliness,
+
+    @ElementCollection(fetch = FetchType.EAGER, targetClass = Lifestyle::class)
+    @CollectionTable(name = "user_profiles_lifestyle", joinColumns = [JoinColumn(name = "user_profile_id")])
+    @Enumerated(EnumType.STRING)
+    var lifestyle: MutableList<Lifestyle>? = mutableListOf(),
 
     /*
     * ADD FIELDS HERE AS REQUIRED
@@ -76,11 +85,12 @@ fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
         //TODO: age = ChronoUnit.YEARS.between(userProfile.dateOfBirth, LocalDate.now()),
         age = ChronoUnit.YEARS.between(userProfile.dateOfBirth, LocalDate.of(2025, 2, 21)),
         gender = userProfile.gender,
+        userPhotos = userProfile.userPhotos?.map {it.id}?.toMutableList(),
         bio = userProfile.bio,
         preferredLocations = userProfile.preferredLocations,
-        userPhotos = userProfile.userPhotos?.map {it.id}?.toMutableList(),
-        userHabits = userProfile.userHabits,
-        userInterests = userProfile.userInterests,
+        maxRent = userProfile.maxRent,
+        cleanliness = userProfile.cleanliness,
+        lifestyle = userProfile.lifestyle,
         id = userProfile.id!!
     )
 
@@ -94,9 +104,10 @@ data class UserProfileDTO(
     val age: Long,
     val gender: Gender,
     val userPhotos: MutableList<Long?>?,
-    val userHabits: MutableList<UserHabit>?,
-    val userInterests: MutableList<UserInterest>?,
     val bio: String?,
     val preferredLocations: MutableList<City>?,
+    val maxRent: MaxRent,
+    val cleanliness: Cleanliness,
+    val lifestyle: MutableList<Lifestyle>?,
     val id: Long
 )
