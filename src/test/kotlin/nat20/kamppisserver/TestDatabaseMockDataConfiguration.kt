@@ -1,9 +1,8 @@
 package nat20.kamppisserver
 
-import nat20.kamppisserver.domain.enums.City
-import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
+import nat20.kamppisserver.domain.enums.*
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.boot.ApplicationRunner
@@ -118,7 +117,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 27,
                 preferredGenders = mutableListOf(Gender.FEMALE),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
-                bio = null,
+                maxRent = MaxRent.LOW,
+                cleanliness = Cleanliness.SPOTLESS,
+                lifestyle = mutableListOf(Lifestyle.EARLY_BIRD, Lifestyle.STUDENT),
+                bio = "I'm a passionate traveler who loves exploring new cultures and cuisines. When I'm not studying, you can find me hiking in nature or experimenting with new recipes in the kitchen.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -131,7 +133,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 37,
                 preferredGenders = mutableListOf(Gender.MALE, Gender.FEMALE),
                 preferredLocations = mutableListOf(City.HELSINKI, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.MID,
+                cleanliness = Cleanliness.TIDY,
+                lifestyle = mutableListOf(Lifestyle.NIGHT_OWL, Lifestyle.PARTY_GOER),
+                bio = "I have a deep appreciation for music and often spend my weekends attending live concerts or playing the guitar. My friends describe me as a foodie who loves to explore new restaurants and culinary experiences.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -144,7 +149,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 26,
                 preferredGenders = mutableListOf(Gender.OTHER),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
-                bio = null,
+                maxRent = MaxRent.HIGH,
+                cleanliness = Cleanliness.TIDY,
+                lifestyle = mutableListOf(Lifestyle.HOMEBODY, Lifestyle.WORKING),
+                bio = "As an avid reader, I enjoy getting lost in a good book and discussing literature with fellow book enthusiasts. Excited to connect with others who share my interests in reading!",
                 updatedAt = null,
             ),
             UserProfile(
@@ -157,7 +165,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 38,
                 preferredGenders = mutableListOf(Gender.FEMALE),
                 preferredLocations = mutableListOf(City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.LOW,
+                cleanliness = Cleanliness.TIDY,
+                lifestyle = mutableListOf(Lifestyle.STUDENT, Lifestyle.NIGHT_OWL),
+                bio = "As a dedicated student, I balance my time between academics and my love for outdoor activities. I enjoy discovering new hiking trails and capturing beautiful landscapes through photography.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -170,7 +181,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 55,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.ESPOO, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.LOW,
+                cleanliness = Cleanliness.CASUAL,
+                lifestyle = mutableListOf(Lifestyle.PARTY_GOER, Lifestyle.EARLY_BIRD),
+                bio = "With a keen interest in fitness and wellness, I start my days with a refreshing morning run. I also enjoy attending local art exhibitions and trying out new coffee shops.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -183,7 +197,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 27,
                 preferredGenders = mutableListOf(Gender.MALE),
                 preferredLocations = mutableListOf(City.HELSINKI, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.LOW,
+                cleanliness = Cleanliness.MESSY,
+                lifestyle =  mutableListOf(Lifestyle.WORKING, Lifestyle.STUDENT),
+                bio = "As a tech enthusiast, I love staying updated with the latest gadgets and innovations. In my free time, I enjoy coding and working on personal projects.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -196,7 +213,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 30,
                 preferredGenders = mutableListOf(Gender.FEMALE, Gender.OTHER),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.MID,
+                cleanliness = Cleanliness.TIDY,
+                lifestyle = mutableListOf(Lifestyle.EARLY_BIRD, Lifestyle.HOMEBODY),
+                bio = "I have a passion for volunteering and often spend my weekends helping out at local shelters. I also enjoy practicing yoga and meditation to maintain a balanced lifestyle.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -209,7 +229,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 26,
                 preferredGenders = mutableListOf(Gender.MALE),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
-                bio = null,
+                maxRent = MaxRent.MID,
+                cleanliness = Cleanliness.CASUAL,
+                lifestyle =  mutableListOf(Lifestyle.NIGHT_OWL, Lifestyle.WORKING),
+                bio = "I have a creative side that I express through painting and DIY crafts. Excited to connect with others who appreciate creativity and the arts!",
                 updatedAt = null,
             ),
             UserProfile(
@@ -222,7 +245,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 28,
                 preferredGenders = mutableListOf(Gender.FEMALE),
                 preferredLocations = mutableListOf(City.ESPOO),
-                bio = null,
+                maxRent = MaxRent.LOW,
+                cleanliness = Cleanliness.CAREFREE,
+                lifestyle = mutableListOf(Lifestyle.PARTY_GOER, Lifestyle.STUDENT),
+                bio = "I have a deep appreciation for music and often spend my weekends attending live concerts. My friends describe me as a foodie who loves to explore new culinary experiences.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -235,7 +261,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 29,
                 preferredGenders = mutableListOf(Gender.MALE, Gender.OTHER),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.MID,
+                cleanliness = Cleanliness.SPOTLESS,
+                lifestyle = mutableListOf(Lifestyle.HOMEBODY, Lifestyle.NIGHT_OWL),
+                bio = "I'm an animal lover and spend a lot of time with my rescue pets. I also enjoy outdoor activities like camping and kayaking.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -248,7 +277,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 32,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.ESPOO, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.HIGH,
+                cleanliness = Cleanliness.TIDY,
+                lifestyle = mutableListOf(Lifestyle.STUDENT, Lifestyle.EARLY_BIRD),
+                bio = "As a dedicated student, I balance my time between academics and my love for outdoor activities. Discovering new hiking trails and capturing beautiful landscapes through photography are my favorite pastimes.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -261,7 +293,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 27,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.HELSINKI),
-                bio = null,
+                maxRent = MaxRent.MID,
+                cleanliness = Cleanliness.TIDY,
+                lifestyle = mutableListOf(Lifestyle.WORKING, Lifestyle.PARTY_GOER),
+                bio = "With a background in culinary arts, I love experimenting with new recipes and hosting dinner parties for friends.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -274,7 +309,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 24,
                 preferredGenders = mutableListOf(Gender.FEMALE),
                 preferredLocations = mutableListOf(City.HELSINKI),
-                bio = null,
+                maxRent = MaxRent.LOW,
+                cleanliness = Cleanliness.TIDY,
+                lifestyle = mutableListOf(Lifestyle.WORKING, Lifestyle.PARTY_GOER),
+                bio = "Music is a big part of my life, and I enjoy playing the guitar and attending live concerts. I'm also a foodie who loves discovering new restaurants and culinary experiences.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -287,7 +325,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 28,
                 preferredGenders = mutableListOf(Gender.MALE),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
-                bio = null,
+                maxRent = MaxRent.HIGH,
+                cleanliness = Cleanliness.SPOTLESS,
+                lifestyle = mutableListOf(Lifestyle.NIGHT_OWL, Lifestyle.HOMEBODY),
+                bio = "I'm an avid reader who enjoys diving into mystery novels and discussing them with fellow book lovers. Gardening is another hobby of mine, and I take pride in my flourishing indoor plants.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -300,7 +341,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 29,
                 preferredGenders = mutableListOf(Gender.FEMALE),
                 preferredLocations = mutableListOf(City.HELSINKI, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.LOW,
+                cleanliness = Cleanliness.CASUAL,
+                lifestyle = mutableListOf(Lifestyle.PARTY_GOER, Lifestyle.WORKING),
+                bio = "I love the nightlife and enjoy attending social events and parties with friends. Dancing and meeting new people are some of my favorite activities.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -313,7 +357,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 30,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.ESPOO, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.LOW,
+                cleanliness = Cleanliness.TIDY,
+                lifestyle = mutableListOf(Lifestyle.HOMEBODY, Lifestyle.STUDENT),
+                bio = "I enjoy practicing yoga and meditation to maintain a balanced lifestyle. Volunteering at local shelters and giving back to the community is something I find fulfilling.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -326,7 +373,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 25,
                 preferredGenders = mutableListOf(Gender.FEMALE, Gender.OTHER),
                 preferredLocations = mutableListOf(City.ESPOO, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.MID,
+                cleanliness = Cleanliness.TIDY,
+                lifestyle = mutableListOf(Lifestyle.STUDENT, Lifestyle.WORKING),
+                bio = "As a tech enthusiast, I love staying updated with the latest gadgets and innovations. In my free time, I enjoy coding and working on personal projects.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -339,7 +389,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 27,
                 preferredGenders = mutableListOf(Gender.MALE),
                 preferredLocations = mutableListOf(City.HELSINKI, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.MID,
+                cleanliness = Cleanliness.CASUAL,
+                lifestyle = mutableListOf(Lifestyle.WORKING, Lifestyle.EARLY_BIRD),
+                bio = "I have a passion for volunteering and often spend my weekends helping out at local shelters. Practicing yoga and meditation helps me maintain a balanced lifestyle.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -352,7 +405,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 33,
                 preferredGenders = mutableListOf(Gender.MALE),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
-                bio = null,
+                maxRent = MaxRent.HIGH,
+                cleanliness = Cleanliness.MESSY,
+                lifestyle = mutableListOf(Lifestyle.EARLY_BIRD, Lifestyle.STUDENT),
+                bio = "As a tech enthusiast, I enjoy staying updated with the latest gadgets and working on coding projects. In my free time, I love exploring new coffee shops and trying different brews.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -365,7 +421,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 28,
                 preferredGenders = mutableListOf(Gender.FEMALE, Gender.OTHER),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.MID,
+                cleanliness = Cleanliness.TIDY,
+                lifestyle = mutableListOf(Lifestyle.NIGHT_OWL, Lifestyle.STUDENT),
+                bio = "Music is a big part of my life, and I enjoy playing the guitar and attending live concerts. I'm also a foodie who loves discovering new restaurants and culinary experiences.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -378,7 +437,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 30,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.HELSINKI, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.HIGH,
+                cleanliness = Cleanliness.CAREFREE,
+                lifestyle = mutableListOf(Lifestyle.PARTY_GOER, Lifestyle.WORKING),
+                bio = "As a sports fan, I love attending live games and cheering for my favorite teams. I also enjoy playing tennis and staying active through various sports.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -391,7 +453,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 31,
                 preferredGenders = mutableListOf(Gender.MALE),
                 preferredLocations = mutableListOf(City.ESPOO, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.LOW,
+                cleanliness = Cleanliness.MESSY,
+                lifestyle = mutableListOf(Lifestyle.HOMEBODY, Lifestyle.EARLY_BIRD),
+                bio = "I'm a film buff who enjoys watching classic movies and discussing them with fellow film enthusiasts. I also have a talent for drawing and often sketch scenes from my favorite films.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -404,7 +469,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 28,
                 preferredGenders = mutableListOf(Gender.FEMALE),
                 preferredLocations = mutableListOf(City.HELSINKI),
-                bio = null,
+                maxRent = MaxRent.MID,
+                cleanliness = Cleanliness.TIDY,
+                lifestyle = mutableListOf(Lifestyle.STUDENT, Lifestyle.PARTY_GOER),
+                bio = "As a science enthusiast, I enjoy reading about the latest discoveries and advancements. I also love trying out new clubs and bars in the city!",
                 updatedAt = null,
             ),
             UserProfile(
@@ -417,7 +485,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 26,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.HELSINKI, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.HIGH,
+                cleanliness = Cleanliness.SPOTLESS,
+                lifestyle = mutableListOf(Lifestyle.WORKING, Lifestyle.NIGHT_OWL),
+                bio = "I have a passion for astronomy and enjoy stargazing and learning about the cosmos. Attending astronomy clubs and events is something I look forward to.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -430,7 +501,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 27,
                 preferredGenders = mutableListOf(Gender.FEMALE, Gender.OTHER),
                 preferredLocations = mutableListOf(City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.LOW,
+                cleanliness = Cleanliness.TIDY,
+                lifestyle = mutableListOf(Lifestyle.EARLY_BIRD, Lifestyle.HOMEBODY),
+                bio = "I'm a puzzle enthusiast who enjoys solving complex puzzles and brainteasers. I also love playing board games with friends and family during gatherings.",
                 updatedAt = null,
             ),
             UserProfile(
@@ -443,7 +517,10 @@ class TestDatabaseMockDataConfiguration {
                 maxAgePreference = 29,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
-                bio = null,
+                maxRent = MaxRent.LOW,
+                cleanliness = Cleanliness.TIDY,
+                lifestyle = mutableListOf(Lifestyle.NIGHT_OWL, Lifestyle.WORKING),
+                bio = "I have a love for fashion and enjoy keeping up with the latest trends and styles. Designing my own clothes and accessories is a creative outlet for me.",
                 updatedAt = null,
             )
         )
