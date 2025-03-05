@@ -1,4 +1,4 @@
-package nat20.kamppisserver.domain
+package nat20.kamppisserver.domain.enums
 
 // Might still change - specifically UPDATED & DELETED
 enum class MessageStatus {
