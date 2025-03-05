@@ -3,7 +3,9 @@ package nat20.kamppisserver.domain
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 /**
  * Entity class for User Photos.
@@ -34,4 +36,19 @@ class UserPhoto(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
+)
+fun toUserPhotoDTO(userPhoto: UserPhoto): UserPhotoDTO {
+    val userPhotoDTO: UserPhotoDTO = UserPhotoDTO(
+        name = userPhoto.name,
+        isProfilePhoto = userPhoto.isProfilePhoto,
+        id = userPhoto.id!!
+    )
+
+    return userPhotoDTO
+}
+
+data class UserPhotoDTO(
+    val name: String,
+    val isProfilePhoto: Boolean,
+    val id: Long
 )
