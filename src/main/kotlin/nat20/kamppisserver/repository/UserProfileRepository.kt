@@ -1,6 +1,5 @@
 package nat20.kamppisserver.repository
 
-import nat20.kamppisserver.domain.Gender
 import org.springframework.data.jpa.repository.JpaRepository
 import nat20.kamppisserver.domain.UserProfile
 import org.springframework.data.jpa.repository.Query

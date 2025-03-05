@@ -1,6 +1,8 @@
 package nat20.kamppisserver.configuration
 
 import nat20.kamppisserver.domain.*
+import nat20.kamppisserver.domain.enums.City
+import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.repository.MatchRepository

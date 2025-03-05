@@ -1,4 +1,4 @@
-package nat20.kamppisserver.domain
+package nat20.kamppisserver.domain.enums
 
 enum class UserStatus {
     ONLINE,

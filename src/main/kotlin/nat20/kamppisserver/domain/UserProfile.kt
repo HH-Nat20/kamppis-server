@@ -1,7 +1,8 @@
 package nat20.kamppisserver.domain
 
 import jakarta.persistence.*
-import nat20.kamppisserver.util.JsonStringListConverter
+import nat20.kamppisserver.domain.enums.City
+import nat20.kamppisserver.domain.enums.Gender
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDate
 import java.time.LocalDateTime

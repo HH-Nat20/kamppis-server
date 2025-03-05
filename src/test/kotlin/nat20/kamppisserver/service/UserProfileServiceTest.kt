@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import jakarta.persistence.EntityNotFoundException
-import nat20.kamppisserver.domain.Gender
+import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.repository.UserProfileRepository

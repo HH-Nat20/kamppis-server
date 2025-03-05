@@ -2,6 +2,7 @@ package nat20.kamppisserver.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
+import nat20.kamppisserver.domain.enums.UserStatus
 
 /**
  * Entity class for User.

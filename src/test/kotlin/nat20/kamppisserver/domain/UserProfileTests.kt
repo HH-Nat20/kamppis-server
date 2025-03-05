@@ -1,6 +1,8 @@
 package nat20.kamppisserver.domain
 
 import nat20.kamppisserver.TestDatabaseMockDataConfiguration
+import nat20.kamppisserver.domain.enums.City
+import nat20.kamppisserver.domain.enums.Gender
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import kotlin.test.Test

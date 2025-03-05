@@ -1,7 +1,7 @@
 package nat20.kamppisserver.service
 
 import nat20.kamppisserver.domain.User
-import nat20.kamppisserver.domain.UserStatus
+import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
