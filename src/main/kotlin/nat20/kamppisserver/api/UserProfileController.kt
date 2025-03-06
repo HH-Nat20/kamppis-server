@@ -27,6 +27,14 @@ class UserProfileController(private val service: UserProfileService, private val
     }
 
     /**
+     * Returns user profile by id.
+     */
+    @GetMapping("/{id}")
+    fun findById(@PathVariable id: Long): ResponseEntity<UserProfileDTO> {
+        return ResponseEntity.ok(service.findById(id))
+    }
+
+    /**
      * Creates new user profile.
      *
      * @param userProfile the profile to be created.
