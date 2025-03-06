@@ -10,7 +10,9 @@ import nat20.kamppisserver.repository.UserProfileRepository
 import org.springframework.dao.EmptyResultDataAccessException
 import java.time.LocalDate
 
-
+/**
+ * Service class for querying user profiles.
+ */
 @Service
 class QueryService(private val userProfileRepository: UserProfileRepository) {
 

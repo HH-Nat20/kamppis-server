@@ -19,12 +19,12 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     * -> For this, we select all columns in the user profiles from the "user_profiles" table with the alias "up"
     *
     * 2) JOIN "user_profiles_genders" upg ON up."id" = upg."user_profile_id"
-    * -> preferred genders are stored as a list of strings, converted from enums
-    * -> In Spring, this creates a new table, so we join the "user_profiles_genders" table with the alias "upg to the "user_profiles" table
+    * -> Preferred genders are stored as a list of strings, converted from enums
+    * -> In Spring, this creates a new table, so we join the "user_profiles_genders" table with the alias "upg" to the "user_profiles" table
     *
     * 3) JOIN "user_profiles_locations" upl ON up."id" = upl."user_profile_id"
-    * -> locations are stored as a list of strings, converted from enums
-    * -> In Spring, this creates a new table, so we join the "user_profiles_locations" table with the alias "upl to the "user_profiles" table
+    * -> Preferred locations are stored as a list of strings, converted from enums
+    * -> In Spring, this creates a new table, so we join the "user_profiles_locations" table with the alias "upl" to the "user_profiles" table
     *
     * 4) WHERE
     * -> Here we specify the query filters
