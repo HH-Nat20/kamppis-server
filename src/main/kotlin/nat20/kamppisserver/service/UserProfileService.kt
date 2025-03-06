@@ -34,6 +34,19 @@ class UserProfileService(
     }
 
     /**
+     * Returns User Profile by id.
+     *
+     * @param id the id of the profile to be returned.
+     * @return the profile with given id.
+     */
+    fun findById(id: Long): UserProfileDTO {
+        val userProfile = repository.findByIdOrNull(id)
+            ?: throw EntityNotFoundException("User profile with id $id not found")
+
+        return toUserProfileDTO(userProfile)
+    }
+
+    /**
      * Creates new User Profile.
      *
      * @param userProfile the profile to be created.
