@@ -9,6 +9,7 @@ import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.enums.MaxRent
 import nat20.kamppisserver.domain.enums.Cleanliness
+import nat20.kamppisserver.domain.toUserProfileDTO
 import nat20.kamppisserver.repository.UserProfileRepository
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,13 +38,14 @@ class UserProfileServiceTest {
     @Test
     fun `update should modify and save user profile`() {
 
+        val userProfile = repository.findByIdOrNull(1L)
+
+        val result = userProfile?.let { service.update(toUserProfileDTO(it), 1L) }
+
         val updatedProfile = repository.findByIdOrNull(1L)
 
-        val result = updatedProfile?.let { service.update(it, 1L) }
+        assertNotNull(updatedProfile?.updatedAt)
 
-        if (result != null) {
-            assertNotNull(result.updatedAt)
-        }
     }
 
     @Test
@@ -61,7 +63,7 @@ class UserProfileServiceTest {
         )
 
         val exception = assertThrows<EntityNotFoundException> {
-            service.update(updatedProfile, id)
+            service.update(toUserProfileDTO(updatedProfile), id)
         }
 
         assertEquals("User profile with id $id not found", exception.message)

@@ -79,7 +79,7 @@ class UserProfile(
 
 fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
     val userProfileDTO: UserProfileDTO = UserProfileDTO(
-        userId = userProfile.user.id!!,
+        //userId = userProfile.user.id!!,
         firstName = userProfile.firstName,
         lastName = userProfile.lastName,
         //TODO: age = ChronoUnit.YEARS.between(userProfile.dateOfBirth, LocalDate.now()),
@@ -98,7 +98,7 @@ fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
 }
 
 data class UserProfileDTO(
-    val userId: Long,
+    //val userId: Long,
     val firstName: String,
     val lastName: String,
     val age: Long,

@@ -25,7 +25,7 @@ class UserProfileTests @Autowired constructor(
     @Test
     fun `toUserProfileDTO should return a valid DTO data class` () {
         val testUserProfileDTO: UserProfileDTO = UserProfileDTO(
-            userId = 1,
+            //userId = 1,
             firstName = "Alice",
             lastName = "Smith",
             age = 34,
