@@ -80,6 +80,8 @@ class UserProfileService(
         // TODO: updating user photos
         // Kotlin shorthand for only updating if the new value is not null
         userProfile.bio?.let { existingProfile.bio = it }
+        userProfile.minAgePreference?.let { existingProfile.minAgePreference = it }
+        userProfile.maxAgePreference?.let { existingProfile.maxAgePreference = it }
         userProfile.preferredLocations?.let { existingProfile.preferredLocations = it }
         existingProfile.maxRent = userProfile.maxRent
         existingProfile.cleanliness = userProfile.cleanliness

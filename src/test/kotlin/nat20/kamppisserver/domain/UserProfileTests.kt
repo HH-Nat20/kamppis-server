@@ -32,6 +32,8 @@ class UserProfileTests @Autowired constructor(
             gender = Gender.FEMALE,
             userPhotos = userProfileRepository.findByIdOrNull(1L)?.userPhotos?.map { toUserPhotoDTO(it) }?.toMutableList(),
             preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
+            minAgePreference = 22,
+            maxAgePreference = 27,
             maxRent = MaxRent.LOW,
             cleanliness = Cleanliness.SPOTLESS,
             lifestyle = mutableListOf(Lifestyle.EARLY_BIRD, Lifestyle.STUDENT),
