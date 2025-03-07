@@ -23,7 +23,14 @@ class UserService(private val repository: UserRepository) {
      * @param user the user to be created.
      * @return the created user.
      */
-    fun add(user: User): User = repository.save(user)
+    fun add(user: User): User {
+        val existingUser = repository.findByEmail(user.email)
+        if (existingUser != null) {
+            throw ResponseStatusException(HttpStatus.CONFLICT, "User with this email already exists")
+        }
+
+        return repository.save(user)
+    }
 
     /**
      * Updates given User.
