@@ -1,6 +1,7 @@
 package nat20.kamppisserver.service
 
 import jakarta.persistence.EntityNotFoundException
+import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.domain.toUserProfileDTO
@@ -67,19 +68,28 @@ class UserProfileService(
      * @param id the id of the profile to be updated.
      * @return the updated profile.
      */
-    fun update(userProfile: UserProfile, id: Long): UserProfile {
-        val updatedProfile = repository.findByIdOrNull(id)
+    @Transactional
+    fun update(userProfile: UserProfileDTO, id: Long): UserProfileDTO {
+        val existingProfile = repository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("User profile with id $id not found")
 
-        updatedProfile.user = userProfile.user
-        updatedProfile.minAgePreference = userProfile.minAgePreference
-        updatedProfile.maxAgePreference = userProfile.maxAgePreference
-        updatedProfile.preferredGenders = userProfile.preferredGenders
-        updatedProfile.preferredLocations = userProfile.preferredLocations
-        updatedProfile.bio = userProfile.bio
-        updatedProfile.updatedAt = LocalDateTime.now()
+        existingProfile.firstName = userProfile.firstName
+        existingProfile.lastName = userProfile.lastName
+        // TODO: age updating? Currently not possible with the DTO structure
+        existingProfile.gender = userProfile.gender
+        // TODO: updating user photos
+        // Kotlin shorthand for only updating if the new value is not null
+        userProfile.bio?.let { existingProfile.bio = it }
+        userProfile.preferredLocations?.let { existingProfile.preferredLocations = it }
+        existingProfile.maxRent = userProfile.maxRent
+        existingProfile.cleanliness = userProfile.cleanliness
+        userProfile.lifestyle?.let { existingProfile.lifestyle = it }
 
-        return repository.save(updatedProfile)
+        existingProfile.updatedAt = LocalDateTime.now()
+
+        val updatedProfile = repository.save(existingProfile)
+
+        return toUserProfileDTO(updatedProfile)
     }
 
     /**

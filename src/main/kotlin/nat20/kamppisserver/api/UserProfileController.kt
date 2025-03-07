@@ -52,7 +52,7 @@ class UserProfileController(private val service: UserProfileService, private val
      * @return ResponseEntity with status code 200 OK.
      */
     @PutMapping("/{id}")
-    fun updateUserProfile(@RequestBody userProfile: UserProfile, @PathVariable id: Long): ResponseEntity<UserProfile>
+    fun updateUserProfile(@RequestBody userProfile: UserProfileDTO, @PathVariable id: Long): ResponseEntity<UserProfileDTO>
         = ResponseEntity.ok(service.update(userProfile, id))
 
     /**
