@@ -543,9 +543,24 @@ class DatabaseMockDataConfiguration {
                 isProfilePhoto = true,
             ),
             UserPhoto(
+                userProfile = userProfileRepository.findById(1L).get(),
+                name = "https://images.pexels.com/photos/7508810/pexels-photo-7508810.jpeg",
+                isProfilePhoto = false,
+            ),
+            UserPhoto(
+                userProfile = userProfileRepository.findById(1L).get(),
+                name = "https://images.pexels.com/photos/7994283/pexels-photo-7994283.jpeg",
+                isProfilePhoto = false,
+            ),
+            UserPhoto(
                 userProfile = userProfileRepository.findById(2L).get(),
                 name = "https://freerangestock.com/sample/169954/young-man-in-contemplative-urban-scene.jpg",
                 isProfilePhoto = true,
+            ),
+            UserPhoto(
+                userProfile = userProfileRepository.findById(2L).get(),
+                name = "https://images.pexels.com/photos/7252531/pexels-photo-7252531.jpeg",
+                isProfilePhoto = false,
             ),
             UserPhoto(
                 userProfile = userProfileRepository.findById(3L).get(),
@@ -553,14 +568,29 @@ class DatabaseMockDataConfiguration {
                 isProfilePhoto = true,
             ),
             UserPhoto(
+                userProfile = userProfileRepository.findById(3L).get(),
+                name = "https://images.pexels.com/photos/1472856/pexels-photo-1472856.jpeg",
+                isProfilePhoto = false,
+            ),
+            UserPhoto(
                 userProfile = userProfileRepository.findById(4L).get(),
                 name = "https://upload.wikimedia.org/wikipedia/commons/2/2d/African-Woman-Business-Woman-Young-Woman-Black-Woman-3439224.jpg",
                 isProfilePhoto = true,
             ),
             UserPhoto(
+                userProfile = userProfileRepository.findById(4L).get(),
+                name = "https://images.pexels.com/photos/6550399/pexels-photo-6550399.jpeg",
+                isProfilePhoto = false,
+            ),
+            UserPhoto(
                 userProfile = userProfileRepository.findById(5L).get(),
                 name = "https://live.staticflickr.com/2727/4523649809_f893abca83_b.jpg",
                 isProfilePhoto = true,
+            ),
+            UserPhoto(
+                userProfile = userProfileRepository.findById(5L).get(),
+                name = "https://images.pexels.com/photos/7849189/pexels-photo-7849189.jpeg",
+                isProfilePhoto = false,
             ),
             UserPhoto(
                 userProfile = userProfileRepository.findById(6L).get(),
