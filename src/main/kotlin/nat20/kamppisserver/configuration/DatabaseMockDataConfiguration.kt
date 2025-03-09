@@ -6,10 +6,7 @@ import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.Lifestyle
 import nat20.kamppisserver.domain.enums.Cleanliness
 import nat20.kamppisserver.domain.enums.MaxRent
-import nat20.kamppisserver.repository.UserProfileRepository
-import nat20.kamppisserver.repository.UserRepository
-import nat20.kamppisserver.repository.MatchRepository
-import nat20.kamppisserver.repository.UserPhotoRepository
+import nat20.kamppisserver.repository.*
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -27,7 +24,7 @@ class DatabaseMockDataConfiguration {
     fun databaseInitializer(userRepository: UserRepository,
                             userProfileRepository: UserProfileRepository,
                             userPhotoRepository: UserPhotoRepository,
-                            matchRepository: MatchRepository
+                            matchRepository: MatchRepository, swipeRepository: SwipeRepository
     ) = ApplicationRunner {
 
         val users = listOf(
@@ -713,6 +710,15 @@ class DatabaseMockDataConfiguration {
 
         // Save matches to database
         matchRepository.saveAll(matches)
+
+        val swipes = listOf(
+            Swipe(userRepository.findById(1L).get(), userRepository.findById(2L).get(), true),
+            Swipe(userRepository.findById(1L).get(), userRepository.findById(3L).get(), true),
+            Swipe(userRepository.findById(2L).get(), userRepository.findById(1L).get(), true),
+            Swipe(userRepository.findById(3L).get(), userRepository.findById(1L).get(), true)
+        )
+
+        swipeRepository.saveAll(swipes)
 
     }
 }
