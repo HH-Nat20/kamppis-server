@@ -34,6 +34,7 @@ class UserProfileTests @Autowired constructor(
             preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
             minAgePreference = 22,
             maxAgePreference = 27,
+            preferredGenders = mutableListOf(Gender.FEMALE),
             maxRent = MaxRent.LOW,
             cleanliness = Cleanliness.SPOTLESS,
             lifestyle = mutableListOf(Lifestyle.EARLY_BIRD, Lifestyle.STUDENT),
