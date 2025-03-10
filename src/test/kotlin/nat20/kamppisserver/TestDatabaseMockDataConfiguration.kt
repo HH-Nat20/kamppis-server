@@ -1,8 +1,10 @@
 package nat20.kamppisserver
 
+import nat20.kamppisserver.domain.Swipe
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.enums.*
+import nat20.kamppisserver.repository.SwipeRepository
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.boot.ApplicationRunner
@@ -20,7 +22,7 @@ import java.time.LocalDate
 class TestDatabaseMockDataConfiguration {
 
     @Bean
-    fun databaseInitializer(userRepository: UserRepository, userProfileRepository: UserProfileRepository) = ApplicationRunner {
+    fun databaseInitializer(userRepository: UserRepository, userProfileRepository: UserProfileRepository, swipeRepository: SwipeRepository) = ApplicationRunner {
         val users = listOf(
             User(
                 email = "alice.smith@example.com",
@@ -113,9 +115,9 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Smith",
                 dateOfBirth = LocalDate.of(1990, 5, 14), // Age 34
                 gender = Gender.FEMALE,
-                minAgePreference = 22,
-                maxAgePreference = 27,
-                preferredGenders = mutableListOf(Gender.FEMALE),
+                minAgePreference = 20,
+                maxAgePreference = 29,
+                preferredGenders = mutableListOf(Gender.FEMALE, Gender.OTHER),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
                 maxRent = MaxRent.LOW,
                 cleanliness = Cleanliness.SPOTLESS,
@@ -129,9 +131,9 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Johnson",
                 dateOfBirth = LocalDate.of(1985, 11, 22), // Age 39
                 gender = Gender.MALE,
-                minAgePreference = 24,
-                maxAgePreference = 37,
-                preferredGenders = mutableListOf(Gender.MALE, Gender.FEMALE),
+                minAgePreference = 22,
+                maxAgePreference = 39,
+                preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.HELSINKI, City.VANTAA),
                 maxRent = MaxRent.MID,
                 cleanliness = Cleanliness.TIDY,
@@ -146,8 +148,8 @@ class TestDatabaseMockDataConfiguration {
                 dateOfBirth = LocalDate.of(1998, 2, 3), // Age 27
                 gender = Gender.OTHER,
                 minAgePreference = 18,
-                maxAgePreference = 26,
-                preferredGenders = mutableListOf(Gender.OTHER),
+                maxAgePreference = 28,
+                preferredGenders = mutableListOf(Gender.OTHER, Gender.FEMALE),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
                 maxRent = MaxRent.HIGH,
                 cleanliness = Cleanliness.TIDY,
@@ -161,10 +163,10 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Lee",
                 dateOfBirth = LocalDate.of(2000, 2, 3), // Age 25
                 gender = Gender.FEMALE,
-                minAgePreference = 31,
-                maxAgePreference = 38,
-                preferredGenders = mutableListOf(Gender.FEMALE),
-                preferredLocations = mutableListOf(City.VANTAA),
+                minAgePreference = 29,
+                maxAgePreference = 40,
+                preferredGenders = mutableListOf(Gender.FEMALE, Gender.OTHER),
+                preferredLocations = mutableListOf(City.ESPOO, City.VANTAA),
                 maxRent = MaxRent.LOW,
                 cleanliness = Cleanliness.TIDY,
                 lifestyle = mutableListOf(Lifestyle.STUDENT, Lifestyle.NIGHT_OWL),
@@ -177,8 +179,8 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Brown",
                 dateOfBirth = LocalDate.of(1995, 8, 19), // Age 29
                 gender = Gender.NOT_IMPORTANT,
-                minAgePreference = 40,
-                maxAgePreference = 55,
+                minAgePreference = 38,
+                maxAgePreference = 57,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.ESPOO, City.VANTAA),
                 maxRent = MaxRent.LOW,
@@ -193,9 +195,9 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Miller",
                 dateOfBirth = LocalDate.of(1988, 3, 22), // Age 36
                 gender = Gender.MALE,
-                minAgePreference = 22,
-                maxAgePreference = 27,
-                preferredGenders = mutableListOf(Gender.MALE),
+                minAgePreference = 20,
+                maxAgePreference = 33,
+                preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.HELSINKI, City.VANTAA),
                 maxRent = MaxRent.LOW,
                 cleanliness = Cleanliness.MESSY,
@@ -209,8 +211,8 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Wilson",
                 dateOfBirth = LocalDate.of(1992, 7, 15), // Age 32
                 gender = Gender.FEMALE,
-                minAgePreference = 25,
-                maxAgePreference = 30,
+                minAgePreference = 23,
+                maxAgePreference = 32,
                 preferredGenders = mutableListOf(Gender.FEMALE, Gender.OTHER),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
                 maxRent = MaxRent.MID,
@@ -225,10 +227,10 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Moore",
                 dateOfBirth = LocalDate.of(1985, 1, 10), // Age 40
                 gender = Gender.MALE,
-                minAgePreference = 20,
-                maxAgePreference = 26,
-                preferredGenders = mutableListOf(Gender.MALE),
-                preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
+                minAgePreference = 18,
+                maxAgePreference = 28,
+                preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
+                preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
                 maxRent = MaxRent.MID,
                 cleanliness = Cleanliness.CASUAL,
                 lifestyle =  mutableListOf(Lifestyle.NIGHT_OWL, Lifestyle.WORKING),
@@ -241,10 +243,10 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Taylor",
                 dateOfBirth = LocalDate.of(1999, 12, 5), // Age 25
                 gender = Gender.FEMALE,
-                minAgePreference = 23,
-                maxAgePreference = 28,
-                preferredGenders = mutableListOf(Gender.FEMALE),
-                preferredLocations = mutableListOf(City.ESPOO),
+                minAgePreference = 21,
+                maxAgePreference = 30,
+                preferredGenders = mutableListOf(Gender.FEMALE, Gender.OTHER),
+                preferredLocations = mutableListOf(City.ESPOO, City.VANTAA),
                 maxRent = MaxRent.LOW,
                 cleanliness = Cleanliness.CAREFREE,
                 lifestyle = mutableListOf(Lifestyle.PARTY_GOER, Lifestyle.STUDENT),
@@ -257,9 +259,9 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Anderson",
                 dateOfBirth = LocalDate.of(1990, 6, 30), // Age 34
                 gender = Gender.MALE,
-                minAgePreference = 24,
-                maxAgePreference = 29,
-                preferredGenders = mutableListOf(Gender.MALE, Gender.OTHER),
+                minAgePreference = 22,
+                maxAgePreference = 27,
+                preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
                 maxRent = MaxRent.MID,
                 cleanliness = Cleanliness.SPOTLESS,
@@ -273,8 +275,8 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Thomas",
                 dateOfBirth = LocalDate.of(1982, 8, 20), // Age 42
                 gender = Gender.FEMALE,
-                minAgePreference = 26,
-                maxAgePreference = 32,
+                minAgePreference = 24,
+                maxAgePreference = 34,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.ESPOO, City.VANTAA),
                 maxRent = MaxRent.HIGH,
@@ -289,10 +291,10 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Jackson",
                 dateOfBirth = LocalDate.of(1995, 4, 2), // Age 29
                 gender = Gender.MALE,
-                minAgePreference = 21,
-                maxAgePreference = 27,
+                minAgePreference = 19,
+                maxAgePreference = 31,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
-                preferredLocations = mutableListOf(City.HELSINKI),
+                preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
                 maxRent = MaxRent.MID,
                 cleanliness = Cleanliness.TIDY,
                 lifestyle = mutableListOf(Lifestyle.WORKING, Lifestyle.PARTY_GOER),
@@ -305,10 +307,10 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "White",
                 dateOfBirth = LocalDate.of(2000, 2, 17), // Age 25
                 gender = Gender.FEMALE,
-                minAgePreference = 19,
-                maxAgePreference = 24,
-                preferredGenders = mutableListOf(Gender.FEMALE),
-                preferredLocations = mutableListOf(City.HELSINKI),
+                minAgePreference = 18,
+                maxAgePreference = 33,
+                preferredGenders = mutableListOf(Gender.MALE, Gender.FEMALE),
+                preferredLocations = mutableListOf(City.HELSINKI, City.VANTAA),
                 maxRent = MaxRent.LOW,
                 cleanliness = Cleanliness.TIDY,
                 lifestyle = mutableListOf(Lifestyle.WORKING, Lifestyle.PARTY_GOER),
@@ -321,9 +323,9 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Harris",
                 dateOfBirth = LocalDate.of(1987, 9, 9), // Age 37
                 gender = Gender.MALE,
-                minAgePreference = 22,
-                maxAgePreference = 28,
-                preferredGenders = mutableListOf(Gender.MALE),
+                minAgePreference = 20,
+                maxAgePreference = 35,
+                preferredGenders = mutableListOf(Gender.MALE, Gender.FEMALE),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
                 maxRent = MaxRent.HIGH,
                 cleanliness = Cleanliness.SPOTLESS,
@@ -337,9 +339,9 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Martin",
                 dateOfBirth = LocalDate.of(1993, 11, 11), // Age 31
                 gender = Gender.FEMALE,
-                minAgePreference = 23,
-                maxAgePreference = 29,
-                preferredGenders = mutableListOf(Gender.FEMALE),
+                minAgePreference = 21,
+                maxAgePreference = 33,
+                preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.HELSINKI, City.VANTAA),
                 maxRent = MaxRent.LOW,
                 cleanliness = Cleanliness.CASUAL,
@@ -353,8 +355,8 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Thompson",
                 dateOfBirth = LocalDate.of(1980, 5, 5), // Age 44
                 gender = Gender.MALE,
-                minAgePreference = 25,
-                maxAgePreference = 30,
+                minAgePreference = 23,
+                maxAgePreference = 36,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.ESPOO, City.VANTAA),
                 maxRent = MaxRent.LOW,
@@ -369,8 +371,8 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Garcia",
                 dateOfBirth = LocalDate.of(1998, 3, 3), // Age 26
                 gender = Gender.OTHER,
-                minAgePreference = 20,
-                maxAgePreference = 25,
+                minAgePreference = 18,
+                maxAgePreference = 29,
                 preferredGenders = mutableListOf(Gender.FEMALE, Gender.OTHER),
                 preferredLocations = mutableListOf(City.ESPOO, City.VANTAA),
                 maxRent = MaxRent.MID,
@@ -385,9 +387,9 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Martinez",
                 dateOfBirth = LocalDate.of(1989, 10, 25), // Age 35
                 gender = Gender.FEMALE,
-                minAgePreference = 21,
-                maxAgePreference = 27,
-                preferredGenders = mutableListOf(Gender.MALE),
+                minAgePreference = 19,
+                maxAgePreference = 31,
+                preferredGenders = mutableListOf(Gender.MALE, Gender.FEMALE),
                 preferredLocations = mutableListOf(City.HELSINKI, City.VANTAA),
                 maxRent = MaxRent.MID,
                 cleanliness = Cleanliness.CASUAL,
@@ -401,9 +403,9 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Robinson",
                 dateOfBirth = LocalDate.of(1978, 12, 1), // Age 46
                 gender = Gender.MALE,
-                minAgePreference = 26,
-                maxAgePreference = 33,
-                preferredGenders = mutableListOf(Gender.MALE),
+                minAgePreference = 24,
+                maxAgePreference = 38,
+                preferredGenders = mutableListOf(Gender.MALE, Gender.OTHER),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
                 maxRent = MaxRent.HIGH,
                 cleanliness = Cleanliness.MESSY,
@@ -417,8 +419,8 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Clark",
                 dateOfBirth = LocalDate.of(1996, 7, 19), // Age 28
                 gender = Gender.FEMALE,
-                minAgePreference = 22,
-                maxAgePreference = 28,
+                minAgePreference = 20,
+                maxAgePreference = 33,
                 preferredGenders = mutableListOf(Gender.FEMALE, Gender.OTHER),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
                 maxRent = MaxRent.MID,
@@ -433,8 +435,8 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Rodriguez",
                 dateOfBirth = LocalDate.of(1991, 1, 29), // Age 34
                 gender = Gender.FEMALE,
-                minAgePreference = 24,
-                maxAgePreference = 30,
+                minAgePreference = 21,
+                maxAgePreference = 35,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.HELSINKI, City.VANTAA),
                 maxRent = MaxRent.HIGH,
@@ -449,9 +451,9 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Lewis",
                 dateOfBirth = LocalDate.of(1984, 4, 14), // Age 40
                 gender = Gender.MALE,
-                minAgePreference = 25,
-                maxAgePreference = 31,
-                preferredGenders = mutableListOf(Gender.MALE),
+                minAgePreference = 20,
+                maxAgePreference = 36,
+                preferredGenders = mutableListOf(Gender.MALE, Gender.FEMALE),
                 preferredLocations = mutableListOf(City.ESPOO, City.VANTAA),
                 maxRent = MaxRent.LOW,
                 cleanliness = Cleanliness.MESSY,
@@ -465,10 +467,10 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Walker",
                 dateOfBirth = LocalDate.of(1994, 6, 8), // Age 30
                 gender = Gender.FEMALE,
-                minAgePreference = 23,
-                maxAgePreference = 28,
-                preferredGenders = mutableListOf(Gender.FEMALE),
-                preferredLocations = mutableListOf(City.HELSINKI),
+                minAgePreference = 21,
+                maxAgePreference = 33,
+                preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
+                preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
                 maxRent = MaxRent.MID,
                 cleanliness = Cleanliness.TIDY,
                 lifestyle = mutableListOf(Lifestyle.STUDENT, Lifestyle.PARTY_GOER),
@@ -481,8 +483,8 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Hall",
                 dateOfBirth = LocalDate.of(1986, 9, 30), // Age 38
                 gender = Gender.MALE,
-                minAgePreference = 20,
-                maxAgePreference = 26,
+                minAgePreference = 19,
+                maxAgePreference = 36,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.HELSINKI, City.VANTAA),
                 maxRent = MaxRent.HIGH,
@@ -497,10 +499,10 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Allen",
                 dateOfBirth = LocalDate.of(1997, 2, 22), // Age 27
                 gender = Gender.FEMALE,
-                minAgePreference = 22,
-                maxAgePreference = 27,
+                minAgePreference = 20,
+                maxAgePreference = 33,
                 preferredGenders = mutableListOf(Gender.FEMALE, Gender.OTHER),
-                preferredLocations = mutableListOf(City.VANTAA),
+                preferredLocations = mutableListOf(City.VANTAA, City.ESPOO),
                 maxRent = MaxRent.LOW,
                 cleanliness = Cleanliness.TIDY,
                 lifestyle = mutableListOf(Lifestyle.EARLY_BIRD, Lifestyle.HOMEBODY),
@@ -513,8 +515,8 @@ class TestDatabaseMockDataConfiguration {
                 lastName = "Young",
                 dateOfBirth = LocalDate.of(1983, 11, 12), // Age 41
                 gender = Gender.MALE,
-                minAgePreference = 24,
-                maxAgePreference = 29,
+                minAgePreference = 21,
+                maxAgePreference = 32,
                 preferredGenders = mutableListOf(Gender.NOT_IMPORTANT),
                 preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
                 maxRent = MaxRent.LOW,
@@ -527,5 +529,14 @@ class TestDatabaseMockDataConfiguration {
 
         // Save all mock user profiles to the database
         userProfileRepository.saveAll(userProfiles)
+
+        val swipes = listOf(
+            Swipe(userRepository.findById(1L).get(), userRepository.findById(2L).get(), true),
+            Swipe(userRepository.findById(1L).get(), userRepository.findById(3L).get(), true),
+            Swipe(userRepository.findById(2L).get(), userRepository.findById(1L).get(), true),
+            Swipe(userRepository.findById(3L).get(), userRepository.findById(1L).get(), true)
+        )
+
+        swipeRepository.saveAll(swipes)
     }
 }
