@@ -56,7 +56,7 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
             "JOIN \"user_profiles_genders\" upg ON up.\"id\" = upg.\"user_profile_id\" "+
             "JOIN \"user_profiles_locations\" upl ON up.\"id\" = upl.\"user_profile_id\" "+
             "WHERE up.\"id\" != :id " +
-            "AND NOT EXISTS (SELECT 1 FROM \"swipes\" s WHERE s.\"swiping_user_id\" = :id AND s.\"swiped_user_id\" = up.\"id\")" +
+            "AND NOT EXISTS (SELECT 1 FROM \"swipes\" s WHERE s.\"swiping_user_id\" = :id AND s.\"swiped_user_id\" = up.\"id\") " +
             "AND (DATEDIFF(YEAR, up.\"date_of_birth\", :queryDate) + CASE WHEN DATEADD(YEAR, DATEDIFF(YEAR, up.\"date_of_birth\", :queryDate), up.\"date_of_birth\") > :queryDate THEN -1 ELSE 0 END) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000) "+
             "AND (up.\"gender\" IN (:preferredGenders) OR 'NOT_IMPORTANT' IN (:preferredGenders)) "+
             "AND upl.\"preferred_locations\" IN (:preferredLocations)",
