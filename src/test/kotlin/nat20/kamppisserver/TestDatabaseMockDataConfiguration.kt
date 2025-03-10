@@ -1,8 +1,10 @@
 package nat20.kamppisserver
 
+import nat20.kamppisserver.domain.Swipe
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.enums.*
+import nat20.kamppisserver.repository.SwipeRepository
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.boot.ApplicationRunner
@@ -20,7 +22,7 @@ import java.time.LocalDate
 class TestDatabaseMockDataConfiguration {
 
     @Bean
-    fun databaseInitializer(userRepository: UserRepository, userProfileRepository: UserProfileRepository) = ApplicationRunner {
+    fun databaseInitializer(userRepository: UserRepository, userProfileRepository: UserProfileRepository, swipeRepository: SwipeRepository) = ApplicationRunner {
         val users = listOf(
             User(
                 email = "alice.smith@example.com",
@@ -527,5 +529,14 @@ class TestDatabaseMockDataConfiguration {
 
         // Save all mock user profiles to the database
         userProfileRepository.saveAll(userProfiles)
+
+        val swipes = listOf(
+            Swipe(userRepository.findById(1L).get(), userRepository.findById(2L).get(), true),
+            Swipe(userRepository.findById(1L).get(), userRepository.findById(3L).get(), true),
+            Swipe(userRepository.findById(2L).get(), userRepository.findById(1L).get(), true),
+            Swipe(userRepository.findById(3L).get(), userRepository.findById(1L).get(), true)
+        )
+
+        swipeRepository.saveAll(swipes)
     }
 }
