@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 /**
- * Test class for ValidationService. Tests that isValidString, isValidEmail,
- * and isValidPassword return true or false accordingly.
+ * Test class for ValidationService. Tests that isValidString returns true or false
+ * accordingly.
  */
 class ValidationServiceTest() {
 
