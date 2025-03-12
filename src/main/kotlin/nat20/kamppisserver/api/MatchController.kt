@@ -14,20 +14,23 @@ import org.springframework.web.server.ResponseStatusException
 class MatchController(private val service: MatchService) {
 
     @GetMapping("", "/")
-    fun findAllForUser(@RequestParam(required = false) userId: Long?): MutableIterable<Match> {
+    fun findAllForUser(@RequestParam(required = false) userId: Long?): ResponseEntity<MutableIterable<Match>> {
         return if (userId != null) {
-            service.findAllForUser(userId)
+            ResponseEntity.ok(service.findAllForUser(userId))
         } else {
-            service.findAll()
+            ResponseEntity.ok(service.findAll())
         }
     }
 
     @GetMapping("/profiles/{id}")
-    fun findAllMatchesForUser(@PathVariable id: Long): MutableIterable<UserProfile> = service.findUserProfilesThatMatchWithUser(id)
+    fun findAllMatchesForUser(@PathVariable id: Long): ResponseEntity<MutableIterable<UserProfile>> {
+        return ResponseEntity.ok(service.findUserProfilesThatMatchWithUser(id))
+    }
 
     @GetMapping("/{id}")
-    fun findMatchById(@PathVariable id: Long) = service.findOne(id)
-        ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "This Match does not exist")
+    fun findMatchById(@PathVariable id: Long): ResponseEntity<Match> {
+        return ResponseEntity.ok(service.findOne(id))
+    }
 
     @PostMapping
     fun addMatch(@RequestBody request: MatchRequest): ResponseEntity<Match> {
