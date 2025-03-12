@@ -1,27 +1,35 @@
-# Use Java 21 as base image
-FROM eclipse-temurin:21-jdk
+# Stage 1: Build the application
+FROM eclipse-temurin:21-jdk AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy only the Gradle wrapper and configuration files
+# Copy Gradle-related files first (cache dependencies)
 COPY gradlew build.gradle.kts settings.gradle.kts ./
 COPY gradle gradle
-
-# Ensure Gradle wrapper is executable
 RUN chmod +x gradlew
+
+# Download dependencies to improve caching
+RUN ./gradlew dependencies
 
 # Copy the source code
 COPY src src
 
+# Build the application (skip tests for faster builds)
+RUN ./gradlew bootJar -x test
+
+# Stage 2: Run the application
+FROM eclipse-temurin:21-jdk
+
+WORKDIR /app
+
+# Copy the built JAR from the build stage
+COPY --from=build /app/build/libs/*.jar app.jar
+
 # Expose the server port
 EXPOSE 8080
 
-# Build the application
-RUN ./gradlew build -x test
-
-# Keep the container running with live-reload support
-CMD ["./gradlew", "bootRun"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 
 # Use the following command to build the image
 # docker build -t kamppis-server .
