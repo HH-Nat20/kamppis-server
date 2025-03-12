@@ -42,3 +42,6 @@ out/
 
 ### Docker ###
 postgres_data/
+
+### Production ###
+application-prod.properties
