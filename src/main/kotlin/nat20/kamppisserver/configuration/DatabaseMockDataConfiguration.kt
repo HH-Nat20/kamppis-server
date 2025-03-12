@@ -27,6 +27,14 @@ class DatabaseMockDataConfiguration {
                             matchRepository: MatchRepository, swipeRepository: SwipeRepository
     ) = ApplicationRunner {
 
+        // Check if users table has any entries
+        if (userRepository.count() > 0) {
+            println("Database already initialized, skipping mock data insertion.")
+            return@ApplicationRunner
+        }
+
+        println("Initializing database with mock data...")
+
         val users = listOf(
             User(
                 email = "alice.smith@example.com",
@@ -720,6 +728,8 @@ class DatabaseMockDataConfiguration {
         )
 
         swipeRepository.saveAll(swipes)
+
+        println("Mock data inserted successfully!")
 
     }
 }
