@@ -14,6 +14,6 @@ class HealthController(
 
     @GetMapping
     fun serverHealth(): ResponseEntity<Map<String, String>> {
-        return ResponseEntity.ok(mapOf("status" to "ok", "startupInfo" to serverStartupInfo.upSince.toString()))
+        return ResponseEntity.ok(mapOf("status" to "ok", "upSince" to serverStartupInfo.upSince.toString()))
     }
 }
