@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile
 import java.time.LocalDate
 
 @Configuration
-@Profile("dev") // This config will only load when the dev profile is active from application.properties
+@Profile("dev", "prod") // This config will only load when the dev or prod profile is active from application.properties
 class DatabaseMockDataConfiguration {
 
     /**
