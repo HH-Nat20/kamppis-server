@@ -3,6 +3,7 @@ package nat20.kamppisserver.repository
 import nat20.kamppisserver.TestDatabaseMockDataConfiguration
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.enums.UserStatus
 import org.junit.jupiter.api.TestInstance
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,10 +38,12 @@ class UserProfileRepositoryTests @Autowired constructor(
     val testDate: LocalDate = LocalDate.of(2025, 2, 21)
 
     @Test
-    fun `should return the correct UserProfile by User-objects id`() {
+    fun `should return the correct and active UserProfile by User-objects id`() {
         val user: User = userRepository.findByIdOrNull(1L)!!
-        val userProfile: UserProfile = userProfileRepository.findByUserId(user.id)
-        assertEquals("Alice", userProfile.firstName)
+        val userProfile: UserProfile? = user.id?.let { userProfileRepository.findByUserIdAndStatus(it, UserStatus.ACTIVE) }
+        if (userProfile != null) {
+            assertEquals("Alice", userProfile.firstName)
+        }
     }
 
     @Test

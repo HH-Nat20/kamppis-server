@@ -2,6 +2,7 @@ package nat20.kamppisserver.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import nat20.kamppisserver.domain.UserProfile
+import nat20.kamppisserver.domain.enums.UserStatus
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.time.LocalDate
@@ -9,9 +10,8 @@ import java.time.LocalDate
 
 interface UserProfileRepository: JpaRepository<UserProfile, Long> {
 
-    @Query(value = "SELECT * FROM \"user_profiles\" WHERE (\"user_id\" = :id)", nativeQuery = true)
-    fun findByUserId(
-        @Param("id") id: Long?): UserProfile
+    @Query("SELECT up FROM UserProfile up WHERE up.user.id = :id AND up.user.status = :status")
+    fun findByUserIdAndStatus(@Param("id") id: Long, @Param("status") status: UserStatus): UserProfile?
 
     /* Click to see SQL QUERY explanation
     * 1) SELECT DISTINCT up.* FROM \"user_profiles\" up

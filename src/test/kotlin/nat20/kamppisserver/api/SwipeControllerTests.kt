@@ -6,12 +6,12 @@ import io.mockk.every
 import nat20.kamppisserver.domain.SwipeRequest
 import nat20.kamppisserver.domain.SwipeResponse
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.SwipeService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
@@ -45,8 +45,8 @@ class SwipeControllerTests @Autowired constructor(
             isMatch = false
         )
 
-        every { userRepository.findByIdOrNull(1L)} returns user1
-        every { userRepository.findByIdOrNull(2L)} returns user2
+        every { userRepository.findByIdAndStatus(1L, UserStatus.ACTIVE)} returns user1
+        every { userRepository.findByIdAndStatus(2L, UserStatus.ACTIVE)} returns user2
         every { swipeService.swipe(any(),any(), any()) } returns swipeResponse
 
         mockMvc.post("/api/swipes") {

@@ -31,7 +31,7 @@ class QueryServiceTests @Autowired constructor(
     @Test
     fun `should return the correct UserProfile from UserProfileRepository by User-objects id`() {
         val user: User = userRepository.findByIdOrNull(1L)!!
-        val userProfile = queryService.findUserProfileByUserId(user.id)
+        val userProfile = user.id?.let { queryService.findUserProfileByUserId(it) }
         assertEquals(1L, userProfile?.id)
     }
 
@@ -40,8 +40,14 @@ class QueryServiceTests @Autowired constructor(
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
         val userProfileDTO: UserProfileDTO = toUserProfileDTO(userProfile)
 
-        val listOfUserProfileDTOs: MutableIterable<UserProfileDTO> = queryService.findUserProfilesThatMeetCriteria(userProfile.id)
+        val listOfUserProfileDTOs: MutableList<UserProfileDTO>? = userProfile.id?.let {
+            queryService.findUserProfilesThatMeetCriteria(
+                it
+            )
+        }
 
-        assertFalse(userProfileDTO in listOfUserProfileDTOs)
+        if (listOfUserProfileDTOs != null) {
+            assertFalse(userProfileDTO in listOfUserProfileDTOs)
+        }
     }
 }

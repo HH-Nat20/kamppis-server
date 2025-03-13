@@ -4,6 +4,7 @@ import nat20.kamppisserver.domain.Swipe
 import nat20.kamppisserver.domain.SwipeRequest
 import nat20.kamppisserver.domain.SwipeResponse
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.SwipeService
 import org.springframework.data.repository.findByIdOrNull
@@ -26,9 +27,9 @@ class SwipeController(private val swipeService: SwipeService,
 
     @PostMapping
     fun swipe(@RequestBody swipeRequest: SwipeRequest): ResponseEntity<SwipeResponse> {
-        val swipingUser: User = userRepository.findByIdOrNull(swipeRequest.swipingUserId)
+        val swipingUser: User = userRepository.findByIdAndStatus(swipeRequest.swipingUserId, UserStatus.ACTIVE)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${swipeRequest.swipingUserId} not found")
-        val swipedUser: User = userRepository.findByIdOrNull(swipeRequest.swipedUserId)
+        val swipedUser: User = userRepository.findByIdAndStatus(swipeRequest.swipedUserId, UserStatus.ACTIVE)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${swipeRequest.swipedUserId} not found")
 
         if (swipingUser.id == swipedUser.id)

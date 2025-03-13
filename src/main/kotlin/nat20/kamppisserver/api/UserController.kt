@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
+import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserService
@@ -21,13 +22,14 @@ import org.springframework.web.server.ResponseStatusException
  */
 @RestController
 @RequestMapping("/api/users")
-class UserController(private val repository: UserRepository, private val userService: UserService) {
+class UserController(private val repository: UserRepository,
+                     private val userService: UserService) {
 
     @GetMapping("", "/")
-    fun findAll(): MutableIterable<User> = repository.findAll()
+    fun findAll(): MutableIterable<User> = repository.findAllByStatus(UserStatus.ACTIVE)
 
     @GetMapping("/{id}")
-    fun findUserById(@PathVariable id: Long) = repository.findByIdOrNull(id)
+    fun findUserById(@PathVariable id: Long) = repository.findByIdAndStatus(id, UserStatus.ACTIVE)
         ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "This user does not exist")
 
     /**
@@ -50,5 +52,17 @@ class UserController(private val repository: UserRepository, private val userSer
     @PutMapping("/{id}")
     fun updateUserProfile(@RequestBody user: User, @PathVariable id: Long): ResponseEntity<User>
             = ResponseEntity.ok(userService.update(user, id))
+
+    /**
+     * Soft deletes user.
+     *
+     * @param id the id of the user to be deleted.
+     * @return ResponseEntity with status code 204 NO CONTENT.
+     */
+    @DeleteMapping("/{id}")
+    fun deleteById(@PathVariable id: Long): ResponseEntity<Void> {
+        userService.delete(id)
+        return ResponseEntity(HttpStatus.NO_CONTENT)
+    }
 
 }

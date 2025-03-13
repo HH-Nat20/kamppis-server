@@ -3,9 +3,7 @@ package nat20.kamppisserver.service
 import jakarta.persistence.EntityNotFoundException
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.enums.UserStatus
-import nat20.kamppisserver.domain.toUserProfileDTO
 import nat20.kamppisserver.repository.UserRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -40,7 +38,7 @@ class UserService(private val repository: UserRepository) {
      * @return the updated user.
      */
     fun update(user: User, id: Long): User {
-        val updatedUser = repository.findByIdOrNull(id)
+        val updatedUser = repository.findByIdAndStatus(id, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("User with id $id not found")
         val existingUser = repository.findByEmail(updatedUser.email)
         if (existingUser != null && existingUser.id != id) {
@@ -51,7 +49,22 @@ class UserService(private val repository: UserRepository) {
         return repository.save(updatedUser)
     }
 
-    fun findUserByEmail(email: String): User? {
-        return repository.findByEmail(email)
+    fun findActiveUserByEmail(email: String): User? {
+        return repository.findByEmailAndStatus(email, UserStatus.ACTIVE)
     }
+
+    /**
+     * Soft deletes given User.
+     *
+     * @param id the id of the user to be deleted.
+     */
+    fun delete(id: Long) {
+        val deletedUser = repository.findByIdAndStatus(id, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("User profile with id $id not found")
+
+        deletedUser.deletedAt = LocalDateTime.now()
+        deletedUser.status = UserStatus.INACTIVE
+        repository.save(deletedUser)
+    }
+
 }

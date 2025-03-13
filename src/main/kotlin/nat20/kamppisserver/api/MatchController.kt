@@ -3,6 +3,8 @@ package nat20.kamppisserver.api
 import nat20.kamppisserver.domain.Match
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.MatchRequest
+import nat20.kamppisserver.domain.enums.UserStatus
+import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.MatchService
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,11 +14,12 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/matches")
-class MatchController(private val service: MatchService) {
+class MatchController(private val service: MatchService,
+                      private val repository: UserRepository) {
 
     @GetMapping("", "/")
     fun findAllForUser(@RequestParam(required = false) userId: Long?): ResponseEntity<MutableIterable<Match>> {
-        return if (userId != null) {
+        return if (userId != null && repository.findByIdAndStatus(userId, UserStatus.ACTIVE) != null) {
             ResponseEntity.ok().body(service.findAllForUser(userId))
         } else {
             ResponseEntity.ok().body(service.findAll())

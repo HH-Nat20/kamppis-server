@@ -3,6 +3,8 @@ package nat20.kamppisserver.domain
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import nat20.kamppisserver.domain.enums.UserStatus
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 
 /**
  * Entity class for User.
@@ -13,7 +15,11 @@ class User(
     var email: String,
 
     @Enumerated(EnumType.STRING)
-    var status: UserStatus = UserStatus.OFFLINE,
+    var status: UserStatus = UserStatus.ACTIVE,
+
+    @Column(name = "deleted_at")
+    @UpdateTimestamp
+    var deletedAt: LocalDateTime? = null,
 
     /*
     * ADD FIELDS HERE AS REQUIRED

@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
+import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.domain.toUserProfileDTO
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
@@ -20,8 +21,6 @@ class UserProfileService(
     private val userRepository: UserRepository,
     private val userProfileRepository: UserProfileRepository
 ) {
-
-    // private final val userProfileRepository: UserProfileRepository = TODO("initialize me")
 
     /**
      * Returns all User Profiles as DTOs.
@@ -54,7 +53,7 @@ class UserProfileService(
      * @return the created profile.
      */
     fun add(userProfile: UserProfile): UserProfileDTO {
-        userRepository.findByIdOrNull(userProfile.user.id)
+        userProfile.user.id?.let { userRepository.findByIdAndStatus(it, UserStatus.ACTIVE) }
             ?: throw EntityNotFoundException("User ${userProfile.user.id} not found")
 
         val addedUserProfile = userProfileRepository.save(userProfile)

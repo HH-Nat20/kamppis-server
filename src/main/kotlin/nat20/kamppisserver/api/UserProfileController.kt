@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/api/user-profiles")
-class UserProfileController(private val service: UserProfileService, private val queryService: QueryService) {
+class UserProfileController(private val service: UserProfileService,
+                            private val queryService: QueryService) {
 
     /**
      * Returns all user profiles as DTOs.

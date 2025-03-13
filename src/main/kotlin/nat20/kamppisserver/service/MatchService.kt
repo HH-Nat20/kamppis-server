@@ -5,11 +5,11 @@ import exception.InvalidRequestException
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.*
+import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.MatchRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-
 
 @Service
 class MatchService(
@@ -21,9 +21,8 @@ class MatchService(
         val match = matchRepository.findById(matchId).orElseThrow {
             throw EntityNotFoundException("Match not found")
         }
-        val user = userRepository.findById(userId).orElseThrow {
-            throw EntityNotFoundException("User not found")
-        }
+        val user = userRepository.findByIdAndStatus(userId, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("User not found")
 
         match.addUser(user)
         return matchRepository.save(match)
@@ -34,9 +33,8 @@ class MatchService(
         val match = matchRepository.findById(matchId).orElseThrow {
             throw EntityNotFoundException("Match not found")
         }
-        val user = userRepository.findById(userId).orElseThrow {
-            throw EntityNotFoundException("User not found")
-        }
+        val user = userRepository.findByIdAndStatus(userId, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("User not found")
 
         match.removeUser(user)
         return matchRepository.save(match)
@@ -47,13 +45,17 @@ class MatchService(
     }
 
     fun findAllForUser(userId: Long): MutableIterable<Match> {
-        if (!userRepository.existsById(userId)) throw EntityNotFoundException("USer with ID $userId not found")
+        if (userRepository.findByIdAndStatus(userId, UserStatus.ACTIVE) == null) throw EntityNotFoundException(
+            "User with ID $userId not found"
+        )
         return matchRepository.findAllByUserId(userId).toMutableList()
     }
 
     fun findUserProfilesThatMatchWithUser(userId: Long): MutableIterable<UserProfile>
     {
-        if (!userRepository.existsById(userId)) throw EntityNotFoundException("USer with ID $userId not found")
+        if (userRepository.findByIdAndStatus(userId, UserStatus.ACTIVE) == null) throw EntityNotFoundException(
+            "User with ID $userId not found"
+        )
         return matchRepository.findUserProfilesThatMatchWithUser(userId)
     }
 
@@ -64,7 +66,7 @@ class MatchService(
 
     @Transactional
     fun createMatch(matchRequest: MatchRequest): Match {
-        val users = userRepository.findAllById(matchRequest.userIds).toMutableSet()
+        val users = userRepository.findAllByIdAndStatus(matchRequest.userIds, UserStatus.ACTIVE).toMutableSet()
         if (users.size < 2) {
             throw InvalidRequestException("A match must have at least two unique users")
         }

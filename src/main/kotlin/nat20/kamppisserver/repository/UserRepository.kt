@@ -4,9 +4,21 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.enums.UserStatus
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 
 interface UserRepository : JpaRepository<User, Long> {
-    fun findAllByStatus(status: UserStatus): List<User>
-
     fun findByEmail(email: String): User?
+
+    @Query("SELECT u FROM User u WHERE u.status = :status")
+    fun findAllByStatus(@Param("status") status: UserStatus): MutableIterable<User>
+
+    @Query("SELECT u FROM User u WHERE u.id IN :ids AND u.status = :status")
+    fun findAllByIdAndStatus(@Param("ids") ids: Set<Long>, @Param("status") status: UserStatus): List<User>
+
+    @Query("SELECT u FROM User u WHERE u.id = :id AND u.status = :status")
+    fun findByIdAndStatus(@Param("id") id: Long, @Param("status") status: UserStatus): User?
+
+    @Query("SELECT u FROM User u WHERE u.email = :email AND u.status = :status")
+    fun findByEmailAndStatus(@Param("email") email: String, @Param("status") status: UserStatus): User?
 }

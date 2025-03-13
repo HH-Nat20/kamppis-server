@@ -4,10 +4,11 @@ import nat20.kamppisserver.domain.Match
 import nat20.kamppisserver.domain.Message
 import nat20.kamppisserver.domain.MessageDTO
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.MatchRepository
 import nat20.kamppisserver.repository.MessageRepository
+import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.UserService
-import org.springframework.data.repository.findByIdOrNull
 //import nat20.kamppisserver.service.MessageService
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.Header
@@ -27,7 +28,8 @@ class MessageController(
     private val userService: UserService,
     private val messagingTemplate: SimpMessagingTemplate,
     private val messageRepository: MessageRepository,
-    private val matchRepository: MatchRepository
+    private val matchRepository: MatchRepository,
+    private val userRepository: UserRepository
 ) {
 
     @MessageMapping("/matches/{matchId}/messages")
@@ -41,7 +43,7 @@ class MessageController(
             throw IllegalAccessException("Unauthorized: Email mismatch")
         }
 
-        val user : User = userService.findUserByEmail(messageDTO.senderEmail)
+        val user : User = userRepository.findByEmailAndStatus(messageDTO.senderEmail, UserStatus.ACTIVE)
             ?: throw IllegalAccessException("Unauthorized: User does not exist")
 
         // If we do not fetch users as well, results in error due to lazy fetching. Read more here:
@@ -74,7 +76,7 @@ class MessageController(
     fun sendHistory(@DestinationVariable matchId: Long,
                     @Header("email") userEmail: String) {
 
-        val user : User = userService.findUserByEmail(userEmail)
+        val user : User = userRepository.findByEmailAndStatus(userEmail, UserStatus.ACTIVE)
             ?: throw IllegalAccessException("Unauthorized: User does not exist")
 
         val match : Match = matchRepository.findByIdWithUsers(matchId)
@@ -89,7 +91,6 @@ class MessageController(
         }
 
         val messageHistory = messageRepository.findByMatchIdOrderByCreatedAtAsc(matchId)
-
 
         // Convert to DTO and send previous messages to the user who just subscribed
         messageHistory.forEach { message ->

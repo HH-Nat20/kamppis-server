@@ -5,16 +5,21 @@ import org.springframework.stereotype.Service
 
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
+import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.domain.toUserProfileDTO
 import nat20.kamppisserver.repository.UserProfileRepository
+import nat20.kamppisserver.repository.UserRepository
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 
 /**
  * Service class for querying user profiles.
  */
 @Service
-class QueryService(private val userProfileRepository: UserProfileRepository) {
+class QueryService(private val userProfileRepository: UserProfileRepository,
+                    private val userRepository: UserRepository) {
 
     /**
      * Finds the user's profile by user id.
@@ -23,9 +28,9 @@ class QueryService(private val userProfileRepository: UserProfileRepository) {
      * @throws EntityNotFoundException if no userId does not match any user
      * @return user's user profile.
      */
-    fun findUserProfileByUserId(userId: Long?): UserProfile? {
+    fun findUserProfileByUserId(userId: Long): UserProfile? {
         return try {
-            userProfileRepository.findByUserId(userId)
+            userProfileRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
         } catch (ex: EmptyResultDataAccessException) {
             throw EntityNotFoundException("UserId does not match to any user")
         }
@@ -37,10 +42,13 @@ class QueryService(private val userProfileRepository: UserProfileRepository) {
      * @param id the id of the user for whom matching profiles are returned.
      * @return a list of matching user profiles.
      */
-    fun findUserProfilesThatMeetCriteria(userId: Long?): MutableList<UserProfileDTO> {
+    fun findUserProfilesThatMeetCriteria(userId: Long): MutableList<UserProfileDTO> {
         /* We first find user's user profile by user's id
         * From the profile, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in UserProfileRepository */
+        if (userRepository.findByIdAndStatus(userId, UserStatus.ACTIVE) == null) throw EntityNotFoundException(
+            "UserId does not match to any user"
+        )
 
         val userProfile: UserProfile? = findUserProfileByUserId(userId)
 
