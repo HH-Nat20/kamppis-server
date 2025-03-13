@@ -1,0 +1,17 @@
+meta {
+  name: POST api-matches
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/matches
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "userIds": []
+  }
+}

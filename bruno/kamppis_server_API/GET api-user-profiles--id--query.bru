@@ -1,0 +1,15 @@
+meta {
+  name: GET api-user-profiles--id--query
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/api/user-profiles/:id/query
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 
+}

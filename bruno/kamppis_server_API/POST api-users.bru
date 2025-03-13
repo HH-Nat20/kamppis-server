@@ -1,0 +1,20 @@
+meta {
+  name: POST api-users
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{baseUrl}}/api/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "",
+    "status": "",
+    "matches": [],
+    "id": ""
+  }
+}

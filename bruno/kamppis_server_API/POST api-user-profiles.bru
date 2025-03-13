@@ -1,0 +1,48 @@
+meta {
+  name: POST api-user-profiles
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/user-profiles
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "user": {
+      "email": "",
+      "status": "",
+      "matches": [],
+      "id": ""
+    },
+    "firstName": "",
+    "lastName": "",
+    "dateOfBirth": "",
+    "gender": "",
+    "userPhotos": [
+      {
+        "userProfile": "",
+        "name": "",
+        "createdAt": "",
+        "updatedAt": "",
+        "deletedAt": "",
+        "id": ""
+      }
+    ],
+    "bio": "",
+    "minAgePreference": "",
+    "maxAgePreference": "",
+    "preferredGenders": [],
+    "preferredLocations": [],
+    "maxRent": "",
+    "cleanliness": "",
+    "lifestyle": [],
+    "createdAt": "",
+    "updatedAt": "",
+    "deletedAt": "",
+    "id": ""
+  }
+}

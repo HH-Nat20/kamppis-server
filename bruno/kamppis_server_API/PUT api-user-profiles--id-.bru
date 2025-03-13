@@ -1,0 +1,39 @@
+meta {
+  name: PUT api-user-profiles--id-
+  type: http
+  seq: 8
+}
+
+put {
+  url: {{baseUrl}}/api/user-profiles/:id
+  body: json
+  auth: none
+}
+
+params:path {
+  id: 
+}
+
+body:json {
+  {
+    "firstName": "",
+    "lastName": "",
+    "age": "",
+    "gender": "",
+    "userPhotos": [
+      {
+        "name": "",
+        "id": ""
+      }
+    ],
+    "bio": "",
+    "minAgePreference": "",
+    "maxAgePreference": "",
+    "preferredGenders": [],
+    "preferredLocations": [],
+    "maxRent": "",
+    "cleanliness": "",
+    "lifestyle": [],
+    "id": ""
+  }
+}
