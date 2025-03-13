@@ -15,7 +15,7 @@ class DBHealthController(private val jdbcTemplate: JdbcTemplate) {
     fun dbHealth(): ResponseEntity<Map<String, String>> {
         return try {
             jdbcTemplate.execute("SELECT 1")
-            ResponseEntity.ok(mapOf("status" to "ok"))
+            ResponseEntity.ok().body(mapOf("status" to "ok"))
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mapOf("status" to "failed"))
         }
