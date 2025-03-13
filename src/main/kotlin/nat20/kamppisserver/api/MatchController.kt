@@ -5,6 +5,7 @@ import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.MatchRequest
 import nat20.kamppisserver.service.MatchService
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
@@ -14,22 +15,25 @@ import org.springframework.web.server.ResponseStatusException
 class MatchController(private val service: MatchService) {
 
     @GetMapping("", "/")
-    fun findAllForUser(@RequestParam(required = false) userId: Long?): MutableIterable<Match> {
+    fun findAllForUser(@RequestParam(required = false) userId: Long?): ResponseEntity<MutableIterable<Match>> {
         return if (userId != null) {
-            service.findAllForUser(userId)
+            ResponseEntity.ok().body(service.findAllForUser(userId))
         } else {
-            service.findAll()
+            ResponseEntity.ok().body(service.findAll())
         }
     }
 
     @GetMapping("/profiles/{id}")
-    fun findAllMatchesForUser(@PathVariable id: Long): MutableIterable<UserProfile> = service.findUserProfilesThatMatchWithUser(id)
+    fun findAllMatchesForUser(@PathVariable id: Long): ResponseEntity<MutableIterable<UserProfile>> {
+        return ResponseEntity.ok().body(service.findUserProfilesThatMatchWithUser(id))
+    }
 
     @GetMapping("/{id}")
-    fun findMatchById(@PathVariable id: Long) = service.findOne(id)
-        ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "This Match does not exist")
+    fun findMatchById(@PathVariable id: Long): ResponseEntity<Match> {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findOne(id))
+    }
 
-    @PostMapping
+    @PostMapping()
     fun addMatch(@RequestBody request: MatchRequest): ResponseEntity<Match> {
         val savedMatch = service.createMatch(request)
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMatch)

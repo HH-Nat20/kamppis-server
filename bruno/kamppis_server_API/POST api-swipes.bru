@@ -1,0 +1,18 @@
+meta {
+  name: POST api-swipes
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{baseUrl}}/api/swipes
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "swipingUserId": "",
+    "swipedUserId": ""
+  }
+}

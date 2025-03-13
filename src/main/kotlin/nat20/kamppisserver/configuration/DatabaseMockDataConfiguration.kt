@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile
 import java.time.LocalDate
 
 @Configuration
-@Profile("dev") // This config will only load when the dev profile is active from application.properties
+@Profile("dev", "prod") // This config will only load when the dev or prod profile is active from application.properties
 class DatabaseMockDataConfiguration {
 
     /**
@@ -26,6 +26,14 @@ class DatabaseMockDataConfiguration {
                             userPhotoRepository: UserPhotoRepository,
                             matchRepository: MatchRepository, swipeRepository: SwipeRepository
     ) = ApplicationRunner {
+
+        // Check if users table has any entries
+        if (userRepository.count() > 0) {
+            println("Database already initialized, skipping mock data insertion.")
+            return@ApplicationRunner
+        }
+
+        println("Initializing database with mock data...")
 
         val users = listOf(
             User(
@@ -720,6 +728,8 @@ class DatabaseMockDataConfiguration {
         )
 
         swipeRepository.saveAll(swipes)
+
+        println("Mock data inserted successfully!")
 
     }
 }

@@ -19,7 +19,10 @@ class SwipeController(private val swipeService: SwipeService,
 ) {
 
     @GetMapping("", "/")
-    fun findAll(): MutableIterable<Swipe> = swipeService.findAll()
+    fun findAll(): ResponseEntity<MutableIterable<Swipe>> {
+        val swipes = swipeService.findAll()
+        return ResponseEntity.ok().body(swipes)
+    }
 
     @PostMapping
     fun swipe(@RequestBody swipeRequest: SwipeRequest): ResponseEntity<SwipeResponse> {

@@ -1,5 +1,7 @@
 package nat20.kamppisserver.api
 
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -10,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController
 class DBHealthController(private val jdbcTemplate: JdbcTemplate) {
 
     @GetMapping
-    fun dbHealth(): Map<String, String> {
+    fun dbHealth(): ResponseEntity<Map<String, String>> {
         return try {
             jdbcTemplate.execute("SELECT 1")
-            mapOf("status" to "ok")
+            ResponseEntity.ok().body(mapOf("status" to "ok"))
         } catch (e: Exception) {
-            mapOf("status" to "failed")
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mapOf("status" to "failed"))
         }
     }
 }

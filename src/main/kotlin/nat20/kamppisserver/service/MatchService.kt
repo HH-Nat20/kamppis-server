@@ -47,15 +47,18 @@ class MatchService(
     }
 
     fun findAllForUser(userId: Long): MutableIterable<Match> {
+        if (!userRepository.existsById(userId)) throw EntityNotFoundException("USer with ID $userId not found")
         return matchRepository.findAllByUserId(userId).toMutableList()
     }
 
     fun findUserProfilesThatMatchWithUser(userId: Long): MutableIterable<UserProfile>
     {
+        if (!userRepository.existsById(userId)) throw EntityNotFoundException("USer with ID $userId not found")
         return matchRepository.findUserProfilesThatMatchWithUser(userId)
     }
 
     fun findOne(matchId: Long): Match? {
+        if (!matchRepository.existsById(matchId)) throw EntityNotFoundException("Match with ID $matchId not found")
         return matchRepository.findByIdOrNull(matchId)
     }
 

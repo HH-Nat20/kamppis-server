@@ -1,4 +1,5 @@
-version: '1.0'
+version: "3.8"
+
 services:
   spring-app:
     build: .
@@ -9,3 +10,53 @@ services:
       - ./target:/app/target
     environment:
       - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/kamppis
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: kamppis
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - 5050:80
+    configs:
+      - source: servers.json
+        target: /pgadmin4/servers.json
+    depends_on:
+      - db
+
+configs:
+  servers.json:
+    content: |
+      {"Servers": {"1": {
+        "Group": "Servers",
+        "Name": "Kamppis Database",
+        "Host": "db",
+        "Port": 5432,
+        "MaintenanceDB": "postgres",
+        "Username": "postgres",
+        "SSLMode": "prefer"
+      }}}
+
+volumes:
+  postgres_data:
