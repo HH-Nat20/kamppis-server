@@ -52,15 +52,22 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     *
     * More criteria and parameters will be added */
 
-    @Query(value = "SELECT DISTINCT up.* FROM \"user_profiles\" up " +
-            "JOIN \"user_profiles_genders\" upg ON up.\"id\" = upg.\"user_profile_id\" "+
-            "JOIN \"user_profiles_locations\" upl ON up.\"id\" = upl.\"user_profile_id\" "+
-            "WHERE up.\"id\" != :id " +
-            "AND NOT EXISTS (SELECT 1 FROM \"swipes\" s WHERE s.\"swiping_user_id\" = :id AND s.\"swiped_user_id\" = up.\"id\") " +
-            "AND (DATEDIFF(YEAR, up.\"date_of_birth\", :queryDate) + CASE WHEN DATEADD(YEAR, DATEDIFF(YEAR, up.\"date_of_birth\", :queryDate), up.\"date_of_birth\") > :queryDate THEN -1 ELSE 0 END) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000) "+
-            "AND (up.\"gender\" IN (:preferredGenders) OR 'NOT_IMPORTANT' IN (:preferredGenders)) "+
-            "AND upl.\"preferred_locations\" IN (:preferredLocations)",
-        nativeQuery = true)
+    @Query(value = """
+    SELECT DISTINCT up.* FROM user_profiles up
+    JOIN user_profiles_genders upg ON up.id = upg.user_profile_id
+    JOIN user_profiles_locations upl ON up.id = upl.user_profile_id
+    WHERE up.id != :id
+    AND NOT EXISTS (
+        SELECT 1 
+        FROM swipes s 
+        WHERE s.swiping_user_id = :id 
+        AND s.swiped_user_id = up.id
+    )
+    AND EXTRACT(YEAR FROM AGE(:queryDate, up.date_of_birth))  BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)
+    AND (up.gender IN (:preferredGenders) OR 'NOT_IMPORTANT' IN (:preferredGenders))
+    AND upl.preferred_locations IN (:preferredLocations)
+    """, nativeQuery = true)
+
     fun findUserProfilesThatMeetCriteria(
         @Param("id") id: Long?,
         @Param("queryDate") queryDate: LocalDate,
