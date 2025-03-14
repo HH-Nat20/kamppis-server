@@ -1,5 +1,6 @@
 package nat20.kamppisserver.repository
 
+import jakarta.transaction.Transactional
 import nat20.kamppisserver.TestDatabaseMockDataConfiguration
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.User
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.TestInstance
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
@@ -22,10 +24,10 @@ import kotlin.test.assertFalse
 /**
  * Test class for UserProfileRepository.
  */
-@DataJpaTest
-@Import(TestDatabaseMockDataConfiguration::class)
+@SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Transactional
 class UserProfileRepositoryTests @Autowired constructor(
     val userProfileRepository: UserProfileRepository,
     val userRepository: UserRepository,
