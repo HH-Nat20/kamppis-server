@@ -1,5 +1,6 @@
 package nat20.kamppisserver.domain
 
+import jakarta.transaction.Transactional
 import nat20.kamppisserver.TestDatabaseMockDataConfiguration
 import nat20.kamppisserver.domain.enums.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -8,14 +9,14 @@ import kotlin.test.Test
 
 import nat20.kamppisserver.repository.UserProfileRepository
 import org.junit.jupiter.api.TestInstance
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
 import kotlin.test.assertEquals
 
 
-@DataJpaTest
-@Import(TestDatabaseMockDataConfiguration::class)
+@SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserProfileTests @Autowired constructor(

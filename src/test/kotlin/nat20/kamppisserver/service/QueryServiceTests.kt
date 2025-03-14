@@ -21,7 +21,6 @@ import kotlin.test.assertFalse
  */
 @SpringBootTest
 @ActiveProfiles("test")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class QueryServiceTests @Autowired constructor(
     val queryService: QueryService,
     val userRepository: UserRepository,

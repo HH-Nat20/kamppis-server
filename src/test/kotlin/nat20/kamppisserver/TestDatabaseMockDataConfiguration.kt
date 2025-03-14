@@ -22,7 +22,10 @@ import java.time.LocalDate
 class TestDatabaseMockDataConfiguration {
 
     @Bean
-    fun databaseInitializer(userRepository: UserRepository, userProfileRepository: UserProfileRepository, swipeRepository: SwipeRepository) = ApplicationRunner {
+    fun databaseInitializer(userRepository: UserRepository,
+                            userProfileRepository: UserProfileRepository,
+                            swipeRepository: SwipeRepository
+    ) = ApplicationRunner {
         val users = listOf(
             User(
                 email = "alice.smith@example.com",
