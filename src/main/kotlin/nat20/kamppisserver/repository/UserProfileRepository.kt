@@ -10,6 +10,12 @@ import java.time.LocalDate
 
 interface UserProfileRepository: JpaRepository<UserProfile, Long> {
 
+    @Query("SELECT up FROM UserProfile up WHERE up.deletedAt IS NULL")
+    fun findAllActive(): List<UserProfile>
+
+    @Query("SELECT up FROM UserProfile up WHERE up.id = :id AND up.deletedAt IS NULL")
+    fun findByIdActive(@Param("id") id: Long): UserProfile?
+
     @Query("SELECT up FROM UserProfile up WHERE up.user.id = :id AND up.user.status = :status")
     fun findByUserIdAndStatus(@Param("id") id: Long, @Param("status") status: UserStatus): UserProfile?
 
