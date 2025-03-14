@@ -57,18 +57,6 @@ class UserProfileController(private val service: UserProfileService,
         = ResponseEntity.ok(service.update(userProfile, id))
 
     /**
-     * Soft deletes user profile.
-     *
-     * @param id the id of the profile to be deleted.
-     * @return ResponseEntity with status code 204 NO CONTENT.
-     */
-    @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable id: Long): ResponseEntity<Void> {
-        service.delete(id)
-        return ResponseEntity(HttpStatus.NO_CONTENT)
-    }
-
-    /**
      * Finds all the user profiles that match the user's search criteria.
      *
      * @param id the id of the user who initiated the query.

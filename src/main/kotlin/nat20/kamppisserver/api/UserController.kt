@@ -54,7 +54,7 @@ class UserController(private val repository: UserRepository,
             = ResponseEntity.ok(userService.update(user, id))
 
     /**
-     * Soft deletes user.
+     * Soft deletes user and subsequent UserProfile.
      *
      * @param id the id of the user to be deleted.
      * @return ResponseEntity with status code 204 NO CONTENT.

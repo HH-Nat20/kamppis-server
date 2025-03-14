@@ -21,6 +21,10 @@ class User(
     @UpdateTimestamp
     var deletedAt: LocalDateTime? = null,
 
+    // Specifically for use in chat
+    @Column(name = "is_online")
+    var isOnline: Boolean = false,
+
     /*
     * ADD FIELDS HERE AS REQUIRED
     * */

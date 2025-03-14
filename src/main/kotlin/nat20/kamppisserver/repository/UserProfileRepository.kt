@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.time.LocalDate
 
-
 interface UserProfileRepository: JpaRepository<UserProfile, Long> {
 
     @Query("SELECT up FROM UserProfile up WHERE up.deletedAt IS NULL")

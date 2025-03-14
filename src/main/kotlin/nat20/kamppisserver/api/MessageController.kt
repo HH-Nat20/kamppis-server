@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 class MessageController(
-    private val userService: UserService,
     private val messagingTemplate: SimpMessagingTemplate,
     private val messageRepository: MessageRepository,
     private val matchRepository: MatchRepository,

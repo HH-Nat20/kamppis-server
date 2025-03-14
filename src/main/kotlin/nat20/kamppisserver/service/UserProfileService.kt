@@ -23,24 +23,24 @@ class UserProfileService(
 ) {
 
     /**
-     * Returns all User Profiles as DTOs.
+     * Returns all active User Profiles as DTOs.
      * For testing purposes only.
      *
      * @return all User Profiles as DTOs.
      */
     fun findAll(): List<UserProfileDTO> {
-        val userProfileList = repository.findAll()
+        val userProfileList = repository.findAllActive()
         return userProfileList.map {toUserProfileDTO(it)}
     }
 
     /**
-     * Returns User Profile by id.
+     * Returns active User Profile by id.
      *
      * @param id the id of the profile to be returned.
      * @return the profile with given id.
      */
     fun findById(id: Long): UserProfileDTO {
-        val userProfile = repository.findByIdOrNull(id)
+        val userProfile = repository.findByIdActive(id)
             ?: throw EntityNotFoundException("User profile with id $id not found")
 
         return toUserProfileDTO(userProfile)
@@ -61,7 +61,7 @@ class UserProfileService(
     }
 
     /**
-     * Updates given User Profile.
+     * Updates given active User Profile.
      *
      * @param userProfile the profile to be updated.
      * @param id the id of the profile to be updated.
@@ -69,6 +69,7 @@ class UserProfileService(
      */
     @Transactional
     fun update(userProfile: UserProfileDTO, id: Long): UserProfileDTO {
+
         val existingProfile = repository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("User profile with id $id not found")
 
@@ -92,19 +93,6 @@ class UserProfileService(
         val updatedProfile = repository.save(existingProfile)
 
         return toUserProfileDTO(updatedProfile)
-    }
-
-    /**
-     * Soft deletes given User Profile.
-     *
-     * @param id the id of the profile to be deleted.
-     */
-    fun delete(id: Long) {
-        val deletedProfile = repository.findByIdOrNull(id)
-            ?: throw EntityNotFoundException("User profile with id $id not found")
-
-        deletedProfile.deletedAt = LocalDateTime.now()
-        repository.save(deletedProfile)
     }
 
 }

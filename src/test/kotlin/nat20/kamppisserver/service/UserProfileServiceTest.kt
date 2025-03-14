@@ -11,13 +11,11 @@ import nat20.kamppisserver.domain.enums.MaxRent
 import nat20.kamppisserver.domain.enums.Cleanliness
 import nat20.kamppisserver.domain.toUserProfileDTO
 import nat20.kamppisserver.repository.UserProfileRepository
-import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
 import java.time.LocalDate
-// TODO: import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 
 /**
  * Test class for UserProfileService. Tests that edit and delete methods return
@@ -25,27 +23,23 @@ import java.time.LocalDate
 */
 @SpringBootTest
 @ActiveProfiles("test")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-// TODO: @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class UserProfileServiceTest {
-
-    @Autowired
-    private lateinit var repository: UserProfileRepository
-
-    @Autowired
-    private lateinit var service: UserProfileService
+class UserProfileServiceTest @Autowired constructor(
+    val repository: UserProfileRepository,
+    val service: UserProfileService
+) {
 
     @Test
     fun `update should modify and save user profile`() {
 
         val userProfile = repository.findByIdOrNull(1L)
-
-        val result = userProfile?.let { service.update(toUserProfileDTO(it), 1L) }
+        val userProfileDTO = userProfile?.let { toUserProfileDTO(it) }
+        if (userProfileDTO != null) {
+            userProfile.id?.let { service.update(userProfileDTO, it) }
+        }
 
         val updatedProfile = repository.findByIdOrNull(1L)
 
         assertNotNull(updatedProfile?.updatedAt)
-
     }
 
     @Test
@@ -69,27 +63,4 @@ class UserProfileServiceTest {
         assertEquals("User profile with id $id not found", exception.message)
     }
 
-    @Test
-    fun `delete should mark profile as deleted`() {
-        val deletedProfile = repository.findByIdOrNull(1L)
-
-        if (deletedProfile != null) {
-            deletedProfile.id?.let { service.delete(it) }
-        }
-
-        if (deletedProfile != null) {
-            assertNotNull(deletedProfile.deletedAt)
-        }
-    }
-
-    @Test
-    fun `delete should throw EntityNotFoundException when profile not found`() {
-        val id = 1000000L
-
-        val exception = assertThrows<EntityNotFoundException> {
-            service.delete(id)
-        }
-
-        assertEquals("User profile with id $id not found", exception.message)
-    }
 }

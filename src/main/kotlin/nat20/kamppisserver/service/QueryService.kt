@@ -46,11 +46,9 @@ class QueryService(private val userProfileRepository: UserProfileRepository,
         /* We first find user's user profile by user's id
         * From the profile, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in UserProfileRepository */
-        if (userRepository.findByIdAndStatus(userId, UserStatus.ACTIVE) == null) throw EntityNotFoundException(
-            "UserId does not match to any user"
-        )
 
-        val userProfile: UserProfile? = findUserProfileByUserId(userId)
+        val userProfile: UserProfile? = userProfileRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("UserId does not match to any user")
 
         //TODO: val queryDate: LocalDate = LocalDate.now()
         val queryDate: LocalDate = LocalDate.of(2025, 2, 21)
