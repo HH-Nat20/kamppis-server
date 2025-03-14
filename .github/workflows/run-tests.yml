@@ -24,7 +24,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
           POSTGRES_DB: ${{ secrets.DB_TEST_NAME }}
         options: >-
-          --health-cmd "pg_isready -U postgres"
+          --health-cmd "pg_isready -U ${{ secrets.DB_USERNAME }}"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -56,7 +56,7 @@ jobs:
       # Run tests with Gradle
       - name: Run Tests
         env:
-          SPRING_DATASOURCE_URL: ${{ secrets.DB_TEST_URL }}
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/${{ secrets.DB_TEST_NAME }}
           SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: ./gradlew test
