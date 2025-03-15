@@ -2,6 +2,7 @@ package nat20.kamppisserver.api
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import nat20.kamppisserver.configuration.SecurityConfig
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
@@ -9,14 +10,20 @@ import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import kotlin.test.Test
 
+@Import(SecurityConfig::class) // Import your security config
 @WebMvcTest(UserController::class)
 class UserControllerTests {
+
+/*      Probably needed later
+    @MockkBean
+    private lateinit var authenticationManager: AuthenticationManager*/
 
     @Autowired
     private lateinit var mockMvc: MockMvc

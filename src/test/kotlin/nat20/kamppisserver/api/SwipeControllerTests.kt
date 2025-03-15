@@ -3,6 +3,7 @@ package nat20.kamppisserver.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import nat20.kamppisserver.configuration.SecurityConfig
 import nat20.kamppisserver.domain.SwipeRequest
 import nat20.kamppisserver.domain.SwipeResponse
 import nat20.kamppisserver.domain.User
@@ -12,11 +13,14 @@ import nat20.kamppisserver.service.SwipeService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
 
 @WebMvcTest(SwipeController::class)
+@Import(SecurityConfig::class) // Import your security config
 class SwipeControllerTests @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper
@@ -25,6 +29,10 @@ class SwipeControllerTests @Autowired constructor(
     private lateinit var swipeService: SwipeService
     @MockkBean
     private lateinit var userRepository: UserRepository
+
+/*    Probably needed later
+    @MockkBean
+    private lateinit var authenticationManager: AuthenticationManager*/
 
     @Test
     fun `should create a swipe successfully`() {
