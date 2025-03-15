@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 
 /**
@@ -22,6 +23,7 @@ import java.time.LocalDate
  * values accordingly, and throw an exception in case of invalid id:s.
 */
 @SpringBootTest
+@Transactional
 @ActiveProfiles("test")
 class UserProfileServiceTest @Autowired constructor(
     val repository: UserProfileRepository,

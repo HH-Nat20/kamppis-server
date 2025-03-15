@@ -27,10 +27,8 @@ class UserService(private val userRepository: UserRepository,
      */
     fun add(user: User): User {
         // Check for all e-mails, even INACTIVE ones
-        val existingUser = userRepository.findByEmail(user.email)
-        if (existingUser != null) {
-            throw DuplicateEmailException("User with this email already exists")
-        }
+        userRepository.findByEmail(user.email)
+            ?.let { throw DuplicateEmailException("User with this email already exists") }
 
         return userRepository.save(user)
     }
