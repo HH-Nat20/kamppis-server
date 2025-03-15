@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres-container-kamppis
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: kamppis
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    command: >
+      bash -c "
+        docker-entrypoint.sh postgres &
+        until psql -U postgres -d kamppis -c 'SELECT 1'; do
+        echo 'Waiting for PostgreSQL to start...';
+        sleep 1;
+        done;
+        psql -U postgres -d kamppis -c 'CREATE DATABASE kamppistest;'
+        wait
+      "
+
+volumes:
+  postgres-data:
