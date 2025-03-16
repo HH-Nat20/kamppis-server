@@ -1,19 +1,41 @@
 package nat20.kamppisserver.configuration
 
+import io.jsonwebtoken.security.Keys
+import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 class SecurityConfig {
+
+    private val key = "b8c485dc1b1db98ab477d6028a258609d729a18bda824d11d44e50a63b935e50" // TODO: Replace with proper secret in env
+
+    private val secretKey = Keys.hmacShaKeyFor(key.toByteArray())
+
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .cors { } // Enable CORS
             .csrf { it.disable() } // Disable CSRF for development
-            .authorizeHttpRequests { it.anyRequest().permitAll() } // Allow all requests
+            .authorizeHttpRequests { auth ->
+                auth.requestMatchers("/api/login").permitAll() // Always allow login
 
+                auth.requestMatchers("/api/login/protected").authenticated() // Maybe this works?
+
+                auth.anyRequest().permitAll() // Allow all other requests for now
+                // TODO: Apply authentication to all endpoints
+            }
+            .addFilterBefore(JwtAuthenticationFilter(key), UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
     }
+
+/*    @Bean
+    fun jwtFilter(): FilterRegistrationBean<JwtAuthenticationFilter> {
+        val registrationBean = FilterRegistrationBean(JwtAuthenticationFilter(key))
+        registrationBean.addUrlPatterns("/api/login/protected") // Apply only to this endpoint
+        return registrationBean
+    }*/
 }
