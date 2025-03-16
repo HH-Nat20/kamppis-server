@@ -18,7 +18,6 @@ class User(
     var status: UserStatus = UserStatus.ACTIVE,
 
     @Column(name = "deleted_at")
-    @UpdateTimestamp
     var deletedAt: LocalDateTime? = null,
 
     // Specifically for use in chat

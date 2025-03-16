@@ -33,13 +33,13 @@ class UserProfileServiceTest @Autowired constructor(
     @Test
     fun `update should modify and save user profile`() {
 
-        val userProfile = repository.findByIdOrNull(1L)
+        val userProfile = repository.findByIdActive(1L)
         val userProfileDTO = userProfile?.let { toUserProfileDTO(it) }
         if (userProfileDTO != null) {
             userProfile.id?.let { service.update(userProfileDTO, it) }
         }
 
-        val updatedProfile = repository.findByIdOrNull(1L)
+        val updatedProfile = repository.findByIdActive(1L)
 
         assertNotNull(updatedProfile?.updatedAt)
     }
