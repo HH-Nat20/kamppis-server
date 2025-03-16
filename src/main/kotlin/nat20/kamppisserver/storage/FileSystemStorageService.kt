@@ -1,6 +1,13 @@
+package nat20.kamppisserver.storage
+
+import org.springframework.stereotype.Service
+import org.springframework.core.io.Resource
+import org.springframework.core.io.UrlResource
+import org.springframework.web.multipart.MultipartFile
+import java.io.IOException
 import java.nio.file.*
-import org.springframework.util.FileSystemUtils
 import java.util.UUID
+import org.springframework.util.FileSystemUtils
 
 @Service
 class FileSystemStorageService(private val properties: StorageProperties) : StorageService {
@@ -30,7 +37,7 @@ class FileSystemStorageService(private val properties: StorageProperties) : Stor
 
         val destinationFile = userDir.resolve(sanitizedFilename).normalize().toAbsolutePath()
 
-        if (!destinationFile.parent.equals(userDir.toAbsolutePath())) {
+        if (!destinationFile.startsWith(userDir.toAbsolutePath())) {
             throw RuntimeException("Cannot store file outside the user directory.")
         }
 
