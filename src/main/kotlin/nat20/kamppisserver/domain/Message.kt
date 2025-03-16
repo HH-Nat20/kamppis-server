@@ -1,7 +1,9 @@
 package nat20.kamppisserver.domain
 
 import jakarta.persistence.*
-import org.hibernate.annotations.UpdateTimestamp
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.PastOrPresent
 import java.time.LocalDateTime
 
 /**
@@ -14,15 +16,19 @@ import java.time.LocalDateTime
 class Message(
     @ManyToOne
     @JoinColumn(name = "sender_id", nullable = false)
+    @NotNull(message = "Sender cannot be null.")
     var sender: User,
 
     @ManyToOne
     @JoinColumn(name = "match_id", nullable = false)
+    @NotNull(message = "Match cannot be null.")
     var match: Match,
 
     @Column(nullable = false)
+    @NotEmpty(message = "Message content cannot be empty.")
     var content: String,
 
+    @PastOrPresent(message = "Creation date cannot be in the future.")
     var createdAt: LocalDateTime? = LocalDateTime.now(),
 
     @Id
@@ -43,9 +49,9 @@ class Message(
 
 data class MessageDTO(
     val id: Long? = null,
-    val senderEmail: String,
-    val senderId: Long,
-    val matchId: Long,
-    val content: String,
-    val createdAt: LocalDateTime?,
+    @NotNull val senderEmail: String,
+    @NotNull val senderId: Long,
+    @NotNull val matchId: Long,
+    @NotEmpty val content: String,
+    @PastOrPresent val createdAt: LocalDateTime?,
 )

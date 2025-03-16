@@ -2,6 +2,9 @@ package nat20.kamppisserver.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.PastOrPresent
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -15,21 +18,26 @@ import java.time.temporal.ChronoUnit
 @Table(name = "user_photos")
 class UserPhoto(
     @ManyToOne
-    @JoinColumn(name = "user_profile_id")
+    @JoinColumn(name = "user_profile_id", nullable = false)
     @JsonIgnore
+    @NotNull(message = "User profile cannot be null.")
     var userProfile: UserProfile,
 
+    @NotEmpty(message = "Name cannot be empty.")
     var name: String,
 
     // Is this photo on the user card (= True) or in the gallery (= False)?
     var isProfilePhoto: Boolean,
 
+    @PastOrPresent(message = "Creation date cannot be in the future.")
     var createdAt: LocalDateTime = LocalDateTime.now(),
 
     @UpdateTimestamp
+    @PastOrPresent(message = "Update date cannot be in the future.")
     var updatedAt: LocalDateTime? = null,
 
     @Column(name = "deleted_at")
+    @PastOrPresent(message = "Deletion date cannot be in the future.")
     var deletedAt: LocalDateTime? = null,
 
     @Id
@@ -47,7 +55,7 @@ fun toUserPhotoDTO(userPhoto: UserPhoto): UserPhotoDTO {
 }
 
 data class UserPhotoDTO(
-    val name: String,
+    @NotEmpty val name: String,
     val isProfilePhoto: Boolean,
     val id: Long
 )

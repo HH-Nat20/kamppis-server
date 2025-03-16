@@ -29,6 +29,7 @@ dependencies {
     implementation("org.springframework.data:spring-data-jpa")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.hibernate:hibernate-core:6.1.5.Final")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
