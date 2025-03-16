@@ -6,11 +6,12 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class StorageProperties {
     
-    @Value("\${UPLOAD_DIR:uploads}")
-    lateinit var location: String
+    //@Value("\${UPLOAD_DIR:uploads}")
+    //lateinit var location: String
 
-    fun getLocation(): String {
-        val homeDir = System.getenv("HOME") ?: "/var/www"
-        return "$homeDir/$location"
+    fun fullPath(): String {
+        //val homeDir = System.getenv("HOME") ?: "/var/www"
+        //return "$homeDir/$location"
+        return "/var/www/uploads" // Hardcoded for now
     }
 }

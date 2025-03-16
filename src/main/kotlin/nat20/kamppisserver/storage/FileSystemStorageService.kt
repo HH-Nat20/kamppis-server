@@ -15,7 +15,7 @@ import org.springframework.util.FileSystemUtils
 @Service
 class FileSystemStorageService(private val properties: StorageProperties) : StorageService {
 
-    private val rootLocation: Path = Paths.get(properties.getLocation())
+    private val rootLocation: Path = Paths.get(properties.fullPath())
 
     init {
         init()
