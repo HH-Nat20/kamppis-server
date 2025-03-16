@@ -50,8 +50,7 @@ class QueryService(private val userProfileRepository: UserProfileRepository,
         val userProfile: UserProfile? = userProfileRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("UserId does not match to any user")
 
-        //TODO: val queryDate: LocalDate = LocalDate.now()
-        val queryDate: LocalDate = LocalDate.of(2025, 2, 21)
+        val queryDate: LocalDate = LocalDate.now()
         val minAgePreference: Int? = userProfile?.minAgePreference
         val maxAgePreference: Int? = userProfile?.maxAgePreference
         val preferredGenders: List<String> = userProfile?.preferredGenders!!.map { it.name }
