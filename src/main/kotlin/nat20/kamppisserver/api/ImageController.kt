@@ -30,23 +30,24 @@ class ImageController(
 
     private val uploadRootDir: Path = Paths.get("/var/www/uploads")
 
-    @GetMapping("/get/{userId}/{filename}")
-    fun getImage(@PathVariable userId: Long, @PathVariable filename: String): ResponseEntity<Resource> {
+    @GetMapping("/get/{userId}/{filename}", produces = [MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE])
+    fun getImage(@PathVariable userId: Long, @PathVariable filename: String): ResponseEntity<ByteArray> {
         val userDir = uploadRootDir.resolve(userId.toString())
         val filePath = userDir.resolve(filename).normalize()
-        
-        return try {
-            val resource = UrlResource(filePath.toUri())
-            if (resource.exists() && resource.isReadable) {
-                val mimeType = Files.probeContentType(filePath) ?: "image/jpeg"
 
-                ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(mimeType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"$filename\"")
-                    .body(resource)
-            } else {
-                ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        return try {
+            if (!Files.exists(filePath) || !Files.isReadable(filePath)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
             }
+
+            val fileBytes = Files.readAllBytes(filePath)
+            val mimeType = Files.probeContentType(filePath) ?: "application/octet-stream"
+
+            ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(mimeType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"$filename\"")
+                .body(fileBytes)
+
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
         }
