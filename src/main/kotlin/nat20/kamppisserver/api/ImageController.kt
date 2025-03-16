@@ -22,6 +22,8 @@ class ImageController(
     private val storageService: StorageService
 ) {
 
+    private val uploadRootDir: Path = Paths.get("/var/www/uploads")
+
     @GetMapping("/get/{userId}/{filename}")
     fun getImage(@PathVariable userId: Long, @PathVariable filename: String): ResponseEntity<Resource> {
         val userDir = uploadRootDir.resolve(userId.toString())
