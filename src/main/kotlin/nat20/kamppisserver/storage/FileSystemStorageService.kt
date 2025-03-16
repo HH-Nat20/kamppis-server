@@ -5,12 +5,9 @@ import org.springframework.core.io.UrlResource
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
-import java.io.InputStream
-import java.net.MalformedURLException
 import java.nio.file.*
-import java.util.stream.Stream
+import java.util.UUID
 import org.springframework.util.FileSystemUtils
-
 
 @Service
 class FileSystemStorageService(private val properties: StorageProperties) : StorageService {
@@ -21,22 +18,15 @@ class FileSystemStorageService(private val properties: StorageProperties) : Stor
         init()
     }
 
-    override fun init() {
-        try {
-            Files.createDirectories(rootLocation)
-        } catch (e: IOException) {
-            throw RuntimeException("Could not initialize storage", e)
-        }
-    }
-
     override fun store(file: MultipartFile, userId: Long): String {
         if (file.isEmpty) throw RuntimeException("Cannot store empty file.")
 
         val userDir = rootLocation.resolve(userId.toString())
-        Files.createDirectories(userDir) // Ensure user directory exists
+        Files.createDirectories(userDir)
 
         val originalExtension = file.originalFilename?.substringAfterLast(".", "jpg") ?: "jpg"
         val sanitizedFilename = "${UUID.randomUUID()}.$originalExtension"
+
         val destinationFile = userDir.resolve(sanitizedFilename).normalize().toAbsolutePath()
 
         if (!destinationFile.parent.equals(userDir.toAbsolutePath())) {
@@ -51,34 +41,6 @@ class FileSystemStorageService(private val properties: StorageProperties) : Stor
             throw RuntimeException("Failed to store file", e)
         }
 
-        return "https://kamppis.hellmanstudios.fi/api/images/get/$userId/$sanitizedFilename" // Hardcoded origin url for now
-    }
-
-    override fun loadAll(): Stream<Path> {
-        return Files.walk(rootLocation, 1)
-            .filter { path -> !path.equals(rootLocation) }
-            .map(rootLocation::relativize)
-    }
-
-    override fun load(filename: String): Path {
-        return rootLocation.resolve(filename)
-    }
-
-    override fun loadAsResource(filename: String): Resource {
-        try {
-            val file = load(filename)
-            val resource: Resource = UrlResource(file.toUri())
-            if (resource.exists() && resource.isReadable) {
-                return resource
-            } else {
-                throw RuntimeException("Could not read file: $filename")
-            }
-        } catch (e: MalformedURLException) {
-            throw RuntimeException("Could not read file: $filename", e)
-        }
-    }
-
-    override fun deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile())
+        return "https://kamppis.hellmanstudios.fi/api/images/get/$userId/$sanitizedFilename"
     }
 }
