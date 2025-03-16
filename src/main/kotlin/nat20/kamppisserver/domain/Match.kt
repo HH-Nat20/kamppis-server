@@ -39,8 +39,21 @@ class Match(
         users.remove(user)
         updatedAt = LocalDateTime.now()
     }
+
+    fun toMatchDTO(match: Match): MatchDTO {
+        val matchDTO = MatchDTO(
+            userIds = match.users.mapNotNull { it.id }.toSet(),
+            id = match.id
+        )
+        return matchDTO
+    }
 }
 
 data class MatchRequest(
     @NotEmpty val userIds: Set<Long>
+)
+
+data class MatchDTO(
+    @NotEmpty val userIds: Set<Long>,
+    val id: Long? = null,
 )

@@ -8,9 +8,6 @@ import jakarta.validation.constraints.PastOrPresent
 import nat20.kamppisserver.domain.enums.UserStatus
 import java.time.LocalDateTime
 
-/**
- * Entity class for User.
- */
 @Entity
 @Table(name = "users")
 class User(
@@ -41,4 +38,23 @@ class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
+) {
+    fun toUserDTO(user: User): UserDTO {
+        val userDTO = UserDTO(
+            email = user.email,
+            status = user.status,
+            isOnline = user.isOnline,
+            matchIds = user.matches.mapNotNull { it.id }.toSet(),
+            id = user.id
+        )
+        return userDTO
+    }
+}
+
+data class UserDTO(
+    @NotEmpty @Email val email: String,
+    val status: UserStatus,
+    val isOnline: Boolean,
+    val matchIds: Set<Long>,
+    val id: Long? = null
 )

@@ -6,11 +6,6 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.PastOrPresent
 import java.time.LocalDateTime
 
-/**
- * Entity class for Message.
- * @ManyToOne relationship to sender (User) and receiver (User).
- * @ManyToOne relationship to Match.
- */
 @Entity
 @Table
 class Message(

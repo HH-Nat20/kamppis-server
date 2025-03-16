@@ -10,10 +10,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-/**
- * Entity class for User Photos.
- * @ManyToOne relationship to User Profile.
- */
 @Entity
 @Table(name = "user_photos")
 class UserPhoto(
@@ -57,5 +53,5 @@ fun toUserPhotoDTO(userPhoto: UserPhoto): UserPhotoDTO {
 data class UserPhotoDTO(
     @NotEmpty val name: String,
     val isProfilePhoto: Boolean,
-    val id: Long
+    val id: Long? = null
 )

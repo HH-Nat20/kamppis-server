@@ -16,12 +16,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-/**
- * Entity class for UserProfile.
- * @OneToOne relationship to User.
- * @OneToMany relationship to UserHabit.
- * @OneToMany relationship to UserInterest.
- */
 @Entity
 @Table(name = "user_profiles")
 class UserProfile(
