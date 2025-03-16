@@ -1,4 +1,4 @@
-### Get all the messages
+### Get all users
 GET http://localhost:8080/api/users/
 
 ### Get user with id = 1
@@ -13,3 +13,19 @@ GET http://localhost:8080/api/user-profiles
 // The server looks up this user's search criteria (by user's id)
 // And returns all profiles that meet the user's search criteria
 GET http://localhost:8080/api/user-profiles/2/query
+
+### Get authentication token for alice smith (save it in auth_token for the following request)
+POST http://localhost:8080/api/login?
+    email=alice.smith@example.com
+
+> {%
+    client.global.set("auth_token", response.body.token);
+%}
+
+### Use the above token to access a protected endpoint
+GET http://localhost:8080/api/login/protected
+Authorization: Bearer {{auth_token}}
+
+### Example using expired token
+GET http://localhost:8080/api/login/protected
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbGljZS5zbWl0aEBleGFtcGxlLmNvbSIsImlhdCI6MTc0MjA3MDA1MCwiZXhwIjoxNzQyMDczNjUwfQ.hRqdcGM3hDrXdbRZShNzhmWcqiTHmOIbKYXRdZnY6V_XPortA-LaZAFvn-ru4t8WTMsGYsv8BtEqzhbCUImfnw
