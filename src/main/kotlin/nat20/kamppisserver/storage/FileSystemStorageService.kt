@@ -8,6 +8,7 @@ import java.io.IOException
 import java.nio.file.*
 import java.util.UUID
 import org.springframework.util.FileSystemUtils
+import java.net.MalformedURLException
 
 @Service
 class FileSystemStorageService(private val properties: StorageProperties) : StorageService {
@@ -70,6 +71,15 @@ class FileSystemStorageService(private val properties: StorageProperties) : Stor
         }
     }
 
+    override fun loadAll(): Stream<Path> {
+        return try {
+            Files.walk(rootLocation, 1)
+                .filter { path -> !path.equals(rootLocation) }
+                .map(rootLocation::relativize)
+        } catch (e: IOException) {
+            throw RuntimeException("Failed to read stored files", e)
+        }
+    }
 
     override fun deleteAll() {
         try {
