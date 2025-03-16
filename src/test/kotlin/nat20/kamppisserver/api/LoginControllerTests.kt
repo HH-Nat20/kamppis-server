@@ -1,12 +1,19 @@
 package nat20.kamppisserver.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
+import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.security.SecurityConfig
+import nat20.kamppisserver.service.UserService
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
@@ -17,11 +24,21 @@ class LoginControllerTests @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper
 ){
+    @MockkBean
+    private lateinit var userService: UserService
+
+    @AfterEach
+    fun tearDown() {
+        SecurityContextHolder.clearContext()
+    }
+
     @Test
     fun `login should return JWT for valid user`() {
-        val email = "alice.smith@example.com"
+        val mockUser = User(email = "alice.smith@example.com")
 
-        mockMvc.post("/api/login?email=$email")
+        every { userService.findActiveUserByEmail(mockUser.email) } returns mockUser
+
+        mockMvc.post("/api/login?email=${mockUser.email}")
         .andExpect {
             status { isOk() }
             jsonPath("$.token") { isNotEmpty() }
@@ -30,7 +47,7 @@ class LoginControllerTests @Autowired constructor(
 
     @Test
     fun `login should return 400 for invalid user`() {
-        val email = "invalid@example.com"
+        val email = "invalid@not-example.com"
 
         mockMvc.post("/api/login?email=$email")
         .andExpect {
@@ -40,10 +57,12 @@ class LoginControllerTests @Autowired constructor(
 
     @Test
     fun `should access protected endpoint with valid JWT`() {
-        val email = "alice.smith@example.com"
+        val mockUser = User(email = "alice.smith@example.com")
+
+        every { userService.findActiveUserByEmail(mockUser.email) } returns mockUser
 
         // Step 1: Perform login and extract the token
-        val token = mockMvc.post("/api/login?email=$email")
+        val token = mockMvc.post("/api/login?email=${mockUser.email}")
             .andExpect {
                 status { isOk() }
                 jsonPath("$.token") { isNotEmpty() }
@@ -55,6 +74,10 @@ class LoginControllerTests @Autowired constructor(
                 val jsonNode = objectMapper.readTree(responseBody)
                 jsonNode.get("token").asText() // Extract the token from JSON response
             }
+
+        // Step 2: Set authentication in SecurityContext
+        val authentication = UsernamePasswordAuthenticationToken(mockUser.email, null, emptyList())
+        SecurityContextHolder.getContext().authentication = authentication
 
         // Step 2: Use the extracted token to access the protected endpoint
         mockMvc.get("/api/login/protected") {

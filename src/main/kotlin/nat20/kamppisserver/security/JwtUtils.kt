@@ -35,4 +35,16 @@ object JwtUtils {
             .signWith(secretKey)
             .compact()
     }
+
+    // Method to validate token and extract email from it
+    fun validateTokenAndGetEmail(token: String): String? {
+        val email = Jwts.parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .payload // claims
+            .subject // email
+        println("Extracted email from JWT: $email")
+        return email
+    }
 }
