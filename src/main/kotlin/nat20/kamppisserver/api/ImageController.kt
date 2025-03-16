@@ -39,7 +39,7 @@ class ImageController(
         val resource = UrlResource(filePath.toUri())
 
         return if (resource.exists() && resource.isReadable) {
-            val mimeType = Files.probeContentType(filePath) ?: "application/octet-stream"
+            val mimeType = Files.probeContentType(filePath) ?: "image/jpeg"
 
             ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(mimeType))
@@ -105,12 +105,6 @@ class ImageController(
 
     @Throws(IOException::class)
     private fun saveFile(filePath: Path, inputStream: InputStream) {
-        try {
-            Files.newOutputStream(filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE).use { outputStream ->
-                inputStream.copyTo(outputStream)
-            }
-        } catch (e: IOException) {
-            throw RuntimeException("Failed to save file: ${filePath.fileName}", e)
-        }
+        Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING)
     }
 }
