@@ -9,6 +9,8 @@ import java.io.InputStream
 import java.net.MalformedURLException
 import java.nio.file.*
 import java.util.stream.Stream
+import org.springframework.util.FileSystemUtils
+
 
 @Service
 class FileSystemStorageService(private val properties: StorageProperties) : StorageService {
