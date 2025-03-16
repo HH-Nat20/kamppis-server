@@ -72,7 +72,8 @@ class ImageController(
         val sanitizedFilename = "${UUID.randomUUID()}.$originalExtension"
 
         val filePath = userDir.resolve(sanitizedFilename)
-        Files.copy(image.inputStream, filePath, StandardCopyOption.REPLACE_EXISTING)
+        //Files.copy(image.inputStream, filePath, StandardCopyOption.REPLACE_EXISTING)
+        saveFile(filePath, image.inputStream)
 
         // Public URL to access the image
         val imageUrl = "api/images/get/$userId/$sanitizedFilename"
@@ -100,5 +101,12 @@ class ImageController(
                 "imageUrl" to imageUrl
             )
         )
+    }
+
+    @Throws(IOException::class)
+    private fun saveFile(filePath: Path, inputStream: InputStream) {
+        Files.newOutputStream(filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE).use { outputStream ->
+            inputStream.copyTo(outputStream)
+        }
     }
 }
