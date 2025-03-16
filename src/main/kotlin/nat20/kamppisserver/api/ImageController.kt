@@ -13,9 +13,10 @@ import org.springframework.http.ResponseEntity
 import org.springframework.core.io.Resource
 import org.springframework.core.io.UrlResource
 import org.springframework.transaction.annotation.Transactional
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardCopyOption
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
+import java.io.IOException
+import java.io.InputStream
+import java.nio.file.*
 import java.util.*
 
 @RestController
@@ -60,7 +61,7 @@ class ImageController(
             return ResponseEntity.badRequest().body(mapOf("message" to "File is empty"))
         }
 
-        val userProfile = userProfileRepository.findByIdActive(userId)
+        val userProfile = userProfileRepository.findById(userId).orElse(null)
             ?: return ResponseEntity.badRequest().body(mapOf("message" to "User profile not found"))
 
         // Create user-specific folder
@@ -72,25 +73,24 @@ class ImageController(
         val sanitizedFilename = "${UUID.randomUUID()}.$originalExtension"
 
         val filePath = userDir.resolve(sanitizedFilename)
-        //Files.copy(image.inputStream, filePath, StandardCopyOption.REPLACE_EXISTING)
         saveFile(filePath, image.inputStream)
 
-        // Public URL to access the image
-        val imageUrl = "api/images/get/$userId/$sanitizedFilename"
+        // Get base URL dynamically
+        val baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString()
+        val imageUrl = "$baseUrl/api/images/get/$userId/$sanitizedFilename"
 
         // Save image metadata in database
         val userPhoto = UserPhoto(
             userProfile = userProfile,
-            name = "https://kamppis.hellmanstudios.fi/$imageUrl", // TODO: Don't hardcode the URL
+            name = imageUrl,
             isProfilePhoto = isProfilePhoto
         )
         userPhotoRepository.save(userPhoto)
- 
-        if (userProfile.userPhotos == null) {
-            userProfile.userPhotos = mutableListOf()
-        }
 
-        userProfile.userPhotos!!.add(userPhoto)
+        // Ensure `userPhotos` list is initialized before adding
+        userProfile.userPhotos = (userProfile.userPhotos ?: mutableListOf()).apply {
+            add(userPhoto)
+        }
 
         userProfileRepository.save(userProfile)
 
@@ -105,8 +105,12 @@ class ImageController(
 
     @Throws(IOException::class)
     private fun saveFile(filePath: Path, inputStream: InputStream) {
-        Files.newOutputStream(filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE).use { outputStream ->
-            inputStream.copyTo(outputStream)
+        try {
+            Files.newOutputStream(filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE).use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
+        } catch (e: IOException) {
+            throw RuntimeException("Failed to save file: ${filePath.fileName}", e)
         }
     }
 }
