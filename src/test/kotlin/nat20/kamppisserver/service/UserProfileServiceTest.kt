@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 
 /**
@@ -22,6 +23,7 @@ import java.time.LocalDate
  * values accordingly, and throw an exception in case of invalid id:s.
 */
 @SpringBootTest
+@Transactional
 @ActiveProfiles("test")
 class UserProfileServiceTest @Autowired constructor(
     val repository: UserProfileRepository,
@@ -31,13 +33,13 @@ class UserProfileServiceTest @Autowired constructor(
     @Test
     fun `update should modify and save user profile`() {
 
-        val userProfile = repository.findByIdOrNull(1L)
+        val userProfile = repository.findByIdActive(1L)
         val userProfileDTO = userProfile?.let { toUserProfileDTO(it) }
         if (userProfileDTO != null) {
             userProfile.id?.let { service.update(userProfileDTO, it) }
         }
 
-        val updatedProfile = repository.findByIdOrNull(1L)
+        val updatedProfile = repository.findByIdActive(1L)
 
         assertNotNull(updatedProfile?.updatedAt)
     }

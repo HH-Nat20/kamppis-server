@@ -14,12 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.transaction.annotation.Transactional
 import kotlin.test.assertFalse
 
 /**
  * Test class for QueryService.
  */
 @SpringBootTest
+@Transactional
 @ActiveProfiles("test")
 class QueryServiceTests @Autowired constructor(
     val queryService: QueryService,

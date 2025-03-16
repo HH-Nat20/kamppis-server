@@ -69,7 +69,6 @@ class UserProfile(
     var updatedAt: LocalDateTime? = null,
 
     @Column(name = "deleted_at")
-    @UpdateTimestamp
     var deletedAt: LocalDateTime? = null,
 
     @Id
@@ -82,8 +81,7 @@ fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
         //userId = userProfile.user.id!!,
         firstName = userProfile.firstName,
         lastName = userProfile.lastName,
-        //TODO: age = ChronoUnit.YEARS.between(userProfile.dateOfBirth, LocalDate.now()),
-        age = ChronoUnit.YEARS.between(userProfile.dateOfBirth, LocalDate.of(2025, 2, 21)),
+        age = ChronoUnit.YEARS.between(userProfile.dateOfBirth, LocalDate.now()),
         gender = userProfile.gender,
         userPhotos = userProfile.userPhotos?.map { toUserPhotoDTO(it) }?.toMutableList(),
         bio = userProfile.bio,

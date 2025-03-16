@@ -12,5 +12,8 @@ class DuplicateSwipeException(message: String) : RuntimeException(message)
 @ResponseStatus(HttpStatus.CONFLICT)
 class DuplicateMatchException(message: String) : RuntimeException(message)
 
+@ResponseStatus(HttpStatus.CONFLICT)
+class DuplicateEmailException(message: String) : RuntimeException(message)
+
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 class InvalidRequestException(message: String) : RuntimeException(message)

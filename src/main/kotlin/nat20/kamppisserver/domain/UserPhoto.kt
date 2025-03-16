@@ -30,7 +30,6 @@ class UserPhoto(
     var updatedAt: LocalDateTime? = null,
 
     @Column(name = "deleted_at")
-    @UpdateTimestamp
     var deletedAt: LocalDateTime? = null,
 
     @Id

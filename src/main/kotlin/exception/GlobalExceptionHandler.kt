@@ -18,6 +18,10 @@ class GlobalExceptionHandler {
     fun handleDuplicateMatch(ex: DuplicateMatchException) {
     }
 
+    @ExceptionHandler(DuplicateEmailException::class)
+    fun handleDuplicateEmail(ex: DuplicateEmailException) {
+    }
+
     @ExceptionHandler(InvalidRequestException::class)
     fun handleInvalidRequest(ex: InvalidRequestException) {
     }

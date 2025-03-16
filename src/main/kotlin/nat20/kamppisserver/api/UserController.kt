@@ -65,4 +65,15 @@ class UserController(private val repository: UserRepository,
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
+    /**
+     * Restores deleted user.
+     *
+     * @param user the user to be restored.
+     * @param id the id of the user to be restored.
+     * @return ResponseEntity with status code 200 OK.
+     */
+    @PutMapping("/{id}/restore")
+    fun restoreById(@RequestBody user: User,@PathVariable id: Long): ResponseEntity<User>
+        = ResponseEntity.ok(userService.restore(user, id))
+
 }
