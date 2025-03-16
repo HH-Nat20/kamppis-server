@@ -35,7 +35,8 @@ class FileSystemStorageService(private val properties: StorageProperties) : Stor
         val userDir = rootLocation.resolve(userId.toString())
         Files.createDirectories(userDir) // Ensure user directory exists
 
-        val sanitizedFilename = "${System.currentTimeMillis()}-${file.originalFilename?.replace("\\s+".toRegex(), "_")}"
+        val originalExtension = file.originalFilename?.substringAfterLast(".", "jpg") ?: "jpg"
+        val sanitizedFilename = "${UUID.randomUUID()}.$originalExtension"
         val destinationFile = userDir.resolve(sanitizedFilename).normalize().toAbsolutePath()
 
         if (!destinationFile.parent.equals(userDir.toAbsolutePath())) {
@@ -50,7 +51,7 @@ class FileSystemStorageService(private val properties: StorageProperties) : Stor
             throw RuntimeException("Failed to store file", e)
         }
 
-        return "/api/images/get/$userId/$sanitizedFilename" // Public URL for access
+        return "https://kamppis.hellmanstudios.fi/api/images/get/$userId/$sanitizedFilename" // Hardcoded origin url for now
     }
 
     override fun loadAll(): Stream<Path> {

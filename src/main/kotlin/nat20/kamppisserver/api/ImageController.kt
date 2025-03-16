@@ -24,15 +24,26 @@ class ImageController(
 
     @GetMapping("/get/{userId}/{filename}")
     fun getImage(@PathVariable userId: Long, @PathVariable filename: String): ResponseEntity<Resource> {
+        val userDir = uploadRootDir.resolve(userId.toString())
+        val filePath = userDir.resolve(filename).normalize()
+        
         return try {
-            val resource = storageService.loadAsResource("$userId/$filename")
-            ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"$filename\"")
-                .body(resource)
-        } catch (e: RuntimeException) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+            val resource = UrlResource(filePath.toUri())
+            if (resource.exists() && resource.isReadable) {
+                val mimeType = Files.probeContentType(filePath) ?: "image/jpeg"
+
+                ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(mimeType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"$filename\"")
+                    .body(resource)
+            } else {
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+            }
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
         }
     }
+
 
     @PostMapping("/{userId}")
     @Transactional
