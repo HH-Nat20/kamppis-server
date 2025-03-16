@@ -1,11 +1,15 @@
 package nat20.kamppisserver.api
-
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.nio.file.Files
+import org.springframework.http.MediaType
+import org.springframework.core.io.UrlResource
+import org.springframework.web.bind.annotation.*
 import nat20.kamppisserver.domain.UserPhoto
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.repository.UserPhotoRepository
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.storage.StorageService
-import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus

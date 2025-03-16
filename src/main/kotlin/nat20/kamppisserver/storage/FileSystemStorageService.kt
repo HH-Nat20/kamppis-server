@@ -1,13 +1,6 @@
-package nat20.kamppisserver.storage
-
-import org.springframework.core.io.Resource
-import org.springframework.core.io.UrlResource
-import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
-import java.io.IOException
 import java.nio.file.*
-import java.util.UUID
 import org.springframework.util.FileSystemUtils
+import java.util.UUID
 
 @Service
 class FileSystemStorageService(private val properties: StorageProperties) : StorageService {
@@ -16,6 +9,14 @@ class FileSystemStorageService(private val properties: StorageProperties) : Stor
 
     init {
         init()
+    }
+
+    override fun init() {
+        try {
+            Files.createDirectories(rootLocation)
+        } catch (e: IOException) {
+            throw RuntimeException("Could not initialize storage", e)
+        }
     }
 
     override fun store(file: MultipartFile, userId: Long): String {
@@ -42,5 +43,13 @@ class FileSystemStorageService(private val properties: StorageProperties) : Stor
         }
 
         return "https://kamppis.hellmanstudios.fi/api/images/get/$userId/$sanitizedFilename"
+    }
+
+    override fun deleteAll() {
+        try {
+            FileSystemUtils.deleteRecursively(rootLocation)
+        } catch (e: IOException) {
+            throw RuntimeException("Failed to delete files", e)
+        }
     }
 }
