@@ -1,6 +1,10 @@
 package nat20.kamppisserver.domain
 
 import jakarta.persistence.*
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Past
+import jakarta.validation.constraints.PastOrPresent
 import nat20.kamppisserver.domain.enums.City
 import nat20.kamppisserver.domain.enums.Cleanliness
 import nat20.kamppisserver.domain.enums.Gender
@@ -12,24 +16,26 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-/**
- * Entity class for UserProfile.
- * @OneToOne relationship to User.
- * @OneToMany relationship to UserHabit.
- * @OneToMany relationship to UserInterest.
- */
 @Entity
 @Table(name = "user_profiles")
 class UserProfile(
     @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    @NotNull(message = "User cannot be null.")
     var user: User,
 
+    @NotEmpty(message = "First name cannot be empty.")
     var firstName: String,
+
+    @NotEmpty(message = "Last name cannot be empty.")
     var lastName: String,
+
+    @Past(message = "Date of birth cannot be in the future.")
     var dateOfBirth: LocalDate,
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @NotNull(message = "Gender cannot be null.")
     var gender: Gender,
 
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "userProfile", orphanRemoval = true, fetch = FetchType.EAGER,)
@@ -49,7 +55,7 @@ class UserProfile(
     @Enumerated(EnumType.STRING)
     var preferredLocations: MutableList<City>? = mutableListOf(),
 
-    @Enumerated(EnumType.STRING) // Remove EnumType.STRING if we want to compare users' maxRent values by enum ordinal values
+    @Enumerated(EnumType.STRING) // TODO: Remove EnumType.STRING if we want to compare users' maxRent values by enum ordinal values
     var maxRent: MaxRent,
 
     @Enumerated(EnumType.STRING)
@@ -64,11 +70,15 @@ class UserProfile(
     * ADD FIELDS HERE AS REQUIRED
     * */
 
+    @PastOrPresent(message = "Creation date cannot be in the future.")
     var createdAt: LocalDateTime = LocalDateTime.now(),
+
     @UpdateTimestamp
+    @PastOrPresent(message = "Update date cannot be in the future.")
     var updatedAt: LocalDateTime? = null,
 
     @Column(name = "deleted_at")
+    @PastOrPresent(message = "Deletion date cannot be in the future.")
     var deletedAt: LocalDateTime? = null,
 
     @Id
@@ -100,10 +110,10 @@ fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
 
 data class UserProfileDTO(
     //val userId: Long,
-    val firstName: String,
-    val lastName: String,
+    @NotEmpty val firstName: String,
+    @NotEmpty val lastName: String,
     val age: Long? = null,
-    val gender: Gender,
+    @NotNull val gender: Gender,
     val userPhotos: MutableList<UserPhotoDTO?>? = null,
     val bio: String? = "",
     val minAgePreference: Int? = null,

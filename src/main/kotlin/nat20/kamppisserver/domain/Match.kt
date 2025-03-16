@@ -1,6 +1,8 @@
 package nat20.kamppisserver.domain
 
 import jakarta.persistence.*
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.PastOrPresent
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
@@ -13,13 +15,20 @@ class Match(
         joinColumns = [JoinColumn(name = "match_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
+
+    @NotEmpty(message = "A match must have at least one user.")
     var users: MutableSet<User> = mutableSetOf(),
 
+    @PastOrPresent(message = "Creation date cannot be in the future.")
     var createdAt: LocalDateTime = LocalDateTime.now(),
+
     @UpdateTimestamp
+    @PastOrPresent(message = "Update date cannot be in the future.")
     var updatedAt: LocalDateTime? = null,
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
+
 ) {
     fun addUser(user: User) {
         users.add(user)
@@ -30,8 +39,21 @@ class Match(
         users.remove(user)
         updatedAt = LocalDateTime.now()
     }
+
+    fun toMatchDTO(match: Match): MatchDTO {
+        val matchDTO = MatchDTO(
+            userIds = match.users.mapNotNull { it.id }.toSet(),
+            id = match.id
+        )
+        return matchDTO
+    }
 }
 
 data class MatchRequest(
-    val userIds: Set<Long>
+    @NotEmpty val userIds: Set<Long>
+)
+
+data class MatchDTO(
+    @NotEmpty val userIds: Set<Long>,
+    val id: Long? = null,
 )
