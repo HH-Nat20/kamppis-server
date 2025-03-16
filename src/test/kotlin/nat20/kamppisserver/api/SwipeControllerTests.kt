@@ -3,7 +3,7 @@ package nat20.kamppisserver.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import nat20.kamppisserver.configuration.SecurityConfig
+import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.domain.SwipeRequest
 import nat20.kamppisserver.domain.SwipeResponse
 import nat20.kamppisserver.domain.User
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
-import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
 

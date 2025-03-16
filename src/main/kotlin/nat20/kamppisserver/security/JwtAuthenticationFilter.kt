@@ -1,4 +1,4 @@
-package nat20.kamppisserver.configuration
+package nat20.kamppisserver.security
 
 
 import io.jsonwebtoken.ExpiredJwtException

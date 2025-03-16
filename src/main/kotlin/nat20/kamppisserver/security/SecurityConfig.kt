@@ -1,7 +1,6 @@
-package nat20.kamppisserver.configuration
+package nat20.kamppisserver.security
 
 import io.jsonwebtoken.security.Keys
-import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

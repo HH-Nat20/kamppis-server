@@ -2,7 +2,7 @@ package nat20.kamppisserver.api
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import nat20.kamppisserver.configuration.SecurityConfig
+import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
