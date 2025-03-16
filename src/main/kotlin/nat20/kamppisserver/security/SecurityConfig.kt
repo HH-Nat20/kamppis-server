@@ -1,6 +1,5 @@
 package nat20.kamppisserver.security
 
-import io.jsonwebtoken.security.Keys
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -11,8 +10,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityConfig {
 
     private val key = "b8c485dc1b1db98ab477d6028a258609d729a18bda824d11d44e50a63b935e50" // TODO: Replace with proper secret in env
-
-    private val secretKey = Keys.hmacShaKeyFor(key.toByteArray())
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -30,11 +27,4 @@ class SecurityConfig {
             .addFilterBefore(JwtAuthenticationFilter(key), UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
     }
-
-/*    @Bean
-    fun jwtFilter(): FilterRegistrationBean<JwtAuthenticationFilter> {
-        val registrationBean = FilterRegistrationBean(JwtAuthenticationFilter(key))
-        registrationBean.addUrlPatterns("/api/login/protected") // Apply only to this endpoint
-        return registrationBean
-    }*/
 }

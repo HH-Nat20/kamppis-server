@@ -1,10 +1,9 @@
 package nat20.kamppisserver.api
 
-import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import nat20.kamppisserver.security.JwtUtils
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @RestController
 @RequestMapping("/api/login")
@@ -17,7 +16,7 @@ class LoginController {
     @PostMapping
     fun login(@RequestParam email: String): ResponseEntity<Map<String, String>> {
         if (email == "alice.smith@example.com") {
-            val token = generateJwtToken(email)
+            val token = JwtUtils.generateJwtToken(email)
             return mapOf("token" to token).let { ResponseEntity.ok(it) }
         } else {
             return ResponseEntity.badRequest().build()
@@ -29,16 +28,4 @@ class LoginController {
         return "Hello, $email! This is protected data."
     }
 
-    private fun generateJwtToken(email: String): String {
-        val token = Jwts.builder()
-        .claims()
-        .subject(email)
-        .issuedAt(Date())
-        .expiration(Date(System.currentTimeMillis() + 3600000))
-        .and()
-        .signWith(secretKey)
-        .compact()
-        println("Generated token: $token")
-        return token
-    }
 }
