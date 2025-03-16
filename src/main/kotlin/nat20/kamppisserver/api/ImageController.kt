@@ -25,7 +25,7 @@ class ImageController(
     private val userPhotoRepository: UserPhotoRepository
 ) {
 
-    private val uploadRootDir = Path.of("uploads")
+    private val uploadRootDir = Path.of("/var/www/uploads")
 
     init {
         Files.createDirectories(uploadRootDir)
