@@ -52,6 +52,25 @@ class FileSystemStorageService(private val properties: StorageProperties) : Stor
         return "https://kamppis.hellmanstudios.fi/api/images/get/$userId/$sanitizedFilename"
     }
 
+    override fun load(filename: String): Path {
+        return rootLocation.resolve(filename)
+    }
+
+    override fun loadAsResource(filename: String): Resource {
+        return try {
+            val file = load(filename)
+            val resource: Resource = UrlResource(file.toUri())
+            if (resource.exists() && resource.isReadable) {
+                resource
+            } else {
+                throw RuntimeException("Could not read file: $filename")
+            }
+        } catch (e: MalformedURLException) {
+            throw RuntimeException("Could not read file: $filename", e)
+        }
+    }
+
+
     override fun deleteAll() {
         try {
             FileSystemUtils.deleteRecursively(rootLocation)
