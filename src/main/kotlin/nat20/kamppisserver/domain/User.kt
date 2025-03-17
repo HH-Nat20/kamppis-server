@@ -85,7 +85,7 @@ data class UserDTO(
     @NotEmpty val firstName: String,
     @NotEmpty val lastName: String,
     @NotEmpty @Email val email: String,
-    val age: Long,
+    val age: Long? = null,
     @NotNull val gender: Gender,
     val status: UserStatus,
     val isOnline: Boolean,
