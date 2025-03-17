@@ -57,10 +57,13 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
+      # Set storage location explicitly
+      - name: Set Storage Location
+        run: echo "STORAGE_LOCATION=/tmp/storage" >> $GITHUB_ENV
+
       # Run tests with Gradle
       - name: Run Tests
         env:
-          STORAGE_LOCATION: /tmp/storage
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/${{ secrets.DB_TEST_NAME }}
           SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
