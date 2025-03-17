@@ -12,6 +12,6 @@ class StorageProperties {
     fun fullPath(): String {
         //val homeDir = System.getenv("HOME") ?: "/var/www"
         //return "$homeDir/$location"
-        return "/var/www/uploads" // Hardcoded for now
+        return "/home/forge/hellmanstudios.fi/public/kamppis-images" // TODO: Change path
     }
 }

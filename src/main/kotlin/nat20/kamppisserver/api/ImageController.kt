@@ -28,7 +28,7 @@ class ImageController(
     private val storageService: StorageService
 ) {
 
-    private val uploadRootDir: Path = Paths.get("/var/www/uploads")
+    private val uploadRootDir: Path = Paths.get("/home/forge/hellmanstudios.fi/public/kamppis-images") // TODO: Change path
 
     @GetMapping("/get/{userId}/{filename}", produces = [MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE])
     fun getImage(@PathVariable userId: Long, @PathVariable filename: String): ResponseEntity<ByteArray> {

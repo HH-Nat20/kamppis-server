@@ -51,7 +51,7 @@ class FileSystemStorageService(private val properties: StorageProperties) : Stor
             throw RuntimeException("Failed to store file", e)
         }
 
-        return "https://kamppis.hellmanstudios.fi/api/images/get/$userId/$sanitizedFilename"
+        return "https://hellmanstudios.fi/kamppis-images/$userId/$sanitizedFilename" // TODO: Change path
     }
 
     override fun load(filename: String): Path {
