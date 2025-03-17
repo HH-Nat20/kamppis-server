@@ -54,6 +54,9 @@ class User(
     @ManyToMany(mappedBy = "users") // This makes it bidirectional
     var matches: MutableSet<Match> = mutableSetOf(),
 
+    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+    var profile: Profile? = null,
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -73,7 +76,7 @@ fun toUserDTO(user: User): UserDTO {
         updatedAt = user.updatedAt,
         deletedAt = user.deletedAt,
         //TODO: flatPreferenceDTO = user.flatPreference.toFlatPreferenceDTO()
-        //TODO: profileDTO = user.profile.toProfileDTO()
+         profile = user.profile?.let { toProfileDTO(it) },
         //TODO: roommatePreferenceDTO = user.roommatePreference.toRoommatePreferenceDTO()
         id = user.id
     )
@@ -94,7 +97,7 @@ data class UserDTO(
     @PastOrPresent val updatedAt: LocalDateTime? = null,
     @PastOrPresent val deletedAt: LocalDateTime? = null,
     //TODO: val flatPreferenceDTO: FlatPreferenceDTO,
-    //TODO: val profileDTO: ProfileDTO,
+    val profile: ProfileDTO? = null,
     //TODO: val roommatePreferenceDTO: RoommatePreferenceDTO,
     val id: Long? = null
 )
