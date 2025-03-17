@@ -1,0 +1,15 @@
+meta {
+  name: Post Image
+  type: http
+  seq: 21
+}
+
+post {
+  url: {{baseUrl}}/api/images/1
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  image: @file(\\wsl.localhost\Ubuntu-22.04\home\jessehellman\nat20\kamppis\kamppis-app\assets\images\kamppis-app.png)
+}
