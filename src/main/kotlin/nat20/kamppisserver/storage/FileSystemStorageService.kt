@@ -14,7 +14,9 @@ import java.net.MalformedURLException
 @Service
 class FileSystemStorageService(private val properties: StorageProperties) : StorageService {
 
-    private val rootLocation: Path = Paths.get(properties.fullPath())
+    private val rootLocation: Path = Paths.get(
+        properties.fullPath().ifBlank { System.getProperty("java.io.tmpdir") + "/storage" }
+    )
 
     init {
         init()
