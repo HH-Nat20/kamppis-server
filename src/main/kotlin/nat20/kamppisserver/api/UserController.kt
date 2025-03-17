@@ -2,6 +2,7 @@ package nat20.kamppisserver.api
 
 import com.fasterxml.jackson.databind.JsonNode
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.UserDTO
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.domain.enums.UserStatus
@@ -26,11 +27,10 @@ class UserController(private val repository: UserRepository,
                      private val userService: UserService) {
 
     @GetMapping("", "/")
-    fun findAll(): MutableIterable<User> = repository.findAllByStatus(UserStatus.ACTIVE)
+    fun findAll(): ResponseEntity<List<UserDTO>> = ResponseEntity.ok(userService.findAll())
 
     @GetMapping("/{id}")
-    fun findUserById(@PathVariable id: Long) = repository.findByIdAndStatus(id, UserStatus.ACTIVE)
-        ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "This user does not exist")
+    fun findUserById(@PathVariable id: Long): ResponseEntity<UserDTO> = ResponseEntity.ok(userService.findById(id))
 
     /**
      * Creates new user.
@@ -39,7 +39,7 @@ class UserController(private val repository: UserRepository,
      * @return ResponseEntity with status code 201 CREATED.
      */
     @PostMapping
-    fun addUserProfile(@RequestBody user: User): ResponseEntity<User>
+    fun addUserProfile(@RequestBody user: User): ResponseEntity<UserDTO>
             = ResponseEntity.status(HttpStatus.CREATED).body(userService.add(user))
 
     /**
@@ -50,7 +50,7 @@ class UserController(private val repository: UserRepository,
      * @return ResponseEntity with status code 200 OK.
      */
     @PutMapping("/{id}")
-    fun updateUserProfile(@RequestBody user: User, @PathVariable id: Long): ResponseEntity<User>
+    fun updateUserProfile(@RequestBody user: User, @PathVariable id: Long): ResponseEntity<UserDTO>
             = ResponseEntity.ok(userService.update(user, id))
 
     /**
@@ -73,7 +73,7 @@ class UserController(private val repository: UserRepository,
      * @return ResponseEntity with status code 200 OK.
      */
     @PutMapping("/{id}/restore")
-    fun restoreById(@RequestBody user: User,@PathVariable id: Long): ResponseEntity<User>
+    fun restoreById(@RequestBody user: User,@PathVariable id: Long): ResponseEntity<UserDTO>
         = ResponseEntity.ok(userService.restore(user, id))
 
 }

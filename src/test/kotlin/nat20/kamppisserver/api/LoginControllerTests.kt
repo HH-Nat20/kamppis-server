@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.UserDTO
+import nat20.kamppisserver.domain.enums.Gender
+import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.service.UserService
@@ -17,6 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @WebMvcTest(LoginController::class)
 @Import(SecurityConfig::class) // Import your security config
@@ -34,11 +39,21 @@ class LoginControllerTests @Autowired constructor(
 
     @Test
     fun `login should return JWT for valid user`() {
-        val mockUser = User(email = "alice.smith@example.com")
+        val mockUserDTO = UserDTO(
+            email = "alice.smith@example.com",
+            firstName = "Alice",
+            lastName = "Smith",
+            age = 34,
+            gender = Gender.FEMALE,
+            status = UserStatus.ACTIVE,
+            isOnline = false,
+            createdAt = LocalDateTime.now(),
+            matchIds = setOf(1, 2)
+        )
 
-        every { userService.findActiveUserByEmail(mockUser.email) } returns mockUser
+        every { userService.findActiveUserByEmail(mockUserDTO.email) } returns mockUserDTO
 
-        mockMvc.post("/api/login?email=${mockUser.email}")
+        mockMvc.post("/api/login?email=${mockUserDTO.email}")
         .andExpect {
             status { isOk() }
             jsonPath("$.token") { isNotEmpty() }
@@ -57,12 +72,22 @@ class LoginControllerTests @Autowired constructor(
 
     @Test
     fun `should access protected endpoint with valid JWT`() {
-        val mockUser = User(email = "alice.smith@example.com")
+        val mockUserDTO = UserDTO(
+            email = "alice.smith@example.com",
+            firstName = "Alice",
+            lastName = "Smith",
+            age = 34,
+            gender = Gender.FEMALE,
+            status = UserStatus.ACTIVE,
+            isOnline = false,
+            createdAt = LocalDateTime.now(),
+            matchIds = setOf(1, 2)
+        )
 
-        every { userService.findActiveUserByEmail(mockUser.email) } returns mockUser
+        every { userService.findActiveUserByEmail(mockUserDTO.email) } returns mockUserDTO
 
         // Step 1: Perform login and extract the token
-        val token = mockMvc.post("/api/login?email=${mockUser.email}")
+        val token = mockMvc.post("/api/login?email=${mockUserDTO.email}")
             .andExpect {
                 status { isOk() }
                 jsonPath("$.token") { isNotEmpty() }
@@ -76,7 +101,7 @@ class LoginControllerTests @Autowired constructor(
             }
 
         // Step 2: Set authentication in SecurityContext
-        val authentication = UsernamePasswordAuthenticationToken(mockUser.email, null, emptyList())
+        val authentication = UsernamePasswordAuthenticationToken(mockUserDTO.email, null, emptyList())
         SecurityContextHolder.getContext().authentication = authentication
 
         // Step 2: Use the extracted token to access the protected endpoint

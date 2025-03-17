@@ -2,8 +2,10 @@ package nat20.kamppisserver.repository
 
 import nat20.kamppisserver.domain.Match
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.enums.Gender
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertNotEquals
 
@@ -21,6 +23,10 @@ class MatchRepositoryTests @Autowired constructor(
 
         val bobJohnson = User(
             email = "bob.johnson@example.com",
+            firstName = "Bob",
+            lastName = "Johnson",
+            dateOfBirth = LocalDate.of(1985, 11, 22), // Age 39
+            gender = Gender.MALE
         )
 
         userRepository.save(bobJohnson)

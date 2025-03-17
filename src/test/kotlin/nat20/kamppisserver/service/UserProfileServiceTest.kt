@@ -49,7 +49,13 @@ class UserProfileServiceTest @Autowired constructor(
         val id = 1000000L
         val updatedProfile = UserProfile(
             id = id,
-            user = User(email = "test@example.com"),
+            user = User(
+                email = "alice.smith@example.com",
+                firstName = "Alice",
+                lastName = "Smith",
+                dateOfBirth = LocalDate.of(1990, 5, 14), // Age 34
+                gender = Gender.FEMALE
+            ),
             firstName = "Test",
             lastName = "User",
             dateOfBirth = LocalDate.of(1995, 1, 1),

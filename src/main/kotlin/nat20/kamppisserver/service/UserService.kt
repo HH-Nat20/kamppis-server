@@ -3,7 +3,9 @@ package nat20.kamppisserver.service
 import exception.DuplicateEmailException
 import jakarta.persistence.EntityNotFoundException
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.UserDTO
 import nat20.kamppisserver.domain.enums.UserStatus
+import nat20.kamppisserver.domain.toUserDTO
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.http.HttpStatus
@@ -20,41 +22,82 @@ class UserService(private val userRepository: UserRepository,
                   private val userProfileRepository: UserProfileRepository) {
 
     /**
-     * Creates new User Profile.
+     * Returns all active Users.
+     *
+     * @return all Users as DTOs.
+     */
+    fun findAll(): List<UserDTO> {
+        val users = userRepository.findAllByStatus(UserStatus.ACTIVE)
+        return users.map { toUserDTO(it) }
+    }
+
+    /**
+     * Returns active User by id.
+     *
+     * @param id the id of the User to be returned.
+     * @return corresponding UserDTO.
+     */
+    fun findById(id: Long): UserDTO {
+        val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "This user does not exist")
+
+        return toUserDTO(user)
+    }
+
+    /**
+     * Creates new User.
      *
      * @param user the user to be created.
      * @return the created user.
      */
-    fun add(user: User): User {
+    fun add(user: User): UserDTO {
         // Check for all e-mails, even INACTIVE ones
         userRepository.findByEmail(user.email)
             ?.let { throw DuplicateEmailException("User with this email already exists") }
 
-        return userRepository.save(user)
+        val addedUser = userRepository.save(user)
+
+        return toUserDTO(addedUser)
     }
 
     /**
-     * Updates given User.
+     * Updates given active User.
      *
      * @param user the user to be updated.
      * @param id the id of the user to be updated.
      * @return the updated user.
      */
-    fun update(user: User, id: Long): User {
-        val updatedUser = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+    fun update(user: User, id: Long): UserDTO {
+        val updateUser = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("User with id $id not found")
         // Check for all e-mails, even INACTIVE ones
-        val existingUser = userRepository.findByEmail(updatedUser.email)
+        val existingUser = userRepository.findByEmail(updateUser.email)
         if (existingUser != null && existingUser.id != id) {
             throw DuplicateEmailException("User with this email already exists")
         }
-        updatedUser.email = user.email
 
-        return userRepository.save(updatedUser)
+        updateUser.firstName = user.firstName
+        updateUser.lastName = user.lastName
+        updateUser.email = user.email
+        updateUser.gender = user.gender
+        updateUser.updatedAt = LocalDateTime.now()
+
+        val updatedUser = userRepository.save(updateUser)
+
+        return toUserDTO(updatedUser)
     }
 
-    fun findActiveUserByEmail(email: String): User? {
-        return userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
+    /**
+     * Finds active User by e-mail.
+     *
+     * @param email the e-mail to search for.
+     * @return the corresponding UserDTO.
+     */
+    fun findActiveUserByEmail(email: String): UserDTO? {
+        val user = userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("User with email $email not found")
+
+        return toUserDTO(user)
     }
 
     /**
@@ -71,8 +114,10 @@ class UserService(private val userRepository: UserRepository,
             ?: throw EntityNotFoundException("User profile with id $id not found")
 
         deletedUser.deletedAt = LocalDateTime.now()
+        deletedUserProfile.updatedAt = LocalDateTime.now()
         deletedUser.status = UserStatus.INACTIVE
         deletedUserProfile.deletedAt = LocalDateTime.now()
+        deletedUserProfile.updatedAt = LocalDateTime.now()
 
         userRepository.save(deletedUser)
         userProfileRepository.save(deletedUserProfile)
@@ -86,21 +131,23 @@ class UserService(private val userRepository: UserRepository,
      * @return the restored user.
      */
     @Transactional
-    fun restore(user: User, id: Long): User {
-        val restoredUser = userRepository.findByIdAndStatus(id, UserStatus.INACTIVE)
+    fun restore(user: User, id: Long): UserDTO {
+        val restoreUser = userRepository.findByIdAndStatus(id, UserStatus.INACTIVE)
             ?: throw EntityNotFoundException("Deleted user with id $id not found")
 
         val restoredUserProfile = userProfileRepository.findByUserIdAndStatus(id, UserStatus.INACTIVE)
             ?: throw EntityNotFoundException("Deleted user profile with id $id not found")
 
-        restoredUser.deletedAt = null
-        restoredUser.status = UserStatus.ACTIVE
+        restoreUser.deletedAt = null
+        restoreUser.updatedAt = LocalDateTime.now()
+        restoreUser.status = UserStatus.ACTIVE
         restoredUserProfile.deletedAt = null
+        restoredUserProfile.updatedAt = LocalDateTime.now()
 
-        userRepository.save(restoredUser)
         userProfileRepository.save(restoredUserProfile)
+        val restoredUser = userRepository.save(restoreUser)
 
-        return restoredUser
+        return toUserDTO(restoredUser)
     }
 
 }

@@ -29,81 +29,185 @@ class TestDatabaseMockDataConfiguration {
         val users = listOf(
             User(
                 email = "alice.smith@example.com",
+                firstName = "Alice",
+                lastName = "Smith",
+                dateOfBirth = LocalDate.of(1990, 5, 14), // Age 34
+                gender = Gender.FEMALE
             ),
             User(
                 email = "bob.johnson@example.com",
+                firstName = "Bob",
+                lastName = "Johnson",
+                dateOfBirth = LocalDate.of(1985, 11, 22), // Age 39
+                gender = Gender.MALE
             ),
             User(
                 email = "charlie.davis@example.com",
+                firstName = "Charlie",
+                lastName = "Davis",
+                dateOfBirth = LocalDate.of(1998, 2, 3), // Age 27
+                gender = Gender.OTHER
             ),
             User(
                 email = "diana.lee@example.com",
+                firstName = "Diana",
+                lastName = "Lee",
+                dateOfBirth = LocalDate.of(2000, 2, 3), // Age 25
+                gender = Gender.FEMALE
             ),
             User(
                 email = "eve.brown@example.com",
+                firstName = "Eve",
+                lastName = "Brown",
+                dateOfBirth = LocalDate.of(1995, 8, 19), // Age 29
+                gender = Gender.NOT_IMPORTANT
             ),
             User(
                 email = "frank.miller@example.com",
+                firstName = "Frank",
+                lastName = "Miller",
+                dateOfBirth = LocalDate.of(1988, 3, 22), // Age 36
+                gender = Gender.MALE
             ),
             User(
                 email = "grace.wilson@example.com",
+                firstName = "Grace",
+                lastName = "Wilson",
+                dateOfBirth = LocalDate.of(1992, 7, 15), // Age 32
+                gender = Gender.FEMALE
             ),
             User(
                 email = "harry.moore@example.com",
+                firstName = "Harry",
+                lastName = "Moore",
+                dateOfBirth = LocalDate.of(1985, 1, 10), // Age 40
+                gender = Gender.MALE
             ),
             User(
                 email = "isabella.taylor@example.com",
+                firstName = "Isabella",
+                lastName = "Taylor",
+                dateOfBirth = LocalDate.of(1999, 12, 5), // Age 25
+                gender = Gender.FEMALE
             ),
             User(
                 email = "jack.anderson@example.com",
+                firstName = "Jack",
+                lastName = "Anderson",
+                dateOfBirth = LocalDate.of(1990, 6, 30), // Age 34
+                gender = Gender.MALE
             ),
             User(
                 email = "karen.thomas@example.com",
+                firstName = "Karen",
+                lastName = "Thomas",
+                dateOfBirth = LocalDate.of(1982, 8, 20), // Age 42
+                gender = Gender.FEMALE
             ),
             User(
                 email = "luke.jackson@example.com",
+                firstName = "Luke",
+                lastName = "Jackson",
+                dateOfBirth = LocalDate.of(1995, 4, 2), // Age 29
+                gender = Gender.MALE
             ),
             User(
                 email = "mia.white@example.com",
+                firstName = "Mia",
+                lastName = "White",
+                dateOfBirth = LocalDate.of(2000, 2, 17), // Age 25
+                gender = Gender.FEMALE
             ),
             User(
                 email = "nathan.harris@example.com",
+                firstName = "Nathan",
+                lastName = "Harris",
+                dateOfBirth = LocalDate.of(1987, 9, 9), // Age 37
+                gender = Gender.MALE
             ),
             User(
                 email = "olivia.martin@example.com",
+                firstName = "Olivia",
+                lastName = "Martin",
+                dateOfBirth = LocalDate.of(1993, 11, 11), // Age 31
+                gender = Gender.FEMALE
             ),
             User(
                 email = "peter.thompson@example.com",
+                firstName = "Peter",
+                lastName = "Thompson",
+                dateOfBirth = LocalDate.of(1980, 5, 5), // Age 44
+                gender = Gender.MALE
             ),
             User(
                 email = "quinn.garcia@example.com",
+                firstName = "Quinn",
+                lastName = "Garcia",
+                dateOfBirth = LocalDate.of(1998, 3, 3), // Age 26
+                gender = Gender.OTHER
             ),
             User(
                 email = "rachel.martinez@example.com",
+                firstName = "Rachel",
+                lastName = "Martinez",
+                dateOfBirth = LocalDate.of(1989, 10, 25), // Age 35
+                gender = Gender.FEMALE
             ),
             User(
                 email = "samuel.robinson@example.com",
+                firstName = "Samuel",
+                lastName = "Robinson",
+                dateOfBirth = LocalDate.of(1978, 12, 1), // Age 46
+                gender = Gender.MALE
             ),
             User(
                 email = "tina.clark@example.com",
+                firstName = "Tina",
+                lastName = "Clark",
+                dateOfBirth = LocalDate.of(1996, 7, 19), // Age 28
+                gender = Gender.FEMALE
             ),
             User(
                 email = "ursula.rodriguez@example.com",
+                firstName = "Ursula",
+                lastName = "Rodriguez",
+                dateOfBirth = LocalDate.of(1991, 1, 29), // Age 34
+                gender = Gender.FEMALE
             ),
             User(
                 email = "victor.lewis@example.com",
+                firstName = "Victor",
+                lastName = "Lewis",
+                dateOfBirth = LocalDate.of(1984, 4, 14), // Age 40
+                gender = Gender.MALE
             ),
             User(
                 email = "wendy.walker@example.com",
+                firstName = "Wendy",
+                lastName = "Walker",
+                dateOfBirth = LocalDate.of(1994, 6, 8), // Age 30
+                gender = Gender.FEMALE
             ),
             User(
                 email = "xavier.hall@example.com",
+                firstName = "Xavier",
+                lastName = "Hall",
+                dateOfBirth = LocalDate.of(1986, 9, 30), // Age 38
+                gender = Gender.MALE
             ),
             User(
                 email = "yvonne.allen@example.com",
+                firstName = "Yvonne",
+                lastName = "Allen",
+                dateOfBirth = LocalDate.of(1997, 2, 22), // Age 27
+                gender = Gender.FEMALE
             ),
             User(
                 email = "zachary.young@example.com",
+                firstName = "Zachary",
+                lastName = "Young",
+                dateOfBirth = LocalDate.of(1983, 11, 12), // Age 41
+                gender = Gender.MALE
             )
         )
 

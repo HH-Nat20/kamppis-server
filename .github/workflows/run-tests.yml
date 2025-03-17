@@ -57,6 +57,10 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
+      # Set storage location explicitly
+      - name: Set Storage Location
+        run: echo "STORAGE_LOCATION=/tmp/storage" >> $GITHUB_ENV
+
       # Run tests with Gradle
       - name: Run Tests
         env:

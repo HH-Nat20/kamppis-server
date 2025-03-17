@@ -32,7 +32,11 @@ class UserServiceTest @Autowired constructor(
     @BeforeEach
     fun setup() {
         testUser = userRepository.save(User(
-            email = "john.doe@test.com"
+            email = "john.doe@example.com",
+            firstName = "John",
+            lastName = "Doe",
+            dateOfBirth = LocalDate.of(1990, 5, 14),
+            gender = Gender.MALE
         ))
 
         testUserProfile = userProfileRepository.save(UserProfile(
