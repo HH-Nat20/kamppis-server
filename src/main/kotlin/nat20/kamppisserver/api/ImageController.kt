@@ -39,6 +39,7 @@ class ImageController(
             val contentType = Files.probeContentType(resource.file.toPath())
             val headers = HttpHeaders()
             headers.contentType = MediaType.parseMediaType(contentType)
+            headers.contentLength = resource.contentLength()
             return ResponseEntity.ok().headers(headers).body(resource)
         } else {
             return ResponseEntity.notFound().build()
