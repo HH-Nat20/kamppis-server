@@ -3,7 +3,8 @@ package nat20.kamppisserver.api
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import nat20.kamppisserver.security.SecurityConfig
-import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.UserDTO
+import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.QueryService
@@ -15,6 +16,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.time.LocalDateTime
 import kotlin.test.Test
 
 @Import(SecurityConfig::class) // Import your security config
@@ -39,15 +41,32 @@ class UserControllerTests {
 
     @Test
     fun `List all users`() {
-        val bobJohnson = User(
+        val bobJohnson = UserDTO(
             email = "bob.johnson@example.com",
+            firstName = "Bob",
+            lastName = "Johnson",
+            age = 39,
+            gender = Gender.MALE,
+            status = UserStatus.ACTIVE,
+            isOnline = false,
+            createdAt = LocalDateTime.now(),
+            matchIds = setOf(1, 2)
         )
 
-        val charlieDavis = User(
+        val charlieDavis = UserDTO(
             email = "charlie.davis@example.com",
+            firstName = "Charlie",
+            lastName = "Davis",
+            age = 27,
+            gender = Gender.OTHER,
+            status = UserStatus.ACTIVE,
+            isOnline = false,
+            createdAt = LocalDateTime.now(),
+            matchIds = setOf(1, 2)
         )
 
-        every { userRepository.findAllByStatus(UserStatus.ACTIVE) } returns mutableListOf(bobJohnson, charlieDavis)
+        every { userService.findAll() } returns listOf(bobJohnson, charlieDavis)
+
         mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk)
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -57,10 +76,20 @@ class UserControllerTests {
 
     @Test
     fun `Find user by id`() {
-        val bobJohnson = User(
+        val bobJohnson = UserDTO(
             email = "bob.johnson@example.com",
+            firstName = "Bob",
+            lastName = "Johnson",
+            age = 39,
+            gender = Gender.MALE,
+            status = UserStatus.ACTIVE,
+            isOnline = false,
+            createdAt = LocalDateTime.now(),
+            matchIds = setOf(1, 2)
         )
-        every { userRepository.findByIdAndStatus(any(), UserStatus.ACTIVE) } returns bobJohnson
+
+        every { userService.findById(1) } returns bobJohnson
+
         mockMvc.perform(get("/api/users/1").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))

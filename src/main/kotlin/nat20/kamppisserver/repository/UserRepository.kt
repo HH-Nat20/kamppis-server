@@ -11,7 +11,7 @@ interface UserRepository : JpaRepository<User, Long> {
     fun findByEmail(email: String): User?
 
     @Query("SELECT u FROM User u WHERE u.status = :status")
-    fun findAllByStatus(@Param("status") status: UserStatus): MutableIterable<User>
+    fun findAllByStatus(@Param("status") status: UserStatus): List<User>
 
     @Query("SELECT u FROM User u WHERE u.id IN :ids AND u.status = :status")
     fun findAllByIdAndStatus(@Param("ids") ids: Set<Long>, @Param("status") status: UserStatus): List<User>

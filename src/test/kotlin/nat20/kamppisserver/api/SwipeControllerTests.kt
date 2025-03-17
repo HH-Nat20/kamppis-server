@@ -7,6 +7,7 @@ import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.domain.SwipeRequest
 import nat20.kamppisserver.domain.SwipeResponse
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.SwipeService
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
+import java.time.LocalDate
 
 @WebMvcTest(SwipeController::class)
 @Import(SecurityConfig::class) // Import your security config
@@ -35,8 +37,20 @@ class SwipeControllerTests @Autowired constructor(
 
     @Test
     fun `should create a swipe successfully`() {
-        val user1 = User(email = "alice@example.com", id = 1L)
-        val user2 = User(email = "bob@example.com", id = 2L)
+        val user1 = User(
+            email = "alice.smith@example.com",
+            firstName = "Alice",
+            lastName = "Smith",
+            dateOfBirth = LocalDate.of(1990, 5, 14), // Age 34
+            gender = Gender.FEMALE,
+            id = 1L)
+        val user2 = User(
+            email = "bob.johnson@example.com",
+            firstName = "Bob",
+            lastName = "Johnson",
+            dateOfBirth = LocalDate.of(1985, 11, 22), // Age 39
+            gender = Gender.MALE,
+            id = 2L)
 
         val swipeRequest = SwipeRequest(
             swipingUserId = 1,
@@ -64,8 +78,8 @@ class SwipeControllerTests @Autowired constructor(
                 status { isCreated() }
                 content { contentType(MediaType.APPLICATION_JSON) }
                 jsonPath("$.swipeId") { value(1) }
-                jsonPath("$.swipingUser.email") { value("alice@example.com") }
-                jsonPath("$.swipedUser.email") { value("bob@example.com") }
+                jsonPath("$.swipingUser.email") { value("alice.smith@example.com") }
+                jsonPath("$.swipedUser.email") { value("bob.johnson@example.com") }
                 jsonPath("$.isRightSwipe") { value(true) }
             }
     }

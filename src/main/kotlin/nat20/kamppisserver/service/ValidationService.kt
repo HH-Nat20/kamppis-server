@@ -8,34 +8,17 @@ class ValidationService {
 
     /**
      * Validates String values by checking for whitelisted characters.
-     *
-     * @param string to be validated.
-     * @return true if includes only whitelisted characters (letters, apostrophes ('),
-     * and hyphens (-)). False otherwise.
      */
-    fun isValidString(string: String): Boolean =
-        string.matches(Regex("^[a-zA-Z' -]+$"))
+    fun isValidString(string: String): Boolean {
+        val sanitized = string.trim()
 
-    /**
-     * Validates e-mails.
-     * @param email to be validated.
-     * @return true if matches default e-mail pattern. False otherwise.
-     */
-    fun isValidEmail(email: String): Boolean =
-        email.matches(Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"))
+        // Only allow letters, spaces, apostrophes, and hyphens
+        val validPattern = Regex("^[a-zA-Z' -]+$")
 
-    /**
-     * Validates passwords. Might not be needed due to OAuth.
-     * @param password to be validated.
-     * @return true if includes required characters. False otherwise.
-     */
-    fun isValidPassword(password: String): Boolean {
-        return when {
-            password.length < 8 -> false
-            password.none { it.isUpperCase() } -> false
-            password.none { it.isLowerCase() } -> false
-            password.none { it.isDigit() } -> false
-            else -> true
-        }
+        // Check for control characters, null bytes, or other risky characters
+        val riskyPattern = Regex("[\\x00-\\x1F<>\"&%;(){}=]")
+
+        return sanitized.matches(validPattern) && !riskyPattern.containsMatchIn(sanitized)
     }
+
 }

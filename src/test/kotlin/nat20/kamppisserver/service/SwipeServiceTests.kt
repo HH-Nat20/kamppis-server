@@ -5,17 +5,31 @@ import io.mockk.mockk
 import io.mockk.verify
 import nat20.kamppisserver.domain.Swipe
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.repository.SwipeRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 
 class SwipeServiceTests {
     private lateinit var swipeRepository: SwipeRepository
     private lateinit var matchService: MatchService
     private lateinit var swipeService: SwipeService
 
-    private val userA = User(email = "a@example.com")
-    private val userB = User(email = "b@example.com")
+    private val userA = User(
+        email = "alice.smith@example.com",
+        firstName = "Alice",
+        lastName = "Smith",
+        dateOfBirth = LocalDate.of(1990, 5, 14), // Age 34
+        gender = Gender.FEMALE
+    )
+    private val userB = User(
+        email = "bob.johnson@example.com",
+        firstName = "Bob",
+        lastName = "Johnson",
+        dateOfBirth = LocalDate.of(1985, 11, 22), // Age 39
+        gender = Gender.MALE
+    )
 
     @BeforeEach
     fun setup() {
