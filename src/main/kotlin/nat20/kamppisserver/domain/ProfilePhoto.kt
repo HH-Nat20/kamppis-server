@@ -11,11 +11,8 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "profile_photos")
 class ProfilePhoto(
-    @ManyToOne
-    @JoinColumn(name = "profile_id", nullable = false)
-    @JsonIgnore
-    @NotNull(message = "Profile cannot be null.")
-    var profile: Profile,
+
+    // Has no reference to Profile, since as an abstract class it cannot store foreign keys
 
     @NotEmpty(message = "Url cannot be empty.")
     var url: String,
@@ -39,7 +36,7 @@ class ProfilePhoto(
     var id: Long? = null,
 )
 fun toProfilePhotoDTO(profilePhoto: ProfilePhoto): ProfilePhotoDTO {
-    val profilePhotoDTO: ProfilePhotoDTO = ProfilePhotoDTO(
+    val profilePhotoDTO = ProfilePhotoDTO(
         url = profilePhoto.url,
         isProfilePhoto = profilePhoto.isProfilePhoto,
         id = profilePhoto.id

@@ -25,6 +25,10 @@ class UserProfile (
     @Enumerated(EnumType.STRING)
     var lifestyle: MutableList<Lifestyle>? = mutableListOf(),
 
+    @OneToMany
+    @JoinColumn(name = "user_profile_id",)
+    var photos: MutableList<ProfilePhoto> = mutableListOf(),
+
 ) : Profile() // Inherits id, bio, and other attributes from Profile
 
 fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
@@ -33,6 +37,7 @@ fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
         bio = userProfile.bio,
         cleanliness = userProfile.cleanliness,
         lifestyle = userProfile.lifestyle,
+        photos = userProfile.photos,
         id = userProfile.id
     )
     return userProfileDTO
@@ -43,5 +48,6 @@ data class UserProfileDTO(
     val bio: String,
     val cleanliness: Cleanliness? = null,
     val lifestyle: MutableList<Lifestyle>? = mutableListOf(),
+    val photos: MutableList<ProfilePhoto> = mutableListOf(),
     val id: Long? = null
 )

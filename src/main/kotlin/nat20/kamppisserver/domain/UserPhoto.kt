@@ -1,3 +1,4 @@
+/*
 package nat20.kamppisserver.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -54,4 +55,4 @@ data class UserPhotoDTO(
     @NotEmpty val name: String,
     val isProfilePhoto: Boolean,
     val id: Long? = null
-)
+)*/

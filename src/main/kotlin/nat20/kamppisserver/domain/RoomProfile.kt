@@ -18,35 +18,40 @@ class RoomProfile(
 
     var isPrivateRoom: Boolean,
 
-
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Utilities::class)
     @CollectionTable(name = "room_profiles_utilities", joinColumns = [JoinColumn(name = "profile_id")])
     @Enumerated(EnumType.STRING)
     var utilities: MutableList<Utilities>? = mutableListOf(),
 
+    @OneToMany
+    @JoinColumn(name = "room_profile_id") // Creates a foreign key column in ProfilePhoto
+    var photos: MutableList<ProfilePhoto>? = mutableListOf(),
+
 ): Profile()
 
 fun toRoomProfileDTO(roomProfile: RoomProfile): RoomProfileDTO {
     val roomProfileDTO = RoomProfileDTO(
-        rent = roomProfile.rent,
-        isPrivateRoom = roomProfile.isPrivateRoom,
+        flatId = roomProfile.flat.id!!,
         totalRoommates = roomProfile.flat.totalRoommates,
         location = roomProfile.flat.location,
+        rent = roomProfile.rent,
+        isPrivateRoom = roomProfile.isPrivateRoom,
         utilities = roomProfile.utilities,
+        photos = roomProfile.photos,
         bio = roomProfile.bio,
-        flatId = roomProfile.flat.id!!,
         id = roomProfile.id
     )
     return roomProfileDTO
 }
 
 data class RoomProfileDTO(
-    val rent: Int,
-    val isPrivateRoom: Boolean,
+    val flatId: Long,
     val totalRoommates: Int,
     val location: City,
+    val rent: Int,
+    val isPrivateRoom: Boolean,
     val utilities: MutableList<Utilities>? = mutableListOf(),
+    val photos: MutableList<ProfilePhoto>? = mutableListOf(),
     val bio: String,
-    val flatId: Long,
     val id: Long? = null
 )
