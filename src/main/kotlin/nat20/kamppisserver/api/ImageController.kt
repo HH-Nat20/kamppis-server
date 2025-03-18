@@ -119,4 +119,47 @@ class ImageController(
         }
     }
 
+    @PutMapping("/{userId}/{photoId}")
+    @Transactional
+    fun updateImage(
+        @PathVariable userId: Long,
+        @PathVariable photoId: Long,
+        @RequestParam("isProfilePhoto", defaultValue = "false") isProfilePhoto: Boolean
+    ): ResponseEntity<Map<String, String>> {
+        // TODO: Move this duplicate logic elsewhere
+        val userProfile = userProfileRepository.findById(userId).orElse(null)
+            ?: return ResponseEntity.badRequest().body(mapOf("message" to "User profile not found"))
+
+        val userPhoto = userPhotoRepository.findById(photoId).orElse(null)
+            ?: return ResponseEntity.badRequest().body(mapOf("message" to "User photo not found"))
+
+        if (userPhoto.userProfile.id != userId) {
+            return ResponseEntity.badRequest().body(mapOf("message" to "User photo does not belong to user"))
+        }
+
+        val allUserPhotos = userPhotoRepository.findByUserProfileId(userId)
+
+        if (!isProfilePhoto) {
+            // Deny request if this is the only profile photo being turned off
+            val currentProfilePhoto = allUserPhotos.find { it.isProfilePhoto }
+            if (currentProfilePhoto?.id == userPhoto.id) {
+                return ResponseEntity.badRequest().body(mapOf("message" to "There must always be one profile photo"))
+            }
+        } else {
+            // If setting this as profile photo, remove profile status from all others
+            allUserPhotos.forEach { photo ->
+                if (photo.id != photoId && photo.isProfilePhoto) {
+                    photo.isProfilePhoto = false
+                    userPhotoRepository.save(photo)
+                }
+            }
+        }
+
+        // Set the selected photo as the profile photo
+        userPhoto.isProfilePhoto = isProfilePhoto
+        userPhotoRepository.save(userPhoto)
+
+        return ResponseEntity.ok(mapOf("message" to "Image updated", "isProfilePhoto" to isProfilePhoto.toString()))
+    }
+
 }
