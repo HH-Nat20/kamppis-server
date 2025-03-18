@@ -1,8 +1,7 @@
 package nat20.kamppisserver.domain
 
 import jakarta.persistence.*
-import jakarta.validation.constraints.NotNull
-import jakarta.validation.constraints.Positive
+import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.PositiveOrZero
 import nat20.kamppisserver.domain.enums.City
 import nat20.kamppisserver.domain.enums.Utilities
@@ -10,13 +9,18 @@ import nat20.kamppisserver.domain.enums.Utilities
 @Entity
 class RoomProfile(
     @OneToOne
-    @JoinColumn(name = "profile_id", nullable = false)
-    @NotNull(message = "Profile cannot be null.")
+    @MapsId // Uses the same ID as Profile
+    @JoinColumn(name = "id")
     var profile: Profile,
+
+    @Column(nullable = false)
+    @NotEmpty(message = "Bio cannot be empty.")
+    var bio: String = "Describe the room here!", // Room-specific bio
 
     @PositiveOrZero(message = "Rent must be a positive integer")
     var rent: Int,
 
+    @Column(nullable = false)
     var isPrivateRoom: Boolean,
 
     @PositiveOrZero(message = "Total roommates must be a positive integer")
@@ -33,11 +37,12 @@ class RoomProfile(
     var utilities: MutableList<Utilities>? = mutableListOf(),
 
     @Id
-    var id: Long,
+    var id: Long? = null,
 )
 
 fun toRoomProfileDTO(roomProfile: RoomProfile): RoomProfileDTO {
     val roomProfileDTO = RoomProfileDTO(
+        bio = roomProfile.bio,
         rent = roomProfile.rent,
         isPrivateRoom = roomProfile.isPrivateRoom,
         totalRoommates = roomProfile.totalRoommates,
@@ -49,6 +54,7 @@ fun toRoomProfileDTO(roomProfile: RoomProfile): RoomProfileDTO {
 }
 
 data class RoomProfileDTO(
+    val bio: String,
     val rent: Int,
     val isPrivateRoom: Boolean,
     val totalRoommates: Int,

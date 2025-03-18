@@ -1,6 +1,7 @@
 package nat20.kamppisserver.domain
 
 import jakarta.persistence.*
+import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.PastOrPresent
 import nat20.kamppisserver.domain.enums.Cleanliness
@@ -13,9 +14,13 @@ import java.time.LocalDateTime
 @Table(name = "user_profiles")
 class UserProfile(
     @OneToOne
-    @JoinColumn(name = "profile_id", nullable = false)
-    @NotNull(message = "Profile cannot be null.")
+    @MapsId // Uses the same ID as Profile
+    @JoinColumn(name = "id")
     var profile: Profile,
+
+    @Column(nullable = false)
+    @NotEmpty(message = "Bio cannot be empty.")
+    var bio: String = "Tell about yourself here!", // User-specific bio
 
     @Enumerated(EnumType.STRING)
     var cleanliness: Cleanliness? = null,
@@ -38,11 +43,12 @@ class UserProfile(
     var deletedAt: LocalDateTime? = null,
 
     @Id
-    var id: Long,
+    var id: Long? = null, // Uses the same ID as Profile
 )
 
 fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
     val userProfileDTO = UserProfileDTO(
+        bio = userProfile.bio,
         cleanliness = userProfile.cleanliness,
         lifestyle = userProfile.lifestyle,
         id = userProfile.id
@@ -51,6 +57,7 @@ fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
 }
 
 data class UserProfileDTO(
+    val bio: String,
     val cleanliness: Cleanliness? = null,
     val lifestyle: MutableList<Lifestyle>? = mutableListOf(),
     val id: Long? = null
