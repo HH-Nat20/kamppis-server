@@ -11,7 +11,7 @@ import nat20.kamppisserver.service.ValidationService
 @Entity
 @Table(name = "roommate_preferences")
 @ValidationService.ValidAgePreferences // Validates that minAgePreference < maxAgePreference
-class RoommatePreferences (
+class RoommatePreference (
     @OneToOne
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     @NotNull(message = "User cannot be null")
@@ -40,20 +40,20 @@ class RoommatePreferences (
     var id: Long? = null
 )
 
-fun toRoommatePreferenceDTO(roommatePreferences: RoommatePreferences): RoommatePreferencesDTO {
-    val roommatePreferencesDTO = RoommatePreferencesDTO(
-        userId = roommatePreferences.user.id,
-        minAgePreference = roommatePreferences.minAgePreference,
-        maxAgePreference = roommatePreferences.maxAgePreference,
-        genderPreferences = roommatePreferences.genderPreferences,
-        locationPreferences = roommatePreferences.locationPreferences,
-        id = roommatePreferences.id
+fun toRoommatePreferenceDTO(roommatePreference: RoommatePreference): RoommatePreferenceDTO {
+    val roommatePreferenceDTO = RoommatePreferenceDTO(
+        userId = roommatePreference.user.id,
+        minAgePreference = roommatePreference.minAgePreference,
+        maxAgePreference = roommatePreference.maxAgePreference,
+        genderPreferences = roommatePreference.genderPreferences,
+        locationPreferences = roommatePreference.locationPreferences,
+        id = roommatePreference.id
     )
 
-    return roommatePreferencesDTO
+    return roommatePreferenceDTO
 }
 
-class RoommatePreferencesDTO(
+class RoommatePreferenceDTO(
     val userId: Long?,
     val minAgePreference: Int,
     val maxAgePreference: Int,

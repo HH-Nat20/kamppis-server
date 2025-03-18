@@ -7,7 +7,7 @@ import nat20.kamppisserver.domain.enums.City
 
 @Entity
 @Table(name = "room_preferences")
-class RoomPreferences (
+class RoomPreference (
     @OneToOne
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     @NotNull(message = "User cannot be null")
@@ -34,20 +34,20 @@ class RoomPreferences (
     var id: Long? = null
 )
 
-fun toRoomPreferencesDTO(roomPreferences: RoomPreferences): RoomPreferencesDTO {
-    val roomPreferencesDTO: RoomPreferencesDTO = RoomPreferencesDTO(
-        userId = roomPreferences.user.id,
-        maxRent = roomPreferences.maxRent,
-        hasPrivateRoom = roomPreferences.hasPrivateRoom,
-        maxRoommates = roomPreferences.maxRoommates,
-        locationPreferences = roomPreferences.locationPreferences,
-        id = roomPreferences.id
+fun toRoomPreferenceDTO(roomPreference: RoomPreference): RoomPreferenceDTO {
+    val roomPreferenceDTO: RoomPreferenceDTO = RoomPreferenceDTO(
+        userId = roomPreference.user.id,
+        maxRent = roomPreference.maxRent,
+        hasPrivateRoom = roomPreference.hasPrivateRoom,
+        maxRoommates = roomPreference.maxRoommates,
+        locationPreferences = roomPreference.locationPreferences,
+        id = roomPreference.id
     )
 
-    return roomPreferencesDTO
+    return roomPreferenceDTO
 }
 
-class RoomPreferencesDTO(
+class RoomPreferenceDTO(
     val userId: Long?,
     val maxRent: Int,
     val hasPrivateRoom: Boolean,
