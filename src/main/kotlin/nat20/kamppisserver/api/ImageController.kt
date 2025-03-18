@@ -1,17 +1,13 @@
 package nat20.kamppisserver.api
-import nat20.kamppisserver.domain.UserPhoto
-import nat20.kamppisserver.domain.UserProfile
-import nat20.kamppisserver.repository.UserPhotoRepository
+import nat20.kamppisserver.domain.ProfilePhoto
+import nat20.kamppisserver.repository.ProfilePhotoRepository
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.storage.FileSystemStorageService
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.core.io.Resource
-import org.springframework.core.io.UrlResource
 import org.springframework.http.MediaType
 import org.springframework.transaction.annotation.Transactional
 import java.nio.file.Files
@@ -25,7 +21,8 @@ import java.util.*
 @RequestMapping("/api/images")
 class ImageController(
     private val userProfileRepository: UserProfileRepository,
-    private val userPhotoRepository: UserPhotoRepository,
+    // Paul's changes:
+    private val profilePhotoRepository: ProfilePhotoRepository,
     private val storageService: FileSystemStorageService
 ) {
 
@@ -65,14 +62,15 @@ class ImageController(
         val imageUrl = storageService.store(image, userId)
 
         // Save image metadata in database
-        val userPhoto = UserPhoto(
-            userProfile = userProfile,
-            name = imageUrl,
+        val userPhoto = ProfilePhoto(
+            // Does it need the user reference? Could pass just the id I guess -Paul
+            //userProfile = userProfile,
+            url = imageUrl, // "url" instead of "name" -Paul
             isProfilePhoto = isProfilePhoto
         )
-        userPhotoRepository.save(userPhoto)
+        profilePhotoRepository.save(userPhoto)
 
-        userProfile.userPhotos = (userProfile.userPhotos ?: mutableListOf()).apply {
+        userProfile.photos = (userProfile.photos).apply {
             add(userPhoto)
         }
         userProfileRepository.save(userProfile)
