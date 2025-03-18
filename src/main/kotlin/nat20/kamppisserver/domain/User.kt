@@ -55,7 +55,7 @@ class User(
     var matches: MutableSet<Match> = mutableSetOf(),
 
     @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
-    var profile: Profile? = null,
+    var userProfile: UserProfile? = null,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,7 +76,7 @@ fun toUserDTO(user: User): UserDTO {
         updatedAt = user.updatedAt,
         deletedAt = user.deletedAt,
         //TODO: flatPreferenceDTO = user.flatPreference.toFlatPreferenceDTO()
-         profile = user.profile?.let { toProfileDTO(it) },
+         userProfile = user.userProfile?.let { toUserProfileDTO(it) },
         //TODO: roommatePreferenceDTO = user.roommatePreference.toRoommatePreferenceDTO()
         id = user.id
     )
@@ -97,7 +97,7 @@ data class UserDTO(
     @PastOrPresent val updatedAt: LocalDateTime? = null,
     @PastOrPresent val deletedAt: LocalDateTime? = null,
     //TODO: val flatPreferenceDTO: FlatPreferenceDTO,
-    val profile: ProfileDTO? = null,
+    val userProfile: UserProfileDTO? = null,
     //TODO: val roommatePreferenceDTO: RoommatePreferenceDTO,
     val id: Long? = null
 )

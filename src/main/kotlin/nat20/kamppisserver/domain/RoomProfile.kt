@@ -1,64 +1,52 @@
 package nat20.kamppisserver.domain
 
 import jakarta.persistence.*
-import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.PositiveOrZero
 import nat20.kamppisserver.domain.enums.City
 import nat20.kamppisserver.domain.enums.Utilities
 
 @Entity
+@Table(name = "room_profiles")
 class RoomProfile(
-    @OneToOne
-    @MapsId // Uses the same ID as Profile
-    @JoinColumn(name = "id")
-    var profile: Profile,
 
-    @Column(nullable = false)
-    @NotEmpty(message = "Bio cannot be empty.")
-    var bio: String = "Describe the room here!", // Room-specific bio
+    @ManyToOne
+    @JoinColumn(name = "flat_id", nullable = false)
+    var flat: Flat,
 
     @PositiveOrZero(message = "Rent must be a positive integer")
     var rent: Int,
 
-    @Column(nullable = false)
     var isPrivateRoom: Boolean,
 
-    @PositiveOrZero(message = "Total roommates must be a positive integer")
-    var totalRoommates: Int,
-
-    @ElementCollection(fetch = FetchType.EAGER, targetClass = City::class)
-    @CollectionTable(name = "room_profiles_locations", joinColumns = [JoinColumn(name = "room_profile_id")])
-    @Enumerated(EnumType.STRING)
-    var location: MutableList<City>? = mutableListOf(),
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Utilities::class)
-    @CollectionTable(name = "room_profiles_utilities", joinColumns = [JoinColumn(name = "room_profile_id")])
+    @CollectionTable(name = "room_profiles_utilities", joinColumns = [JoinColumn(name = "profile_id")])
     @Enumerated(EnumType.STRING)
     var utilities: MutableList<Utilities>? = mutableListOf(),
 
-    @Id
-    var id: Long? = null,
-)
+): Profile()
 
 fun toRoomProfileDTO(roomProfile: RoomProfile): RoomProfileDTO {
     val roomProfileDTO = RoomProfileDTO(
-        bio = roomProfile.bio,
         rent = roomProfile.rent,
         isPrivateRoom = roomProfile.isPrivateRoom,
-        totalRoommates = roomProfile.totalRoommates,
-        location = roomProfile.location,
+        totalRoommates = roomProfile.flat.totalRoommates,
+        location = roomProfile.flat.location,
         utilities = roomProfile.utilities,
+        bio = roomProfile.bio,
+        flatId = roomProfile.flat.id!!,
         id = roomProfile.id
     )
     return roomProfileDTO
 }
 
 data class RoomProfileDTO(
-    val bio: String,
     val rent: Int,
     val isPrivateRoom: Boolean,
     val totalRoommates: Int,
-    val location: MutableList<City>? = mutableListOf(),
+    val location: City,
     val utilities: MutableList<Utilities>? = mutableListOf(),
+    val bio: String,
+    val flatId: Long,
     val id: Long? = null
 )

@@ -1,41 +1,30 @@
 package nat20.kamppisserver.domain
 
 import jakarta.persistence.*
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.PastOrPresent
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 
-@Entity
-@Table(name = "profiles")
-@Inheritance(strategy = InheritanceType.JOINED) // Ensures subtype tables
-class Profile(
+@MappedSuperclass
+abstract class Profile(
 
-    @OneToOne
-    @MapsId // Uses the same ID as User
-    @JoinColumn(name = "id")
-    var user: User,
+    @NotEmpty(message = "Bio cannot be empty.")
+    @Column(nullable = false)
+    var bio: String = "Write bio here",
 
-    @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
-    var userProfile: UserProfile? = null,
+    @PastOrPresent(message = "Creation date cannot be in the future.")
+    var createdAt: LocalDateTime = LocalDateTime.now(),
 
-    @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
-    var roomProfile: RoomProfile? = null,
+    @UpdateTimestamp
+    @PastOrPresent(message = "Update date cannot be in the future.")
+    var updatedAt: LocalDateTime? = null,
+
+    @Column(name = "deleted_at")
+    @PastOrPresent(message = "Deletion date cannot be in the future.")
+    var deletedAt: LocalDateTime? = null,
 
     @Id
-    var id: Long? = null, // Uses the same ID as User
-
-)
-
-fun toProfileDTO(profile: Profile): ProfileDTO {
-    val profileDTO = ProfileDTO(
-        id = profile.id,
-        userId = profile.user.id ?: throw IllegalStateException("User ID is null"),
-        userProfile = profile.userProfile?.let { toUserProfileDTO(it) },
-        roomProfile = profile.roomProfile?.let { toRoomProfileDTO(it) },
-    )
-    return profileDTO
-}
-
-data class ProfileDTO(
-    val id: Long?,
-    val userId: Long,
-    val userProfile: UserProfileDTO? = null,
-    val roomProfile: RoomProfileDTO? = null,
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
 )
