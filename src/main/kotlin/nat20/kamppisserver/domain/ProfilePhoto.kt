@@ -12,7 +12,8 @@ import java.time.LocalDateTime
 @Table(name = "profile_photos")
 class ProfilePhoto(
 
-    // Has no reference to Profile, since as an abstract class it cannot store foreign keys
+    @ManyToOne
+    var profile: Profile,
 
     @NotEmpty(message = "Url cannot be empty.")
     var url: String,

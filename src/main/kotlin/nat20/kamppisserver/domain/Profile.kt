@@ -6,7 +6,9 @@ import jakarta.validation.constraints.PastOrPresent
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
-@MappedSuperclass
+@Entity
+@Table(name = "profiles")
+@Inheritance(strategy = InheritanceType.JOINED)
 abstract class Profile(
 
     @NotEmpty(message = "Bio cannot be empty.")
