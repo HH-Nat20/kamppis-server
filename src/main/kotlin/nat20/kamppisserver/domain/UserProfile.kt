@@ -11,11 +11,11 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "user_profiles")
-class UserProfile(
+class UserProfile (
+
     @OneToOne
-    @JoinColumn(name = "profile_id", nullable = false)
-    @NotNull(message = "Profile cannot be null.")
-    var profile: Profile,
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    var user: User,
 
     @Enumerated(EnumType.STRING)
     var cleanliness: Cleanliness? = null,
@@ -25,24 +25,12 @@ class UserProfile(
     @Enumerated(EnumType.STRING)
     var lifestyle: MutableList<Lifestyle>? = mutableListOf(),
 
-
-    @PastOrPresent(message = "Creation date cannot be in the future.")
-    var createdAt: LocalDateTime = LocalDateTime.now(),
-
-    @UpdateTimestamp
-    @PastOrPresent(message = "Update date cannot be in the future.")
-    var updatedAt: LocalDateTime? = null,
-
-    @Column(name = "deleted_at")
-    @PastOrPresent(message = "Deletion date cannot be in the future.")
-    var deletedAt: LocalDateTime? = null,
-
-    @Id
-    var id: Long,
-)
+) : Profile() // Inherits id, bio, and other attributes from Profile
 
 fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
     val userProfileDTO = UserProfileDTO(
+        userId = userProfile.user.id!!,
+        bio = userProfile.bio,
         cleanliness = userProfile.cleanliness,
         lifestyle = userProfile.lifestyle,
         id = userProfile.id
@@ -51,6 +39,8 @@ fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
 }
 
 data class UserProfileDTO(
+    val userId: Long,
+    val bio: String,
     val cleanliness: Cleanliness? = null,
     val lifestyle: MutableList<Lifestyle>? = mutableListOf(),
     val id: Long? = null
