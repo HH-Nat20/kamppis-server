@@ -61,13 +61,13 @@ class ImageController(
         val userProfile = userProfileRepository.findById(userId).orElse(null)
             ?: return ResponseEntity.badRequest().body(mapOf("message" to "User profile not found"))
 
-        // Store file and get public URL
-        val imageUrl = storageService.store(image, userId)
+        // Store files and get public URLs
+        val imageUrls = storageService.store(image, userId)
 
         // Save image metadata in database
         val userPhoto = UserPhoto(
             userProfile = userProfile,
-            name = imageUrl,
+            name = imageUrls["original"].orEmpty(),
             isProfilePhoto = isProfilePhoto
         )
         userPhotoRepository.save(userPhoto)
@@ -77,6 +77,11 @@ class ImageController(
         }
         userProfileRepository.save(userProfile)
 
-        return ResponseEntity.ok(mapOf("message" to "Upload successful", "imageUrl" to imageUrl))
+        return ResponseEntity.ok(mapOf(
+            "message" to "Upload successful",
+            "original" to imageUrls["original"].orEmpty(),
+            "resized" to imageUrls["resized"].orEmpty(),
+            "thumbnail" to imageUrls["thumbnail"].orEmpty()
+        ))
     }
 }
