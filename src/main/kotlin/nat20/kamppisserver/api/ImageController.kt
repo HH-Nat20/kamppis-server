@@ -67,7 +67,7 @@ class ImageController(
         // Save image metadata in database
         val userPhoto = UserPhoto(
             userProfile = userProfile,
-            name = imageUrls["original"].orEmpty(),
+            name = imageUrls["original"].orEmpty(), // TODO: Perhaps don't save original at all to save space
             isProfilePhoto = isProfilePhoto
         )
         userPhotoRepository.save(userPhoto)

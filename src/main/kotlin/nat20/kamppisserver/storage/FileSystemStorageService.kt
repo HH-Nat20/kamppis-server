@@ -79,9 +79,9 @@ class FileSystemStorageService(private val properties: StorageProperties) : Stor
 
         // Return URLs for all three versions
         return mapOf(
-            "original" to "https://hellmanstudios.fi/kamppis-images/$userId/${originalFile.name}",
-            "resized" to "https://hellmanstudios.fi/kamppis-images/$userId/${resizedFile.name}",
-            "thumbnail" to "https://hellmanstudios.fi/kamppis-images/$userId/${thumbnailFile.name}"
+            "original" to "$userId/${originalFile.name}",
+            "resized" to "$userId/${resizedFile.name}",
+            "thumbnail" to "$userId/${thumbnailFile.name}"
         )
     }
 
