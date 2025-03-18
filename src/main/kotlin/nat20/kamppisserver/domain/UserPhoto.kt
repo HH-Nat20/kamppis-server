@@ -44,6 +44,7 @@ fun toUserPhotoDTO(userPhoto: UserPhoto): UserPhotoDTO {
     val userPhotoDTO: UserPhotoDTO = UserPhotoDTO(
         name = userPhoto.name,
         isProfilePhoto = userPhoto.isProfilePhoto,
+        userId = userPhoto.userProfile.id!!,
         id = userPhoto.id!!
     )
 
@@ -53,5 +54,6 @@ fun toUserPhotoDTO(userPhoto: UserPhoto): UserPhotoDTO {
 data class UserPhotoDTO(
     @NotEmpty val name: String,
     val isProfilePhoto: Boolean,
+    val userId: Long,
     val id: Long? = null
 )
