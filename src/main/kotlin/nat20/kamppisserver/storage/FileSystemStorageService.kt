@@ -88,17 +88,19 @@ class FileSystemStorageService(private val properties: StorageProperties) : Stor
     override fun delete(userId: Long, filename: String) {
         val userDir = rootLocation.resolve(userId.toString())
 
-        // Ensure filename follows expected format
-        if (!filename.contains("-original.")) {
-            throw RuntimeException("Invalid filename format: $filename")
-        }
+        // Ensure filename follows expected format (must contain "-original.")
+        val match = Regex("(.+)-original\\.(\\w+)$").find(filename)
+            ?: throw RuntimeException("Invalid filename format: $filename")
 
-        // Generate all related filenames
-        val originalFile = userDir.resolve(filename).toFile()
-        val resizedFile = userDir.resolve(filename.replace("-original.", "-resized.jpg")).toFile()
-        val thumbnailFile = userDir.resolve(filename.replace("-original.", "-thumbnail.jpg")).toFile()
+        val baseFilename = match.groupValues[1] // Extract the UUID part
+        val originalExtension = match.groupValues[2] // Extract the original extension
 
-        // Delete files if they exist
+        // Generate full filenames for all versions
+        val originalFile = userDir.resolve("$baseFilename-original.$originalExtension").toFile()
+        val resizedFile = userDir.resolve("$baseFilename-resized.jpg").toFile()
+        val thumbnailFile = userDir.resolve("$baseFilename-thumbnail.jpg").toFile()
+
+        // Delete all image versions
         listOf(originalFile, resizedFile, thumbnailFile).forEach { file ->
             if (file.exists()) {
                 file.delete()
