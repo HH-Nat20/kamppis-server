@@ -53,7 +53,7 @@ fun toRoommatePreferenceDTO(roommatePreference: RoommatePreference): RoommatePre
     return roommatePreferenceDTO
 }
 
-class RoommatePreferenceDTO(
+data class RoommatePreferenceDTO(
     val userId: Long?,
     val minAgePreference: Int,
     val maxAgePreference: Int,

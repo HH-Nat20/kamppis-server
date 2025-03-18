@@ -47,7 +47,7 @@ fun toRoomPreferenceDTO(roomPreference: RoomPreference): RoomPreferenceDTO {
     return roomPreferenceDTO
 }
 
-class RoomPreferenceDTO(
+data class RoomPreferenceDTO(
     val userId: Long?,
     val maxRent: Int,
     val hasPrivateRoom: Boolean,
