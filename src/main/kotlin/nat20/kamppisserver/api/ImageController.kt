@@ -29,23 +29,24 @@ class ImageController(
     private val storageService: FileSystemStorageService
 ) {
 
-    private val uploadRootDir: Path = Paths.get("/home/forge/hellmanstudios.fi/public/kamppis-images") // TODO: Change path
-
     @GetMapping("/get/{userId}/{filename:.+}")
     fun getImage(@PathVariable userId: Long, @PathVariable filename: String): ResponseEntity<Resource> {
-        val resource = storageService.loadAsResource("$userId/$filename")
+        return try {
+            val resource = storageService.loadAsResource("$userId/$filename")
 
-        if (resource.exists()) {
-            val contentType = Files.probeContentType(resource.file.toPath())
-            val headers = HttpHeaders()
-            headers.contentType = MediaType.parseMediaType(contentType)
-            headers.contentLength = resource.contentLength()
-            return ResponseEntity.ok().headers(headers).body(resource)
-        } else {
-            return ResponseEntity.notFound().build()
+            if (resource.exists() && resource.isReadable) {
+                val contentType = Files.probeContentType(resource.file.toPath()) ?: "application/octet-stream"
+                val headers = HttpHeaders()
+                headers.contentType = MediaType.parseMediaType(contentType)
+                headers.contentLength = resource.contentLength()
+                ResponseEntity.ok().headers(headers).body(resource)
+            } else {
+                ResponseEntity.notFound().build() // Return 404 if file does not exist
+            }
+        } catch (e: Exception) {
+            ResponseEntity.notFound().build() // Return 404 on any file loading error
         }
     }
-
 
     @PostMapping("/{userId}")
     @Transactional
@@ -84,4 +85,38 @@ class ImageController(
             "thumbnail" to imageUrls["thumbnail"].orEmpty()
         ))
     }
+
+    @DeleteMapping("/{userId}/{photoId}")
+    @Transactional
+    fun deleteImage(@PathVariable userId: Long, @PathVariable photoId: Long): ResponseEntity<Map<String, String>> {
+        val userProfile = userProfileRepository.findById(userId).orElse(null)
+            ?: return ResponseEntity.badRequest().body(mapOf("message" to "User profile not found"))
+
+        val userPhoto = userPhotoRepository.findById(photoId).orElse(null)
+            ?: return ResponseEntity.badRequest().body(mapOf("message" to "User photo not found"))
+
+        if (userPhoto.userProfile.id != userId) {
+            return ResponseEntity.badRequest().body(mapOf("message" to "User photo does not belong to user"))
+        }
+
+        try {
+            // Delete all image files associated with this photo
+            storageService.delete(userId, userPhoto.name)
+
+            // Remove the photo from the user's list **without replacing the collection**
+            userProfile.userPhotos?.remove(userPhoto)
+
+            // Save the updated user profile
+            userProfileRepository.save(userProfile)
+
+            // Delete metadata from the database
+            userPhotoRepository.delete(userPhoto)
+
+            return ResponseEntity.ok(mapOf("message" to "Image deleted"))
+        } catch (e: Exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(mapOf("message" to "Failed to delete image", "error" to e.message.orEmpty()))
+        }
+    }
+
 }

@@ -79,10 +79,31 @@ class FileSystemStorageService(private val properties: StorageProperties) : Stor
 
         // Return URLs for all three versions
         return mapOf(
-            "original" to "$userId/${originalFile.name}",
-            "resized" to "$userId/${resizedFile.name}",
-            "thumbnail" to "$userId/${thumbnailFile.name}"
+            "original" to originalFile.name,
+            "resized" to resizedFile.name,
+            "thumbnail" to thumbnailFile.name
         )
+    }
+
+    override fun delete(userId: Long, filename: String) {
+        val userDir = rootLocation.resolve(userId.toString())
+
+        // Ensure filename follows expected format
+        if (!filename.contains("-original.")) {
+            throw RuntimeException("Invalid filename format: $filename")
+        }
+
+        // Generate all related filenames
+        val originalFile = userDir.resolve(filename).toFile()
+        val resizedFile = userDir.resolve(filename.replace("-original.", "-resized.jpg")).toFile()
+        val thumbnailFile = userDir.resolve(filename.replace("-original.", "-thumbnail.jpg")).toFile()
+
+        // Delete files if they exist
+        listOf(originalFile, resizedFile, thumbnailFile).forEach { file ->
+            if (file.exists()) {
+                file.delete()
+            }
+        }
     }
 
     override fun load(filename: String): Path {
