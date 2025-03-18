@@ -54,8 +54,8 @@ class User(
     @ManyToMany(mappedBy = "users") // This makes it bidirectional
     var matches: MutableSet<Match> = mutableSetOf(),
 
-    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
-    var profile: Profile? = null,
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    var profile: MutableList<Profile>? = mutableListOf(),
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

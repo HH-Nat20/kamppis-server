@@ -3,6 +3,7 @@ package nat20.kamppisserver.domain
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Positive
+import jakarta.validation.constraints.PositiveOrZero
 import nat20.kamppisserver.domain.enums.City
 import nat20.kamppisserver.domain.enums.Utilities
 
@@ -13,13 +14,13 @@ class RoomProfile(
     @NotNull(message = "Profile cannot be null.")
     var profile: Profile,
 
-    @Positive(message = "Rent must be a positive integer or null")
-    var rent: Int? = null,
+    @PositiveOrZero(message = "Rent must be a positive integer")
+    var rent: Int,
 
-    var isPrivateRoom: Boolean? = null,
+    var isPrivateRoom: Boolean,
 
-    @Positive(message = "Total roommates must be a positive integer or null")
-    var totalRoommates: Int? = null,
+    @PositiveOrZero(message = "Total roommates must be a positive integer")
+    var totalRoommates: Int,
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = City::class)
     @CollectionTable(name = "room_profiles_locations", joinColumns = [JoinColumn(name = "room_profile_id")])
@@ -48,9 +49,9 @@ fun toRoomProfileDTO(roomProfile: RoomProfile): RoomProfileDTO {
 }
 
 data class RoomProfileDTO(
-    val rent: Int? = null,
-    val isPrivateRoom: Boolean? = null,
-    val totalRoommates: Int? = null,
+    val rent: Int,
+    val isPrivateRoom: Boolean,
+    val totalRoommates: Int,
     val location: MutableList<City>? = mutableListOf(),
     val utilities: MutableList<Utilities>? = mutableListOf(),
     val id: Long? = null
