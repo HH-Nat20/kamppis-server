@@ -8,9 +8,13 @@ import nat20.kamppisserver.domain.enums.Utilities
 @Table(name = "flat_profiles")
 class FlatProfile(
 
-    @OneToOne(cascade = [CascadeType.ALL])
-    @JoinColumn(name = "flat_id", nullable = false)
-    var flat : Flat,
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "flat_profiles_users",
+        joinColumns = [JoinColumn(name = "flat_profile_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
+    var users: MutableList<User>,
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Utilities::class)
     @CollectionTable(name = "flat_profiles_utilities", joinColumns = [JoinColumn(name = "profile_id")])
