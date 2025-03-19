@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.*
 
 /**
  * Controller for Message.
- *
- * Lacking PUT and DELETE methods and quite a lot of logic.
  */
 @RestController
 class MessageController(

@@ -66,32 +66,22 @@ class UserProfileService(
      * @param id the id of the profile to be updated.
      * @return the updated profile.
      */
-/*    @Transactional
+    @Transactional
     fun update(userProfile: UserProfileDTO, id: Long): UserProfileDTO {
-
-        val existingProfile = repository.findByIdOrNull(id)
+        val existingProfile = repository.findByIdActive(id)
             ?: throw EntityNotFoundException("User profile with id $id not found")
 
-        existingProfile.firstName = userProfile.firstName
-        existingProfile.lastName = userProfile.lastName
-        // TODO: age updating? Currently not possible with the DTO structure
-        existingProfile.gender = userProfile.gender
-        // TODO: updating user photos
-        // Kotlin shorthand for only updating if the new value is not null
-        userProfile.bio?.let { existingProfile.bio = it }
-        userProfile.minAgePreference?.let { existingProfile.minAgePreference = it }
-        userProfile.maxAgePreference?.let { existingProfile.maxAgePreference = it }
-        userProfile.preferredGenders?.let { existingProfile.preferredGenders = it }
-        userProfile.preferredLocations?.let { existingProfile.preferredLocations = it }
-        existingProfile.maxRent = userProfile.maxRent
-        existingProfile.cleanliness = userProfile.cleanliness
+        // Apply updates only if new values are not null
+        userProfile.bio.let { existingProfile.bio = it }
+        userProfile.cleanliness?.let { existingProfile.cleanliness = it }
         userProfile.lifestyle?.let { existingProfile.lifestyle = it }
+        userProfile.photos.let { existingProfile.photos = it }
 
         existingProfile.updatedAt = LocalDateTime.now()
 
         val updatedProfile = repository.save(existingProfile)
 
-        return toUserProfileDTO(updatedProfile)
-    }*/
+        return updatedProfile.toDTO()
+    }
 
 }
