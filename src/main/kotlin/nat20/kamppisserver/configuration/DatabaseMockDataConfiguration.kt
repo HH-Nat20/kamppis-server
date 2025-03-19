@@ -21,7 +21,8 @@ class DatabaseMockDataConfiguration {
                             userProfileRepository: UserProfileRepository,
                             profilePhotoRepository: ProfilePhotoRepository,
                             matchRepository: MatchRepository, swipeRepository: SwipeRepository,
-                            flatRepository: FlatRepository, profileRepository: ProfileRepository
+                            flatRepository: FlatRepository, profileRepository: ProfileRepository,
+                            roomProfileRepository: RoomProfileRepository
     ) = ApplicationRunner {
 
         // Check if users table has any entries
@@ -837,6 +838,13 @@ class DatabaseMockDataConfiguration {
                 City.HELSINKI,
                 3,
                 mutableListOf(Utilities.WIFI, Utilities.BALCONY),
+            ),
+            Flat(
+                "Hippikommuuni",
+                "Kolme hippiä etsii neljättä. Olisitko se sinä? Woodstock 69' iltamat joka perjantai. Mukana mutaliukumäki.",
+                City.ESPOO,
+                4,
+                mutableListOf(Utilities.SEPARATE_BATHROOM_AND_SHOWER, Utilities.LAUNDRY_MACHINE),
             )
         )
 
@@ -854,13 +862,17 @@ class DatabaseMockDataConfiguration {
                 flatRepository.findById(1L).get(),
                 600,
                 true,
-                bio = "20 neliötä merinäköalalla. Avara näkymä. (Ei sisällä seiniä tai kattoa).")
+                bio = "20 neliötä merinäköalalla. Avara näkymä. (Ei sisällä seiniä tai kattoa)."),
+            RoomProfile(mutableListOf(userRepository.findById(11L).get(), userRepository.findById(12L).get(), userRepository.findById(13L).get()),
+                flatRepository.findById(2L).get(),
+                250,
+                true,
+                bio = "Oma huone ja perunamaa."
+                )
         )
 
         profileRepository.saveAll(roomProfiles)
         flatRepository.saveAll(flats)
-
-        println(flatRepository.findById(1L).get().toDTO())
 
         println("Mock data inserted successfully!")
 

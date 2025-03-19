@@ -1,4 +1,8 @@
 package nat20.kamppisserver.repository
 
-interface RoomProfileRepository {
+import nat20.kamppisserver.domain.RoomProfile
+import org.springframework.data.jpa.repository.JpaRepository
+
+interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
+
 }
