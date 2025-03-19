@@ -61,3 +61,42 @@ Content-Type: application/json
   "roomUtilities": [],
   "bio": "Lato paloi. Samoin heinäpaalit. Kiva tuhkakasa missä lämmin yöpyä."
 }
+
+### Get all flats
+GET http://localhost:8080/api/flats
+
+### Get flat by id
+GET http://localhost:8080/api/flats/1
+Content-Type: application/json
+
+### Post a new flat
+POST http://localhost:8080/api/flats
+Content-Type: application/json
+
+{
+  "name": "McMansion",
+  "description": "Seinät muovia, aidat muovia, puut muovia.",
+  "location": "ESPOO",
+  "totalRoommates": 13,
+  "flatUtilities": [
+    "WIFI",
+    "BALCONY"
+  ]
+}
+
+### Update flat
+PUT http://localhost:8080/api/flats/3
+Content-Type: application/json
+
+{
+  "name": "McMansion2",
+  "description": "Seinät muovia, aidat muovia, puut muovia. Muooooovia.",
+  "location": "HELSINKI",
+  "totalRoommates": 15,
+  "flatUtilities": [
+    "WIFI",
+    "BALCONY",
+    "DISHWASHER"
+  ],
+  "roomProfileIds": [3]
+}

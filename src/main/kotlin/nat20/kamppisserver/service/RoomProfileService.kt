@@ -15,7 +15,8 @@ import java.time.LocalDateTime
 class RoomProfileService(
     private val roomProfileRepository: RoomProfileRepository,
     private val userRepository: UserRepository,
-    private val flatRepository: FlatRepository) {
+    private val flatRepository: FlatRepository
+) {
 
     fun findAll(): List<RoomProfileDTO> {
         val roomProfileList = roomProfileRepository.findAllActive()

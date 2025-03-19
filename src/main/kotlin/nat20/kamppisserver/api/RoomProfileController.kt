@@ -1,6 +1,5 @@
 package nat20.kamppisserver.api
 
-import nat20.kamppisserver.domain.RoomProfile
 import nat20.kamppisserver.domain.RoomProfileDTO
 import nat20.kamppisserver.domain.RoomProfileRequest
 import nat20.kamppisserver.service.RoomProfileService

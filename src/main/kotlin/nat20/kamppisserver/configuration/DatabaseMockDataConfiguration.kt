@@ -872,7 +872,6 @@ class DatabaseMockDataConfiguration {
         )
 
         profileRepository.saveAll(roomProfiles)
-        flatRepository.saveAll(flats)
 
         println("Mock data inserted successfully!")
 
