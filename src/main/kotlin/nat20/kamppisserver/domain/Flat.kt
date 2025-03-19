@@ -28,7 +28,7 @@ class Flat(
     @Enumerated(EnumType.STRING)
     var flatUtilities: MutableList<Utilities>? = mutableListOf(),
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "flat", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     var roomProfiles: MutableList<RoomProfile>? = mutableListOf(),
 
     @Id

@@ -57,7 +57,7 @@ class User(
     @OneToOne
     var userProfile: UserProfile? = null,
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "users")
     var roomProfiles: MutableList<RoomProfile>? = mutableListOf(),
 
     @Id

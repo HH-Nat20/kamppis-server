@@ -1,11 +1,7 @@
 package nat20.kamppisserver.configuration
 
 import nat20.kamppisserver.domain.*
-import nat20.kamppisserver.domain.enums.City
-import nat20.kamppisserver.domain.enums.Gender
-import nat20.kamppisserver.domain.enums.Lifestyle
-import nat20.kamppisserver.domain.enums.Cleanliness
-import nat20.kamppisserver.domain.enums.MaxRent
+import nat20.kamppisserver.domain.enums.*
 import nat20.kamppisserver.repository.*
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
@@ -24,7 +20,8 @@ class DatabaseMockDataConfiguration {
     fun databaseInitializer(userRepository: UserRepository,
                             userProfileRepository: UserProfileRepository,
                             profilePhotoRepository: ProfilePhotoRepository,
-                            matchRepository: MatchRepository, swipeRepository: SwipeRepository
+                            matchRepository: MatchRepository, swipeRepository: SwipeRepository,
+                            flatRepository: FlatRepository, profileRepository: ProfileRepository
     ) = ApplicationRunner {
 
         // Check if users table has any entries
@@ -832,6 +829,38 @@ class DatabaseMockDataConfiguration {
         )
 
         swipeRepository.saveAll(swipes)
+
+        val flats = listOf(
+            Flat(
+                "HOAS kolme huonetta",
+                "Kolme huonetta ja keittiökomero Kalasatamassa. Merellinen viima asunnossa ja metron urbaani äänimaisema luovat ison kaupungin henkeä!",
+                City.HELSINKI,
+                3,
+                mutableListOf(Utilities.WIFI, Utilities.BALCONY),
+            )
+        )
+
+        flatRepository.saveAll(flats)
+
+        val roomProfiles = listOf(
+            RoomProfile(
+                mutableListOf(userRepository.findById(1L).get()),
+                flatRepository.findById(1L).get(),
+                450,
+                true,
+                bio = "Kokonaiset 9 neliötä, ikkunoissa kalterit. Pehmustetut seinät.",
+                ),
+            RoomProfile(mutableListOf(userRepository.findById(1L).get()),
+                flatRepository.findById(1L).get(),
+                600,
+                true,
+                bio = "20 neliötä merinäköalalla. Avara näkymä. (Ei sisällä seiniä tai kattoa).")
+        )
+
+        profileRepository.saveAll(roomProfiles)
+        flatRepository.saveAll(flats)
+
+        println(flatRepository.findById(1L).get().toDTO())
 
         println("Mock data inserted successfully!")
 

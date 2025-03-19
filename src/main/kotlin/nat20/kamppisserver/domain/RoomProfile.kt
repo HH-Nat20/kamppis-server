@@ -33,8 +33,12 @@ class RoomProfile(
     @Enumerated(EnumType.STRING)
     var roomUtilities: MutableList<Utilities>? = mutableListOf(),
 
-): Profile()
-{
+    bio: String = "Write bio here" // Default value from Profile
+
+): Profile() {
+    init {
+        this.bio = bio
+    }
 
     override fun toDTO(): RoomProfileDTO {
         return RoomProfileDTO(

@@ -11,29 +11,33 @@ import java.time.LocalDateTime
 @Inheritance(strategy = InheritanceType.JOINED)
 abstract class Profile(
 
-    @NotEmpty(message = "Bio cannot be empty.")
-    @Column(nullable = false)
-    var bio: String = "Write bio here",
-
-    @OneToMany
-    @JoinColumn(name = "user_profile_id",)
-    var photos: MutableList<ProfilePhoto> = mutableListOf(),
-
-    @PastOrPresent(message = "Creation date cannot be in the future.")
-    var createdAt: LocalDateTime = LocalDateTime.now(),
-
-    @UpdateTimestamp
-    @PastOrPresent(message = "Update date cannot be in the future.")
-    var updatedAt: LocalDateTime? = null,
-
-    @Column(name = "deleted_at")
-    @PastOrPresent(message = "Deletion date cannot be in the future.")
-    var deletedAt: LocalDateTime? = null,
+    // Only id in the constructor
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
+
+    // Other fields as class properties
 ) {
+    @NotEmpty(message = "Bio cannot be empty.")
+    @Column(nullable = false)
+    var bio: String = "Write bio here"
+
+    @OneToMany
+    @JoinColumn(name = "user_profile_id",)
+    var photos: MutableList<ProfilePhoto>? = mutableListOf()
+
+    @PastOrPresent(message = "Creation date cannot be in the future.")
+    var createdAt: LocalDateTime = LocalDateTime.now()
+
+    @UpdateTimestamp
+    @PastOrPresent(message = "Update date cannot be in the future.")
+    var updatedAt: LocalDateTime? = null
+
+    @Column(name = "deleted_at")
+    @PastOrPresent(message = "Deletion date cannot be in the future.")
+    var deletedAt: LocalDateTime? = null
+
     abstract fun toDTO(): ProfileDTO // Abstract function to be implemented by subclasses
 }
 
