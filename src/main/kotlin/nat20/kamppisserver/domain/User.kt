@@ -54,34 +54,37 @@ class User(
     @ManyToMany(mappedBy = "users") // This makes it bidirectional
     var matches: MutableSet<Match> = mutableSetOf(),
 
-    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToOne
     var userProfile: UserProfile? = null,
+
+    @ManyToMany
+    var roomProfiles: MutableList<RoomProfile>? = mutableListOf(),
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 )
-
-fun toUserDTO(user: User): UserDTO {
-    val userDTO = UserDTO(
-        firstName = user.firstName,
-        lastName = user.lastName,
-        email = user.email,
-        age = ChronoUnit.YEARS.between(user.dateOfBirth, LocalDate.now()),
-        gender = user.gender,
-        status = user.status,
-        isOnline = user.isOnline,
-        matchIds = user.matches.mapNotNull { it.id }.toSet(),
-        createdAt = user.createdAt,
-        updatedAt = user.updatedAt,
-        deletedAt = user.deletedAt,
-        //TODO: flatPreferenceDTO = user.flatPreference.toFlatPreferenceDTO()
-         userProfile = user.userProfile?.let { toUserProfileDTO(it) },
-        //TODO: roommatePreferenceDTO = user.roommatePreference.toRoommatePreferenceDTO()
-        id = user.id
-    )
-
-    return userDTO
+{
+    fun toDTO(): UserDTO {
+        return UserDTO(
+            firstName = firstName,
+            lastName = lastName,
+            email = email,
+            age = ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now()),
+            gender = gender,
+            status = status,
+            isOnline = isOnline,
+            matchIds = matches.mapNotNull { it.id }.toSet(),
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            deletedAt = deletedAt,
+            //TODO: flatPreferenceDTO = user.flatPreference.toFlatPreferenceDTO()
+            userProfile = userProfile?.toDTO(),
+            roomProfiles = roomProfiles?.map { it.toDTO() },
+            //TODO: roommatePreferenceDTO = user.roommatePreference.toRoommatePreferenceDTO()
+            id = id
+        )
+    }
 }
 
 data class UserDTO(
@@ -98,6 +101,7 @@ data class UserDTO(
     @PastOrPresent val deletedAt: LocalDateTime? = null,
     //TODO: val flatPreferenceDTO: FlatPreferenceDTO,
     val userProfile: UserProfileDTO? = null,
+    val roomProfiles: List<RoomProfileDTO>? = listOf(),
     //TODO: val roommatePreferenceDTO: RoommatePreferenceDTO,
     val id: Long? = null
 )

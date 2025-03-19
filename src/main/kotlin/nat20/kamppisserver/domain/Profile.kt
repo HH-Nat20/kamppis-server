@@ -15,6 +15,10 @@ abstract class Profile(
     @Column(nullable = false)
     var bio: String = "Write bio here",
 
+    @OneToMany
+    @JoinColumn(name = "user_profile_id",)
+    var photos: MutableList<ProfilePhoto> = mutableListOf(),
+
     @PastOrPresent(message = "Creation date cannot be in the future.")
     var createdAt: LocalDateTime = LocalDateTime.now(),
 
@@ -29,4 +33,8 @@ abstract class Profile(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-)
+) {
+    abstract fun toDTO(): ProfileDTO // Abstract function to be implemented by subclasses
+}
+
+sealed interface ProfileDTO

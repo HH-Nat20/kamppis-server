@@ -38,6 +38,7 @@ class ProfilePhoto(
 )
 fun toProfilePhotoDTO(profilePhoto: ProfilePhoto): ProfilePhotoDTO {
     val profilePhotoDTO = ProfilePhotoDTO(
+        profileId = profilePhoto.profile.id!!,
         url = profilePhoto.url,
         isProfilePhoto = profilePhoto.isProfilePhoto,
         id = profilePhoto.id
@@ -47,6 +48,7 @@ fun toProfilePhotoDTO(profilePhoto: ProfilePhoto): ProfilePhotoDTO {
 }
 
 data class ProfilePhotoDTO(
+    val profileId: Long,
     @NotEmpty val url: String,
     val isProfilePhoto: Boolean,
     val id: Long? = null

@@ -5,7 +5,6 @@ import jakarta.persistence.EntityNotFoundException
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserDTO
 import nat20.kamppisserver.domain.enums.UserStatus
-import nat20.kamppisserver.domain.toUserDTO
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.http.HttpStatus
@@ -28,7 +27,7 @@ class UserService(private val userRepository: UserRepository,
      */
     fun findAll(): List<UserDTO> {
         val users = userRepository.findAllByStatus(UserStatus.ACTIVE)
-        return users.map { toUserDTO(it) }
+        return users.map { it.toDTO() }
     }
 
     /**
@@ -41,7 +40,7 @@ class UserService(private val userRepository: UserRepository,
         val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "This user does not exist")
 
-        return toUserDTO(user)
+        return user.toDTO()
     }
 
     /**
@@ -57,7 +56,7 @@ class UserService(private val userRepository: UserRepository,
 
         val addedUser = userRepository.save(user)
 
-        return toUserDTO(addedUser)
+        return addedUser.toDTO()
     }
 
     /**
@@ -84,7 +83,7 @@ class UserService(private val userRepository: UserRepository,
 
         val updatedUser = userRepository.save(updateUser)
 
-        return toUserDTO(updatedUser)
+        return updatedUser.toDTO()
     }
 
     /**
@@ -97,7 +96,7 @@ class UserService(private val userRepository: UserRepository,
         val user = userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("User with email $email not found")
 
-        return toUserDTO(user)
+        return user.toDTO()
     }
 
     /**
@@ -147,7 +146,7 @@ class UserService(private val userRepository: UserRepository,
         userProfileRepository.save(restoredUserProfile)
         val restoredUser = userRepository.save(restoreUser)
 
-        return toUserDTO(restoredUser)
+        return restoredUser.toDTO()
     }
 
 }
