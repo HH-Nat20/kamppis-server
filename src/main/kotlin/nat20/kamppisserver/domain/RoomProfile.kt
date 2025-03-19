@@ -1,6 +1,7 @@
 package nat20.kamppisserver.domain
 
 import jakarta.persistence.*
+import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.PositiveOrZero
 import nat20.kamppisserver.domain.enums.City
 import nat20.kamppisserver.domain.enums.Utilities
@@ -8,6 +9,15 @@ import nat20.kamppisserver.domain.enums.Utilities
 @Entity
 @Table(name = "room_profiles")
 class RoomProfile(
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "room_profiles_users",
+        joinColumns = [JoinColumn(name = "room_profile_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
+    @NotEmpty(message = "A room profile must have at least one user.")
+    var users: MutableList<User>,
 
     @ManyToOne
     @JoinColumn(name = "flat_id", nullable = false)
@@ -21,37 +31,36 @@ class RoomProfile(
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Utilities::class)
     @CollectionTable(name = "room_profiles_utilities", joinColumns = [JoinColumn(name = "profile_id")])
     @Enumerated(EnumType.STRING)
-    var utilities: MutableList<Utilities>? = mutableListOf(),
-
-    @OneToMany
-    @JoinColumn(name = "room_profile_id") // Creates a foreign key column in ProfilePhoto
-    var photos: MutableList<ProfilePhoto>? = mutableListOf(),
+    var roomUtilities: MutableList<Utilities>? = mutableListOf(),
 
 ): Profile()
+{
 
-fun toRoomProfileDTO(roomProfile: RoomProfile): RoomProfileDTO {
-    val roomProfileDTO = RoomProfileDTO(
-        flatId = roomProfile.flat.id!!,
-        totalRoommates = roomProfile.flat.totalRoommates,
-        location = roomProfile.flat.location,
-        rent = roomProfile.rent,
-        isPrivateRoom = roomProfile.isPrivateRoom,
-        utilities = roomProfile.utilities,
-        photos = roomProfile.photos,
-        bio = roomProfile.bio,
-        id = roomProfile.id
-    )
-    return roomProfileDTO
+    override fun toDTO(): RoomProfileDTO {
+        return RoomProfileDTO(
+            userIds = users.map { it.id!! },
+            flat = flat.toDTO(),
+            totalRoommates = flat.totalRoommates,
+            location = flat.location,
+            rent = rent,
+            isPrivateRoom = isPrivateRoom,
+            roomUtilities = roomUtilities,
+            photos = photos,
+            bio = bio,
+            id = id
+        )
+    }
 }
 
 data class RoomProfileDTO(
-    val flatId: Long,
+    val userIds : List<Long>,
+    val flat: FlatDTO,
     val totalRoommates: Int,
     val location: City,
     val rent: Int,
     val isPrivateRoom: Boolean,
-    val utilities: MutableList<Utilities>? = mutableListOf(),
+    val roomUtilities: MutableList<Utilities>? = mutableListOf(),
     val photos: MutableList<ProfilePhoto>? = mutableListOf(),
     val bio: String,
     val id: Long? = null
-)
+) : ProfileDTO

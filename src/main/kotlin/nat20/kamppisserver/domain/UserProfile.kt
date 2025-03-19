@@ -14,7 +14,6 @@ import java.time.LocalDateTime
 class UserProfile (
 
     @OneToOne
-    @JoinColumn(name = "user_id", unique = true, nullable = false)
     var user: User,
 
     @Enumerated(EnumType.STRING)
@@ -25,22 +24,19 @@ class UserProfile (
     @Enumerated(EnumType.STRING)
     var lifestyle: MutableList<Lifestyle>? = mutableListOf(),
 
-    @OneToMany
-    @JoinColumn(name = "user_profile_id",)
-    var photos: MutableList<ProfilePhoto> = mutableListOf(),
+) : Profile() {// Inherits id, bio, photos, and other attributes from Profile
 
-) : Profile() // Inherits id, bio, and other attributes from Profile
+    override fun toDTO(): UserProfileDTO {
+        return UserProfileDTO(
+            userId = user.id!!,
+            bio = bio,
+            cleanliness = cleanliness,
+            lifestyle = lifestyle,
+            photos = photos,
+            id = id
+        )
+    }
 
-fun toUserProfileDTO(userProfile: UserProfile): UserProfileDTO {
-    val userProfileDTO = UserProfileDTO(
-        userId = userProfile.user.id!!,
-        bio = userProfile.bio,
-        cleanliness = userProfile.cleanliness,
-        lifestyle = userProfile.lifestyle,
-        photos = userProfile.photos,
-        id = userProfile.id
-    )
-    return userProfileDTO
 }
 
 data class UserProfileDTO(
@@ -50,4 +46,4 @@ data class UserProfileDTO(
     val lifestyle: MutableList<Lifestyle>? = mutableListOf(),
     val photos: MutableList<ProfilePhoto> = mutableListOf(),
     val id: Long? = null
-)
+) : ProfileDTO
