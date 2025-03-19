@@ -69,3 +69,13 @@ data class RoomProfileDTO(
     val bio: String,
     val id: Long? = null
 ) : ProfileDTO
+
+data class RoomProfileRequest(
+    val userIds: List<Long>,
+    val flatId: Long,
+    val rent: Int,
+    val isPrivateRoom: Boolean,
+    val roomUtilities: MutableList<Utilities>? = mutableListOf(),
+    val bio: String,
+    val id: Long? = null
+)

@@ -36,3 +36,28 @@ GET http://localhost:8080/api/room-profiles
 ### Get room profile by id
 GET http://localhost:8080/api/room-profiles/1
 
+### Post a new room profile
+POST http://localhost:8080/api/room-profiles
+Content-Type: application/json
+
+{
+  "userIds": [5,6],
+  "flatId": 2,
+  "rent": 750,
+  "isPrivateRoom": true,
+  "roomUtilities": [],
+  "bio": "Kiva lato. Heinäpaalit kullekin."
+}
+
+### Update a room profile
+PUT http://localhost:8080/api/room-profiles/4
+Content-Type: application/json
+
+{
+  "userIds": [5,6,7],
+  "flatId": 2,
+  "rent": 150,
+  "isPrivateRoom": true,
+  "roomUtilities": [],
+  "bio": "Lato paloi. Samoin heinäpaalit. Kiva tuhkakasa missä lämmin yöpyä."
+}
