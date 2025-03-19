@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.domain.enums.UserStatus
-import nat20.kamppisserver.domain.toUserProfileDTO
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.dao.EmptyResultDataAccessException
@@ -51,20 +50,20 @@ class QueryService(private val userProfileRepository: UserProfileRepository,
             ?: throw EntityNotFoundException("UserId does not match to any user")
 
         val queryDate: LocalDate = LocalDate.now()
-        val minAgePreference: Int? = userProfile?.minAgePreference
+/*        val minAgePreference: Int? = userProfile?.minAgePreference
         val maxAgePreference: Int? = userProfile?.maxAgePreference
         val preferredGenders: List<String> = userProfile?.preferredGenders!!.map { it.name }
-        val preferredLocations: List<String> = userProfile.preferredLocations!!.map { it.name }
+        val preferredLocations: List<String> = userProfile.preferredLocations!!.map { it.name }*/
 
         val userProfileList: MutableList<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(
-            userId,
+/*            userId,
             queryDate,
-            minAgePreference,
+*//*            minAgePreference,
             maxAgePreference,
             preferredGenders,
-            preferredLocations
-        )
-        val userProfileDTOList: MutableList<UserProfileDTO> = userProfileList.map {toUserProfileDTO(it)}.toMutableList();
+            preferredLocations*/
+        ).toMutableList()
+        val userProfileDTOList: MutableList<UserProfileDTO> = userProfileList.map { it.toDTO() }.toMutableList();
 
         return userProfileDTOList;
     }

@@ -56,6 +56,7 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     * -> We check if any of the user profiles' preferred cities match the user's list of preferred cities
     *
     * More criteria and parameters will be added */
+    /*
 
     @Query(value = """
     SELECT DISTINCT up.* FROM user_profiles up
@@ -80,4 +81,8 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
         @Param("maxAgePreference") maxAgePreference: Int?,
         @Param("preferredGenders") preferredGenders: List<String>,
         @Param("preferredLocations") preferredLocations: List<String>): MutableList<UserProfile>
+}*/
+    @Query("SELECT up FROM UserProfile up WHERE up.deletedAt IS NULL")
+    fun findUserProfilesThatMeetCriteria(): List<UserProfile>
+
 }

@@ -63,8 +63,7 @@ class ImageController(
 
         // Save image metadata in database
         val userPhoto = ProfilePhoto(
-            // Does it need the user reference? Could pass just the id I guess -Paul
-            //userProfile = userProfile,
+            profile = userProfile,
             url = imageUrl, // "url" instead of "name" -Paul
             isProfilePhoto = isProfilePhoto
         )

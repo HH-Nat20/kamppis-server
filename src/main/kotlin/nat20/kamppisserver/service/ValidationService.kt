@@ -4,7 +4,7 @@ import jakarta.validation.Constraint
 import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext
 import jakarta.validation.Payload
-import nat20.kamppisserver.domain.RoommatePreferences
+import nat20.kamppisserver.domain.RoommatePreference
 import org.springframework.stereotype.Component
 import kotlin.reflect.KClass
 
@@ -47,8 +47,8 @@ class ValidationService {
      * Used in RoommatePreferences entity
      */
     @Component
-    class AgePreferenceValidator: ConstraintValidator<ValidAgePreferences, RoommatePreferences> {
-        override fun isValid(preferences: RoommatePreferences, context: ConstraintValidatorContext): Boolean {
+    class AgePreferenceValidator: ConstraintValidator<ValidAgePreferences, RoommatePreference> {
+        override fun isValid(preferences: RoommatePreference, context: ConstraintValidatorContext): Boolean {
             if (preferences.minAgePreference >= preferences.maxAgePreference) {
                 // Disables default validation message
                 context.disableDefaultConstraintViolation()

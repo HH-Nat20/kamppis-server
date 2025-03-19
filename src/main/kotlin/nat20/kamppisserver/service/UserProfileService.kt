@@ -5,7 +5,6 @@ import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.domain.enums.UserStatus
-import nat20.kamppisserver.domain.toUserProfileDTO
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -30,7 +29,7 @@ class UserProfileService(
      */
     fun findAll(): List<UserProfileDTO> {
         val userProfileList = repository.findAllActive()
-        return userProfileList.map {toUserProfileDTO(it)}
+        return userProfileList.map { it.toDTO() }
     }
 
     /**
@@ -43,7 +42,7 @@ class UserProfileService(
         val userProfile = repository.findByIdActive(id)
             ?: throw EntityNotFoundException("User profile with id $id not found")
 
-        return toUserProfileDTO(userProfile)
+        return userProfile.toDTO()
     }
 
     /**
@@ -57,7 +56,7 @@ class UserProfileService(
             ?: throw EntityNotFoundException("User ${userProfile.user.id} not found")
 
         val addedUserProfile = userProfileRepository.save(userProfile)
-        return toUserProfileDTO(addedUserProfile)
+        return addedUserProfile.toDTO()
     }
 
     /**
@@ -67,7 +66,7 @@ class UserProfileService(
      * @param id the id of the profile to be updated.
      * @return the updated profile.
      */
-    @Transactional
+/*    @Transactional
     fun update(userProfile: UserProfileDTO, id: Long): UserProfileDTO {
 
         val existingProfile = repository.findByIdOrNull(id)
@@ -93,6 +92,6 @@ class UserProfileService(
         val updatedProfile = repository.save(existingProfile)
 
         return toUserProfileDTO(updatedProfile)
-    }
+    }*/
 
 }

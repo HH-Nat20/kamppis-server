@@ -52,9 +52,9 @@ class UserProfileController(private val service: UserProfileService,
      * @param id the id of the profile to be updated.
      * @return ResponseEntity with status code 200 OK.
      */
-    @PutMapping("/{id}")
+/*    @PutMapping("/{id}")
     fun updateUserProfile(@RequestBody userProfile: UserProfileDTO, @PathVariable id: Long): ResponseEntity<UserProfileDTO>
-        = ResponseEntity.ok(service.update(userProfile, id))
+        = ResponseEntity.ok(service.update(userProfile, id))*/
 
     /**
      * Finds all the user profiles that match the user's search criteria.

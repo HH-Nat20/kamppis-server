@@ -23,7 +23,7 @@ class DatabaseMockDataConfiguration {
     @Bean
     fun databaseInitializer(userRepository: UserRepository,
                             userProfileRepository: UserProfileRepository,
-                            userPhotoRepository: UserPhotoRepository,
+                            profilePhotoRepository: ProfilePhotoRepository,
                             matchRepository: MatchRepository, swipeRepository: SwipeRepository
     ) = ApplicationRunner {
 
@@ -222,7 +222,7 @@ class DatabaseMockDataConfiguration {
 
         // Save all mock users to the database
         userRepository.saveAll(users)
-
+/*
         // NOTE! Ages are calculated on 2025-2-21
         val userProfiles = listOf(
             UserProfile(
@@ -810,7 +810,7 @@ class DatabaseMockDataConfiguration {
         )
 
         // Save photos to database
-        userPhotoRepository.saveAll(userPhotos)
+        userPhotoRepository.saveAll(userPhotos)*/
 
         val matches = listOf(
             Match(
