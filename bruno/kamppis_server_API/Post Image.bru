@@ -5,11 +5,15 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/api/images/1
+  url: {{baseUrl}}/api/images/:userId
   body: multipartForm
   auth: none
 }
 
+params:path {
+  userId: 1
+}
+
 body:multipart-form {
-  image: @file(\\wsl.localhost\Ubuntu-22.04\home\jessehellman\nat20\kamppis\kamppis-app\assets\images\kamppis-app.png)
+  image: @file(C:\Users\jesse\OneDrive\Pictures\Screenshots\Näyttökuva 2024-11-24 104502.png)
 }
