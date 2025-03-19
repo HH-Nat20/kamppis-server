@@ -3,6 +3,8 @@ package nat20.kamppisserver.domain
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.PastOrPresent
+import nat20.kamppisserver.domain.enums.UserProfileStatus
+import nat20.kamppisserver.domain.enums.UserStatus
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
@@ -18,6 +20,10 @@ abstract class Profile(
     @OneToMany
     @JoinColumn(name = "user_profile_id",)
     var photos: MutableList<ProfilePhoto> = mutableListOf(),
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    var status: UserProfileStatus = UserProfileStatus.ACTIVE,
 
     @PastOrPresent(message = "Creation date cannot be in the future.")
     var createdAt: LocalDateTime = LocalDateTime.now(),

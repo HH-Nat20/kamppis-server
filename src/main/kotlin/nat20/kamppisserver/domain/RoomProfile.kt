@@ -26,6 +26,7 @@ class RoomProfile(
     @PositiveOrZero(message = "Rent must be a positive integer")
     var rent: Int,
 
+    @Column(name = "is_private_room")
     var isPrivateRoom: Boolean,
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Utilities::class)
