@@ -48,15 +48,14 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     * -> We include only those users who fit min and max age preferences (inclusive)
     * -> If user has not set any age preferences (i.e. null), values 0 and 1000 are used to include user profiles of all ages
     *
-    * 8) AND (up."gender" IN (:preferredGenders) OR 'NOT_IMPORTANT' IN (:preferredGenders))
+    * 8) AND (up."gender" IN (:genderPreferences) OR 'NOT_IMPORTANT' IN (:genderPreferences))
     * -> We check if the queried profiles' gender matches the user's list of preferred genders
     * -> We also check if the user has no gender preferences (preferred gender set as 'NOT_IMPORTANT')
     *
-    * 9) AND upl."preferred_locations" IN (:preferredLocations)
+    * 9) AND upl."location_preferences" IN (:locationPreferences)
     * -> We check if any of the user profiles' preferred cities match the user's list of preferred cities
     *
     * More criteria and parameters will be added */
-    /*
 
     @Query(value = """
     SELECT DISTINCT up.* FROM user_profiles up
@@ -71,7 +70,7 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     )
     AND EXTRACT(YEAR FROM AGE(:queryDate, up.date_of_birth))  BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)
     AND (up.gender IN (:preferredGenders) OR 'NOT_IMPORTANT' IN (:preferredGenders))
-    AND upl.preferred_locations IN (:preferredLocations)
+    AND upl.roommate_preferences_location IN (:preferredLocations)
     """, nativeQuery = true)
 
     fun findUserProfilesThatMeetCriteria(
@@ -79,10 +78,9 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
         @Param("queryDate") queryDate: LocalDate,
         @Param("minAgePreference") minAgePreference: Int?,
         @Param("maxAgePreference") maxAgePreference: Int?,
-        @Param("preferredGenders") preferredGenders: List<String>,
-        @Param("preferredLocations") preferredLocations: List<String>): MutableList<UserProfile>
-}*/
+        @Param("genderPreferences") genderPreferences: List<String>,
+        @Param("locationPreferences") locationPreferences: List<String>): MutableList<UserProfile>
+
     @Query("SELECT up FROM UserProfile up WHERE up.deletedAt IS NULL")
     fun findUserProfilesThatMeetCriteria(): List<UserProfile>
-
 }

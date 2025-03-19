@@ -6,8 +6,8 @@ import kotlin.test.Test
 import nat20.kamppisserver.repository.UserProfileRepository
 import org.junit.jupiter.api.TestInstance
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
+import java.time.LocalDate
 import kotlin.test.assertEquals
 
 
@@ -19,27 +19,26 @@ class UserProfileTests @Autowired constructor(
 ) {
 
     @Test
-    fun `toUserProfileDTO should return a valid DTO data class` () {
-        val testUserProfileDTO: UserProfileDTO = UserProfileDTO(
-            //userId = 1,
+    fun `toDTO() should correctly convert UserProfile to UserProfileDTO`() {
+        val user = User(
+            email = "alice.smith@example.com",
             firstName = "Alice",
             lastName = "Smith",
-            age = 34,
-            gender = Gender.FEMALE,
-            userPhotos = userProfileRepository.findByIdOrNull(1L)?.userPhotos?.map { toUserPhotoDTO(it) }?.toMutableList(),
-            preferredLocations = mutableListOf(City.HELSINKI, City.ESPOO),
-            minAgePreference = 20,
-            maxAgePreference = 29,
-            preferredGenders = mutableListOf(Gender.FEMALE, Gender.OTHER),
-            maxRent = MaxRent.LOW,
-            cleanliness = Cleanliness.SPOTLESS,
-            lifestyle = mutableListOf(Lifestyle.EARLY_BIRD, Lifestyle.STUDENT),
-            bio = "I'm a passionate traveler who loves exploring new cultures and cuisines. When I'm not studying, you can find me hiking in nature or experimenting with new recipes in the kitchen.",
-            id = 1
+            dateOfBirth = LocalDate.of(1990, 5, 14), // Age 34
+            gender = Gender.FEMALE
         )
 
-        val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
+        val profile = UserProfile(
+            user = user,
+            cleanliness = Cleanliness.TIDY,
+            lifestyle = mutableSetOf(Lifestyle.STUDENT)
+        )
 
-        assertEquals(testUserProfileDTO, toUserProfileDTO(userProfile))
+        val dto = profile.toDTO()
+
+        assertEquals(user.id, dto.userId)
+        assertEquals(profile.cleanliness, dto.cleanliness)
+        assertEquals(profile.lifestyle, dto.lifestyle)
+        assertEquals(profile.id, dto.id)
     }
 }
