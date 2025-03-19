@@ -4,4 +4,5 @@ import nat20.kamppisserver.domain.ProfilePhoto
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface ProfilePhotoRepository: JpaRepository<ProfilePhoto, Long> {
+    fun findByProfileId(userId: Long): List<ProfilePhoto>
 }
