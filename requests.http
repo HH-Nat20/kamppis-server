@@ -29,3 +29,10 @@ Authorization: Bearer {{auth_token}}
 ### Example using expired token
 GET http://localhost:8080/api/login/protected
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbGljZS5zbWl0aEBleGFtcGxlLmNvbSIsImlhdCI6MTc0MjA3MDA1MCwiZXhwIjoxNzQyMDczNjUwfQ.hRqdcGM3hDrXdbRZShNzhmWcqiTHmOIbKYXRdZnY6V_XPortA-LaZAFvn-ru4t8WTMsGYsv8BtEqzhbCUImfnw
+
+### Get all room profiles
+GET http://localhost:8080/api/room-profiles
+
+### Get room profile by id
+GET http://localhost:8080/api/room-profiles/1
+
