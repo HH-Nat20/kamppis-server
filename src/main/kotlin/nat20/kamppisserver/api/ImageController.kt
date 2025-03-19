@@ -69,7 +69,7 @@ class ImageController(
         )
         profilePhotoRepository.save(userPhoto)
 
-        userProfile.photos = (userProfile.photos)?.apply {
+        userProfile.photos = (userProfile.photos).apply {
             add(userPhoto)
         }
         userProfileRepository.save(userProfile)
