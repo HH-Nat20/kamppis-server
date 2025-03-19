@@ -1,24 +1,28 @@
 package nat20.kamppisserver.service
 
 import exception.EntityNotFoundException
+import nat20.kamppisserver.domain.RoommatePreference
 import org.springframework.stereotype.Service
 
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.domain.enums.UserStatus
+import nat20.kamppisserver.repository.RoommatePreferenceRepository
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.http.HttpStatus
-import org.springframework.web.server.ResponseStatusException
+import org.springframework.data.repository.findByIdOrNull
 import java.time.LocalDate
 
 /**
  * Service class for querying user profiles.
  */
 @Service
-class QueryService(private val userProfileRepository: UserProfileRepository,
-                    private val userRepository: UserRepository) {
+class QueryService(
+    private val userProfileRepository: UserProfileRepository,
+    private val userRepository: UserRepository,
+    private val roommatePreferenceRepository: RoommatePreferenceRepository
+) {
 
     /**
      * Finds the user's profile by user id.
@@ -46,22 +50,22 @@ class QueryService(private val userProfileRepository: UserProfileRepository,
         * From the profile, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in UserProfileRepository */
 
-        val userProfile: UserProfile? = userProfileRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
+        val roommatePreference: RoommatePreference = roommatePreferenceRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("UserId does not match to any user")
 
         val queryDate: LocalDate = LocalDate.now()
-/*        val minAgePreference: Int? = userProfile?.minAgePreference
-        val maxAgePreference: Int? = userProfile?.maxAgePreference
-        val preferredGenders: List<String> = userProfile?.preferredGenders!!.map { it.name }
-        val preferredLocations: List<String> = userProfile.preferredLocations!!.map { it.name }*/
+        val minAgePreference: Int = roommatePreference.minAgePreference
+        val maxAgePreference: Int = roommatePreference.maxAgePreference
+        val genderPreferences: List<String> = roommatePreference.genderPreferences!!.map { it.name }
+        val locationPreferences: List<String> = roommatePreference.locationPreferences!!.map { it.name }
 
         val userProfileList: MutableList<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(
-/*            userId,
+            userId,
             queryDate,
-*//*            minAgePreference,
+            minAgePreference,
             maxAgePreference,
-            preferredGenders,
-            preferredLocations*/
+            genderPreferences,
+            locationPreferences
         ).toMutableList()
         val userProfileDTOList: MutableList<UserProfileDTO> = userProfileList.map { it.toDTO() }.toMutableList();
 

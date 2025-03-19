@@ -14,6 +14,7 @@ import java.time.LocalDateTime
 class UserProfile (
 
     @OneToOne
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     var user: User,
 
     @Enumerated(EnumType.STRING)
@@ -22,7 +23,7 @@ class UserProfile (
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Lifestyle::class)
     @CollectionTable(name = "user_profiles_lifestyle", joinColumns = [JoinColumn(name = "user_profile_id")])
     @Enumerated(EnumType.STRING)
-    var lifestyle: MutableList<Lifestyle>? = mutableListOf(),
+    var lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
 
 ) : Profile() {// Inherits id, bio, photos, and other attributes from Profile
 
@@ -43,7 +44,7 @@ data class UserProfileDTO(
     val userId: Long,
     val bio: String,
     val cleanliness: Cleanliness? = null,
-    val lifestyle: MutableList<Lifestyle>? = mutableListOf(),
-    val photos: MutableList<ProfilePhoto>? = mutableListOf(),
+    val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
+    val photos: MutableList<ProfilePhoto> = mutableListOf(),
     val id: Long? = null
 ) : ProfileDTO

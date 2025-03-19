@@ -3,12 +3,9 @@ package nat20.kamppisserver.service
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
-import nat20.kamppisserver.domain.toUserProfileDTO
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.repository.UserProfileRepository
-
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -39,7 +36,7 @@ class QueryServiceTests @Autowired constructor(
     @Test
     fun `should not return the querying user's UserProfile`() {
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
-        val userProfileDTO: UserProfileDTO = toUserProfileDTO(userProfile)
+        val userProfileDTO: UserProfileDTO = userProfile.toDTO()
 
         val listOfUserProfileDTOs: MutableList<UserProfileDTO>? = userProfile.id?.let {
             queryService.findUserProfilesThatMeetCriteria(

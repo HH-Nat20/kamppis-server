@@ -7,7 +7,6 @@ import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -16,7 +15,6 @@ import java.time.LocalDateTime
  */
 @Service
 class UserProfileService(
-    private val repository: UserProfileRepository,
     private val userRepository: UserRepository,
     private val userProfileRepository: UserProfileRepository
 ) {
@@ -28,7 +26,7 @@ class UserProfileService(
      * @return all User Profiles as DTOs.
      */
     fun findAll(): List<UserProfileDTO> {
-        val userProfileList = repository.findAllActive()
+        val userProfileList = userProfileRepository.findAllActive()
         return userProfileList.map { it.toDTO() }
     }
 
@@ -39,7 +37,7 @@ class UserProfileService(
      * @return the profile with given id.
      */
     fun findById(id: Long): UserProfileDTO {
-        val userProfile = repository.findByIdActive(id)
+        val userProfile = userProfileRepository.findByIdActive(id)
             ?: throw EntityNotFoundException("User profile with id $id not found")
 
         return userProfile.toDTO()
@@ -66,32 +64,22 @@ class UserProfileService(
      * @param id the id of the profile to be updated.
      * @return the updated profile.
      */
-/*    @Transactional
+    @Transactional
     fun update(userProfile: UserProfileDTO, id: Long): UserProfileDTO {
-
-        val existingProfile = repository.findByIdOrNull(id)
+        val existingProfile = userProfileRepository.findByIdActive(id)
             ?: throw EntityNotFoundException("User profile with id $id not found")
 
-        existingProfile.firstName = userProfile.firstName
-        existingProfile.lastName = userProfile.lastName
-        // TODO: age updating? Currently not possible with the DTO structure
-        existingProfile.gender = userProfile.gender
-        // TODO: updating user photos
-        // Kotlin shorthand for only updating if the new value is not null
-        userProfile.bio?.let { existingProfile.bio = it }
-        userProfile.minAgePreference?.let { existingProfile.minAgePreference = it }
-        userProfile.maxAgePreference?.let { existingProfile.maxAgePreference = it }
-        userProfile.preferredGenders?.let { existingProfile.preferredGenders = it }
-        userProfile.preferredLocations?.let { existingProfile.preferredLocations = it }
-        existingProfile.maxRent = userProfile.maxRent
-        existingProfile.cleanliness = userProfile.cleanliness
+        // Apply updates only if new values are not null
+        userProfile.bio.let { existingProfile.bio = it }
+        userProfile.cleanliness?.let { existingProfile.cleanliness = it }
         userProfile.lifestyle?.let { existingProfile.lifestyle = it }
+        userProfile.photos.let { existingProfile.photos = it }
 
         existingProfile.updatedAt = LocalDateTime.now()
 
-        val updatedProfile = repository.save(existingProfile)
+        val updatedProfile = userProfileRepository.save(existingProfile)
 
-        return toUserProfileDTO(updatedProfile)
-    }*/
+        return updatedProfile.toDTO()
+    }
 
 }
