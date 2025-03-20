@@ -12,9 +12,11 @@ import java.time.temporal.ChronoUnit
 @Entity
 @Table(name = "users")
 class User(
+    @Column(name = "first_name")
     @NotEmpty(message = "First name cannot be empty.")
     var firstName: String,
 
+    @Column(name = "last_name")
     @NotEmpty(message = "Last name cannot be empty.")
     var lastName: String,
 
@@ -23,6 +25,7 @@ class User(
     @Email(message = "Invalid email format.")
     var email: String,
 
+    @Column(name = "date_of_birth")
     @Past(message = "Date of birth cannot be in the future.")
     var dateOfBirth: LocalDate,
 
@@ -35,6 +38,10 @@ class User(
     @Column(nullable = false)
     var status: UserStatus = UserStatus.ACTIVE,
 
+    // Specifically for use in chat
+    @Column(name = "is_online")
+    var isOnline: Boolean = false,
+
     @PastOrPresent(message = "Creation date cannot be in the future.")
     var createdAt: LocalDateTime = LocalDateTime.now(),
 
@@ -46,10 +53,6 @@ class User(
     @PastOrPresent(message = "Deletion date cannot be in the future.")
     var deletedAt: LocalDateTime? = null,
 
-    // Specifically for use in chat
-    @Column(name = "is_online")
-    var isOnline: Boolean = false,
-
     @JsonIgnore
     @ManyToMany(mappedBy = "users") // This makes it bidirectional
     var matches: MutableSet<Match> = mutableSetOf(),
@@ -57,7 +60,7 @@ class User(
     @OneToOne
     var userProfile: UserProfile? = null,
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "users")
     var roomProfiles: MutableList<RoomProfile>? = mutableListOf(),
 
     @Id
@@ -78,7 +81,7 @@ class User(
             createdAt = createdAt,
             updatedAt = updatedAt,
             deletedAt = deletedAt,
-            //TODO: flatPreferenceDTO = user.flatPreference.toFlatPreferenceDTO()
+            //TODO: flatPreferenceDTO = user.roomPreference.toRoomPreferenceDTO()
             userProfile = userProfile?.toDTO(),
             roomProfiles = roomProfiles?.map { it.toDTO() },
             //TODO: roommatePreferenceDTO = user.roommatePreference.toRoommatePreferenceDTO()
@@ -99,7 +102,7 @@ data class UserDTO(
     @PastOrPresent val createdAt: LocalDateTime,
     @PastOrPresent val updatedAt: LocalDateTime? = null,
     @PastOrPresent val deletedAt: LocalDateTime? = null,
-    //TODO: val flatPreferenceDTO: FlatPreferenceDTO,
+    //TODO: val roomPreferenceDTO: RoomPreferenceDTO,
     val userProfile: UserProfileDTO? = null,
     val roomProfiles: List<RoomProfileDTO>? = listOf(),
     //TODO: val roommatePreferenceDTO: RoommatePreferenceDTO,

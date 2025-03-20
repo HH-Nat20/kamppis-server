@@ -23,8 +23,15 @@ class DatabaseMockDataConfiguration {
         roommatePreferenceRepository: RoommatePreferenceRepository,
         roomPreferenceRepository: RoomPreferenceRepository,
         matchRepository: MatchRepository,
-        swipeRepository: SwipeRepository,
-    ) = ApplicationRunner {
+        swipeRepository: SwipeRepository
+    ) {
+        fun databaseInitializer(userRepository: UserRepository,
+                            profilePhotoRepository: ProfilePhotoRepository,
+                            matchRepository: MatchRepository,
+                            swipeRepository: SwipeRepository,
+                            flatRepository: FlatRepository,
+                            profileRepository: ProfileRepository,
+        ) = ApplicationRunner {
 
         // Application.properties: spring.jpa.hibernate.ddl-auto=create, tables are always dropped and re-created
         // THIS WILL NEVER RUN
@@ -52,7 +59,8 @@ class DatabaseMockDataConfiguration {
         // Add mock room profiles to database
         val mockRoomProfilesConfig = MockRoomProfilesConfig()
         mockRoomProfilesConfig.insertMockRoomProfilesToDatabase(userRepository,flatRepository, profileRepository)
- */
+        */
+
         // Add mock profile photos to database
         val mockProfilePhotosConfig = MockProfilePhotosConfig()
         mockProfilePhotosConfig.insertMockProfilePhotosToDatabase(profileRepository, profilePhotoRepository)
@@ -72,5 +80,6 @@ class DatabaseMockDataConfiguration {
         mockMatchesConfig.insertMockMatchesToDatabase(userRepository, matchRepository)
 
         println("\u2705 Mock data inserted successfully!")
+        }
     }
 }

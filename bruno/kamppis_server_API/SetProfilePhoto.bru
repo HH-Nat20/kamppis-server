@@ -1,0 +1,22 @@
+meta {
+  name: SetProfilePhoto
+  type: http
+  seq: 24
+}
+
+put {
+  url: {{baseUrl}}/api/images/:userId/:photoId
+  body: json
+  auth: none
+}
+
+params:path {
+  userId: 1
+  photoId: 3
+}
+
+body:json {
+  {
+    "isProfilePhoto": true
+  }
+}

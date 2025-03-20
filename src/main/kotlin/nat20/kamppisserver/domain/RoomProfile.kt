@@ -26,6 +26,7 @@ class RoomProfile(
     @PositiveOrZero(message = "Rent must be a positive integer")
     var rent: Int,
 
+    @Column(name = "is_private_room")
     var isPrivateRoom: Boolean,
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Utilities::class)
@@ -33,8 +34,12 @@ class RoomProfile(
     @Enumerated(EnumType.STRING)
     var roomUtilities: MutableList<Utilities>? = mutableListOf(),
 
-): Profile()
-{
+    bio: String = "Write bio here", // Default value from Profile,
+
+): Profile() {
+    init {
+        this.bio = bio
+    }
 
     override fun toDTO(): RoomProfileDTO {
         return RoomProfileDTO(
@@ -64,3 +69,13 @@ data class RoomProfileDTO(
     val bio: String,
     val id: Long? = null
 ) : ProfileDTO
+
+data class RoomProfileRequest(
+    val userIds: List<Long>,
+    val flatId: Long,
+    val rent: Int,
+    val isPrivateRoom: Boolean,
+    val roomUtilities: MutableList<Utilities>? = mutableListOf(),
+    val bio: String,
+    val id: Long? = null
+)
