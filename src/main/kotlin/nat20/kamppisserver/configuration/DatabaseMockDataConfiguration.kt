@@ -48,11 +48,9 @@ class DatabaseMockDataConfiguration {
         val mockUserProfilesConfig = MockUserProfilesConfig()
         mockUserProfilesConfig.insertMockUserProfilesToDatabase(userRepository, profileRepository)
 
-        /**
         // Add mock room profiles to database
         val mockRoomProfilesConfig = MockRoomProfilesConfig()
         mockRoomProfilesConfig.insertMockRoomProfilesToDatabase(userRepository,flatRepository, profileRepository)
-        */
 
         // Add mock profile photos to database
         val mockProfilePhotosConfig = MockProfilePhotosConfig()
@@ -62,7 +60,9 @@ class DatabaseMockDataConfiguration {
         val mockRoommatePreferencesConfig = MockRoommatePreferencesConfig()
         mockRoommatePreferencesConfig.insertMockRoommatePreferencesToDatabase(userRepository, roommatePreferenceRepository)
 
-        // TODO: Add mock room preferences to database
+        // Add mock room preferences to database
+        val mockRoomPreferencesConfig = MockRoomPreferencesConfig()
+        mockRoomPreferencesConfig.insertMockRoomPreferencesToDatabase(userRepository, roomPreferenceRepository)
 
         // Add mock swipes to database
         val mockSwipesConfig = MockSwipesConfig()
