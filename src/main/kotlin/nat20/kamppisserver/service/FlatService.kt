@@ -1,6 +1,6 @@
 package nat20.kamppisserver.service
 
-import jakarta.persistence.EntityNotFoundException
+import exception.EntityNotFoundException
 import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.Flat
 import nat20.kamppisserver.domain.FlatDTO

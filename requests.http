@@ -34,7 +34,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbGljZS5zbWl0aEBleGFtcGxlL
 GET http://localhost:8080/api/room-profiles
 
 ### Get room profile by id
-GET http://localhost:8080/api/room-profiles/1
+GET http://localhost:8080/api/room-profiles/90
 
 ### Post a new room profile
 POST http://localhost:8080/api/room-profiles
@@ -50,7 +50,7 @@ Content-Type: application/json
 }
 
 ### Update a room profile
-PUT http://localhost:8080/api/room-profiles/4
+PUT http://localhost:8080/api/room-profiles/97
 Content-Type: application/json
 
 {
@@ -98,5 +98,5 @@ Content-Type: application/json
     "BALCONY",
     "DISHWASHER"
   ],
-  "roomProfileIds": [3]
+  "roomProfileIds": [90]
 }
