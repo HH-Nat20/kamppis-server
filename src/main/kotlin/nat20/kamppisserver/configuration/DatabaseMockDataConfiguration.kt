@@ -24,14 +24,7 @@ class DatabaseMockDataConfiguration {
         roomPreferenceRepository: RoomPreferenceRepository,
         matchRepository: MatchRepository,
         swipeRepository: SwipeRepository
-    ) {
-        fun databaseInitializer(userRepository: UserRepository,
-                            profilePhotoRepository: ProfilePhotoRepository,
-                            matchRepository: MatchRepository,
-                            swipeRepository: SwipeRepository,
-                            flatRepository: FlatRepository,
-                            profileRepository: ProfileRepository,
-        ) = ApplicationRunner {
+    ) = ApplicationRunner {
 
         // Application.properties: spring.jpa.hibernate.ddl-auto=create, tables are always dropped and re-created
         // THIS WILL NEVER RUN
@@ -82,4 +75,3 @@ class DatabaseMockDataConfiguration {
         println("\u2705 Mock data inserted successfully!")
         }
     }
-}
