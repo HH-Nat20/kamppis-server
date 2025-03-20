@@ -17,6 +17,7 @@ class Flat(
     @NotEmpty(message = "Flat description cannot be empty.")
     var description: String,
 
+    @Enumerated(EnumType.STRING)
     @NotNull(message = "Flat location cannot be null.")
     var location: City,
 
