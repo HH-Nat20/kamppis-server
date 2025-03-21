@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
+import nat20.kamppisserver.domain.ProfilePhoto
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
@@ -73,7 +74,18 @@ class UserProfileService(
         userProfile.bio.let { existingProfile.bio = it }
         userProfile.cleanliness?.let { existingProfile.cleanliness = it }
         userProfile.lifestyle?.let { existingProfile.lifestyle = it }
-        userProfile.photos.let { existingProfile.photos = it }
+
+        // Convert ProfilePhotoDTOs to ProfilePhoto entities
+        userProfile.photos.let {
+            existingProfile.photos = it.map { dto ->
+                ProfilePhoto(
+                    profile = existingProfile,
+                    url = dto.url,
+                    isProfilePhoto = dto.isProfilePhoto,
+                    id = dto.id
+                )
+            }.toMutableList()
+        }
 
         existingProfile.updatedAt = LocalDateTime.now()
 

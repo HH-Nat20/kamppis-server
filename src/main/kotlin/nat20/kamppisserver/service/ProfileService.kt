@@ -21,7 +21,9 @@ class ProfileService(
     fun findAll(): List<ProfileDTO> {
         val roomProfiles = roomProfileRepository.findAllActive().map { it.toDTO() }
         val userProfiles = userProfileRepository.findAllActive().map { it.toDTO() }
+
         val profiles = roomProfiles + userProfiles
+
         return profiles
     }
 
@@ -34,11 +36,13 @@ class ProfileService(
     fun findById(id: Long): ProfileDTO? {
         val roomProfile = roomProfileRepository.findByIdActive(id)
         if (roomProfile != null) {
+            println("Found RoomProfile ID: ${roomProfile.id}, Photos: ${roomProfile.photos}")
             return roomProfile.toDTO()
         }
 
         val userProfile = userProfileRepository.findByIdActive(id)
         if (userProfile != null) {
+            println("Found UserProfile ID: ${userProfile.id}, Photos: ${userProfile.photos}")
             return userProfile.toDTO()
         }
 

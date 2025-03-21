@@ -1,6 +1,7 @@
 package nat20.kamppisserver.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.EntityGraph
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.enums.UserStatus
 import org.springframework.data.jpa.repository.Query
@@ -9,6 +10,7 @@ import java.time.LocalDate
 
 interface UserProfileRepository: JpaRepository<UserProfile, Long> {
 
+    @EntityGraph(attributePaths = ["photos"])
     @Query("SELECT up FROM UserProfile up WHERE up.deletedAt IS NULL")
     fun findAllActive(): List<UserProfile>
 

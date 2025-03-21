@@ -33,7 +33,10 @@ class UserProfile (
             bio = bio,
             cleanliness = cleanliness,
             lifestyle = lifestyle,
-            photos = photos,
+            photos = photos
+                .filter { it.deletedAt == null }
+                .map { toProfilePhotoDTO(it) }
+                .toMutableList(),
             id = id
         )
     }
@@ -45,6 +48,6 @@ data class UserProfileDTO(
     val bio: String = "Write bio here",
     val cleanliness: Cleanliness? = null,
     val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
-    val photos: MutableList<ProfilePhoto> = mutableListOf(),
+    val photos: MutableList<ProfilePhotoDTO> = mutableListOf(),
     val id: Long? = null
 ) : ProfileDTO

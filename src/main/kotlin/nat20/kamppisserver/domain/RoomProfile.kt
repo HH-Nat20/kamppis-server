@@ -50,7 +50,7 @@ class RoomProfile(
             rent = rent,
             isPrivateRoom = isPrivateRoom,
             roomUtilities = roomUtilities,
-            photos = photos,
+            photos = photos.map { toProfilePhotoDTO(it) }.toMutableList(),
             bio = bio,
             id = id
         )
@@ -65,7 +65,7 @@ data class RoomProfileDTO(
     val rent: Int,
     val isPrivateRoom: Boolean,
     val roomUtilities: MutableList<Utilities>? = mutableListOf(),
-    val photos: MutableList<ProfilePhoto>? = mutableListOf(),
+    val photos: MutableList<ProfilePhotoDTO>? = mutableListOf(),
     val bio: String,
     val id: Long? = null
 ) : ProfileDTO

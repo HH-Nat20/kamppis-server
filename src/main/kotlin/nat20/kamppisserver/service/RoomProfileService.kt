@@ -60,7 +60,7 @@ class RoomProfileService(
         existingProfile.users = users
         request.bio.let { existingProfile.bio = it }
         request.isPrivateRoom.let { existingProfile.isPrivateRoom = it }
-        request.roomUtilities.let { existingProfile.roomUtilities = it }
+        //request.roomUtilities.let { existingProfile.roomUtilities = it } // Was this purposefully duplicated?
         request.roomUtilities.let { existingProfile.roomUtilities = it }
         request.rent.let { existingProfile.rent = it }
 

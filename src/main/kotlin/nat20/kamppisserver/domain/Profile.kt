@@ -24,8 +24,7 @@ abstract class Profile(
     @Column(nullable = false)
     var bio: String = "Write bio here"
 
-    @OneToMany
-    @JoinColumn(name = "user_profile_id",)
+    @OneToMany(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var photos: MutableList<ProfilePhoto> = mutableListOf()
 
     @Enumerated(EnumType.STRING)
