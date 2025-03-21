@@ -16,26 +16,32 @@ class ProfileService(
 ) {
 
     /**
-     * Returns all Profiles as DTOs.
+     * Returns all active Profiles as DTOs.
      */
     fun findAll(): List<ProfileDTO> {
-        val roomProfiles = roomProfileRepository.findAll().map { it.toDTO() }
-        val userProfiles = userProfileRepository.findAll().map { it.toDTO() }
+        val roomProfiles = roomProfileRepository.findAllActive().map { it.toDTO() }
+        val userProfiles = userProfileRepository.findAllActive().map { it.toDTO() }
         val profiles = roomProfiles + userProfiles
         return profiles
     }
 
     /**
-     * Returns Profile by id.
+     * Returns active Profile by id.
      *
      * @param id the id of the profile to be returned.
      * @return the profile with given id.
      */
     fun findById(id: Long): ProfileDTO? {
-        val profile = profileRepository.findByIdOrNull(id)
-            ?: throw EntityNotFoundException("Profile with id $id not found")
+        val roomProfile = roomProfileRepository.findByIdActive(id)
+        if (roomProfile != null) {
+            return roomProfile.toDTO()
+        }
 
-        return profile.toDTO()
+        val userProfile = userProfileRepository.findByIdActive(id)
+        if (userProfile != null) {
+            return userProfile.toDTO()
+        }
+
+        throw EntityNotFoundException("Profile with id $id not found")
     }
-
 }
