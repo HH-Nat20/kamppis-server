@@ -10,10 +10,11 @@ class UserProfileTest {
     @Test
     fun `toDTO() should correctly convert UserProfile to UserProfileDTO`() {
         val user = User(
-            email = "alice.smith@example.com",
+            id = 999L,
+            email = "alice.smith@test.com",
             firstName = "Alice",
             lastName = "Smith",
-            dateOfBirth = LocalDate.of(1990, 5, 14), // Age 34
+            dateOfBirth = LocalDate.of(1990, 5, 14),
             gender = Gender.FEMALE
         )
 

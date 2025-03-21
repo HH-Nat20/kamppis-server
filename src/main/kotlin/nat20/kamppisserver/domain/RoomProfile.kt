@@ -34,7 +34,7 @@ class RoomProfile(
     @Enumerated(EnumType.STRING)
     var roomUtilities: MutableList<Utilities>? = mutableListOf(),
 
-    bio: String = "Write bio here", // Default value from Profile,
+    bio: String = "Write bio here", // Default value from Profile
 
 ): Profile() {
     init {

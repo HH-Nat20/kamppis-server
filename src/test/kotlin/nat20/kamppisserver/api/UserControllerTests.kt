@@ -49,7 +49,6 @@ class UserControllerTests {
             gender = Gender.MALE,
             status = UserStatus.ACTIVE,
             isOnline = false,
-            createdAt = LocalDateTime.now(),
             matchIds = setOf(1, 2)
         )
 
@@ -61,7 +60,6 @@ class UserControllerTests {
             gender = Gender.OTHER,
             status = UserStatus.ACTIVE,
             isOnline = false,
-            createdAt = LocalDateTime.now(),
             matchIds = setOf(1, 2)
         )
 
@@ -84,7 +82,6 @@ class UserControllerTests {
             gender = Gender.MALE,
             status = UserStatus.ACTIVE,
             isOnline = false,
-            createdAt = LocalDateTime.now(),
             matchIds = setOf(1, 2)
         )
 

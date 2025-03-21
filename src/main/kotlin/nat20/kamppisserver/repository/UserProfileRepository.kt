@@ -57,29 +57,32 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     *
     * More criteria and parameters will be added */
 
-    @Query(value = """
-    SELECT DISTINCT up.* FROM user_profiles up
-    JOIN user_profiles_genders upg ON up.id = upg.user_profile_id
-    JOIN user_profiles_locations upl ON up.id = upl.user_profile_id
+    @Query("""
+    SELECT up.id, up.user_id, up.cleanliness, u.gender, f.location
+    FROM user_profiles up
+    JOIN users u ON up.user_id = u.id
+    JOIN room_profiles_users rpu ON rpu.user_id = u.id
+    JOIN room_profiles rp ON rp.id = rpu.room_profile_id
+    JOIN flats f ON rp.flat_id = f.id
     WHERE up.id != :id
     AND NOT EXISTS (
-        SELECT 1 
-        FROM swipes s 
-        WHERE s.swiping_user_id = :id 
+        SELECT 1
+        FROM swipes s
+        WHERE s.swiping_user_id = :id
         AND s.swiped_user_id = up.id
     )
-    AND EXTRACT(YEAR FROM AGE(:queryDate, up.date_of_birth))  BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)
-    AND (up.gender IN (:preferredGenders) OR 'NOT_IMPORTANT' IN (:preferredGenders))
-    AND upl.roommate_preferences_location IN (:preferredLocations)
+    AND EXTRACT(YEAR FROM AGE(:queryDate, u.date_of_birth)) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)
+    AND (u.gender IN (:genderPreferences) OR 'NOT_IMPORTANT' IN (:genderPreferences))
+    AND f.location IN (:locationPreferences)
     """, nativeQuery = true)
-
     fun findUserProfilesThatMeetCriteria(
         @Param("id") id: Long?,
         @Param("queryDate") queryDate: LocalDate,
         @Param("minAgePreference") minAgePreference: Int?,
         @Param("maxAgePreference") maxAgePreference: Int?,
         @Param("genderPreferences") genderPreferences: List<String>,
-        @Param("locationPreferences") locationPreferences: List<String>): MutableList<UserProfile>
+        @Param("locationPreferences") locationPreferences: List<String>
+    ): MutableList<UserProfile>
 
     @Query("SELECT up FROM UserProfile up WHERE up.deletedAt IS NULL")
     fun findUserProfilesThatMeetCriteria(): List<UserProfile>

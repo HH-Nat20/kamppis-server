@@ -35,7 +35,8 @@ class UserProfileServiceTests {
     @Test
     fun `update() should update and return UserProfileDTO when profile exists`() {
         val user = User(
-            email = "alice.smith@example.com",
+            id = 999L,
+            email = "alice.smith@test.com",
             firstName = "Alice",
             lastName = "Smith",
             dateOfBirth = LocalDate.of(1990, 5, 14), // Age 34

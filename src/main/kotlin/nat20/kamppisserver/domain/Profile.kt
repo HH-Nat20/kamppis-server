@@ -39,7 +39,6 @@ abstract class Profile(
     @PastOrPresent(message = "Update date cannot be in the future.")
     var updatedAt: LocalDateTime? = null
 
-    @Column(name = "deleted_at")
     @PastOrPresent(message = "Deletion date cannot be in the future.")
     var deletedAt: LocalDateTime? = null
 

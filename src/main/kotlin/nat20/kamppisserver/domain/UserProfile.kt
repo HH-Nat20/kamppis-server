@@ -4,7 +4,6 @@ import jakarta.persistence.*
 import nat20.kamppisserver.domain.enums.Cleanliness
 import nat20.kamppisserver.domain.enums.Lifestyle
 
-
 @Entity
 @Table(name = "user_profiles")
 class UserProfile (
@@ -21,7 +20,7 @@ class UserProfile (
     @Enumerated(EnumType.STRING)
     var lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
 
-    bio: String = "Write bio here",
+    bio: String = "Write bio here"
 
 ) : Profile() {// Inherits id, bio, photos, and other attributes from Profile
     init {
@@ -43,7 +42,7 @@ class UserProfile (
 
 data class UserProfileDTO(
     val userId: Long,
-    val bio: String,
+    val bio: String = "Write bio here",
     val cleanliness: Cleanliness? = null,
     val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
     val photos: MutableList<ProfilePhoto> = mutableListOf(),
