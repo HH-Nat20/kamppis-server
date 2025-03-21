@@ -40,12 +40,11 @@ class Match(
         updatedAt = LocalDateTime.now()
     }
 
-    fun toMatchDTO(match: Match): MatchDTO {
-        val matchDTO = MatchDTO(
-            userIds = match.users.mapNotNull { it.id }.toSet(),
-            id = match.id
+    fun toDTO(): MatchDTO {
+        return MatchDTO(
+            userIds = users.mapNotNull { it.id }.toSet(),
+            id = id
         )
-        return matchDTO
     }
 }
 

@@ -48,36 +48,43 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     * -> We include only those users who fit min and max age preferences (inclusive)
     * -> If user has not set any age preferences (i.e. null), values 0 and 1000 are used to include user profiles of all ages
     *
-    * 8) AND (up."gender" IN (:preferredGenders) OR 'NOT_IMPORTANT' IN (:preferredGenders))
+    * 8) AND (up."gender" IN (:genderPreferences) OR 'NOT_IMPORTANT' IN (:genderPreferences))
     * -> We check if the queried profiles' gender matches the user's list of preferred genders
     * -> We also check if the user has no gender preferences (preferred gender set as 'NOT_IMPORTANT')
     *
-    * 9) AND upl."preferred_locations" IN (:preferredLocations)
+    * 9) AND upl."location_preferences" IN (:locationPreferences)
     * -> We check if any of the user profiles' preferred cities match the user's list of preferred cities
     *
     * More criteria and parameters will be added */
 
-    @Query(value = """
-    SELECT DISTINCT up.* FROM user_profiles up
-    JOIN user_profiles_genders upg ON up.id = upg.user_profile_id
-    JOIN user_profiles_locations upl ON up.id = upl.user_profile_id
+    @Query("""
+    SELECT up.id, up.user_id, up.cleanliness, u.gender, f.location, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at
+    FROM user_profiles up
+    JOIN users u ON up.user_id = u.id
+    JOIN room_profiles_users rpu ON rpu.user_id = u.id
+    JOIN room_profiles rp ON rp.id = rpu.room_profile_id
+    JOIN flats f ON rp.flat_id = f.id
+    LEFT JOIN profiles p ON up.id = p.id  -- Join with profiles to get bio, status, etc.
     WHERE up.id != :id
     AND NOT EXISTS (
-        SELECT 1 
-        FROM swipes s 
-        WHERE s.swiping_user_id = :id 
+        SELECT 1
+        FROM swipes s
+        WHERE s.swiping_user_id = :id
         AND s.swiped_user_id = up.id
     )
-    AND EXTRACT(YEAR FROM AGE(:queryDate, up.date_of_birth))  BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)
-    AND (up.gender IN (:preferredGenders) OR 'NOT_IMPORTANT' IN (:preferredGenders))
-    AND upl.preferred_locations IN (:preferredLocations)
+    AND EXTRACT(YEAR FROM AGE(:queryDate, u.date_of_birth)) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)
+    AND (u.gender IN (:genderPreferences) OR 'NOT_IMPORTANT' IN (:genderPreferences))
+    AND f.location IN (:locationPreferences)
     """, nativeQuery = true)
-
     fun findUserProfilesThatMeetCriteria(
         @Param("id") id: Long?,
         @Param("queryDate") queryDate: LocalDate,
         @Param("minAgePreference") minAgePreference: Int?,
         @Param("maxAgePreference") maxAgePreference: Int?,
-        @Param("preferredGenders") preferredGenders: List<String>,
-        @Param("preferredLocations") preferredLocations: List<String>): MutableList<UserProfile>
+        @Param("genderPreferences") genderPreferences: List<String>,
+        @Param("locationPreferences") locationPreferences: List<String>
+    ): MutableList<UserProfile>
+
+    @Query("SELECT up FROM UserProfile up WHERE up.deletedAt IS NULL")
+    fun findUserProfilesThatMeetCriteria(): List<UserProfile>
 }

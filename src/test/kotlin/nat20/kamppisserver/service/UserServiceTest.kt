@@ -41,12 +41,9 @@ class UserServiceTest @Autowired constructor(
 
         testUserProfile = userProfileRepository.save(UserProfile(
             user = testUser,
-            firstName = "John",
-            lastName = "Doe",
-            dateOfBirth = LocalDate.of(1990, 5, 14),
-            gender = Gender.MALE,
-            maxRent = MaxRent.LOW,
-            cleanliness = Cleanliness.SPOTLESS
+            cleanliness = Cleanliness.SPOTLESS,
+            lifestyle = mutableSetOf(Lifestyle.EARLY_BIRD, Lifestyle.STUDENT),
+            bio = "I'm a passionate traveler who loves exploring new cultures and cuisines. When I'm not studying, you can find me hiking in nature or experimenting with new recipes in the kitchen."
         ))
     }
 
@@ -69,7 +66,6 @@ class UserServiceTest @Autowired constructor(
         val restoredUser = userService.restore(testUser, testUser.id!!)
 
         assertEquals(UserStatus.ACTIVE, restoredUser.status)
-        assertNull(restoredUser.deletedAt)
 
         val restoredUserProfile = userProfileRepository.findByIdActive(testUser.id!!)
         assertNull(restoredUserProfile?.deletedAt)

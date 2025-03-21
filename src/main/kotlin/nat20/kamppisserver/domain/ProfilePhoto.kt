@@ -6,21 +6,17 @@ import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.PastOrPresent
 import org.hibernate.annotations.UpdateTimestamp
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 
 @Entity
-@Table(name = "user_photos")
-class UserPhoto(
-    @ManyToOne
-    @JoinColumn(name = "user_profile_id", nullable = false)
-    @JsonIgnore
-    @NotNull(message = "User profile cannot be null.")
-    var userProfile: UserProfile,
+@Table(name = "profile_photos")
+class ProfilePhoto(
 
-    @NotEmpty(message = "Name cannot be empty.")
-    var name: String,
+    @ManyToOne
+    var profile: Profile,
+
+    @NotEmpty(message = "Url cannot be empty.")
+    var url: String,
 
     // Is this photo on the user card (= True) or in the gallery (= False)?
     var isProfilePhoto: Boolean,
@@ -40,20 +36,20 @@ class UserPhoto(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 )
-fun toUserPhotoDTO(userPhoto: UserPhoto): UserPhotoDTO {
-    val userPhotoDTO: UserPhotoDTO = UserPhotoDTO(
-        name = userPhoto.name,
-        isProfilePhoto = userPhoto.isProfilePhoto,
-        userId = userPhoto.userProfile.id!!,
-        id = userPhoto.id!!
+fun toProfilePhotoDTO(profilePhoto: ProfilePhoto): ProfilePhotoDTO {
+    val profilePhotoDTO = ProfilePhotoDTO(
+        profileId = profilePhoto.profile.id!!,
+        url = profilePhoto.url,
+        isProfilePhoto = profilePhoto.isProfilePhoto,
+        id = profilePhoto.id
     )
 
-    return userPhotoDTO
+    return profilePhotoDTO
 }
 
-data class UserPhotoDTO(
-    @NotEmpty val name: String,
+data class ProfilePhotoDTO(
+    val profileId: Long,
+    @NotEmpty val url: String,
     val isProfilePhoto: Boolean,
-    val userId: Long,
     val id: Long? = null
 )

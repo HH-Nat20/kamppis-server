@@ -47,7 +47,6 @@ class LoginControllerTests @Autowired constructor(
             gender = Gender.FEMALE,
             status = UserStatus.ACTIVE,
             isOnline = false,
-            createdAt = LocalDateTime.now(),
             matchIds = setOf(1, 2)
         )
 
@@ -80,7 +79,6 @@ class LoginControllerTests @Autowired constructor(
             gender = Gender.FEMALE,
             status = UserStatus.ACTIVE,
             isOnline = false,
-            createdAt = LocalDateTime.now(),
             matchIds = setOf(1, 2)
         )
 
