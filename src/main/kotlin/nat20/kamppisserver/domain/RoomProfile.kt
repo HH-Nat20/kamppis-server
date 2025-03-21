@@ -10,7 +10,7 @@ import nat20.kamppisserver.domain.enums.Utilities
 @Table(name = "room_profiles")
 class RoomProfile(
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "room_profiles_users",
         joinColumns = [JoinColumn(name = "room_profile_id")],

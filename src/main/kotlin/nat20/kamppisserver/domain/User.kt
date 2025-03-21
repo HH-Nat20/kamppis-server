@@ -57,7 +57,7 @@ class User(
     @ManyToMany(mappedBy = "users") // This makes it bidirectional
     var matches: MutableSet<Match> = mutableSetOf(),
 
-    @OneToOne
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var userProfile: UserProfile? = null,
 
     @ManyToMany(mappedBy = "users")
