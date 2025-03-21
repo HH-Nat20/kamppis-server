@@ -58,12 +58,13 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     * More criteria and parameters will be added */
 
     @Query("""
-    SELECT up.id, up.user_id, up.cleanliness, u.gender, f.location
+    SELECT up.id, up.user_id, up.cleanliness, u.gender, f.location, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at
     FROM user_profiles up
     JOIN users u ON up.user_id = u.id
     JOIN room_profiles_users rpu ON rpu.user_id = u.id
     JOIN room_profiles rp ON rp.id = rpu.room_profile_id
     JOIN flats f ON rp.flat_id = f.id
+    LEFT JOIN profiles p ON up.id = p.id  -- Join with profiles to get bio, status, etc.
     WHERE up.id != :id
     AND NOT EXISTS (
         SELECT 1

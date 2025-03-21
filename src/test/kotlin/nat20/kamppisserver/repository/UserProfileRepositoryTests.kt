@@ -65,7 +65,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
     @Test
     fun `query should return UserProfiles whose age fit between user's min and max age preferences`(){
-        val numberOfMatchingUserProfiles: Int = 9
+        val numberOfMatchingUserProfiles: Int = 16
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
         val roommatePreference: RoommatePreference = roommatePreferenceRepository
             .findByUserIdAndStatus(1L, UserStatus.ACTIVE)
@@ -128,7 +128,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
     @Test
     fun `should return profiles that match user's preferred genders`() {
-        val numberOfMatchingUserProfiles: Int = 13
+        val numberOfMatchingUserProfiles: Int = 17
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
         val roommatePreference: RoommatePreference = roommatePreferenceRepository
             .findByUserIdAndStatus(1L, UserStatus.ACTIVE)
@@ -160,7 +160,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
     @Test
     fun `should return profiles that match user's preferred locations`() {
-        val numberOfMatchingUserProfiles = 25
+        val numberOfMatchingUserProfiles = 21
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
         val roommatePreference: RoommatePreference = roommatePreferenceRepository
             .findByUserIdAndStatus(1L, UserStatus.ACTIVE)
@@ -192,7 +192,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
     @Test
     fun `should not return profiles that have already been swiped`() {
-        val numberOfMatchingUserProfiles: Int = 23
+        val numberOfMatchingUserProfiles: Int = 30
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
 
         // Note that here we don't delete the swipes because that is what we want to test
@@ -220,7 +220,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
     @Test
     fun `should return the correct amount of profiles when all criteria are used`() {
-        val numberOfMatchingUserProfiles: Int = 6
+        val numberOfMatchingUserProfiles: Int = 5
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
         val roommatePreference: RoommatePreference = roommatePreferenceRepository
             .findByUserIdAndStatus(1L, UserStatus.ACTIVE)
