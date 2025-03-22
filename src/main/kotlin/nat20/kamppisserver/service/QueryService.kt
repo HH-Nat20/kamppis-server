@@ -67,8 +67,8 @@ class QueryService(
             genderPreferences,
             locationPreferences
         ).toMutableList()
-        val userProfileDTOList: MutableList<UserProfileDTO> = userProfileList.map { it.toDTO() }.toMutableList();
+        val userProfileDTOList: MutableList<UserProfileDTO> = userProfileList.map { it.toDTO(includeUserSummary = true) }.toMutableList();
 
-        return userProfileDTOList;
+        return userProfileDTOList
     }
 }

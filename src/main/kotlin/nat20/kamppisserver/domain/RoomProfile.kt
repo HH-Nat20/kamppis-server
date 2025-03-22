@@ -10,7 +10,7 @@ import nat20.kamppisserver.domain.enums.Utilities
 @Table(name = "room_profiles")
 class RoomProfile(
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "room_profiles_users",
         joinColumns = [JoinColumn(name = "room_profile_id")],
@@ -41,16 +41,17 @@ class RoomProfile(
         this.bio = bio
     }
 
-    override fun toDTO(): RoomProfileDTO {
+    override fun toDTO(includeUserSummary: Boolean): RoomProfileDTO {
         return RoomProfileDTO(
             userIds = users.map { it.id!! },
+            users = if (includeUserSummary) users.map { it.toSummaryDTO() } else null,
             flat = flat.toDTO(),
             totalRoommates = flat.totalRoommates,
             location = flat.location,
             rent = rent,
             isPrivateRoom = isPrivateRoom,
             roomUtilities = roomUtilities,
-            photos = photos,
+            photos = photos.map { toProfilePhotoDTO(it) }.toMutableList(),
             bio = bio,
             id = id
         )
@@ -59,13 +60,14 @@ class RoomProfile(
 
 data class RoomProfileDTO(
     val userIds : List<Long>,
+    val users: List<UserSummaryDTO>? = null,
     val flat: FlatDTO,
     val totalRoommates: Int,
     val location: City,
     val rent: Int,
     val isPrivateRoom: Boolean,
     val roomUtilities: MutableList<Utilities>? = mutableListOf(),
-    val photos: MutableList<ProfilePhoto>? = mutableListOf(),
+    val photos: MutableList<ProfilePhotoDTO>? = mutableListOf(),
     val bio: String,
     val id: Long? = null
 ) : ProfileDTO

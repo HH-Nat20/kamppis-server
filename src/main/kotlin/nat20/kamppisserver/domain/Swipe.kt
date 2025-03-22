@@ -31,8 +31,8 @@ class Swipe(
     fun toSwipeResponse(): SwipeResponse {
         return SwipeResponse(
             swipeId = id ?: throw IllegalStateException("Swipe ID is null"),
-            swipingUser = swipingUser,
-            swipedUser = swipedUser,
+            swipingUser = swipingUser.toDTO(),
+            swipedUser = swipedUser.toDTO(),
             isRightSwipe = isRightSwipe,
             isMatch = isMatch
         )
@@ -47,8 +47,8 @@ data class SwipeRequest(
 
 data class SwipeResponse(
     @NotNull val swipeId: Long,
-    @NotNull val swipingUser: User,
-    @NotNull val swipedUser: User,
+    @NotNull val swipingUser: UserDTO,
+    @NotNull val swipedUser: UserDTO,
     val isRightSwipe: Boolean,
     val isMatch: Boolean
 )

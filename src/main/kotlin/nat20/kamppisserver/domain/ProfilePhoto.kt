@@ -13,6 +13,7 @@ import java.time.LocalDateTime
 class ProfilePhoto(
 
     @ManyToOne
+    @JsonIgnore
     var profile: Profile,
 
     @NotEmpty(message = "Url cannot be empty.")

@@ -20,14 +20,14 @@ class RoomProfileService(
 
     fun findAll(): List<RoomProfileDTO> {
         val roomProfileList = roomProfileRepository.findAllActive()
-        return roomProfileList.map { it.toDTO() }
+        return roomProfileList.map { it.toDTO(includeUserSummary = true) }
     }
 
     fun findById(id: Long): RoomProfileDTO {
         val roomProfile = roomProfileRepository.findByIdActive(id)
             ?: throw EntityNotFoundException("Room profile with id $id not found")
 
-        return roomProfile.toDTO()
+        return roomProfile.toDTO(includeUserSummary = true)
     }
 
     fun add(request: RoomProfileRequest): RoomProfileDTO {
@@ -44,7 +44,7 @@ class RoomProfileService(
         )
 
         val addedRoomProfile = roomProfileRepository.save(roomProfile)
-        return addedRoomProfile.toDTO()
+        return addedRoomProfile.toDTO(includeUserSummary = true)
     }
 
     @Transactional
@@ -61,14 +61,13 @@ class RoomProfileService(
         request.bio.let { existingProfile.bio = it }
         request.isPrivateRoom.let { existingProfile.isPrivateRoom = it }
         request.roomUtilities.let { existingProfile.roomUtilities = it }
-        request.roomUtilities.let { existingProfile.roomUtilities = it }
         request.rent.let { existingProfile.rent = it }
 
         existingProfile.updatedAt = LocalDateTime.now()
 
         val updatedProfile = roomProfileRepository.save(existingProfile)
 
-        return updatedProfile.toDTO()
+        return updatedProfile.toDTO(includeUserSummary = true)
     }
 
     fun delete(id: Long): Boolean {

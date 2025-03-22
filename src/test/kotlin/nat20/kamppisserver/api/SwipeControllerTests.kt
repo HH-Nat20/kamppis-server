@@ -60,8 +60,8 @@ class SwipeControllerTests @Autowired constructor(
 
         val swipeResponse = SwipeResponse(
             swipeId = 1,
-            swipingUser = user1,
-            swipedUser = user2,
+            swipingUser = user1.toDTO(),
+            swipedUser = user2.toDTO(),
             isRightSwipe = true,
             isMatch = false
         )
