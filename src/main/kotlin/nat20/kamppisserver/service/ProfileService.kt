@@ -5,7 +5,6 @@ import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.repository.ProfileRepository
 import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserProfileRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
