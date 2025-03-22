@@ -2,6 +2,7 @@ package nat20.kamppisserver.api
 
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.service.ProfileService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -23,5 +24,13 @@ class ProfileController(private val profileService: ProfileService) {
     @GetMapping("/{id}")
     fun findById(@PathVariable id: Long): ResponseEntity<ProfileDTO> {
         return ResponseEntity.ok(profileService.findById(id))
+    }
+
+    /**
+     * Updates profile.
+     */
+    @PutMapping("/{id}")
+    fun updateProfile(@PathVariable id: Long) {
+        profileService.update(id)
     }
 }

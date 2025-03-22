@@ -78,10 +78,8 @@ class User(
             status = status,
             isOnline = isOnline,
             matchIds = matches.mapNotNull { it.id }.toSet(),
-            //TODO: flatPreferenceDTO = user.roomPreference.toRoomPreferenceDTO()
             userProfile = userProfile?.toDTO(),
             roomProfiles = roomProfiles?.map { it.toDTO() },
-            //TODO: roommatePreferenceDTO = user.roommatePreference.toRoommatePreferenceDTO()
             id = id
         )
     }
@@ -107,10 +105,8 @@ data class UserDTO(
     val status: UserStatus,
     val isOnline: Boolean,
     val matchIds: Set<Long>,
-    //TODO: val roomPreferenceDTO: RoomPreferenceDTO,
     val userProfile: UserProfileDTO? = null,
     val roomProfiles: List<RoomProfileDTO>? = listOf(),
-    //TODO: val roommatePreferenceDTO: RoommatePreferenceDTO,
     val id: Long? = null
 )
 
@@ -121,4 +117,10 @@ data class UserSummaryDTO(
     val gender: Gender,
     val isOnline: Boolean,
     val id: Long? = null,
+)
+
+data class UserPreferenceDTO(
+    val roomPreference: RoomPreferenceDTO?,
+    val roommatePreference: RoommatePreferenceDTO?,
+    val id: Long? = null
 )

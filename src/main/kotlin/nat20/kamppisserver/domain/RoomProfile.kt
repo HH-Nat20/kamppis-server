@@ -56,6 +56,17 @@ class RoomProfile(
             id = id
         )
     }
+    fun toRoomProfileRequest(): RoomProfileRequest {
+        return RoomProfileRequest(
+            userIds = users.map { it.id!! },
+            flatId = flat.id!!,
+            rent = rent,
+            isPrivateRoom = isPrivateRoom,
+            roomUtilities = roomUtilities,
+            bio = bio,
+            id = id
+        )
+    }
 }
 
 data class RoomProfileDTO(

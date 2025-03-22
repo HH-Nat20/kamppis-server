@@ -1,6 +1,8 @@
 package nat20.kamppisserver.domain
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.PastOrPresent

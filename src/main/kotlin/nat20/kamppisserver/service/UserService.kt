@@ -4,7 +4,12 @@ import exception.DuplicateEmailException
 import jakarta.persistence.EntityNotFoundException
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserDTO
+import nat20.kamppisserver.domain.UserPreferenceDTO
+import nat20.kamppisserver.domain.toRoomPreferenceDTO
+import nat20.kamppisserver.domain.toRoommatePreferenceDTO
 import nat20.kamppisserver.domain.enums.UserStatus
+import nat20.kamppisserver.repository.RoomPreferenceRepository
+import nat20.kamppisserver.repository.RoommatePreferenceRepository
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.http.HttpStatus
@@ -18,7 +23,9 @@ import java.time.LocalDateTime
  */
 @Service
 class UserService(private val userRepository: UserRepository,
-                  private val userProfileRepository: UserProfileRepository) {
+                  private val userProfileRepository: UserProfileRepository,
+                  private val roommatePreferenceRepository: RoommatePreferenceRepository,
+                    private val roomPreferenceRepository: RoomPreferenceRepository) {
 
     /**
      * Returns all active Users.
@@ -41,6 +48,23 @@ class UserService(private val userRepository: UserRepository,
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "This user does not exist")
 
         return user.toDTO()
+    }
+
+    /**
+     * Find user preferences for active User.
+     */
+    fun getPreferences(id: Long): UserPreferenceDTO {
+        val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "This user does not exist")
+
+        val roomPreference = roomPreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
+        val roommatePreference = roommatePreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
+
+        return UserPreferenceDTO(
+            roomPreference = roomPreference?.let { toRoomPreferenceDTO(it) },
+            roommatePreference = roommatePreference?.let { toRoommatePreferenceDTO(it) },
+            id = user.id!!
+        )
     }
 
     /**

@@ -1,10 +1,7 @@
 package nat20.kamppisserver.api
 
 import com.fasterxml.jackson.databind.JsonNode
-import nat20.kamppisserver.domain.User
-import nat20.kamppisserver.domain.UserDTO
-import nat20.kamppisserver.domain.UserProfile
-import nat20.kamppisserver.domain.UserProfileDTO
+import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.QueryService
@@ -27,10 +24,19 @@ class UserController(private val repository: UserRepository,
                      private val userService: UserService) {
 
     @GetMapping("", "/")
-    fun findAll(): ResponseEntity<List<UserDTO>> = ResponseEntity.ok(userService.findAll())
+    fun findAll(): ResponseEntity<List<UserDTO>>
+            = ResponseEntity.ok(userService.findAll())
 
     @GetMapping("/{id}")
-    fun findUserById(@PathVariable id: Long): ResponseEntity<UserDTO> = ResponseEntity.ok(userService.findById(id))
+    fun findUserById(@PathVariable id: Long): ResponseEntity<UserDTO>
+            = ResponseEntity.ok(userService.findById(id))
+
+    /**
+     * Find user preferences.
+     */
+    @GetMapping("/{id}/preferences")
+    fun getUserPreferences(@PathVariable id: Long): ResponseEntity<UserPreferenceDTO>
+            = ResponseEntity.ok(userService.getPreferences(id))
 
     /**
      * Creates new user.
