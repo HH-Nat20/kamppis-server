@@ -17,7 +17,7 @@ class MatchService(
     private val userRepository: UserRepository
 ) {
     @Transactional
-    fun addUserToMatch(matchId: Long, userId: Long): Match {
+    fun addUserToMatch(matchId: Long, userId: Long): MatchDTO {
         val match = matchRepository.findById(matchId).orElseThrow {
             throw EntityNotFoundException("Match not found")
         }
@@ -25,11 +25,11 @@ class MatchService(
             ?: throw EntityNotFoundException("User not found")
 
         match.addUser(user)
-        return matchRepository.save(match)
+        return matchRepository.save(match).toDTO()
     }
 
     @Transactional
-    fun removeUserFromMatch(matchId: Long, userId: Long): Match {
+    fun removeUserFromMatch(matchId: Long, userId: Long): MatchDTO {
         val match = matchRepository.findById(matchId).orElseThrow {
             throw EntityNotFoundException("Match not found")
         }
@@ -37,35 +37,35 @@ class MatchService(
             ?: throw EntityNotFoundException("User not found")
 
         match.removeUser(user)
-        return matchRepository.save(match)
+        return matchRepository.save(match).toDTO()
     }
 
-    fun findAll(): MutableIterable<Match> {
-        return matchRepository.findAll()
+    fun findAll(): List<MatchDTO> {
+        return matchRepository.findAll().map { it.toDTO() }
     }
 
-    fun findAllForUser(userId: Long): MutableIterable<Match> {
+    fun findAllForUser(userId: Long): List<MatchDTO> {
         if (userRepository.findByIdAndStatus(userId, UserStatus.ACTIVE) == null) throw EntityNotFoundException(
             "User with ID $userId not found"
         )
-        return matchRepository.findAllByUserId(userId).toMutableList()
+        return matchRepository.findAllByUserId(userId).map { it.toDTO() }
     }
 
-    fun findUserProfilesThatMatchWithUser(userId: Long): MutableIterable<UserProfile>
+    fun findUserProfilesThatMatchWithUser(userId: Long): List<UserProfileDTO>
     {
         if (userRepository.findByIdAndStatus(userId, UserStatus.ACTIVE) == null) throw EntityNotFoundException(
             "User with ID $userId not found"
         )
-        return matchRepository.findUserProfilesThatMatchWithUser(userId)
+        return matchRepository.findUserProfilesThatMatchWithUser(userId).map { it.toDTO() }
     }
 
-    fun findOne(matchId: Long): Match? {
+    fun findOne(matchId: Long): MatchDTO? {
         if (!matchRepository.existsById(matchId)) throw EntityNotFoundException("Match with ID $matchId not found")
-        return matchRepository.findByIdOrNull(matchId)
+        return matchRepository.findByIdOrNull(matchId)?.toDTO()
     }
 
     @Transactional
-    fun createMatch(matchRequest: MatchRequest): Match {
+    fun createMatch(matchRequest: MatchRequest): MatchDTO {
         val users = userRepository.findAllByIdAndStatus(matchRequest.userIds, UserStatus.ACTIVE).toMutableSet()
         if (users.size < 2) {
             throw InvalidRequestException("A match must have at least two unique users")
@@ -81,12 +81,12 @@ class MatchService(
         }
 
         val match = Match(users = users)
-        return matchRepository.save(match)
+        return matchRepository.save(match).toDTO()
     }
 
     // Overloaded method for internal use
     @Transactional
-    fun createMatch(users: Set<User>): Match {
+    fun createMatch(users: Set<User>): MatchDTO {
         if (users.size < 2) {
             throw InvalidRequestException("A match must have at least two users")
         }
@@ -97,7 +97,7 @@ class MatchService(
             throw DuplicateMatchException("This match already exists")
         }
 
-        return matchRepository.save(Match(users = users.toMutableSet()))
+        return matchRepository.save(Match(users = users.toMutableSet())).toDTO()
     }
 
     /**

@@ -1,8 +1,6 @@
 package nat20.kamppisserver.api
 
-import nat20.kamppisserver.domain.Match
-import nat20.kamppisserver.domain.UserProfile
-import nat20.kamppisserver.domain.MatchRequest
+import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.MatchService
@@ -18,7 +16,7 @@ class MatchController(private val service: MatchService,
                       private val repository: UserRepository) {
 
     @GetMapping("", "/")
-    fun findAllForUser(@RequestParam(required = false) userId: Long?): ResponseEntity<MutableIterable<Match>> {
+    fun findAllForUser(@RequestParam(required = false) userId: Long?): ResponseEntity<List<MatchDTO>> {
         return if (userId != null && repository.findByIdAndStatus(userId, UserStatus.ACTIVE) != null) {
             ResponseEntity.ok().body(service.findAllForUser(userId))
         } else {
@@ -27,17 +25,17 @@ class MatchController(private val service: MatchService,
     }
 
     @GetMapping("/profiles/{id}")
-    fun findAllMatchesForUser(@PathVariable id: Long): ResponseEntity<MutableIterable<UserProfile>> {
+    fun findAllMatchesForUser(@PathVariable id: Long): ResponseEntity<List<UserProfileDTO>> {
         return ResponseEntity.ok().body(service.findUserProfilesThatMatchWithUser(id))
     }
 
     @GetMapping("/{id}")
-    fun findMatchById(@PathVariable id: Long): ResponseEntity<Match> {
+    fun findMatchById(@PathVariable id: Long): ResponseEntity<MatchDTO> {
         return ResponseEntity.status(HttpStatus.OK).body(service.findOne(id))
     }
 
     @PostMapping()
-    fun addMatch(@RequestBody request: MatchRequest): ResponseEntity<Match> {
+    fun addMatch(@RequestBody request: MatchRequest): ResponseEntity<MatchDTO> {
         val savedMatch = service.createMatch(request)
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMatch)
     }

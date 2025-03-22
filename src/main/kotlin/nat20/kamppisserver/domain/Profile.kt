@@ -1,5 +1,6 @@
 package nat20.kamppisserver.domain
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.PastOrPresent
@@ -41,7 +42,8 @@ abstract class Profile(
     @PastOrPresent(message = "Deletion date cannot be in the future.")
     var deletedAt: LocalDateTime? = null
 
-    abstract fun toDTO(): ProfileDTO // Abstract function to be implemented by subclasses
+    abstract fun toDTO(includeUserSummary: Boolean = false): ProfileDTO // Abstract function to be implemented by subclasses
 }
 
+@JsonInclude(JsonInclude.Include.NON_NULL) // Hide keys with null values in the DTOs
 sealed interface ProfileDTO

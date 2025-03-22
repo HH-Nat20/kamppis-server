@@ -85,6 +85,17 @@ class User(
             id = id
         )
     }
+
+    fun toSummaryDTO(): UserSummaryDTO {
+        return UserSummaryDTO(
+            firstName = firstName,
+            lastName = lastName,
+            age = ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now()),
+            gender = gender,
+            isOnline = isOnline,
+            id = id,
+        )
+    }
 }
 
 data class UserDTO(
@@ -101,4 +112,13 @@ data class UserDTO(
     val roomProfiles: List<RoomProfileDTO>? = listOf(),
     //TODO: val roommatePreferenceDTO: RoommatePreferenceDTO,
     val id: Long? = null
+)
+
+data class UserSummaryDTO(
+    val firstName: String,
+    val lastName: String,
+    val age: Long? = null,
+    val gender: Gender,
+    val isOnline: Boolean,
+    val id: Long? = null,
 )

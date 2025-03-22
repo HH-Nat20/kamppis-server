@@ -28,7 +28,7 @@ class UserProfileService(
      */
     fun findAll(): List<UserProfileDTO> {
         val userProfileList = userProfileRepository.findAllActive()
-        return userProfileList.map { it.toDTO() }
+        return userProfileList.map { it.toDTO(includeUserSummary = true) }
     }
 
     /**
@@ -41,7 +41,7 @@ class UserProfileService(
         val userProfile = userProfileRepository.findByIdActive(id)
             ?: throw EntityNotFoundException("User profile with id $id not found")
 
-        return userProfile.toDTO()
+        return userProfile.toDTO(includeUserSummary = true)
     }
 
     /**
@@ -55,7 +55,7 @@ class UserProfileService(
             ?: throw EntityNotFoundException("User ${userProfile.user.id} not found")
 
         val addedUserProfile = userProfileRepository.save(userProfile)
-        return addedUserProfile.toDTO()
+        return addedUserProfile.toDTO(includeUserSummary = true)
     }
 
     /**
@@ -91,7 +91,7 @@ class UserProfileService(
 
         val updatedProfile = userProfileRepository.save(existingProfile)
 
-        return updatedProfile.toDTO()
+        return updatedProfile.toDTO(includeUserSummary = true)
     }
 
 }

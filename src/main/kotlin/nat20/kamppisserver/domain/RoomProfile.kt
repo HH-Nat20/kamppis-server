@@ -41,9 +41,10 @@ class RoomProfile(
         this.bio = bio
     }
 
-    override fun toDTO(): RoomProfileDTO {
+    override fun toDTO(includeUserSummary: Boolean): RoomProfileDTO {
         return RoomProfileDTO(
             userIds = users.map { it.id!! },
+            users = if (includeUserSummary) users.map { it.toSummaryDTO() } else null,
             flat = flat.toDTO(),
             totalRoommates = flat.totalRoommates,
             location = flat.location,
@@ -59,6 +60,7 @@ class RoomProfile(
 
 data class RoomProfileDTO(
     val userIds : List<Long>,
+    val users: List<UserSummaryDTO>? = null,
     val flat: FlatDTO,
     val totalRoommates: Int,
     val location: City,

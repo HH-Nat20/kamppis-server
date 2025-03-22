@@ -27,9 +27,10 @@ class UserProfile (
         this.bio = bio // This block is needed if you want to initialize the bio during instance creation!
     }
 
-    override fun toDTO(): UserProfileDTO {
+    override fun toDTO(includeUserSummary: Boolean): UserProfileDTO {
         return UserProfileDTO(
             userId = user.id!!,
+            user = if (includeUserSummary) user.toSummaryDTO() else null,
             bio = bio,
             cleanliness = cleanliness,
             lifestyle = lifestyle,
@@ -45,6 +46,7 @@ class UserProfile (
 
 data class UserProfileDTO(
     val userId: Long,
+    val user: UserSummaryDTO? = null,
     val bio: String = "Write bio here",
     val cleanliness: Cleanliness? = null,
     val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
