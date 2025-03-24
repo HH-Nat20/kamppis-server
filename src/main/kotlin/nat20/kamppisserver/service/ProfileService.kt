@@ -51,29 +51,4 @@ class ProfileService(
         }
     }
 
-    /**
-     * Updates given active Profile.
-     * TODO: NB!!! Returns 200 OK but doesn't fucking do anything!!!
-     *
-     * @param id the id of the profile to be updated.
-     * @return the updated profile.
-     */
-    fun update(id: Long) {
-        val roomProfile = roomProfileRepository.findByIdActive(id)
-        val userProfile = userProfileRepository.findByIdActive(id)
-
-        when {
-            roomProfile != null -> {
-                val updatedRoomProfile = roomProfile.toRoomProfileRequest()
-                roomProfileService.update(updatedRoomProfile, id)
-            }
-
-            userProfile != null -> {
-                val updatedUserProfile = userProfile.toDTO()
-                userProfileService.update(updatedUserProfile, id)
-            }
-
-            else -> throw EntityNotFoundException("Profile with id $id not found")
-        }
-    }
 }
