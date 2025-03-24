@@ -2,6 +2,7 @@ package nat20.kamppisserver.service
 
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
+import jakarta.validation.Valid
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.domain.ProfilePhoto
@@ -66,7 +67,7 @@ class UserProfileService(
      * @return the updated profile.
      */
     @Transactional
-    fun update(userProfile: UserProfileDTO, id: Long): UserProfileDTO {
+    fun update(@Valid userProfile: UserProfileDTO, id: Long): UserProfileDTO {
         val existingProfile = userProfileRepository.findByIdActive(id)
             ?: throw EntityNotFoundException("User profile with id $id not found")
 

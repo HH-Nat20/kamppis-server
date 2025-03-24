@@ -70,12 +70,12 @@ class RoomProfile(
 }
 
 data class RoomProfileDTO(
-    val userIds : List<Long>,
+    @NotEmpty val userIds : List<Long>,
     val users: List<UserSummaryDTO>? = null,
     val flat: FlatDTO,
     val totalRoommates: Int,
     val location: City,
-    val rent: Int,
+    @PositiveOrZero val rent: Int,
     val isPrivateRoom: Boolean,
     val roomUtilities: MutableList<Utilities>? = mutableListOf(),
     val photos: MutableList<ProfilePhotoDTO>? = mutableListOf(),
@@ -84,9 +84,9 @@ data class RoomProfileDTO(
 ) : ProfileDTO
 
 data class RoomProfileRequest(
-    val userIds: List<Long>,
+    @NotEmpty val userIds: List<Long>,
     val flatId: Long,
-    val rent: Int,
+    @PositiveOrZero val rent: Int,
     val isPrivateRoom: Boolean,
     val roomUtilities: MutableList<Utilities>? = mutableListOf(),
     val bio: String,

@@ -2,6 +2,7 @@ package nat20.kamppisserver.service
 
 import exception.DuplicateEmailException
 import jakarta.persistence.EntityNotFoundException
+import jakarta.validation.Valid
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserDTO
 import nat20.kamppisserver.domain.UserPreferenceDTO
@@ -15,6 +16,7 @@ import nat20.kamppisserver.repository.UserRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
 
@@ -22,6 +24,7 @@ import java.time.LocalDateTime
  * Service class for User.
  */
 @Service
+@Validated
 class UserService(private val userRepository: UserRepository,
                   private val userProfileRepository: UserProfileRepository,
                   private val roommatePreferenceRepository: RoommatePreferenceRepository,
@@ -73,7 +76,7 @@ class UserService(private val userRepository: UserRepository,
      * @param user the user to be created.
      * @return the created user.
      */
-    fun add(user: User): UserDTO {
+    fun add(@Valid user: User): UserDTO {
         // Check for all e-mails, even INACTIVE ones
         userRepository.findByEmail(user.email)
             ?.let { throw DuplicateEmailException("User with this email already exists") }
@@ -90,7 +93,7 @@ class UserService(private val userRepository: UserRepository,
      * @param id the id of the user to be updated.
      * @return the updated user.
      */
-    fun update(user: User, id: Long): UserDTO {
+    fun update(@Valid user: UserDTO, id: Long): UserDTO {
         val updateUser = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("User with id $id not found")
         // Check for all e-mails, even INACTIVE ones
@@ -154,7 +157,7 @@ class UserService(private val userRepository: UserRepository,
      * @return the restored user.
      */
     @Transactional
-    fun restore(user: User, id: Long): UserDTO {
+    fun restore(id: Long): UserDTO {
         val restoreUser = userRepository.findByIdAndStatus(id, UserStatus.INACTIVE)
             ?: throw EntityNotFoundException("Deleted user with id $id not found")
 

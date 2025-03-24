@@ -2,14 +2,17 @@ package nat20.kamppisserver.service
 
 import exception.EntityNotFoundException
 import jakarta.transaction.Transactional
+import jakarta.validation.Valid
 import nat20.kamppisserver.domain.Flat
 import nat20.kamppisserver.domain.FlatDTO
 import nat20.kamppisserver.repository.FlatRepository
 import nat20.kamppisserver.repository.RoomProfileRepository
 import org.springframework.stereotype.Service
+import org.springframework.validation.annotation.Validated
 import kotlin.jvm.optionals.getOrNull
 
 @Service
+@Validated
 class FlatService(
     private val flatRepository: FlatRepository,
     private val roomProfileRepository: RoomProfileRepository
@@ -26,7 +29,7 @@ class FlatService(
         return flat.toDTO()
     }
 
-    fun add(request: FlatDTO): FlatDTO {
+    fun add(@Valid request: FlatDTO): FlatDTO {
 
         val flat = Flat(
             name = request.name,
@@ -41,7 +44,7 @@ class FlatService(
     }
 
     @Transactional
-    fun update(request: FlatDTO, id: Long): FlatDTO {
+    fun update(@Valid request: FlatDTO, id: Long): FlatDTO {
         val existingFlat = flatRepository.findById(id).getOrNull()
         ?: throw EntityNotFoundException("Flat with id $id not found")
 

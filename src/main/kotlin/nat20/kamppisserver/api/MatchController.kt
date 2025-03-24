@@ -1,5 +1,6 @@
 package nat20.kamppisserver.api
 
+import jakarta.validation.Valid
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
@@ -7,11 +8,13 @@ import nat20.kamppisserver.service.MatchService
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/matches")
+@Validated
 class MatchController(private val service: MatchService,
                       private val repository: UserRepository) {
 
@@ -35,7 +38,7 @@ class MatchController(private val service: MatchService,
     }
 
     @PostMapping()
-    fun addMatch(@RequestBody request: MatchRequest): ResponseEntity<MatchDTO> {
+    fun addMatch(@Valid @RequestBody request: MatchRequest): ResponseEntity<MatchDTO> {
         val savedMatch = service.createMatch(request)
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMatch)
     }

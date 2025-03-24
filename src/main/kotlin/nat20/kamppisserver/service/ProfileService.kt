@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service
 @Service
 class ProfileService(
     private val roomProfileRepository: RoomProfileRepository,
-    private val userProfileRepository: UserProfileRepository,
-    private val roomProfileService: RoomProfileService,
-    private val userProfileService: UserProfileService,
+    private val userProfileRepository: UserProfileRepository
 ) {
 
     /**

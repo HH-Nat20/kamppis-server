@@ -63,7 +63,7 @@ class UserServiceTest @Autowired constructor(
     fun `restore should reactivate user and clear deletedAt`() {
         userService.delete(testUser.id!!)
 
-        val restoredUser = userService.restore(testUser, testUser.id!!)
+        val restoredUser = userService.restore(testUser.id!!)
 
         assertEquals(UserStatus.ACTIVE, restoredUser.status)
 

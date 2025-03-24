@@ -4,14 +4,17 @@ import exception.DuplicateMatchException
 import exception.InvalidRequestException
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
+import jakarta.validation.Valid
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.MatchRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.validation.annotation.Validated
 
 @Service
+@Validated
 class MatchService(
     private val matchRepository: MatchRepository,
     private val userRepository: UserRepository
@@ -65,7 +68,7 @@ class MatchService(
     }
 
     @Transactional
-    fun createMatch(matchRequest: MatchRequest): MatchDTO {
+    fun createMatch(@Valid matchRequest: MatchRequest): MatchDTO {
         val users = userRepository.findAllByIdAndStatus(matchRequest.userIds, UserStatus.ACTIVE).toMutableSet()
         if (users.size < 2) {
             throw InvalidRequestException("A match must have at least two unique users")

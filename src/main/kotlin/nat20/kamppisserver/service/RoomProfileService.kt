@@ -2,6 +2,7 @@ package nat20.kamppisserver.service
 
 import exception.EntityNotFoundException
 import jakarta.transaction.Transactional
+import jakarta.validation.Valid
 import nat20.kamppisserver.domain.RoomProfile
 import nat20.kamppisserver.domain.RoomProfileDTO
 import nat20.kamppisserver.domain.RoomProfileRequest
@@ -9,9 +10,11 @@ import nat20.kamppisserver.repository.FlatRepository
 import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.stereotype.Service
+import org.springframework.validation.annotation.Validated
 import java.time.LocalDateTime
 
 @Service
+@Validated
 class RoomProfileService(
     private val roomProfileRepository: RoomProfileRepository,
     private val userRepository: UserRepository,
@@ -30,7 +33,7 @@ class RoomProfileService(
         return roomProfile.toDTO(includeUserSummary = true)
     }
 
-    fun add(request: RoomProfileRequest): RoomProfileDTO {
+    fun add(@Valid request: RoomProfileRequest): RoomProfileDTO {
         val users = request.userIds.map { userRepository.findById(it).get() }.toMutableList()
         val flat = request.flatId.let { flatRepository.findById(it).get() }
 
@@ -48,7 +51,7 @@ class RoomProfileService(
     }
 
     @Transactional
-    fun update(request: RoomProfileRequest, id: Long): RoomProfileDTO {
+    fun update(@Valid request: RoomProfileRequest, id: Long): RoomProfileDTO {
         val existingProfile = roomProfileRepository.findByIdActive(id)
             ?: throw EntityNotFoundException("Room profile with id $id not found")
 

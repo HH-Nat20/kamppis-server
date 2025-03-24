@@ -1,25 +1,20 @@
 package nat20.kamppisserver.api
 
-import com.fasterxml.jackson.databind.JsonNode
+import jakarta.validation.Valid
 import nat20.kamppisserver.domain.*
-import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
-import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserService
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.messaging.handler.annotation.MessageMapping
-import org.springframework.messaging.handler.annotation.Payload
-import org.springframework.messaging.handler.annotation.SendTo
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.server.ResponseStatusException
 
 /**
  * Rest controller for User.
  */
 @RestController
 @RequestMapping("/api/users")
+@Validated
 class UserController(private val repository: UserRepository,
                      private val userService: UserService) {
 
@@ -45,7 +40,7 @@ class UserController(private val repository: UserRepository,
      * @return ResponseEntity with status code 201 CREATED.
      */
     @PostMapping
-    fun addUserProfile(@RequestBody user: User): ResponseEntity<UserDTO>
+    fun addUserProfile(@Valid @RequestBody user: User): ResponseEntity<UserDTO>
             = ResponseEntity.status(HttpStatus.CREATED).body(userService.add(user))
 
     /**
@@ -56,7 +51,7 @@ class UserController(private val repository: UserRepository,
      * @return ResponseEntity with status code 200 OK.
      */
     @PutMapping("/{id}")
-    fun updateUserProfile(@RequestBody user: User, @PathVariable id: Long): ResponseEntity<UserDTO>
+    fun updateUserProfile(@Valid @RequestBody user: UserDTO, @PathVariable id: Long): ResponseEntity<UserDTO>
             = ResponseEntity.ok(userService.update(user, id))
 
     /**
@@ -79,7 +74,7 @@ class UserController(private val repository: UserRepository,
      * @return ResponseEntity with status code 200 OK.
      */
     @PutMapping("/{id}/restore")
-    fun restoreById(@RequestBody user: User,@PathVariable id: Long): ResponseEntity<UserDTO>
-        = ResponseEntity.ok(userService.restore(user, id))
+    fun restoreById(@PathVariable id: Long): ResponseEntity<UserDTO>
+        = ResponseEntity.ok(userService.restore(id))
 
 }

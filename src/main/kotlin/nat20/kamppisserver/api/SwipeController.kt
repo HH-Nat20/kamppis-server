@@ -1,5 +1,6 @@
 package nat20.kamppisserver.api
 
+import jakarta.validation.Valid
 import nat20.kamppisserver.domain.Swipe
 import nat20.kamppisserver.domain.SwipeRequest
 import nat20.kamppisserver.domain.SwipeResponse
@@ -9,11 +10,13 @@ import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.SwipeService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/swipes")
+@Validated
 class SwipeController(private val swipeService: SwipeService,
     private val userRepository: UserRepository
 ) {
@@ -25,7 +28,7 @@ class SwipeController(private val swipeService: SwipeService,
     }
 
     @PostMapping
-    fun swipe(@RequestBody swipeRequest: SwipeRequest): ResponseEntity<SwipeResponse> {
+    fun swipe(@Valid @RequestBody swipeRequest: SwipeRequest): ResponseEntity<SwipeResponse> {
         val swipingUser: User = userRepository.findByIdAndStatus(swipeRequest.swipingUserId, UserStatus.ACTIVE)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${swipeRequest.swipingUserId} not found")
         val swipedUser: User = userRepository.findByIdAndStatus(swipeRequest.swipedUserId, UserStatus.ACTIVE)

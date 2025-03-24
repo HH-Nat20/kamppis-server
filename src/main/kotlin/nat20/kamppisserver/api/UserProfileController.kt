@@ -1,11 +1,13 @@
 package nat20.kamppisserver.api
 
+import jakarta.validation.Valid
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserProfileService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 /**
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/api/user-profiles")
+@Validated
 class UserProfileController(private val service: UserProfileService,
                             private val queryService: QueryService) {
 
@@ -42,7 +45,7 @@ class UserProfileController(private val service: UserProfileService,
      * @return ResponseEntity with status code 201 CREATED.
      */
     @PostMapping
-    fun addUserProfile(@RequestBody userProfile: UserProfile): ResponseEntity<UserProfileDTO>
+    fun addUserProfile(@Valid @RequestBody userProfile: UserProfile): ResponseEntity<UserProfileDTO>
         = ResponseEntity.status(HttpStatus.CREATED).body(service.add(userProfile))
 
     /**
@@ -53,7 +56,7 @@ class UserProfileController(private val service: UserProfileService,
      * @return ResponseEntity with status code 200 OK.
      */
     @PutMapping("/{id}")
-    fun updateUserProfile(@RequestBody userProfile: UserProfileDTO, @PathVariable id: Long): ResponseEntity<UserProfileDTO>
+    fun updateUserProfile(@Valid @RequestBody userProfile: UserProfileDTO, @PathVariable id: Long): ResponseEntity<UserProfileDTO>
         = ResponseEntity.ok(service.update(userProfile, id))
 
     /**
