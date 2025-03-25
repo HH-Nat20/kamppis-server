@@ -43,6 +43,9 @@ class Match(
     fun toDTO(): MatchDTO {
         return MatchDTO(
             userIds = users.mapNotNull { it.id }.toSet(),
+            users = users.map { it.toSummaryDTO() }.toSet(),
+            createdAt = createdAt,
+            updatedAt = updatedAt,
             id = id
         )
     }
@@ -54,5 +57,8 @@ data class MatchRequest(
 
 data class MatchDTO(
     @NotEmpty val userIds: Set<Long>,
+    @NotEmpty val users: Set<UserSummaryDTO>,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime? = null,
     val id: Long? = null,
 )

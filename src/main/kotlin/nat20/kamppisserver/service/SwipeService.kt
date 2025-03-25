@@ -3,6 +3,7 @@ package nat20.kamppisserver.service
 import exception.DuplicateSwipeException
 import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.Swipe
+import nat20.kamppisserver.domain.SwipeDTO
 import nat20.kamppisserver.domain.SwipeResponse
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.repository.SwipeRepository
@@ -45,8 +46,8 @@ class SwipeService(
         )
     }
 
-    fun findAll(): MutableIterable<Swipe> {
-        return swipeRepository.findAll()
+    fun findAll(): List<SwipeDTO> {
+        return swipeRepository.findAll().map { it.toDTO() }
     }
 
 }

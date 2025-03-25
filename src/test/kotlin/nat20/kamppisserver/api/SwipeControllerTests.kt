@@ -60,8 +60,8 @@ class SwipeControllerTests @Autowired constructor(
 
         val swipeResponse = SwipeResponse(
             swipeId = 1,
-            swipingUser = user1.toDTO(),
-            swipedUser = user2.toDTO(),
+            swipingUser = user1.toSummaryDTO(),
+            swipedUser = user2.toSummaryDTO(),
             isRightSwipe = true,
             isMatch = false
         )
@@ -78,8 +78,8 @@ class SwipeControllerTests @Autowired constructor(
                 status { isCreated() }
                 content { contentType(MediaType.APPLICATION_JSON) }
                 jsonPath("$.swipeId") { value(1) }
-                jsonPath("$.swipingUser.email") { value("alice.smith@example.com") }
-                jsonPath("$.swipedUser.email") { value("bob.johnson@example.com") }
+                jsonPath("$.swipingUser.firstName") { value("Alice") }
+                jsonPath("$.swipedUser.firstName") { value("Bob") }
                 jsonPath("$.isRightSwipe") { value(true) }
             }
     }

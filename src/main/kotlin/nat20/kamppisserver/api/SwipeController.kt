@@ -1,10 +1,7 @@
 package nat20.kamppisserver.api
 
 import jakarta.validation.Valid
-import nat20.kamppisserver.domain.Swipe
-import nat20.kamppisserver.domain.SwipeRequest
-import nat20.kamppisserver.domain.SwipeResponse
-import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.SwipeService
@@ -22,7 +19,7 @@ class SwipeController(private val swipeService: SwipeService,
 ) {
 
     @GetMapping("", "/")
-    fun findAll(): ResponseEntity<MutableIterable<Swipe>> {
+    fun findAll(): ResponseEntity<List<SwipeDTO>> {
         val swipes = swipeService.findAll()
         return ResponseEntity.ok().body(swipes)
     }
