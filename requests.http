@@ -113,15 +113,10 @@ POST http://localhost:8080/api/swipes
 Content-Type: application/json
 
 {
-  "swipingProfileId": 1,
+  "swipingProfileId": 2,
   "swipedProfileId": 79,
   "isRightSwipe": true
 }
-
-<> 2025-03-26T112522.201.json
-<> 2025-03-25T160606.201.json
-<> 2025-03-25T154913.201.json
-<> 2025-03-25T154725.201.json
 
 ### RoomProfile swipes UserProfile
 POST http://localhost:8080/api/swipes
@@ -129,6 +124,26 @@ Content-Type: application/json
 
 {
   "swipingProfileId": 79,
-  "swipedProfileId": 1,
+  "swipedProfileId": 2,
+  "isRightSwipe": true
+}
+
+### UserProfile swipes RoomProfile
+POST http://localhost:8080/api/swipes
+Content-Type: application/json
+
+{
+  "swipingProfileId": 27,
+  "swipedProfileId": 81,
+  "isRightSwipe": true
+}
+
+### RoomProfile swipes UserProfile
+POST http://localhost:8080/api/swipes
+Content-Type: application/json
+
+{
+  "swipingProfileId": 81,
+  "swipedProfileId": 27,
   "isRightSwipe": true
 }

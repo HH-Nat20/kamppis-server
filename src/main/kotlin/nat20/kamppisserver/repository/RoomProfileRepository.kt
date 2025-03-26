@@ -19,15 +19,13 @@ interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
     @Query("""
     SELECT DISTINCT rp.id, rp.rent, rp.is_private_room, rp.flat_id, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at
     FROM room_profiles rp
-    JOIN room_profiles_users rpu ON rp.id = rpu.room_profile_id
-    JOIN users u ON rpu.user_id = u.id
     JOIN flats f ON rp.flat_id = f.id
     LEFT JOIN profiles p ON rp.id = p.id
     WHERE NOT EXISTS (
         SELECT 1
         FROM swipes s
-        WHERE s.swiping_user_id = :id
-        AND s.swiped_user_id = u.id
+        WHERE s.swiping_profile_id = :id
+        AND s.swiped_profile_id = rp.id
     )
     AND (rp.rent <= :maxRent)
     AND (:hasPrivateRoom IS NULL OR rp.is_private_room = :hasPrivateRoom)

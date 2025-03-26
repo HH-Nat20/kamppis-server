@@ -71,8 +71,8 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     AND NOT EXISTS (
         SELECT 1
         FROM swipes s
-        WHERE s.swiping_user_id = :id
-        AND s.swiped_user_id = up.id
+        WHERE s.swiping_profile_id = :id
+        AND s.swiped_profile_id = up.id
     )
     AND EXTRACT(YEAR FROM AGE(:queryDate, u.date_of_birth)) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)
     AND (u.gender IN (:genderPreferences) OR 'NOT_IMPORTANT' IN (:genderPreferences))
@@ -87,6 +87,4 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
         @Param("locationPreferences") locationPreferences: List<String>
     ): MutableList<UserProfile>
 
-    @Query("SELECT up FROM UserProfile up WHERE up.deletedAt IS NULL")
-    fun findUserProfilesThatMeetCriteria(): List<UserProfile>
 }
