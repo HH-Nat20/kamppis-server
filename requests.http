@@ -113,7 +113,7 @@ POST http://localhost:8080/api/swipes
 Content-Type: application/json
 
 {
-  "swipingProfileId": 2,
+  "swipingProfileId": 1,
   "swipedProfileId": 79,
   "isRightSwipe": true
 }
@@ -123,8 +123,8 @@ POST http://localhost:8080/api/swipes
 Content-Type: application/json
 
 {
-  "swipingProfileId": 79,
-  "swipedProfileId": 2,
+  "swipingProfileId": 4,
+  "swipedProfileId": 5,
   "isRightSwipe": true
 }
 
@@ -145,5 +145,25 @@ Content-Type: application/json
 {
   "swipingProfileId": 81,
   "swipedProfileId": 27,
+  "isRightSwipe": true
+}
+
+### UserProfile swipes RoomProfile
+POST https://kamppis.hellmanstudios.fi/api/swipes
+Content-Type: application/json
+
+{
+  "swipingProfileId": 4,
+  "swipedProfileId": 5,
+  "isRightSwipe": true
+}
+
+### RoomProfile swipes UserProfile
+https://kamppis.hellmanstudios.fi/api/swipes
+Content-Type: application/json
+
+{
+  "swipingProfileId": 79,
+  "swipedProfileId": 1,
   "isRightSwipe": true
 }
