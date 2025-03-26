@@ -153,17 +153,17 @@ POST https://kamppis.hellmanstudios.fi/api/swipes
 Content-Type: application/json
 
 {
-  "swipingProfileId": 4,
-  "swipedProfileId": 5,
+  "swipingProfileId": 27,
+  "swipedProfileId": 81,
   "isRightSwipe": true
 }
 
 ### RoomProfile swipes UserProfile
-https://kamppis.hellmanstudios.fi/api/swipes
+POST https://kamppis.hellmanstudios.fi/api/swipes
 Content-Type: application/json
 
 {
-  "swipingProfileId": 79,
-  "swipedProfileId": 1,
+  "swipingProfileId": 81,
+  "swipedProfileId": 27,
   "isRightSwipe": true
 }
