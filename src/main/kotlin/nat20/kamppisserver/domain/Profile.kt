@@ -50,11 +50,11 @@ abstract class Profile(
 @JsonInclude(JsonInclude.Include.NON_NULL) // Hide keys with null values in the DTOs
 // For use in ProfileController.updateProfile() - Jackson cannot deserialize
 // Profile without type definitions for UserProfile and RoomProfile
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+/*@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes(
     JsonSubTypes.Type(value = UserProfileDTO::class, name = "userProfile"),
     JsonSubTypes.Type(value = RoomProfileDTO::class, name = "roomProfile")
-)
+)*/
 sealed interface ProfileDTO
 
 // Helper function to get users from any profile
