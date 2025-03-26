@@ -56,3 +56,12 @@ abstract class Profile(
     JsonSubTypes.Type(value = RoomProfileDTO::class, name = "roomProfile")
 )
 sealed interface ProfileDTO
+
+// Helper function to get users from any profile
+fun getUsersFromProfile(profile: Profile): Set<User> {
+    return when (profile) {
+        is UserProfile -> setOf(profile.user) // Single user in UserProfile
+        is RoomProfile -> profile.users.toSet() // Multiple users in RoomProfile
+        else -> emptySet()
+    }
+}

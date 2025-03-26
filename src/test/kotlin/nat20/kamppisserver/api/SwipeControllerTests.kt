@@ -7,8 +7,9 @@ import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.domain.SwipeRequest
 import nat20.kamppisserver.domain.SwipeResponse
 import nat20.kamppisserver.domain.User
-import nat20.kamppisserver.domain.enums.Gender
-import nat20.kamppisserver.domain.enums.UserStatus
+import nat20.kamppisserver.domain.UserProfile
+import nat20.kamppisserver.domain.enums.*
+import nat20.kamppisserver.repository.ProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.SwipeService
 import org.junit.jupiter.api.Test
@@ -29,7 +30,7 @@ class SwipeControllerTests @Autowired constructor(
     @MockkBean
     private lateinit var swipeService: SwipeService
     @MockkBean
-    private lateinit var userRepository: UserRepository
+    private lateinit var profileRepository: ProfileRepository
 
 /*    Probably needed later
     @MockkBean
@@ -38,36 +39,52 @@ class SwipeControllerTests @Autowired constructor(
     @Test
     fun `should create a swipe successfully`() {
         val user1 = User(
-            email = "alice.smith@example.com",
+            id = 1L,
+            email = "alice.smith@test.com",
             firstName = "Alice",
             lastName = "Smith",
-            dateOfBirth = LocalDate.of(1990, 5, 14), // Age 34
-            gender = Gender.FEMALE,
-            id = 1L)
+            dateOfBirth = LocalDate.of(1990, 5, 14),
+            gender = Gender.FEMALE
+        )
+
+        val profile1 = UserProfile(
+            id = 1L,
+            user = user1,
+            cleanliness = Cleanliness.TIDY,
+            lifestyle = mutableSetOf(Lifestyle.STUDENT)
+        )
         val user2 = User(
-            email = "bob.johnson@example.com",
+            id = 2L,
+            email = "bob.smith@test.com",
             firstName = "Bob",
-            lastName = "Johnson",
-            dateOfBirth = LocalDate.of(1985, 11, 22), // Age 39
-            gender = Gender.MALE,
-            id = 2L)
+            lastName = "Smith",
+            dateOfBirth = LocalDate.of(1990, 5, 14),
+            gender = Gender.MALE
+        )
+
+        val profile2 = UserProfile(
+            id = 2L,
+            user = user2,
+            cleanliness = Cleanliness.TIDY,
+            lifestyle = mutableSetOf(Lifestyle.STUDENT)
+        )
 
         val swipeRequest = SwipeRequest(
-            swipingUserId = 1,
-            swipedUserId = 2,
+            swipingProfileId = 1,
+            swipedProfileId = 2,
             isRightSwipe = true
         )
 
         val swipeResponse = SwipeResponse(
             swipeId = 1,
-            swipingUser = user1.toSummaryDTO(),
-            swipedUser = user2.toSummaryDTO(),
+            swipingProfile = profile1.toDTO(includeUserSummary = true),
+            swipedProfile = profile2.toDTO(includeUserSummary = true),
             isRightSwipe = true,
             isMatch = false
         )
 
-        every { userRepository.findByIdAndStatus(1L, UserStatus.ACTIVE)} returns user1
-        every { userRepository.findByIdAndStatus(2L, UserStatus.ACTIVE)} returns user2
+        every { profileRepository.findByIdAndStatus(1L, ProfileStatus.ACTIVE)} returns profile1
+        every { profileRepository.findByIdAndStatus(2L, ProfileStatus.ACTIVE)} returns profile2
         every { swipeService.swipe(any(),any(), any()) } returns swipeResponse
 
         mockMvc.post("/api/swipes") {
@@ -78,8 +95,8 @@ class SwipeControllerTests @Autowired constructor(
                 status { isCreated() }
                 content { contentType(MediaType.APPLICATION_JSON) }
                 jsonPath("$.swipeId") { value(1) }
-                jsonPath("$.swipingUser.firstName") { value("Alice") }
-                jsonPath("$.swipedUser.firstName") { value("Bob") }
+                jsonPath("$.swipingProfile.user.firstName") { value("Alice") }
+                jsonPath("$.swipedProfile.user.firstName") { value("Bob") }
                 jsonPath("$.isRightSwipe") { value(true) }
             }
     }

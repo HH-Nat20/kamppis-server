@@ -27,6 +27,13 @@ class UserProfile (
         this.bio = bio // This block is needed if you want to initialize the bio during instance creation!
     }
 
+    // Secondary constructor allows setting id explicitly (mainly for tests)
+    constructor(id: Long, user: User, cleanliness: Cleanliness?, lifestyle: MutableSet<Lifestyle>?) : this(
+        user, cleanliness, lifestyle
+    ) {
+        this.id = id
+    }
+
     override fun toDTO(includeUserSummary: Boolean): UserProfileDTO {
         return UserProfileDTO(
             userId = user.id!!,

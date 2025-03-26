@@ -2,10 +2,7 @@ package nat20.kamppisserver.service
 
 import exception.DuplicateSwipeException
 import jakarta.transaction.Transactional
-import nat20.kamppisserver.domain.Swipe
-import nat20.kamppisserver.domain.SwipeDTO
-import nat20.kamppisserver.domain.SwipeResponse
-import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.repository.SwipeRepository
 import org.springframework.stereotype.Service
 
@@ -15,33 +12,35 @@ class SwipeService(
     private val swipeRepository: SwipeRepository
 ) {
     @Transactional
-    fun swipe(swipingUser: User, swipedUser: User, isRightSwipe: Boolean): SwipeResponse {
+    fun swipe(swipingProfile: Profile, swipedProfile: Profile, isRightSwipe: Boolean): SwipeResponse {
 
         // Check if an identical swipe already exists
-        if (swipeRepository.existsBySwipingUserAndSwipedUserAndIsRightSwipe(swipingUser, swipedUser, isRightSwipe)) {
+        if (swipeRepository.existsBySwipingProfileAndSwipedProfileAndIsRightSwipe(swipingProfile, swipedProfile, isRightSwipe)) {
             throw DuplicateSwipeException("Swipe already exists!")
         }
 
         val newSwipe = Swipe(
-            swipingUser = swipingUser,
-            swipedUser = swipedUser,
+            swipingProfile = swipingProfile,
+            swipedProfile = swipedProfile,
             isRightSwipe = isRightSwipe
         )
         swipeRepository.save(newSwipe)
 
         // Identical matches are prevented in the service
-        if (isRightSwipe && hasMutualSwipe(swipingUser, swipedUser)) {
-            matchService.createMatch(setOf(swipingUser, swipedUser))
+        if (isRightSwipe && hasMutualSwipe(swipingProfile, swipedProfile)) {
+            val swipingUsers = getUsersFromProfile(swipingProfile)
+            val swipedUsers = getUsersFromProfile(swipedProfile)
+            matchService.createMatch(swipingUsers + swipedUsers)
             newSwipe.isMatch = true
         }
         return newSwipe.toSwipeResponse()
     }
 
-    private fun hasMutualSwipe(swipingUser: User, swipedUser: User): Boolean {
-        // Check if the swipedUser has already right-swiped the swipingUser
-        return swipeRepository.existsBySwipingUserAndSwipedUserAndIsRightSwipe(
-            swipingUser = swipedUser, //REVERSED
-            swipedUser = swipingUser, //REVERSED
+    private fun hasMutualSwipe(swipingProfile: Profile, swipedProfile: Profile): Boolean {
+        // Check if the swipedProfile has already right-swiped the swipingProfile
+        return swipeRepository.existsBySwipingProfileAndSwipedProfileAndIsRightSwipe(
+            swipingProfile = swipedProfile, //REVERSED
+            swipedProfile = swipingProfile, //REVERSED
             isRightSwipe = true
         )
     }

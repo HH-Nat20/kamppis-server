@@ -5,7 +5,11 @@ import io.mockk.mockk
 import io.mockk.verify
 import nat20.kamppisserver.domain.Swipe
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.UserProfile
+import nat20.kamppisserver.domain.enums.Cleanliness
 import nat20.kamppisserver.domain.enums.Gender
+import nat20.kamppisserver.domain.enums.Lifestyle
+import nat20.kamppisserver.domain.getUsersFromProfile
 import nat20.kamppisserver.repository.SwipeRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,19 +20,33 @@ class SwipeServiceTests {
     private lateinit var matchService: MatchService
     private lateinit var swipeService: SwipeService
 
-    private val userA = User(
-        email = "alice.smith@example.com",
+    val user1 = User(
+        id = 1L,
+        email = "alice.smith@test.com",
         firstName = "Alice",
         lastName = "Smith",
-        dateOfBirth = LocalDate.of(1990, 5, 14), // Age 34
+        dateOfBirth = LocalDate.of(1990, 5, 14),
         gender = Gender.FEMALE
     )
-    private val userB = User(
-        email = "bob.johnson@example.com",
+
+    val profile1 = UserProfile(
+        user = user1,
+        cleanliness = Cleanliness.TIDY,
+        lifestyle = mutableSetOf(Lifestyle.STUDENT)
+    )
+    val user2 = User(
+        id = 2L,
+        email = "bob.smith@test.com",
         firstName = "Bob",
-        lastName = "Johnson",
-        dateOfBirth = LocalDate.of(1985, 11, 22), // Age 39
+        lastName = "Smith",
+        dateOfBirth = LocalDate.of(1990, 5, 14),
         gender = Gender.MALE
+    )
+
+    val profile2 = UserProfile(
+        user = user2,
+        cleanliness = Cleanliness.TIDY,
+        lifestyle = mutableSetOf(Lifestyle.STUDENT)
     )
 
     @BeforeEach
@@ -44,38 +62,42 @@ class SwipeServiceTests {
 
     @Test
     fun `single right swipe should not create a match`() {
-        // Given: User B has not swiped right on User A
+        // Given: Profile 1 has not swiped right on Profile 2
         every {
-            swipeRepository.existsBySwipingUserAndSwipedUserAndIsRightSwipe(userB, userA, true)
+            swipeRepository.existsBySwipingProfileAndSwipedProfileAndIsRightSwipe(profile1, profile2, true)
         } returns false
 
-        // When: User A swipes right on User B
-        swipeService.swipe(userA, userB, true)
+        // When: Profile 1 swipes right on Profile 2
+        swipeService.swipe(profile1, profile2, true)
 
         // Then
-        verify(exactly = 0) { matchService.createMatch(users = setOf(userA, userB)) }
+        verify(exactly = 0) { matchService.createMatch(users = getUsersFromProfile(profile1) + getUsersFromProfile(profile2)) }
     }
 
     @Test
     fun `mutual right swipes should create a match`() {
-        // Given: User B has already swiped right on User A
-        every { swipeRepository.existsBySwipingUserAndSwipedUserAndIsRightSwipe(userB, userA, true)
+        // Given: Profile 2 has already swiped right on Profile 1
+        every { swipeRepository.existsBySwipingProfileAndSwipedProfileAndIsRightSwipe(profile2, profile1, true)
         } returns true
 
-        // When: User A now swipes right on User B
-        swipeService.swipe(userA, userB, true)
+        // When: Profile 1 now swipes right on Profile 2
+        swipeService.swipe(profile1, profile2, true)
 
         // Then
-        verify(exactly = 1) { matchService.createMatch(users = setOf(userA, userB))  }
+        verify(exactly = 1) { matchService.createMatch(users = getUsersFromProfile(profile1) + getUsersFromProfile(profile2))  }
     }
 
     @Test
     fun `left swipe should never create a match`() {
-        // When: User A swipes left on User B
-        swipeService.swipe(userA, userB, false)
+        // Given: Profile 2 has already swiped right on Profile 1
+        every { swipeRepository.existsBySwipingProfileAndSwipedProfileAndIsRightSwipe(profile2, profile1, true)
+        } returns true
+
+        // When: Profile 1 swipes left on Profile 2
+        swipeService.swipe(profile1, profile2, false)
 
         // Then
-        verify(exactly = 0) { matchService.createMatch(users = setOf(userA, userB)) }
+        verify(exactly = 0) { matchService.createMatch(users = getUsersFromProfile(profile1) + getUsersFromProfile(profile2)) }
     }
 
 
