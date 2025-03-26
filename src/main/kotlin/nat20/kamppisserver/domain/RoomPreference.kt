@@ -18,7 +18,7 @@ class RoomPreference (
     var maxRent: Int,
 
     @Column(name = "has_private_room")
-    var hasPrivateRoom: Boolean,
+    var hasPrivateRoom: Boolean?,
 
     @Positive(message = "Max roommates in flat must be a positive integer")
     @Column(name = "max_roommates")
@@ -50,7 +50,7 @@ fun toRoomPreferenceDTO(roomPreference: RoomPreference): RoomPreferenceDTO {
 data class RoomPreferenceDTO(
     val userId: Long?,
     val maxRent: Int,
-    val hasPrivateRoom: Boolean,
+    val hasPrivateRoom: Boolean?,
     val maxRoommates: Int,
     val locationPreferences: MutableList<City>?,
     val id: Long? = null,

@@ -1,15 +1,11 @@
 package nat20.kamppisserver.service
 
 import exception.EntityNotFoundException
-import nat20.kamppisserver.domain.RoommatePreference
+import nat20.kamppisserver.domain.*
 import org.springframework.stereotype.Service
 
-import nat20.kamppisserver.domain.UserProfile
-import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.domain.enums.UserStatus
-import nat20.kamppisserver.repository.RoommatePreferenceRepository
-import nat20.kamppisserver.repository.UserProfileRepository
-import nat20.kamppisserver.repository.UserRepository
+import nat20.kamppisserver.repository.*
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.repository.findByIdOrNull
 import java.time.LocalDate
@@ -21,7 +17,9 @@ import java.time.LocalDate
 class QueryService(
     private val userProfileRepository: UserProfileRepository,
     private val userRepository: UserRepository,
-    private val roommatePreferenceRepository: RoommatePreferenceRepository
+    private val roommatePreferenceRepository: RoommatePreferenceRepository,
+    private val roomPreferenceRepository: RoomPreferenceRepository,
+    private val roomProfileRepository: RoomProfileRepository,
 ) {
 
     /**
@@ -70,5 +68,31 @@ class QueryService(
         val userProfileDTOList: MutableList<UserProfileDTO> = userProfileList.map { it.toDTO(includeUserSummary = true) }.toMutableList();
 
         return userProfileDTOList
+    }
+
+    fun findRoomProfilesThatMeetCriteria(userId: Long): MutableList<RoomProfileDTO> {
+        /* We first find user's room preferences
+        * From the preferences, we set user's search criteria to individual variables
+        * Finally, we pass these variables to the SQL query in RoomProfileRepository */
+
+        val roomPreference: RoomPreference = roomPreferenceRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("UserId does not match to any user")
+
+        val maxRent: Int = roomPreference.maxRent
+        val hasPrivateRoom: Boolean? = roomPreference.hasPrivateRoom
+        val maxRoommates: Int = roomPreference.maxRoommates
+        val locationPreferences: MutableList<String> = roomPreference.locationPreferences!!.map {it.name}.toMutableList()
+
+        val roomProfileList: MutableList<RoomProfile> = roomProfileRepository.findRoomProfilesThatMeetCriteria(
+            userId,
+            maxRent,
+            hasPrivateRoom,
+            maxRoommates,
+            locationPreferences
+        )
+
+        val roomProfileDTOList: MutableList<RoomProfileDTO> = roomProfileList.map {it.toDTO(includeUserSummary = true) }.toMutableList()
+
+        return roomProfileDTOList
     }
 }
