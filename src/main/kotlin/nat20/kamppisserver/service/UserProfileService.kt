@@ -77,7 +77,7 @@ class UserProfileService(
         userProfile.lifestyle?.let { existingProfile.lifestyle = it }
 
         // Convert ProfilePhotoDTOs to ProfilePhoto entities
-        userProfile.photos?.let {
+        userProfile.photos.let {
             existingProfile.photos = it.map { dto ->
                 ProfilePhoto(
                     profile = existingProfile,

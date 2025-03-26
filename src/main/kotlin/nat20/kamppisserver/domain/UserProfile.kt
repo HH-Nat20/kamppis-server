@@ -57,6 +57,6 @@ data class UserProfileDTO(
     val bio: String = "Write bio here",
     val cleanliness: Cleanliness? = null,
     val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
-    val photos: MutableList<ProfilePhotoDTO>? = mutableListOf(),
+    val photos: MutableList<ProfilePhotoDTO> = mutableListOf(),
     val id: Long? = null
 ) : ProfileDTO
