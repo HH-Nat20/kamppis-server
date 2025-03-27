@@ -27,16 +27,16 @@ interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
         WHERE s.swiping_profile_id = :id
         AND s.swiped_profile_id = rp.id
     )
-    AND (rp.rent <= :maxRent)
+    AND (:maxRent IS NULL OR rp.rent <= :maxRent)
     AND (:hasPrivateRoom IS NULL OR rp.is_private_room = :hasPrivateRoom)
-    AND (f.total_roommates <= :maxRoommates)
-    AND (f.location IN (:locationPreferences))
+    AND (:maxRoommates IS NULL OR f.total_roommates <= :maxRoommates)
+    AND (COALESCE(:locationPreferences) IS NULL OR f.location IN (:locationPreferences))
     """, nativeQuery = true)
     fun findRoomProfilesThatMeetCriteria(
         @Param("id") id: Long,
-        @Param("maxRent") maxRent: Int,
+        @Param("maxRent") maxRent: Int?,
         @Param("hasPrivateRoom") hasPrivateRoom: Boolean?,
-        @Param("maxRoommates") maxRoommates: Int,
-        @Param("locationPreferences") locationPreferences: MutableList<String>
+        @Param("maxRoommates") maxRoommates: Int?,
+        @Param("locationPreferences") locationPreferences: List<String>?
     ): MutableList<RoomProfile>
 }

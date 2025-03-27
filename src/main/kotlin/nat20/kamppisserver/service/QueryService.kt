@@ -78,10 +78,10 @@ class QueryService(
         val roomPreference: RoomPreference = roomPreferenceRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("UserId does not match to any user")
 
-        val maxRent: Int = roomPreference.maxRent
+        val maxRent: Int? = roomPreference.maxRent
         val hasPrivateRoom: Boolean? = roomPreference.hasPrivateRoom
-        val maxRoommates: Int = roomPreference.maxRoommates
-        val locationPreferences: MutableList<String> = roomPreference.locationPreferences!!.map {it.name}.toMutableList()
+        val maxRoommates: Int? = roomPreference.maxRoommates
+        val locationPreferences: List<String>? = roomPreference.locationPreferences?.map {it.name}
 
         val roomProfileList: MutableList<RoomProfile> = roomProfileRepository.findRoomProfilesThatMeetCriteria(
             userId,
