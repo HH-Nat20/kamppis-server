@@ -43,7 +43,7 @@ class QueryService(
      * @param id the id of the user for whom matching profiles are returned.
      * @return a list of matching user profiles.
      */
-    fun findUserProfilesThatMeetCriteria(userId: Long): MutableList<UserProfileDTO> {
+    fun findUserProfilesThatMeetCriteria(userId: Long): List<UserProfileDTO> {
         /* We first find user's user profile by user's id
         * From the profile, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in UserProfileRepository */
@@ -57,20 +57,21 @@ class QueryService(
         val genderPreferences: List<String> = roommatePreference.genderPreferences!!.map { it.name }
         val locationPreferences: List<String> = roommatePreference.locationPreferences!!.map { it.name }
 
-        val userProfileList: MutableList<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(
+        val userProfileList: List<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(
             userId,
             queryDate,
             minAgePreference,
             maxAgePreference,
             genderPreferences,
             locationPreferences
-        ).toMutableList()
-        val userProfileDTOList: MutableList<UserProfileDTO> = userProfileList.map { it.toDTO(includeUserSummary = true) }.toMutableList();
+        )
+
+        val userProfileDTOList: List<UserProfileDTO> = userProfileList.map { it.toDTO(includeUserSummary = true) }
 
         return userProfileDTOList
     }
 
-    fun findRoomProfilesThatMeetCriteria(userId: Long): MutableList<RoomProfileDTO> {
+    fun findRoomProfilesThatMeetCriteria(userId: Long): List<RoomProfileDTO> {
         /* We first find user's room preferences
         * From the preferences, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in RoomProfileRepository */
@@ -83,7 +84,7 @@ class QueryService(
         val maxRoommates: Int? = roomPreference.maxRoommates
         val locationPreferences: List<String>? = roomPreference.locationPreferences?.map {it.name}
 
-        val roomProfileList: MutableList<RoomProfile> = roomProfileRepository.findRoomProfilesThatMeetCriteria(
+        val roomProfileList: List<RoomProfile> = roomProfileRepository.findRoomProfilesThatMeetCriteria(
             userId,
             maxRent,
             hasPrivateRoom,
@@ -91,7 +92,7 @@ class QueryService(
             locationPreferences
         )
 
-        val roomProfileDTOList: MutableList<RoomProfileDTO> = roomProfileList.map {it.toDTO(includeUserSummary = true) }.toMutableList()
+        val roomProfileDTOList: List<RoomProfileDTO> = roomProfileList.map {it.toDTO(includeUserSummary = true) }
 
         return roomProfileDTOList
     }

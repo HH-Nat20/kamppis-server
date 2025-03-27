@@ -67,8 +67,8 @@ class UserProfileController(private val service: UserProfileService,
      * @return ResponseEntity with status code 204 NO_CONTENT if no user profiles have been found.
      */
     @GetMapping("/{id}/query")
-    fun findUserProfilesThatMeetCriteria(@PathVariable id: Long): ResponseEntity<MutableList<UserProfileDTO>> {
-        val userProfileList: MutableList<UserProfileDTO> = queryService.findUserProfilesThatMeetCriteria(id)
+    fun findUserProfilesThatMeetCriteria(@PathVariable id: Long): ResponseEntity<List<UserProfileDTO>> {
+        val userProfileList: List<UserProfileDTO> = queryService.findUserProfilesThatMeetCriteria(id)
 
         if (userProfileList.isEmpty()) {
             return ResponseEntity(HttpStatus.NO_CONTENT)

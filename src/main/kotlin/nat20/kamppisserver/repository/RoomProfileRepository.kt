@@ -38,5 +38,5 @@ interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
         @Param("hasPrivateRoom") hasPrivateRoom: Boolean?,
         @Param("maxRoommates") maxRoommates: Int?,
         @Param("locationPreferences") locationPreferences: List<String>?
-    ): MutableList<RoomProfile>
+    ): List<RoomProfile>
 }

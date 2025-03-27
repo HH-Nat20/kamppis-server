@@ -35,7 +35,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
         val maxRoommates = null
         val locationPreferences = null
 
-        val listOfRoomProfiles: MutableIterable<RoomProfile> =
+        val listOfRoomProfiles: Iterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
                 user.id!!,
                 roomPreference.maxRent,
@@ -59,7 +59,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
         val maxRoommates = null
         val locationPreferences = null
 
-        val listOfRoomProfiles: MutableIterable<RoomProfile> =
+        val listOfRoomProfiles: Iterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
                 user.id!!,
                 maxRent,
@@ -83,7 +83,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
         val hasPrivateRoom = null
         val locationPreferences = null
 
-        val listOfRoomProfiles: MutableIterable<RoomProfile> =
+        val listOfRoomProfiles: Iterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
                 user.id!!,
                 maxRent,
@@ -109,7 +109,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
         val hasPrivateRoom = null
         val maxRoommates = null
 
-        val listOfRoomProfiles: MutableIterable<RoomProfile> =
+        val listOfRoomProfiles: Iterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
                 user.id!!,
                 maxRent,
@@ -128,7 +128,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
         val roomPreference: RoomPreference = roomPreferenceRepository.findByUserIdAndStatus(user!!.id!!, UserStatus.ACTIVE)
             ?: fail("Expected RoomPreference but found null")
 
-        val listOfRoomProfiles: MutableIterable<RoomProfile> =
+        val listOfRoomProfiles: Iterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
                 user.id!!,
                 roomPreference.maxRent,

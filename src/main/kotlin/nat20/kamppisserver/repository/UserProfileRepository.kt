@@ -85,6 +85,6 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
         @Param("maxAgePreference") maxAgePreference: Int?,
         @Param("genderPreferences") genderPreferences: List<String>,
         @Param("locationPreferences") locationPreferences: List<String>
-    ): MutableList<UserProfile>
+    ): List<UserProfile>
 
 }

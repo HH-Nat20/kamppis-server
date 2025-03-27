@@ -50,7 +50,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         assertNotNull(userProfile!!.user.id, "User ID should not be null")
 
-        val listOfUserProfiles: MutableIterable<UserProfile> =
+        val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
                 userProfile.user.id,
                 testDate,
@@ -81,7 +81,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         assertNotNull(userProfile.user.id, "User ID should not be null")
 
-        val listOfUserProfiles: MutableIterable<UserProfile> =
+        val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
                 userProfile.user.id,
                 testDate,
@@ -113,7 +113,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         assertNotNull(userProfile.user.id, "User ID should not be null")
 
-        val listOfUserProfiles: MutableIterable<UserProfile> =
+        val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
                 userProfile.user.id,
                 incorrectDate,
@@ -145,7 +145,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         assertNotNull(userProfile.user.id, "User ID should not be null")
 
-        val listOfUserProfiles: MutableIterable<UserProfile> =
+        val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
                 userProfile.user.id,
                 testDate,
@@ -177,7 +177,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         assertNotNull(userProfile.user.id, "User ID should not be null")
 
-        val listOfUserProfiles: MutableIterable<UserProfile> =
+        val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
                 userProfile.user.id,
                 testDate,
@@ -205,7 +205,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         assertNotNull(userProfile.user.id, "User ID should not be null")
 
-        val listOfUserProfiles: MutableIterable<UserProfile> =
+        val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
                 userProfile.user.id,
                 testDate,
@@ -230,7 +230,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         // Query parameters (=user's search criteria) are selected from the user's profile
         // Swipes are taken into account
-        val listOfUserProfiles: MutableIterable<UserProfile> =
+        val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
                 userProfile.user.id,
                 testDate,
