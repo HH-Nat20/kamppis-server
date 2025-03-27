@@ -30,10 +30,10 @@ class RoomProfileRepositoryTests @Autowired constructor(
         val roomPreference: RoomPreference = roomPreferenceRepository.findByUserIdAndStatus(user!!.id!!, UserStatus.ACTIVE)
             ?: fail("Expected RoomPreference but found null")
 
-        // Set other criteria to values that do not affect the max rent filtering
+        // Set other criteria to null so that they do not affect the max rent filtering
         val hasPrivateRoom = null;
-        val maxRoommates = 100
-        val preferredLocations = mutableListOf("HELSINKI", "VANTAA", "ESPOO")
+        val maxRoommates = null
+        val locationPreferences = null
 
         val listOfRoomProfiles: MutableIterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
@@ -41,7 +41,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
                 roomPreference.maxRent,
                 hasPrivateRoom,
                 maxRoommates,
-                preferredLocations
+                locationPreferences
             )
 
         assertEquals(numberOfMatchingRoomProfiles, listOfRoomProfiles.count())
@@ -54,10 +54,10 @@ class RoomProfileRepositoryTests @Autowired constructor(
         val roomPreference: RoomPreference = roomPreferenceRepository.findByUserIdAndStatus(user!!.id!!, UserStatus.ACTIVE)
             ?: fail("Expected RoomPreference but found null")
 
-        // Set other criteria to values that do not affect the room privacy filtering
-        val maxRent = 10000
-        val maxRoommates = 100
-        val preferredLocations = mutableListOf("HELSINKI", "VANTAA", "ESPOO")
+        // Set other criteria to null so that they do not affect the room privacy filtering
+        val maxRent = null
+        val maxRoommates = null
+        val locationPreferences = null
 
         val listOfRoomProfiles: MutableIterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
@@ -65,7 +65,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
                 maxRent,
                 roomPreference.hasPrivateRoom,
                 maxRoommates,
-                preferredLocations
+                locationPreferences
             )
 
         assertEquals(numberOfMatchingRoomProfiles, listOfRoomProfiles.count())
@@ -78,10 +78,10 @@ class RoomProfileRepositoryTests @Autowired constructor(
         val roomPreference: RoomPreference = roomPreferenceRepository.findByUserIdAndStatus(user!!.id!!, UserStatus.ACTIVE)
             ?: fail("Expected RoomPreference but found null")
 
-        // Set other criteria to values that do not affect the max roommate filtering
-        val maxRent = 10000
+        // Set other criteria to null so that they do not affect the max roommate filtering
+        val maxRent = null
         val hasPrivateRoom = null
-        val preferredLocations = mutableListOf("HELSINKI", "VANTAA", "ESPOO")
+        val locationPreferences = null
 
         val listOfRoomProfiles: MutableIterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
@@ -89,7 +89,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
                 maxRent,
                 hasPrivateRoom,
                 roomPreference.maxRoommates,
-                preferredLocations
+                locationPreferences
             )
 
         assertEquals(numberOfMatchingRoomProfiles, listOfRoomProfiles.count())
@@ -104,10 +104,10 @@ class RoomProfileRepositoryTests @Autowired constructor(
         val roomPreference: RoomPreference = roomPreferenceRepository.findByUserIdAndStatus(user!!.id!!, UserStatus.ACTIVE)
             ?: fail("Expected RoomPreference but found null")
 
-        // Set other criteria to values that do not affect the location filtering
-        val maxRent = 10000
+        // Set other criteria to null so that they do not affect the location filtering
+        val maxRent = null
         val hasPrivateRoom = null
-        val maxRoommates = 100
+        val maxRoommates = null
 
         val listOfRoomProfiles: MutableIterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
