@@ -122,6 +122,32 @@ class RoomProfileRepositoryTests @Autowired constructor(
     }
 
     @Test
+    fun `should not return profiles that have already been swiped`(){
+        val numberOfMatchingRoomProfiles: Int = 16
+        val user: User = userRepository.findByIdAndStatus(27L, UserStatus.ACTIVE)
+            ?: fail("Expected User but found null")
+
+        // Note that here we don't delete the swipes because that is what we want to test
+
+        // Set other criteria to null so that they do not affect the swipe filtering
+        val maxRent = null
+        val hasPrivateRoom = null
+        val maxRoommates = null
+        val locationPreferences = null
+
+        val listOfRoomProfiles: Iterable<RoomProfile> =
+            roomProfileRepository.findRoomProfilesThatMeetCriteria(
+                user.id!!,
+                maxRent,
+                hasPrivateRoom,
+                maxRoommates,
+                locationPreferences
+            )
+
+        assertEquals(numberOfMatchingRoomProfiles, listOfRoomProfiles.count())
+    }
+
+    @Test
     fun `should return the correct amount of room profiles when all criteria are used`() {
         val numberOfMatchingRoomProfiles: Int = 10
         val user: User? = userRepository.findByIdAndStatus(27L, UserStatus.ACTIVE)
