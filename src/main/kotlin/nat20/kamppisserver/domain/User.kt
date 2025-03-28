@@ -140,14 +140,14 @@ data class UserDataDTO(
     val gender: Gender,
     val status: UserStatus,
     val isOnline: Boolean,
+    // Metadata
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime? = null,
+    val deletedAt: LocalDateTime? = null,
     // Profile(s)
     val userProfile: UserProfileDataDTO? = null,
     val roomProfiles: List<RoomProfileDataDTO?> = listOf(),
     // Preferences and settings
     val roommatePreference: RoommatePreferenceDataDTO? = null,
     val roomPreference: RoomPreferenceDataDTO? = null,
-    // Metadata
-    val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime? = null,
-    val deletedAt: LocalDateTime? = null,
 )

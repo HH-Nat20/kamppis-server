@@ -104,13 +104,13 @@ class UserService(private val userRepository: UserRepository,
             gender = user.gender,
             status = user.status,
             isOnline = user.isOnline,
+            createdAt = user.createdAt,
+            updatedAt = user.updatedAt,
+            deletedAt = user.deletedAt,
             userProfile = userProfile?.toUserProfileDataDTO(),
             roomProfiles = roomProfiles.map { it?.toRoomProfileDataDTO() },
             roommatePreference = roommatePreference?.toRoommatePreferenceDataDTO(),
-            roomPreference = roomPreference?.toRoomPreferenceDataDTO(),
-            createdAt = user.createdAt,
-            updatedAt = user.updatedAt,
-            deletedAt = user.deletedAt
+            roomPreference = roomPreference?.toRoomPreferenceDataDTO()
         )
      }
 
