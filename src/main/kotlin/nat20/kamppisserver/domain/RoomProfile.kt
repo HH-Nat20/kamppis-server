@@ -72,7 +72,7 @@ class RoomProfile(
         )
     }
 
-    fun toRoomProfileDataDTO(): RoomProfileDataDTO {
+    fun toRoomProfileDataDTO(): RoomProfileDataDTO? {
         return RoomProfileDataDTO(
             flat = flat.toFlatDataDTO(),
             rent = rent,

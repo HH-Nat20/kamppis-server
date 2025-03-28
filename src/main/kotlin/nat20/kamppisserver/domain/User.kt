@@ -100,25 +100,6 @@ class User(
             id = id,
         )
     }
-
-    fun toUserDataDTO(): UserDataDTO {
-        return UserDataDTO(
-            firstName = firstName,
-            lastName = lastName,
-            email = email,
-            dateOfBirth = dateOfBirth,
-            gender = gender,
-            status = status,
-            isOnline = isOnline,
-            userProfile = userProfile?.toUserProfileDataDTO(),
-            roomProfiles = roomProfiles?.map { it.toRoomProfileDataDTO() },
-            roommatePreference = roommatePreference?.toRoommatePreferenceDataDTO(),
-            roomPreference = roomPreference?.toRoomPreferenceDataDTO(),
-            createdAt = createdAt,
-            updatedAt = updatedAt,
-            deletedAt = deletedAt,
-        )
-    }
 }
 
 data class UserDTO(
@@ -161,7 +142,7 @@ data class UserDataDTO(
     val isOnline: Boolean,
     // Profile(s)
     val userProfile: UserProfileDataDTO? = null,
-    val roomProfiles: List<RoomProfileDataDTO>? = listOf(),
+    val roomProfiles: List<RoomProfileDataDTO?> = listOf(),
     // Preferences and settings
     val roommatePreference: RoommatePreferenceDataDTO? = null,
     val roomPreference: RoomPreferenceDataDTO? = null,

@@ -3,6 +3,7 @@ package nat20.kamppisserver.api
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.repository.UserRepository
+import nat20.kamppisserver.service.UserProfileService
 import nat20.kamppisserver.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,8 +16,9 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/users")
 @Validated
-class UserController(private val repository: UserRepository,
-                     private val userService: UserService) {
+class UserController(
+    private val userService: UserService
+    ) {
 
     @GetMapping("", "/")
     fun findAll(): ResponseEntity<List<UserDTO>>
@@ -35,11 +37,11 @@ class UserController(private val repository: UserRepository,
 
     /**
      * Get copy of all user data.
-
+    */
     @GetMapping("/{id}/copy")
     fun getCopyOfUserData(@PathVariable id: Long): ResponseEntity<UserDataDTO>
             = ResponseEntity.ok(userService.getCopyOfUserData(id))
-*/
+
     /**
      * Creates new user.
      *

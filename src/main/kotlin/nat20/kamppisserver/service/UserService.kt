@@ -5,12 +5,10 @@ import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserDTO
+import nat20.kamppisserver.domain.UserDataDTO
 import nat20.kamppisserver.domain.UserPreferenceDTO
 import nat20.kamppisserver.domain.enums.UserStatus
-import nat20.kamppisserver.repository.RoomPreferenceRepository
-import nat20.kamppisserver.repository.RoommatePreferenceRepository
-import nat20.kamppisserver.repository.UserProfileRepository
-import nat20.kamppisserver.repository.UserRepository
+import nat20.kamppisserver.repository.*
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.annotation.Validated
@@ -23,8 +21,10 @@ import java.time.LocalDateTime
 @Validated
 class UserService(private val userRepository: UserRepository,
                   private val userProfileRepository: UserProfileRepository,
+                  private val roomProfileRepository: RoomProfileRepository,
                   private val roommatePreferenceRepository: RoommatePreferenceRepository,
-                  private val roomPreferenceRepository: RoomPreferenceRepository) {
+                  private val roomPreferenceRepository: RoomPreferenceRepository
+) {
 
     /**
      * Returns all active Users.
@@ -78,6 +78,41 @@ class UserService(private val userRepository: UserRepository,
             id = user.id!!
         )
     }
+
+    /**
+     * Function for GDPR-compliant Copy of Information functionality. The User receives
+     * a copy of
+     * - profile information
+     * - preferences and settings
+     * - any data from related tables
+     * - metadata (createdAt, latest update, etc.)
+     * - logs
+     * Does NOT return information that poses a security risk, e.g. IDs.
+     */
+     fun getCopyOfUserData(id: Long): UserDataDTO {
+         val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+             ?: throw EntityNotFoundException("User with id $id not found")
+        val userProfile = userProfileRepository.findByUserIdAndStatus(id, UserStatus.ACTIVE)
+        val roomProfiles = roomProfileRepository.findByUserIdAndStatus(id, UserStatus.ACTIVE)
+        val roommatePreference = roommatePreferenceRepository.findByUserIdAndStatus(id, UserStatus.ACTIVE)
+        val roomPreference = roomPreferenceRepository.findByUserIdAndStatus(id, UserStatus.ACTIVE)
+        return UserDataDTO(
+            firstName = user.firstName,
+            lastName = user.lastName,
+            email = user.email,
+            dateOfBirth = user.dateOfBirth,
+            gender = user.gender,
+            status = user.status,
+            isOnline = user.isOnline,
+            userProfile = userProfile?.toUserProfileDataDTO(),
+            roomProfiles = roomProfiles.map { it?.toRoomProfileDataDTO() },
+            roommatePreference = roommatePreference?.toRoommatePreferenceDataDTO(),
+            roomPreference = roomPreference?.toRoomPreferenceDataDTO(),
+            createdAt = user.createdAt,
+            updatedAt = user.updatedAt,
+            deletedAt = user.deletedAt
+        )
+     }
 
     /**
      * Creates new User.

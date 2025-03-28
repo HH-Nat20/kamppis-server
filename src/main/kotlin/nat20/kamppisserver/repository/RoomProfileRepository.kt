@@ -1,11 +1,11 @@
 package nat20.kamppisserver.repository
 
 import nat20.kamppisserver.domain.RoomProfile
+import nat20.kamppisserver.domain.enums.UserStatus
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
-import java.time.LocalDate
 
 interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
 
@@ -15,6 +15,9 @@ interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
 
     @Query("SELECT rp FROM RoomProfile rp WHERE rp.id = :id AND rp.deletedAt IS NULL")
     fun findByIdActive(@Param("id") id: Long): RoomProfile?
+
+    @Query("SELECT rp FROM RoomProfile rp JOIN rp.users u WHERE u.id = :id AND u.status = :status")
+    fun findByUserIdAndStatus(@Param("id") id: Long, @Param("status") status: UserStatus): List<RoomProfile?>
 
     @Query("""
     SELECT DISTINCT rp.id, rp.rent, rp.is_private_room, rp.flat_id, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at
