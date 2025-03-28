@@ -26,8 +26,8 @@ class MockSwipesConfig {
         // User profiles who have swiped room profiles
         val userToRoomSwipes = listOf(
             Swipe(profileRepository.findById(1L).get(), profileRepository.findById(79L).get(), true),
-            Swipe(profileRepository.findById(27L).get(), profileRepository.findById(79L).get(), true),
-            Swipe(profileRepository.findById(27L).get(), profileRepository.findById(80L).get(), true),
+            Swipe(profileRepository.findById(27L).get(), profileRepository.findById(81L).get(), true),
+            Swipe(profileRepository.findById(27L).get(), profileRepository.findById(82L).get(), true),
         )
 
         // Room profiles who have swiped user profiles
