@@ -34,6 +34,13 @@ class UserController(private val repository: UserRepository,
             = ResponseEntity.ok(userService.getPreferences(id))
 
     /**
+     * Get copy of all user data.
+
+    @GetMapping("/{id}/copy")
+    fun getCopyOfUserData(@PathVariable id: Long): ResponseEntity<UserDataDTO>
+            = ResponseEntity.ok(userService.getCopyOfUserData(id))
+*/
+    /**
      * Creates new user.
      *
      * @param user the user to be created.

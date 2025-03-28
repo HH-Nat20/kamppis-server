@@ -48,6 +48,16 @@ class Flat(
             id = id
         )
     }
+
+    fun toFlatDataDTO(): FlatDataDTO {
+        return FlatDataDTO(
+            name = name,
+            description = description,
+            location = location,
+            totalRoommates = totalRoommates,
+            flatUtilities = flatUtilities,
+        )
+    }
 }
 
 data class FlatDTO(
@@ -58,4 +68,13 @@ data class FlatDTO(
     val flatUtilities: MutableList<Utilities>? = mutableListOf(),
     val roomProfileIds: List<Long>? = listOf(),
     val id: Long?
+)
+
+data class FlatDataDTO(
+    // Only used by UserDataExportService
+    val name: String,
+    val description: String,
+    val location: City,
+    val totalRoommates: Int,
+    val flatUtilities: MutableList<Utilities>? = mutableListOf(),
 )

@@ -3,6 +3,9 @@ package nat20.kamppisserver.domain
 import jakarta.persistence.*
 import nat20.kamppisserver.domain.enums.Cleanliness
 import nat20.kamppisserver.domain.enums.Lifestyle
+import nat20.kamppisserver.domain.enums.ProfileStatus
+import nat20.kamppisserver.domain.enums.UserStatus
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "user_profiles")
@@ -41,22 +44,45 @@ class UserProfile (
             bio = bio,
             cleanliness = cleanliness,
             lifestyle = lifestyle,
-            photos = photos
-                .filter { it.deletedAt == null }
-                .map { toProfilePhotoDTO(it) }
+            photos = photos.map { it.toProfilePhotoDTO() }
                 .toMutableList(),
             id = id
         )
     }
 
+    fun toUserProfileDataDTO(): UserProfileDataDTO {
+        return UserProfileDataDTO(
+            bio = bio,
+            cleanliness = cleanliness,
+            lifestyle = lifestyle,
+            photos = photos.map { it.toProfilePhotoDataDTO() }
+                .toMutableList(),
+            status = status,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            deletedAt = deletedAt,
+        )
+    }
 }
 
 data class UserProfileDTO(
     val userId: Long,
     val user: UserSummaryDTO? = null,
-    val bio: String = "Write bio here",
+    val bio: String,
     val cleanliness: Cleanliness? = null,
     val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
     val photos: MutableList<ProfilePhotoDTO> = mutableListOf(),
     val id: Long? = null
 ) : ProfileDTO
+
+data class UserProfileDataDTO(
+    // Only used by UserDataExportService
+    val bio: String,
+    val cleanliness: Cleanliness? = null,
+    val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
+    val photos: MutableList<ProfilePhotoDataDTO> = mutableListOf(),
+    val status: ProfileStatus,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime? = null,
+    val deletedAt: LocalDateTime? = null,
+)

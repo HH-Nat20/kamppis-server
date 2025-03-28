@@ -6,18 +6,14 @@ import jakarta.validation.Valid
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserDTO
 import nat20.kamppisserver.domain.UserPreferenceDTO
-import nat20.kamppisserver.domain.toRoomPreferenceDTO
-import nat20.kamppisserver.domain.toRoommatePreferenceDTO
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.RoomPreferenceRepository
 import nat20.kamppisserver.repository.RoommatePreferenceRepository
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
 
 /**
@@ -28,7 +24,7 @@ import java.time.LocalDateTime
 class UserService(private val userRepository: UserRepository,
                   private val userProfileRepository: UserProfileRepository,
                   private val roommatePreferenceRepository: RoommatePreferenceRepository,
-                    private val roomPreferenceRepository: RoomPreferenceRepository) {
+                  private val roomPreferenceRepository: RoomPreferenceRepository) {
 
     /**
      * Returns all active Users.
@@ -48,7 +44,20 @@ class UserService(private val userRepository: UserRepository,
      */
     fun findById(id: Long): UserDTO {
         val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "This user does not exist")
+            ?: throw EntityNotFoundException("User with id $id not found")
+
+        return user.toDTO()
+    }
+
+    /**
+     * Finds active User by e-mail.
+     *
+     * @param email the e-mail to search for.
+     * @return the corresponding UserDTO.
+     */
+    fun findActiveUserByEmail(email: String): UserDTO? {
+        val user = userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("User with email $email not found")
 
         return user.toDTO()
     }
@@ -58,20 +67,21 @@ class UserService(private val userRepository: UserRepository,
      */
     fun getPreferences(id: Long): UserPreferenceDTO {
         val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "This user does not exist")
+            ?: throw EntityNotFoundException("User with id $id not found")
 
         val roomPreference = roomPreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
         val roommatePreference = roommatePreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
 
         return UserPreferenceDTO(
-            roomPreference = roomPreference?.let { toRoomPreferenceDTO(it) },
-            roommatePreference = roommatePreference?.let { toRoommatePreferenceDTO(it) },
+            roomPreference = roomPreference?.toRoomPreferenceDTO(),
+            roommatePreference = roommatePreference?.toRoommatePreferenceDTO(),
             id = user.id!!
         )
     }
 
     /**
      * Creates new User.
+     * TODO: Should not be able to create without redirecting to POST UserProfile!
      *
      * @param user the user to be created.
      * @return the created user.
@@ -111,19 +121,6 @@ class UserService(private val userRepository: UserRepository,
         val updatedUser = userRepository.save(updateUser)
 
         return updatedUser.toDTO()
-    }
-
-    /**
-     * Finds active User by e-mail.
-     *
-     * @param email the e-mail to search for.
-     * @return the corresponding UserDTO.
-     */
-    fun findActiveUserByEmail(email: String): UserDTO? {
-        val user = userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
-            ?: throw EntityNotFoundException("User with email $email not found")
-
-        return user.toDTO()
     }
 
     /**

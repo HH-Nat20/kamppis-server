@@ -63,6 +63,12 @@ class User(
     @ManyToMany(mappedBy = "users")
     var roomProfiles: MutableList<RoomProfile>? = mutableListOf(),
 
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var roommatePreference: RoommatePreference? = null,
+
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var roomPreference: RoomPreference? = null,
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -94,6 +100,25 @@ class User(
             id = id,
         )
     }
+
+    fun toUserDataDTO(): UserDataDTO {
+        return UserDataDTO(
+            firstName = firstName,
+            lastName = lastName,
+            email = email,
+            dateOfBirth = dateOfBirth,
+            gender = gender,
+            status = status,
+            isOnline = isOnline,
+            userProfile = userProfile?.toUserProfileDataDTO(),
+            roomProfiles = roomProfiles?.map { it.toRoomProfileDataDTO() },
+            roommatePreference = roommatePreference?.toRoommatePreferenceDataDTO(),
+            roomPreference = roomPreference?.toRoomPreferenceDataDTO(),
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            deletedAt = deletedAt,
+        )
+    }
 }
 
 data class UserDTO(
@@ -123,4 +148,25 @@ data class UserPreferenceDTO(
     val roomPreference: RoomPreferenceDTO?,
     val roommatePreference: RoommatePreferenceDTO?,
     val id: Long? = null
+)
+
+data class UserDataDTO(
+    // User information
+    val firstName: String,
+    val lastName: String,
+    val email: String,
+    val dateOfBirth: LocalDate,
+    val gender: Gender,
+    val status: UserStatus,
+    val isOnline: Boolean,
+    // Profile(s)
+    val userProfile: UserProfileDataDTO? = null,
+    val roomProfiles: List<RoomProfileDataDTO>? = listOf(),
+    // Preferences and settings
+    val roommatePreference: RoommatePreferenceDataDTO? = null,
+    val roomPreference: RoomPreferenceDataDTO? = null,
+    // Metadata
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime? = null,
+    val deletedAt: LocalDateTime? = null,
 )

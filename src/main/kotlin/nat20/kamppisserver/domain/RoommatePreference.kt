@@ -38,19 +38,26 @@ class RoommatePreference (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
-)
+) {
+    fun toRoommatePreferenceDTO(): RoommatePreferenceDTO {
+        return RoommatePreferenceDTO(
+            userId = user.id,
+            minAgePreference = minAgePreference,
+            maxAgePreference = maxAgePreference,
+            genderPreferences = genderPreferences,
+            locationPreferences = locationPreferences,
+            id = id
+        )
+    }
 
-fun toRoommatePreferenceDTO(roommatePreference: RoommatePreference): RoommatePreferenceDTO {
-    val roommatePreferenceDTO = RoommatePreferenceDTO(
-        userId = roommatePreference.user.id,
-        minAgePreference = roommatePreference.minAgePreference,
-        maxAgePreference = roommatePreference.maxAgePreference,
-        genderPreferences = roommatePreference.genderPreferences,
-        locationPreferences = roommatePreference.locationPreferences,
-        id = roommatePreference.id
-    )
-
-    return roommatePreferenceDTO
+    fun toRoommatePreferenceDataDTO(): RoommatePreferenceDataDTO {
+        return RoommatePreferenceDataDTO(
+            minAgePreference = minAgePreference,
+            maxAgePreference = maxAgePreference,
+            genderPreferences = genderPreferences,
+            locationPreferences = locationPreferences,
+        )
+    }
 }
 
 data class RoommatePreferenceDTO(
@@ -60,4 +67,12 @@ data class RoommatePreferenceDTO(
     val genderPreferences: MutableList<Gender>? = mutableListOf(),
     val locationPreferences: MutableList<City>? = mutableListOf(),
     val id: Long? = null,
+)
+
+data class RoommatePreferenceDataDTO(
+    // Only used by UserDataExportService
+    val minAgePreference: Int,
+    val maxAgePreference: Int,
+    val genderPreferences: MutableList<Gender>? = mutableListOf(),
+    val locationPreferences: MutableList<City>? = mutableListOf(),
 )

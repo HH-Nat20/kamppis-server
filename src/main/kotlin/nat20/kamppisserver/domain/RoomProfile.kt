@@ -4,7 +4,9 @@ import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.PositiveOrZero
 import nat20.kamppisserver.domain.enums.City
+import nat20.kamppisserver.domain.enums.ProfileStatus
 import nat20.kamppisserver.domain.enums.Utilities
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "room_profiles")
@@ -51,11 +53,13 @@ class RoomProfile(
             rent = rent,
             isPrivateRoom = isPrivateRoom,
             roomUtilities = roomUtilities,
-            photos = photos.map { toProfilePhotoDTO(it) }.toMutableList(),
+            photos = photos.map { it.toProfilePhotoDTO() }
+                .toMutableList(),
             bio = bio,
             id = id
         )
     }
+
     fun toRoomProfileRequest(): RoomProfileRequest {
         return RoomProfileRequest(
             userIds = users.map { it.id!! },
@@ -65,6 +69,22 @@ class RoomProfile(
             roomUtilities = roomUtilities,
             bio = bio,
             id = id
+        )
+    }
+
+    fun toRoomProfileDataDTO(): RoomProfileDataDTO {
+        return RoomProfileDataDTO(
+            flat = flat.toFlatDataDTO(),
+            rent = rent,
+            isPrivateRoom = isPrivateRoom,
+            roomUtilities = roomUtilities,
+            photos = photos.map { it.toProfilePhotoDataDTO() }
+                .toMutableList(),
+            bio = bio,
+            status = status,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            deletedAt = deletedAt,
         )
     }
 }
@@ -91,4 +111,18 @@ data class RoomProfileRequest(
     val roomUtilities: MutableList<Utilities>? = mutableListOf(),
     val bio: String,
     val id: Long? = null
+)
+
+data class RoomProfileDataDTO(
+    // Only used by UserDataExportService
+    val flat: FlatDataDTO,
+    val rent: Int,
+    val isPrivateRoom: Boolean,
+    val roomUtilities: MutableList<Utilities>? = mutableListOf(),
+    val photos: MutableList<ProfilePhotoDataDTO>? = mutableListOf(),
+    val bio: String,
+    val status: ProfileStatus,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime? = null,
+    val deletedAt: LocalDateTime? = null,
 )

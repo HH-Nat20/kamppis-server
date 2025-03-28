@@ -36,21 +36,41 @@ class ProfilePhoto(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-)
-fun toProfilePhotoDTO(profilePhoto: ProfilePhoto): ProfilePhotoDTO {
-    val profilePhotoDTO = ProfilePhotoDTO(
-        profileId = profilePhoto.profile.id!!,
-        url = profilePhoto.url,
-        isProfilePhoto = profilePhoto.isProfilePhoto,
-        id = profilePhoto.id
-    )
+) {
+    fun toProfilePhotoDTO(): ProfilePhotoDTO {
+        return ProfilePhotoDTO(
+            profileId = profile.id!!,
+            url = url,
+            isProfilePhoto = isProfilePhoto,
+            id = id
+        )
+    }
 
-    return profilePhotoDTO
+    fun toProfilePhotoDataDTO(): ProfilePhotoDataDTO {
+        return ProfilePhotoDataDTO(
+            url = url,
+            isProfilePhoto = isProfilePhoto,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            deletedAt = deletedAt,
+        )
+    }
 }
+
+
 
 data class ProfilePhotoDTO(
     val profileId: Long,
     @NotEmpty val url: String,
     val isProfilePhoto: Boolean,
     val id: Long? = null
+)
+
+data class ProfilePhotoDataDTO(
+    // Only used by UserDataExportService
+    val url: String,
+    val isProfilePhoto: Boolean,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime? = null,
+    val deletedAt: LocalDateTime? = null,
 )

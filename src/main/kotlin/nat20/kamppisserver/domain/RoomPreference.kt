@@ -32,19 +32,26 @@ class RoomPreference (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
-)
+) {
+    fun toRoomPreferenceDTO(): RoomPreferenceDTO {
+        return RoomPreferenceDTO(
+            userId = user.id,
+            maxRent = maxRent,
+            hasPrivateRoom = hasPrivateRoom,
+            maxRoommates = maxRoommates,
+            locationPreferences = locationPreferences,
+            id = id
+        )
+    }
 
-fun toRoomPreferenceDTO(roomPreference: RoomPreference): RoomPreferenceDTO {
-    val roomPreferenceDTO: RoomPreferenceDTO = RoomPreferenceDTO(
-        userId = roomPreference.user.id,
-        maxRent = roomPreference.maxRent,
-        hasPrivateRoom = roomPreference.hasPrivateRoom,
-        maxRoommates = roomPreference.maxRoommates,
-        locationPreferences = roomPreference.locationPreferences,
-        id = roomPreference.id
-    )
-
-    return roomPreferenceDTO
+    fun toRoomPreferenceDataDTO(): RoomPreferenceDataDTO {
+        return RoomPreferenceDataDTO(
+            maxRent = maxRent,
+            hasPrivateRoom = hasPrivateRoom,
+            maxRoommates = maxRoommates,
+            locationPreferences = locationPreferences,
+        )
+    }
 }
 
 data class RoomPreferenceDTO(
@@ -54,4 +61,11 @@ data class RoomPreferenceDTO(
     val maxRoommates: Int?,
     val locationPreferences: MutableList<City>?,
     val id: Long? = null,
+)
+
+data class RoomPreferenceDataDTO(
+    val maxRent: Int?,
+    val hasPrivateRoom: Boolean?,
+    val maxRoommates: Int?,
+    val locationPreferences: MutableList<City>?,
 )
