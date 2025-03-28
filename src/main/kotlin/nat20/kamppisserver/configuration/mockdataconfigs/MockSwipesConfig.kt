@@ -1,8 +1,8 @@
 package nat20.kamppisserver.configuration.mockdataconfigs
 
 import nat20.kamppisserver.domain.Swipe
+import nat20.kamppisserver.repository.ProfileRepository
 import nat20.kamppisserver.repository.SwipeRepository
-import nat20.kamppisserver.repository.UserRepository
 
 class MockSwipesConfig {
 
@@ -10,17 +10,32 @@ class MockSwipesConfig {
      * Database initializer for adding mock swipes data into the database
      */
     fun insertMockSwipesToDatabase(
-        userRepository: UserRepository,
+        profileRepository: ProfileRepository,
         swipeRepository: SwipeRepository
     ) {
-        // These are swipes that users have given to each other
-        val swipes = listOf(
-            Swipe(userRepository.findById(1L).get(), userRepository.findById(2L).get(), true),
-            Swipe(userRepository.findById(1L).get(), userRepository.findById(3L).get(), true),
-            Swipe(userRepository.findById(2L).get(), userRepository.findById(1L).get(), true),
-            Swipe(userRepository.findById(3L).get(), userRepository.findById(1L).get(), true)
+        // These are swipes that profiles have given to each other
+
+        // User profiles who have swiped other user profiles
+        val userToUserSwipes = listOf(
+            Swipe(profileRepository.findById(1L).get(), profileRepository.findById(2L).get(), true),
+            Swipe(profileRepository.findById(1L).get(), profileRepository.findById(3L).get(), true),
+            Swipe(profileRepository.findById(2L).get(), profileRepository.findById(1L).get(), true),
+            Swipe(profileRepository.findById(3L).get(), profileRepository.findById(1L).get(), true),
         )
 
-        swipeRepository.saveAll(swipes)
+        // User profiles who have swiped room profiles
+        val userToRoomSwipes = listOf(
+            Swipe(profileRepository.findById(1L).get(), profileRepository.findById(79L).get(), true),
+            Swipe(profileRepository.findById(27L).get(), profileRepository.findById(81L).get(), true),
+            Swipe(profileRepository.findById(27L).get(), profileRepository.findById(82L).get(), true),
+        )
+
+        // Room profiles who have swiped user profiles
+        val roomToUserSwipes = listOf(
+            Swipe(profileRepository.findById(79L).get(), profileRepository.findById(1L).get(), true),
+        )
+
+        // Save all mock swipes to the database
+        swipeRepository.saveAll(userToUserSwipes + userToRoomSwipes + roomToUserSwipes)
     }
 }

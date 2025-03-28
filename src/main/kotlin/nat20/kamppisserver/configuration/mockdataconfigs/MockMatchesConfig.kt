@@ -20,6 +20,9 @@ class MockMatchesConfig {
             ),
             Match(
                 users = mutableSetOf(userRepository.findById(1L).get(), userRepository.findById(3L).get())
+            ),
+            Match(
+                users = mutableSetOf(userRepository.findById(1L).get(), userRepository.findById(53L).get(), userRepository.findById(54L).get())
             )
         )
 

@@ -15,14 +15,14 @@ class RoomPreference (
 
     @Positive(message = "Max rent must be a positive integer")
     @Column(name = "max_rent")
-    var maxRent: Int,
+    var maxRent: Int?,
 
     @Column(name = "has_private_room")
-    var hasPrivateRoom: Boolean,
+    var hasPrivateRoom: Boolean?,
 
     @Positive(message = "Max roommates in flat must be a positive integer")
     @Column(name = "max_roommates")
-    var maxRoommates: Int,
+    var maxRoommates: Int?,
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = City::class)
     @CollectionTable(name = "room_preferences_locations", joinColumns = [JoinColumn(name = "room_preferences_id")])
@@ -49,9 +49,9 @@ fun toRoomPreferenceDTO(roomPreference: RoomPreference): RoomPreferenceDTO {
 
 data class RoomPreferenceDTO(
     val userId: Long?,
-    val maxRent: Int,
-    val hasPrivateRoom: Boolean,
-    val maxRoommates: Int,
+    val maxRent: Int?,
+    val hasPrivateRoom: Boolean?,
+    val maxRoommates: Int?,
     val locationPreferences: MutableList<City>?,
     val id: Long? = null,
 )

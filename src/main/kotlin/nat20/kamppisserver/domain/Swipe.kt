@@ -9,14 +9,14 @@ import java.time.LocalDateTime
 @Table(name = "swipes")
 class Swipe(
     @ManyToOne
-    @JoinColumn(name = "swiping_user_id", nullable = false)
-    @NotNull(message = "Swiping user cannot be null.")
-    var swipingUser: User,
+    @JoinColumn(name = "swiping_profile_id", nullable = false)
+    @NotNull(message = "Swiping profile cannot be null.")
+    var swipingProfile: Profile,
 
     @ManyToOne
-    @JoinColumn(name = "swiped_user_id", nullable = false)
-    @NotNull(message = "Swiped user cannot be null.")
-    var swipedUser: User,
+    @JoinColumn(name = "swiped_profile_id", nullable = false)
+    @NotNull(message = "Swiped profile cannot be null.")
+    var swipedProfile: Profile,
 
     var isRightSwipe: Boolean,
 
@@ -31,24 +31,44 @@ class Swipe(
     fun toSwipeResponse(): SwipeResponse {
         return SwipeResponse(
             swipeId = id ?: throw IllegalStateException("Swipe ID is null"),
-            swipingUser = swipingUser.toDTO(),
-            swipedUser = swipedUser.toDTO(),
+            swipingProfile = swipingProfile.toDTO(includeUserSummary = true),
+            swipedProfile = swipedProfile.toDTO(includeUserSummary = true),
             isRightSwipe = isRightSwipe,
             isMatch = isMatch
+        )
+    }
+
+    fun toDTO(): SwipeDTO {
+        return SwipeDTO(
+            id = id,
+            swipingProfile = swipingProfile.toDTO(includeUserSummary = true),
+            swipedProfile = swipedProfile.toDTO(includeUserSummary = true),
+            isRightSwipe = isRightSwipe,
+            isMatch = isMatch,
+            createdAt = createdAt,
         )
     }
 }
 
 data class SwipeRequest(
-    @NotNull val swipingUserId: Long,
-    @NotNull val swipedUserId: Long,
+    @NotNull val swipingProfileId: Long,
+    @NotNull val swipedProfileId: Long,
     val isRightSwipe: Boolean
 )
 
 data class SwipeResponse(
     @NotNull val swipeId: Long,
-    @NotNull val swipingUser: UserDTO,
-    @NotNull val swipedUser: UserDTO,
+    @NotNull val swipingProfile: ProfileDTO,
+    @NotNull val swipedProfile: ProfileDTO,
     val isRightSwipe: Boolean,
     val isMatch: Boolean
+)
+
+data class SwipeDTO(
+    val id: Long? = null,
+    @NotNull val swipingProfile: ProfileDTO,
+    @NotNull val swipedProfile: ProfileDTO,
+    val isRightSwipe: Boolean,
+    val isMatch: Boolean,
+    val createdAt: LocalDateTime
 )

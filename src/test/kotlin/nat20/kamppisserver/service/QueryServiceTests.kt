@@ -38,7 +38,7 @@ class QueryServiceTests @Autowired constructor(
         val userProfile: UserProfile = userProfileRepository.findByIdOrNull(1L)!!
         val userProfileDTO: UserProfileDTO = userProfile.toDTO()
 
-        val listOfUserProfileDTOs: MutableList<UserProfileDTO>? = userProfile.id?.let {
+        val listOfUserProfileDTOs: List<UserProfileDTO>? = userProfile.id?.let {
             queryService.findUserProfilesThatMeetCriteria(
                 it
             )

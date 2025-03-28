@@ -49,30 +49,24 @@ class ProfileController(private val profileService: ProfileService,
         val userProfile = userProfileRepository.findByIdActive(id)
         val roomProfile = roomProfileRepository.findByIdActive(id)
 
-        when (profile) {
-            is UserProfileDTO -> {
-                if (userProfile != null) {
-                    return ResponseEntity.ok(userProfileService.update(profile, id))
-                } else {
-                    throw EntityNotFoundException("Profile with id $id not found")
-                }
+        when {
+            userProfile != null && profile is UserProfileDTO -> {
+                return ResponseEntity.ok(userProfileService.update(profile, id))
             }
 
-            is RoomProfileDTO -> {
-                if (roomProfile != null) {
-                    val roomProfileRequest = RoomProfileRequest(
-                        userIds = profile.userIds,
-                        flatId = profile.flat.id!!,
-                        rent = profile.rent,
-                        isPrivateRoom = profile.isPrivateRoom,
-                        roomUtilities = profile.roomUtilities,
-                        bio = profile.bio,
-                        id = profile.id
-                    )
-                    return ResponseEntity.ok(roomProfileService.update(roomProfileRequest, id))
-                }
+            roomProfile != null && profile is RoomProfileDTO -> {
+                val roomProfileRequest = RoomProfileRequest(
+                    userIds = profile.userIds,
+                    flatId = profile.flat.id!!,
+                    rent = profile.rent,
+                    isPrivateRoom = profile.isPrivateRoom,
+                    roomUtilities = profile.roomUtilities,
+                    bio = profile.bio,
+                    id = profile.id
+                )
+                return ResponseEntity.ok(roomProfileService.update(roomProfileRequest, id))
             }
+            else -> return ResponseEntity.notFound().build()
         }
-        return ResponseEntity.notFound().build()
     }
 }

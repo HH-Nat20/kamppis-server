@@ -66,7 +66,7 @@ class DatabaseMockDataConfiguration {
 
         // Add mock swipes to database
         val mockSwipesConfig = MockSwipesConfig()
-        mockSwipesConfig.insertMockSwipesToDatabase(userRepository, swipeRepository)
+        mockSwipesConfig.insertMockSwipesToDatabase(profileRepository, swipeRepository)
 
         // Add mock matches to database
         val mockMatchesConfig = MockMatchesConfig()
