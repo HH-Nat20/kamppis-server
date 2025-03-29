@@ -74,9 +74,9 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
         WHERE s.swiping_profile_id = :userProfileId
         AND s.swiped_profile_id = up.id
     )
-    AND EXTRACT(YEAR FROM AGE(:queryDate, u.date_of_birth)) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)
-    AND (u.gender IN (:genderPreferences) OR 'NOT_IMPORTANT' IN (:genderPreferences))
-    AND f.location IN (:locationPreferences)
+    AND (EXTRACT(YEAR FROM AGE(:queryDate, u.date_of_birth)) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000))
+    AND (COALESCE(:genderPreferences) IS NULL OR u.gender IN (:genderPreferences))
+    AND (f.location IN (:locationPreferences))
     """, nativeQuery = true)
     fun findUserProfilesThatMeetCriteria(
         @Param("userProfileId") userProfileId: Long?,
