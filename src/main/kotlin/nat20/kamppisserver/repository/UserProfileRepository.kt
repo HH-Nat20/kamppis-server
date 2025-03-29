@@ -83,8 +83,8 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
         @Param("queryDate") queryDate: LocalDate,
         @Param("minAgePreference") minAgePreference: Int?,
         @Param("maxAgePreference") maxAgePreference: Int?,
-        @Param("genderPreferences") genderPreferences: List<String>,
-        @Param("locationPreferences") locationPreferences: List<String>
+        @Param("genderPreferences") genderPreferences: List<String>?,
+        @Param("locationPreferences") locationPreferences: List<String>?
     ): List<UserProfile>
 
 }

@@ -56,10 +56,10 @@ class QueryService(
 
         val userProfileId: Long = userProfile.id!!
         val queryDate: LocalDate = LocalDate.now()
-        val minAgePreference: Int = roommatePreference.minAgePreference
-        val maxAgePreference: Int = roommatePreference.maxAgePreference
-        val genderPreferences: List<String> = roommatePreference.genderPreferences!!.map { it.name }
-        val locationPreferences: List<String> = roommatePreference.locationPreferences!!.map { it.name }
+        val minAgePreference: Int? = roommatePreference.minAgePreference
+        val maxAgePreference: Int? = roommatePreference.maxAgePreference
+        val genderPreferences: List<String>? = roommatePreference.genderPreferences?.map { it.name }
+        val locationPreferences: List<String>? = roommatePreference.locationPreferences?.map { it.name }
 
         val userProfileList: List<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(
             userProfileId,

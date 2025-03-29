@@ -19,11 +19,11 @@ class RoommatePreference (
 
     @PositiveOrZero(message = "Min age preference must be a positive integer or zero")
     @Column(name= "min_age_preference")
-    var minAgePreference: Int,
+    var minAgePreference: Int?,
 
     @Positive(message = "Min age preference must be a positive integer")
     @Column(name= "max_age_preference")
-    var maxAgePreference: Int,
+    var maxAgePreference: Int?,
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Gender::class)
     @CollectionTable(name = "roommate_preferences_gender", joinColumns = [JoinColumn(name = "roommate_preferences_id")])
@@ -62,8 +62,8 @@ class RoommatePreference (
 
 data class RoommatePreferenceDTO(
     val userId: Long?,
-    val minAgePreference: Int,
-    val maxAgePreference: Int,
+    val minAgePreference: Int?,
+    val maxAgePreference: Int?,
     val genderPreferences: MutableList<Gender>? = mutableListOf(),
     val locationPreferences: MutableList<City>? = mutableListOf(),
     val id: Long? = null,
@@ -71,8 +71,8 @@ data class RoommatePreferenceDTO(
 
 data class RoommatePreferenceDataDTO(
     // Only used by UserDataExportService
-    val minAgePreference: Int,
-    val maxAgePreference: Int,
+    val minAgePreference: Int?,
+    val maxAgePreference: Int?,
     val genderPreferences: MutableList<Gender>? = mutableListOf(),
     val locationPreferences: MutableList<City>? = mutableListOf(),
 )
