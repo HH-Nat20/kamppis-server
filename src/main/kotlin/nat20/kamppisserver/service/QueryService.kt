@@ -76,16 +76,20 @@ class QueryService(
         * From the preferences, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in RoomProfileRepository */
 
+        val userProfile: UserProfile = userProfileRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("UserId does not match to any user")
+
         val roomPreference: RoomPreference = roomPreferenceRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("UserId does not match to any user")
 
+        val userProfileId: Long = userProfile.id!!
         val maxRent: Int? = roomPreference.maxRent
         val hasPrivateRoom: Boolean? = roomPreference.hasPrivateRoom
         val maxRoommates: Int? = roomPreference.maxRoommates
         val locationPreferences: List<String>? = roomPreference.locationPreferences?.map {it.name}
 
         val roomProfileList: List<RoomProfile> = roomProfileRepository.findRoomProfilesThatMeetCriteria(
-            userId,
+            userProfileId,
             maxRent,
             hasPrivateRoom,
             maxRoommates,
