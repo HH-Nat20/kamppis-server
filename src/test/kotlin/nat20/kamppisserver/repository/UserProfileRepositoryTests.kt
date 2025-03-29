@@ -58,7 +58,7 @@ class UserProfileRepositoryTests @Autowired constructor(
                 testDate,
                 roommatePreference.minAgePreference,
                 roommatePreference.maxAgePreference,
-                roommatePreference.genderPreferences!!.map { it.name },
+                roommatePreference.genderPreferences?.map { it.name },
                 roommatePreference.locationPreferences!!.map { it.name }
             )
 
@@ -74,7 +74,7 @@ class UserProfileRepositoryTests @Autowired constructor(
         swipeRepository.deleteAll()
 
         // Set preferred genders and locations to select all user profiles
-        val preferredGenders = listOf("NOT_IMPORTANT")
+        val preferredGenders = null
         val preferredLocations = listOf("HELSINKI", "ESPOO", "VANTAA")
 
         val listOfUserProfiles: Iterable<UserProfile> =
@@ -100,7 +100,7 @@ class UserProfileRepositoryTests @Autowired constructor(
         swipeRepository.deleteAll()
 
         // Set preferred genders and locations to select all user profiles
-        val preferredGenders = listOf("NOT_IMPORTANT")
+        val preferredGenders = null
         val preferredLocations = listOf("HELSINKI", "ESPOO", "VANTAA")
 
         val listOfUserProfiles: Iterable<UserProfile> =
@@ -135,7 +135,7 @@ class UserProfileRepositoryTests @Autowired constructor(
                 testDate,
                 minAgePreference,
                 maxAgePreference,
-                roommatePreference.genderPreferences!!.map {it.name},
+                roommatePreference.genderPreferences?.map {it.name},
                 preferredLocations
             )
 
@@ -153,7 +153,7 @@ class UserProfileRepositoryTests @Autowired constructor(
         // Set preferred minAge, maxAge and genders to select all user profiles
         val minAgePreference = null
         val maxAgePreference = null
-        val preferredGenders = listOf("NOT_IMPORTANT")
+        val preferredGenders = null
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
@@ -177,7 +177,7 @@ class UserProfileRepositoryTests @Autowired constructor(
         // Set preferred minAge, maxAge, genders and locations to select all user profiles
         val minAgePreference = null
         val maxAgePreference = null
-        val preferredGenders = listOf("NOT_IMPORTANT")
+        val preferredGenders = null
         val preferredLocations = listOf("HELSINKI", "ESPOO", "VANTAA")
 
         val listOfUserProfiles: Iterable<UserProfile> =
@@ -205,7 +205,7 @@ class UserProfileRepositoryTests @Autowired constructor(
                 testDate,
                 roommatePreference.minAgePreference,
                 roommatePreference.maxAgePreference,
-                roommatePreference.genderPreferences!!.map { it.name },
+                roommatePreference.genderPreferences?.map { it.name },
                 roommatePreference.locationPreferences!!.map { it.name }
             )
 
