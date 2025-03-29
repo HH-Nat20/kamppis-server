@@ -48,9 +48,13 @@ class QueryService(
         * From the profile, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in UserProfileRepository */
 
+        val userProfile: UserProfile = userProfileRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("UserId does not match to any user")
+
         val roommatePreference: RoommatePreference = roommatePreferenceRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("UserId does not match to any user")
 
+        val userProfileId: Long = userProfile.id!!
         val queryDate: LocalDate = LocalDate.now()
         val minAgePreference: Int = roommatePreference.minAgePreference
         val maxAgePreference: Int = roommatePreference.maxAgePreference
@@ -58,7 +62,7 @@ class QueryService(
         val locationPreferences: List<String> = roommatePreference.locationPreferences!!.map { it.name }
 
         val userProfileList: List<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(
-            userId,
+            userProfileId,
             queryDate,
             minAgePreference,
             maxAgePreference,
