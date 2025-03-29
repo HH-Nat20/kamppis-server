@@ -54,7 +54,7 @@ class UserProfileRepositoryTests @Autowired constructor(
     fun `query should not return the user's own profile`() {
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
-                userProfile.user.id,
+                userProfile.id!!,
                 testDate,
                 roommatePreference.minAgePreference,
                 roommatePreference.maxAgePreference,
@@ -79,7 +79,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
-                userProfile.user.id,
+                userProfile.id!!,
                 testDate,
                 roommatePreference.minAgePreference,
                 roommatePreference.maxAgePreference,
@@ -105,7 +105,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
-                userProfile.user.id,
+                userProfile.id!!,
                 incorrectDate,
                 roommatePreference.minAgePreference,
                 roommatePreference.maxAgePreference,
@@ -131,7 +131,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
-                userProfile.user.id,
+                userProfile.id!!,
                 testDate,
                 minAgePreference,
                 maxAgePreference,
@@ -157,7 +157,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
-                userProfile.user.id,
+                userProfile.id!!,
                 testDate,
                 minAgePreference,
                 maxAgePreference,
@@ -182,7 +182,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
-                userProfile.user.id,
+                userProfile.id!!,
                 testDate,
                 minAgePreference,
                 maxAgePreference,
@@ -201,7 +201,7 @@ class UserProfileRepositoryTests @Autowired constructor(
         // Swipes are taken into account
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
-                userProfile.user.id,
+                userProfile.id!!,
                 testDate,
                 roommatePreference.minAgePreference,
                 roommatePreference.maxAgePreference,
