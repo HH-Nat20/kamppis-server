@@ -34,7 +34,11 @@ class ValidationService {
     @Component
     class AgePreferenceValidator: ConstraintValidator<ValidAgePreferences, RoommatePreference> {
         override fun isValid(preferences: RoommatePreference, context: ConstraintValidatorContext): Boolean {
-            if (preferences.minAgePreference >= preferences.maxAgePreference) {
+            if (preferences.minAgePreference == null || preferences.maxAgePreference == null) {
+                return true // Validation passes because comparison is not possible with a null value
+            }
+
+            if (preferences.minAgePreference!! >= preferences.maxAgePreference!!) {
                 // Disables default validation message
                 context.disableDefaultConstraintViolation()
 

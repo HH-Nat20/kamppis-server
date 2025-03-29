@@ -67,11 +67,11 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     JOIN room_profiles rp ON rp.id = rpu.room_profile_id
     JOIN flats f ON rp.flat_id = f.id
     LEFT JOIN profiles p ON up.id = p.id  -- Join with profiles to get bio, status, etc.
-    WHERE up.id != :id
+    WHERE up.id != :userProfileId
     AND NOT EXISTS (
         SELECT 1
         FROM swipes s
-        WHERE s.swiping_profile_id = :id
+        WHERE s.swiping_profile_id = :userProfileId
         AND s.swiped_profile_id = up.id
     )
     AND EXTRACT(YEAR FROM AGE(:queryDate, u.date_of_birth)) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)
@@ -79,12 +79,12 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     AND f.location IN (:locationPreferences)
     """, nativeQuery = true)
     fun findUserProfilesThatMeetCriteria(
-        @Param("id") id: Long?,
+        @Param("userProfileId") userProfileId: Long?,
         @Param("queryDate") queryDate: LocalDate,
         @Param("minAgePreference") minAgePreference: Int?,
         @Param("maxAgePreference") maxAgePreference: Int?,
-        @Param("genderPreferences") genderPreferences: List<String>,
-        @Param("locationPreferences") locationPreferences: List<String>
+        @Param("genderPreferences") genderPreferences: List<String>?,
+        @Param("locationPreferences") locationPreferences: List<String>?
     ): List<UserProfile>
 
 }

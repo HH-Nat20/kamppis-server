@@ -48,17 +48,21 @@ class QueryService(
         * From the profile, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in UserProfileRepository */
 
+        val userProfile: UserProfile = userProfileRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("UserId does not match to any user")
+
         val roommatePreference: RoommatePreference = roommatePreferenceRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("UserId does not match to any user")
 
+        val userProfileId: Long = userProfile.id!!
         val queryDate: LocalDate = LocalDate.now()
-        val minAgePreference: Int = roommatePreference.minAgePreference
-        val maxAgePreference: Int = roommatePreference.maxAgePreference
-        val genderPreferences: List<String> = roommatePreference.genderPreferences!!.map { it.name }
-        val locationPreferences: List<String> = roommatePreference.locationPreferences!!.map { it.name }
+        val minAgePreference: Int? = roommatePreference.minAgePreference
+        val maxAgePreference: Int? = roommatePreference.maxAgePreference
+        val genderPreferences: List<String>? = roommatePreference.genderPreferences?.map { it.name }
+        val locationPreferences: List<String>? = roommatePreference.locationPreferences?.map { it.name }
 
         val userProfileList: List<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(
-            userId,
+            userProfileId,
             queryDate,
             minAgePreference,
             maxAgePreference,
@@ -76,16 +80,20 @@ class QueryService(
         * From the preferences, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in RoomProfileRepository */
 
+        val userProfile: UserProfile = userProfileRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("UserId does not match to any user")
+
         val roomPreference: RoomPreference = roomPreferenceRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("UserId does not match to any user")
 
+        val userProfileId: Long = userProfile.id!!
         val maxRent: Int? = roomPreference.maxRent
         val hasPrivateRoom: Boolean? = roomPreference.hasPrivateRoom
         val maxRoommates: Int? = roomPreference.maxRoommates
         val locationPreferences: List<String>? = roomPreference.locationPreferences?.map {it.name}
 
         val roomProfileList: List<RoomProfile> = roomProfileRepository.findRoomProfilesThatMeetCriteria(
-            userId,
+            userProfileId,
             maxRent,
             hasPrivateRoom,
             maxRoommates,
