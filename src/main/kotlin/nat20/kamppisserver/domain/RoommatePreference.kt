@@ -71,8 +71,8 @@ data class RoommatePreferenceDTO(
 
 data class RoommatePreferenceDataDTO(
     // Only used by Copy of Data
-    val minAgePreference: Int,
-    val maxAgePreference: Int,
+    val minAgePreference: Int?,
+    val maxAgePreference: Int?,
     val genderPreferences: MutableList<Gender>? = mutableListOf(),
     val locationPreferences: MutableList<City>? = mutableListOf(),
 )
