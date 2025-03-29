@@ -49,14 +49,14 @@ class MockRoommatePreferencesConfig {
                 user = userRepository.findById(5L).get(),
                 minAgePreference = 38,
                 maxAgePreference = 57,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT),
+                genderPreferences = null,
                 locationPreferences = mutableListOf(City.ESPOO, City.VANTAA),
             ),
             RoommatePreference(
                 user = userRepository.findById(6L).get(),
                 minAgePreference = 20,
                 maxAgePreference = 33,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT),
+                genderPreferences = null,
                 locationPreferences = mutableListOf(City.HELSINKI, City.VANTAA),
             ),
             RoommatePreference(
@@ -70,7 +70,7 @@ class MockRoommatePreferencesConfig {
                 user = userRepository.findById(8L).get(),
                 minAgePreference = 18,
                 maxAgePreference = 28,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT),
+                genderPreferences = null,
                 locationPreferences = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
             ),
             RoommatePreference(
@@ -84,21 +84,21 @@ class MockRoommatePreferencesConfig {
                 user = userRepository.findById(10L).get(),
                 minAgePreference = 22,
                 maxAgePreference = 27,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT),
+                genderPreferences = null,
                 locationPreferences = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
             ),
             RoommatePreference(
                 user = userRepository.findById(11L).get(),
                 minAgePreference = 24,
                 maxAgePreference = 34,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT),
+                genderPreferences = null,
                 locationPreferences = mutableListOf(City.ESPOO, City.VANTAA),
             ),
             RoommatePreference(
                 user = userRepository.findById(12L).get(),
                 minAgePreference = 19,
                 maxAgePreference = 31,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT),
+                genderPreferences = null,
                 locationPreferences = mutableListOf(City.HELSINKI, City.ESPOO),
             ),
             RoommatePreference(
@@ -119,14 +119,14 @@ class MockRoommatePreferencesConfig {
                 user = userRepository.findById(15L).get(),
                 minAgePreference = 21,
                 maxAgePreference = 33,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT),
+                genderPreferences = null,
                 locationPreferences = mutableListOf(City.HELSINKI, City.VANTAA),
             ),
             RoommatePreference(
                 user = userRepository.findById(16L).get(),
                 minAgePreference = 23,
                 maxAgePreference = 36,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT),
+                genderPreferences = null,
                 locationPreferences = mutableListOf(City.ESPOO, City.VANTAA),
             ),
             RoommatePreference(
@@ -161,7 +161,7 @@ class MockRoommatePreferencesConfig {
                 user = userRepository.findById(21L).get(),
                 minAgePreference = 21,
                 maxAgePreference = 35,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT),
+                genderPreferences = null,
                 locationPreferences = mutableListOf(City.HELSINKI, City.VANTAA),
             ),
             RoommatePreference(
@@ -175,14 +175,14 @@ class MockRoommatePreferencesConfig {
                 user = userRepository.findById(23L).get(),
                 minAgePreference = 21,
                 maxAgePreference = 33,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT),
+                genderPreferences = null,
                 locationPreferences = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
             ),
             RoommatePreference(
                 user = userRepository.findById(24L).get(),
                 minAgePreference = 19,
                 maxAgePreference = 36,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT),
+                genderPreferences = null,
                 locationPreferences = mutableListOf(City.HELSINKI, City.VANTAA),
             ),
             RoommatePreference(
@@ -196,7 +196,7 @@ class MockRoommatePreferencesConfig {
                 user = userRepository.findById(26L).get(),
                 minAgePreference = 21,
                 maxAgePreference = 32,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT),
+                genderPreferences = null,
                 locationPreferences = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA),
             )
         )
@@ -219,7 +219,7 @@ class MockRoommatePreferencesConfig {
                 user = userRepository.findById(55L).get(),
                 minAgePreference = 18,
                 maxAgePreference = 25,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             ),
             RoommatePreference(
                 user = userRepository.findById(56L).get(),
@@ -231,19 +231,19 @@ class MockRoommatePreferencesConfig {
                 user = userRepository.findById(57L).get(),
                 minAgePreference = 20,
                 maxAgePreference = 28,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             ),
             RoommatePreference(
                 user = userRepository.findById(58L).get(),
                 minAgePreference = 20,
                 maxAgePreference = 28,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             ),
             RoommatePreference(
                 user = userRepository.findById(59L).get(),
                 minAgePreference = 20,
                 maxAgePreference = 28,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             ),
             RoommatePreference(
                 user = userRepository.findById(60L).get(),
@@ -261,13 +261,13 @@ class MockRoommatePreferencesConfig {
                 user = userRepository.findById(62L).get(),
                 minAgePreference = 19,
                 maxAgePreference = 28,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             ),
             RoommatePreference(
                 user = userRepository.findById(63L).get(),
                 minAgePreference = 19,
                 maxAgePreference = 28,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             ),
             RoommatePreference(
                 user = userRepository.findById(64L).get(),
@@ -279,31 +279,31 @@ class MockRoommatePreferencesConfig {
                 user = userRepository.findById(65L).get(),
                 minAgePreference = 18,
                 maxAgePreference = 32,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             ),
             RoommatePreference(
                 user = userRepository.findById(66L).get(),
                 minAgePreference = 18,
                 maxAgePreference = 32,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             ),
             RoommatePreference(
                 user = userRepository.findById(67L).get(),
                 minAgePreference = 21,
                 maxAgePreference = 35,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             ),
             RoommatePreference(
                 user = userRepository.findById(68L).get(),
                 minAgePreference = 21,
                 maxAgePreference = 35,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             ),
             RoommatePreference(
                 user = userRepository.findById(69L).get(),
                 minAgePreference = 21,
                 maxAgePreference = 35,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             ),
             RoommatePreference(
                 user = userRepository.findById(70L).get(),
@@ -327,7 +327,7 @@ class MockRoommatePreferencesConfig {
                 user = userRepository.findById(73L).get(),
                 minAgePreference = 19,
                 maxAgePreference = 27,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             ),
             RoommatePreference(
                 user = userRepository.findById(74L).get(),
@@ -351,13 +351,13 @@ class MockRoommatePreferencesConfig {
                 user = userRepository.findById(77L).get(),
                 minAgePreference = 23,
                 maxAgePreference = 37,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             ),
             RoommatePreference(
                 user = userRepository.findById(78L).get(),
                 minAgePreference = 23,
                 maxAgePreference = 37,
-                genderPreferences = mutableListOf(Gender.NOT_IMPORTANT)
+                genderPreferences = null
             )
         )
 

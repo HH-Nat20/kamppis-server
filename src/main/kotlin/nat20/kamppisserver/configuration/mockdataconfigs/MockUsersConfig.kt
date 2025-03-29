@@ -53,7 +53,7 @@ class MockUsersConfig {
                 firstName = "Eve",
                 lastName = "Brown",
                 dateOfBirth = LocalDate.of(1995, 8, 19),
-                gender = Gender.NOT_IMPORTANT,
+                gender = Gender.OTHER,
                 status = UserStatus.ACTIVE
             ),
             User(
