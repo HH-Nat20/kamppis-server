@@ -6,8 +6,6 @@ import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.domain.UserDTO
 import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.UserStatus
-import nat20.kamppisserver.repository.UserRepository
-import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -16,25 +14,17 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import java.time.LocalDateTime
 import kotlin.test.Test
 
 @Import(SecurityConfig::class) // Import your security config
 @WebMvcTest(UserController::class)
-class UserControllerTests {
+class UserControllerTests @Autowired constructor(
+    val mockMvc: MockMvc
+){
 
 /*      Probably needed later
     @MockkBean
     private lateinit var authenticationManager: AuthenticationManager*/
-
-    @Autowired
-    private lateinit var mockMvc: MockMvc
-
-    @MockkBean
-    lateinit var userRepository: UserRepository
-
-    @MockkBean
-    lateinit var queryService: QueryService
 
     @MockkBean
     lateinit var userService: UserService

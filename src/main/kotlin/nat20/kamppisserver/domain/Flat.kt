@@ -71,7 +71,7 @@ data class FlatDTO(
 )
 
 data class FlatDataDTO(
-    // Only used by UserDataExportService
+    // Only used by Copy of Data
     val name: String,
     val description: String,
     val location: City,

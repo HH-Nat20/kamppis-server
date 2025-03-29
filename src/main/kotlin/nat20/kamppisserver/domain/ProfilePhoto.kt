@@ -67,7 +67,7 @@ data class ProfilePhotoDTO(
 )
 
 data class ProfilePhotoDataDTO(
-    // Only used by UserDataExportService
+    // Only used by Copy of Data
     val url: String,
     val isProfilePhoto: Boolean,
     val createdAt: LocalDateTime,

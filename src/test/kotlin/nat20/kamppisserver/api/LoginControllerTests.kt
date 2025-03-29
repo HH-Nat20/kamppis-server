@@ -3,7 +3,6 @@ package nat20.kamppisserver.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserDTO
 import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.UserStatus
@@ -20,8 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 @WebMvcTest(LoginController::class)
 @Import(SecurityConfig::class) // Import your security config

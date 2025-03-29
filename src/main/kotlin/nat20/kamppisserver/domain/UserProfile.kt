@@ -76,7 +76,7 @@ data class UserProfileDTO(
 ) : ProfileDTO
 
 data class UserProfileDataDTO(
-    // Only used by UserDataExportService
+    // Only used by Copy of Data
     val bio: String,
     val cleanliness: Cleanliness? = null,
     val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),

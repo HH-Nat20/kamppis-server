@@ -64,6 +64,7 @@ data class RoomPreferenceDTO(
 )
 
 data class RoomPreferenceDataDTO(
+    // Only used by Copy of Data
     val maxRent: Int?,
     val hasPrivateRoom: Boolean?,
     val maxRoommates: Int?,
