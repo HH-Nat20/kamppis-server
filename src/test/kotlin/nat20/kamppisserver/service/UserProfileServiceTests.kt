@@ -11,8 +11,10 @@ import nat20.kamppisserver.domain.enums.Cleanliness
 import nat20.kamppisserver.repository.UserProfileRepository
 import org.junit.jupiter.api.BeforeEach
 import io.mockk.*
+import nat20.kamppisserver.domain.UserProfileRequest
 import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.Lifestyle
+import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
 import java.time.LocalDate
 
@@ -49,22 +51,23 @@ class UserProfileServiceTests {
             lifestyle = mutableSetOf(Lifestyle.STUDENT)
         )
 
-        val updateDTO = UserProfileDTO(
+        val updateRequest = UserProfileRequest(
             userId = user.id!!,
             bio = "New bio",
             cleanliness = Cleanliness.MESSY,
             lifestyle = mutableSetOf(Lifestyle.NIGHT_OWL)
         )
 
+        every { userRepository.findByIdAndStatus(999L, UserStatus.ACTIVE) } returns user
         every { userProfileRepository.findByIdActive(123L) } returns existingProfile
         every { userProfileRepository.save(any()) } answers { firstArg() }
 
-        val result = service.update(updateDTO, 123L)
+        val result = service.update(updateRequest, 123L)
 
-        assertEquals(updateDTO.bio, result.bio)
-        assertEquals(updateDTO.cleanliness, result.cleanliness)
-        assertEquals(updateDTO.lifestyle, result.lifestyle)
-        assertEquals(updateDTO.photos, result.photos)
+        assertEquals(updateRequest.bio, result.bio)
+        assertEquals(updateRequest.cleanliness, result.cleanliness)
+        assertEquals(updateRequest.lifestyle, result.lifestyle)
+        assertEquals(updateRequest.photos, result.photos)
 
         verify(exactly = 1) { userProfileRepository.findByIdActive(123L) }
         verify(exactly = 1) { userProfileRepository.save(existingProfile) }
@@ -74,10 +77,10 @@ class UserProfileServiceTests {
     fun `update() should throw EntityNotFoundException when profile does not exist`() {
         every { userProfileRepository.findByIdActive(999L) } returns null
 
-        val updateDTO = UserProfileDTO(userId = 1L, bio = "New bio", id = 999L)
+        val updateRequest = UserProfileRequest(userId = 1L, bio = "New bio", id = 999L)
 
         val exception = assertThrows<EntityNotFoundException> {
-            service.update(updateDTO, 999L)
+            service.update(updateRequest, 999L)
         }
 
         assertEquals("User profile with id 999 not found", exception.message)

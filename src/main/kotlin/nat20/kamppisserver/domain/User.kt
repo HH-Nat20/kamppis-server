@@ -121,7 +121,8 @@ data class UserRequest(
     @NotEmpty val lastName: String,
     @NotEmpty @Email val email: String,
     @NotNull val gender: Gender,
-    val dateOfBirth: LocalDate
+    val dateOfBirth: LocalDate,
+    val id: Long? = null
 )
 
 data class UserSummaryDTO(

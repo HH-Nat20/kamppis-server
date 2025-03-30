@@ -3,11 +3,7 @@ package nat20.kamppisserver.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.*
-import nat20.kamppisserver.domain.UserProfile
-import nat20.kamppisserver.domain.RoomProfile
-import nat20.kamppisserver.domain.UserProfileDTO
-import nat20.kamppisserver.domain.RoomProfileDTO
-import nat20.kamppisserver.domain.FlatDTO
+import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.City
 import nat20.kamppisserver.domain.enums.Utilities
 import nat20.kamppisserver.repository.RoomProfileRepository
@@ -57,7 +53,7 @@ class ProfileControllerTests @Autowired constructor(
 
         every { userProfileRepository.findByIdActive(userProfileId) } returns userProfile
         every { roomProfileRepository.findByIdActive(userProfileId) } returns null
-        every { userProfileService.update(userProfileDTO, userProfileId) } returns userProfileDTO
+        every { userProfileService.update(match { it.id == userProfileId }, userProfileId) } returns userProfileDTO
 
         mockMvc.put("/api/profiles/$userProfileId") {
             contentType = MediaType.APPLICATION_JSON
@@ -68,7 +64,7 @@ class ProfileControllerTests @Autowired constructor(
                 jsonPath("$.id") { value(userProfileId) }
             }
 
-        verify { userProfileService.update(userProfileDTO, userProfileId) }
+        verify { userProfileService.update(any(), userProfileId) }
     }
 
     @Test

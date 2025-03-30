@@ -51,7 +51,15 @@ class ProfileController(private val profileService: ProfileService,
 
         when {
             userProfile != null && profile is UserProfileDTO -> {
-                return ResponseEntity.ok(userProfileService.update(profile, id))
+                val userProfileRequest = UserProfileRequest(
+                    userId = profile.userId,
+                    bio = profile.bio,
+                    cleanliness = profile.cleanliness,
+                    lifestyle = profile.lifestyle,
+                    photos = profile.photos,
+                    id = profile.id
+                )
+                return ResponseEntity.ok(userProfileService.update(userProfileRequest, id))
             }
 
             roomProfile != null && profile is RoomProfileDTO -> {

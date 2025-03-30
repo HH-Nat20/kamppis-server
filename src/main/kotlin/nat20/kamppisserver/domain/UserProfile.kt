@@ -23,7 +23,9 @@ class UserProfile (
     @Enumerated(EnumType.STRING)
     var lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
 
-    bio: String = "Write bio here"
+    bio: String = "Write bio here",
+
+    photos: MutableList<ProfilePhoto> = mutableListOf()
 
 ) : Profile() {// Inherits id, bio, photos, and other attributes from Profile
     init {
@@ -74,6 +76,15 @@ data class UserProfileDTO(
     val photos: MutableList<ProfilePhotoDTO> = mutableListOf(),
     val id: Long? = null
 ) : ProfileDTO
+
+data class UserProfileRequest(
+    val userId: Long,
+    val bio: String? = "Write bio here",
+    val cleanliness: Cleanliness? = null,
+    val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
+    val photos: MutableList<ProfilePhotoDTO>? = mutableListOf(),
+    val id: Long? = null
+)
 
 data class UserProfileDataDTO(
     // Only used by Copy of Data
