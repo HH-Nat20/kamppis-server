@@ -55,7 +55,7 @@ class User(
 
     @JsonIgnore
     @ManyToMany(mappedBy = "users") // This makes it bidirectional
-    var matches: MutableSet<Match> = mutableSetOf(),
+    var matches: MutableSet<Match>? = mutableSetOf(),
 
     @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var userProfile: UserProfile? = null,
@@ -83,7 +83,7 @@ class User(
             gender = gender,
             status = status,
             isOnline = isOnline,
-            matchIds = matches.mapNotNull { it.id }.toSet(),
+            matchIds = matches?.mapNotNull { it.id }?.toSet() ?: emptySet(),
             userProfile = userProfile?.toDTO(),
             roomProfiles = roomProfiles?.map { it.toDTO() },
             id = id
@@ -110,10 +110,18 @@ data class UserDTO(
     @NotNull val gender: Gender,
     val status: UserStatus,
     val isOnline: Boolean,
-    val matchIds: Set<Long>,
+    val matchIds: Set<Long>? = null,
     val userProfile: UserProfileDTO? = null,
     val roomProfiles: List<RoomProfileDTO>? = listOf(),
     val id: Long? = null
+)
+
+data class UserRequest(
+    @NotEmpty val firstName: String,
+    @NotEmpty val lastName: String,
+    @NotEmpty @Email val email: String,
+    @NotNull val gender: Gender,
+    val dateOfBirth: LocalDate
 )
 
 data class UserSummaryDTO(

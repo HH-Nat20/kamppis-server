@@ -49,8 +49,8 @@ class UserController(
      * @return ResponseEntity with status code 201 CREATED.
      */
     @PostMapping
-    fun addUserProfile(@Valid @RequestBody user: User): ResponseEntity<UserDTO>
-            = ResponseEntity.status(HttpStatus.CREATED).body(userService.add(user))
+    fun addUserProfile(@Valid @RequestBody request: UserRequest): ResponseEntity<UserDTO>
+            = ResponseEntity.status(HttpStatus.CREATED).body(userService.add(request))
 
     /**
      * Updates user.
@@ -60,8 +60,8 @@ class UserController(
      * @return ResponseEntity with status code 200 OK.
      */
     @PutMapping("/{id}")
-    fun updateUserProfile(@Valid @RequestBody user: UserDTO, @PathVariable id: Long): ResponseEntity<UserDTO>
-            = ResponseEntity.ok(userService.update(user, id))
+    fun updateUserProfile(@Valid @RequestBody request: UserRequest, @PathVariable id: Long): ResponseEntity<UserDTO>
+            = ResponseEntity.ok(userService.update(request, id))
 
     /**
      * Soft deletes user and subsequent UserProfile.

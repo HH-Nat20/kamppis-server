@@ -3,10 +3,7 @@ package nat20.kamppisserver.service
 import exception.DuplicateEmailException
 import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.Valid
-import nat20.kamppisserver.domain.User
-import nat20.kamppisserver.domain.UserDTO
-import nat20.kamppisserver.domain.UserDataDTO
-import nat20.kamppisserver.domain.UserPreferenceDTO
+import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.*
 import org.springframework.stereotype.Service
@@ -121,13 +118,20 @@ class UserService(private val userRepository: UserRepository,
      * @param user the user to be created.
      * @return the created user.
      */
-    fun add(@Valid user: User): UserDTO {
+    fun add(@Valid request: UserRequest): UserDTO {
         // Check for all e-mails, even INACTIVE ones
-        userRepository.findByEmail(user.email)
+        userRepository.findByEmail(request.email)
             ?.let { throw DuplicateEmailException("User with this email already exists") }
 
-        val addedUser = userRepository.save(user)
+        val user = User(
+            firstName = request.firstName,
+            lastName = request.lastName,
+            email = request.email,
+            dateOfBirth = request.dateOfBirth,
+            gender = request.gender
+        )
 
+        val addedUser = userRepository.save(user)
         return addedUser.toDTO()
     }
 
@@ -138,22 +142,20 @@ class UserService(private val userRepository: UserRepository,
      * @param id the id of the user to be updated.
      * @return the updated user.
      */
-    fun update(@Valid user: UserDTO, id: Long): UserDTO {
-        val updateUser = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+    @Transactional
+    fun update(@Valid request: UserRequest, id: Long): UserDTO {
+        val existingUser = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("User with id $id not found")
-        // Check for all e-mails, even INACTIVE ones
-        val existingUser = userRepository.findByEmail(updateUser.email)
-        if (existingUser != null && existingUser.id != id) {
-            throw DuplicateEmailException("User with this email already exists")
-        }
 
-        updateUser.firstName = user.firstName
-        updateUser.lastName = user.lastName
-        updateUser.email = user.email
-        updateUser.gender = user.gender
-        updateUser.updatedAt = LocalDateTime.now()
+        request.firstName.let { existingUser.firstName = it }
+        request.lastName.let { existingUser.lastName = it }
+        request.email.let { existingUser.email = it }
+        request.dateOfBirth.let { existingUser.dateOfBirth = it }
+        request.gender.let { existingUser.gender = it }
 
-        val updatedUser = userRepository.save(updateUser)
+        existingUser.updatedAt = LocalDateTime.now()
+
+        val updatedUser = userRepository.save(existingUser)
 
         return updatedUser.toDTO()
     }
