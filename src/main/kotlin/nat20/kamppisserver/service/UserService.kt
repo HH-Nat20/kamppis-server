@@ -220,32 +220,26 @@ class UserService(private val userRepository: UserRepository,
         val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("User with id $id not found")
 
-        user.roomPreference = request.roomPreference?.let { dto ->
-            RoomPreference(
-                user = user,
-                maxRent = dto.maxRent,
-                hasPrivateRoom = dto.hasPrivateRoom,
-                maxRoommates = dto.maxRoommates,
-                locationPreferences = dto.locationPreferences?.map { City.valueOf(it.toString()) }?.toMutableList() ?: mutableListOf(),
-                id = dto.id
-            )
-        } // If request.roomPreference is null, user.roomPreference will also be set to null
+        // Set RoomPreferences
+        request.roomPreference?.maxRent.let { user.roomPreference?.maxRent = it }
+        request.roomPreference?.hasPrivateRoom.let { user.roomPreference?.hasPrivateRoom = it }
+        request.roomPreference?.maxRoommates.let { user.roomPreference?.maxRoommates = it }
+        request.roomPreference?.locationPreferences.let { user.roomPreference?.locationPreferences = it }
 
-        user.roommatePreference = request.roommatePreference?.let { dto ->
-            RoommatePreference(
-                user = user,
-                minAgePreference = dto.minAgePreference,
-                maxAgePreference = dto.maxAgePreference,
-                genderPreferences = dto.genderPreferences?.map { Gender.valueOf(it.toString()) }?.toMutableList() ?: mutableListOf(),
-                locationPreferences = dto.locationPreferences?.map { City.valueOf(it.toString()) }?.toMutableList() ?: mutableListOf(),
-                id = dto.id
-            )
-        } // Same logic as above
+        // Set RoommatePreferences
+        request.roommatePreference?.minAgePreference.let { user.roommatePreference?.minAgePreference = it }
+        request.roommatePreference?.maxAgePreference.let { user.roommatePreference?.maxAgePreference = it }
+        request.roommatePreference?.genderPreferences.let { user.roommatePreference?.genderPreferences = it }
+        request.roommatePreference?.locationPreferences.let { user.roommatePreference?.locationPreferences = it }
+
+        user.updatedAt = LocalDateTime.now()
+
+        val updatedUser = userRepository.save(user)
 
         return UserPreferenceDTO(
-            roomPreference = user.roomPreference?.toRoomPreferenceDTO(),
-            roommatePreference = user.roommatePreference?.toRoommatePreferenceDTO(),
-            id = id
+            roomPreference = updatedUser.roomPreference?.toRoomPreferenceDTO(),
+            roommatePreference = updatedUser.roommatePreference?.toRoommatePreferenceDTO(),
+            id = updatedUser.id
         )
     }
 }
