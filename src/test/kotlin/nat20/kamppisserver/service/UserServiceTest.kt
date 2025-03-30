@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Assertions.*
 
 /**
  * Test class for UserService.
+ * TODO: Test get preferences, create and update
  */
 @SpringBootTest
 @Transactional

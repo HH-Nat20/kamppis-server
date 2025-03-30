@@ -28,12 +28,7 @@ class UserController(
     fun findUserById(@PathVariable id: Long): ResponseEntity<UserDTO>
             = ResponseEntity.ok(userService.findById(id))
 
-    /**
-     * Find user preferences.
-     */
-    @GetMapping("/{id}/preferences")
-    fun getUserPreferences(@PathVariable id: Long): ResponseEntity<UserPreferenceDTO>
-            = ResponseEntity.ok(userService.getPreferences(id))
+
 
     /**
      * Get copy of all user data.
@@ -49,7 +44,7 @@ class UserController(
      * @return ResponseEntity with status code 201 CREATED.
      */
     @PostMapping
-    fun addUserProfile(@Valid @RequestBody request: UserRequest): ResponseEntity<UserDTO>
+    fun addUser(@Valid @RequestBody request: UserRequest): ResponseEntity<UserDTO>
             = ResponseEntity.status(HttpStatus.CREATED).body(userService.add(request))
 
     /**
@@ -60,7 +55,7 @@ class UserController(
      * @return ResponseEntity with status code 200 OK.
      */
     @PutMapping("/{id}")
-    fun updateUserProfile(@Valid @RequestBody request: UserRequest, @PathVariable id: Long): ResponseEntity<UserDTO>
+    fun updateUser(@Valid @RequestBody request: UserRequest, @PathVariable id: Long): ResponseEntity<UserDTO>
             = ResponseEntity.ok(userService.update(request, id))
 
     /**
@@ -85,5 +80,19 @@ class UserController(
     @PutMapping("/{id}/restore")
     fun restoreById(@PathVariable id: Long): ResponseEntity<UserDTO>
         = ResponseEntity.ok(userService.restore(id))
+
+    /**
+     * Find user preferences.
+     */
+    @GetMapping("/{id}/preferences")
+    fun getUserPreferences(@PathVariable id: Long): ResponseEntity<UserPreferenceDTO>
+            = ResponseEntity.ok(userService.getPreferences(id))
+
+    /**
+     * Update user preferences.
+     */
+    @PutMapping("/{id}/preferences")
+    fun updateUserPreferences(@Valid @RequestBody request: UserPreferenceRequest, @PathVariable id: Long): ResponseEntity<UserPreferenceDTO>
+            = ResponseEntity.ok(userService.updatePreferences(request, id))
 
 }

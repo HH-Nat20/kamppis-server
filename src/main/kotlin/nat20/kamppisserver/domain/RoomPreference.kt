@@ -7,7 +7,7 @@ import nat20.kamppisserver.domain.enums.City
 
 @Entity
 @Table(name = "room_preferences")
-class RoomPreference (
+class RoomPreference(
     @OneToOne
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     @NotNull(message = "User cannot be null")
@@ -15,14 +15,14 @@ class RoomPreference (
 
     @Positive(message = "Max rent must be a positive integer")
     @Column(name = "max_rent")
-    var maxRent: Int?,
+    var maxRent: Int? = null,
 
     @Column(name = "has_private_room")
-    var hasPrivateRoom: Boolean?,
+    var hasPrivateRoom: Boolean? = false,
 
     @Positive(message = "Max roommates in flat must be a positive integer")
     @Column(name = "max_roommates")
-    var maxRoommates: Int?,
+    var maxRoommates: Int? = null,
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = City::class)
     @CollectionTable(name = "room_preferences_locations", joinColumns = [JoinColumn(name = "room_preferences_id")])
@@ -55,18 +55,18 @@ class RoomPreference (
 }
 
 data class RoomPreferenceDTO(
-    val userId: Long?,
-    val maxRent: Int?,
-    val hasPrivateRoom: Boolean?,
-    val maxRoommates: Int?,
-    val locationPreferences: MutableList<City>?,
+    val userId: Long? = null,
+    val maxRent: Int? = null,
+    val hasPrivateRoom: Boolean? = false,
+    val maxRoommates: Int? = null,
+    val locationPreferences: MutableList<City>? = mutableListOf(),
     val id: Long? = null,
 )
 
 data class RoomPreferenceDataDTO(
     // Only used by Copy of Data
-    val maxRent: Int?,
-    val hasPrivateRoom: Boolean?,
-    val maxRoommates: Int?,
-    val locationPreferences: MutableList<City>?,
+    val maxRent: Int? = null,
+    val hasPrivateRoom: Boolean? = false,
+    val maxRoommates: Int? = null,
+    val locationPreferences: MutableList<City>? = mutableListOf(),
 )

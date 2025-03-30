@@ -140,6 +140,11 @@ data class UserPreferenceDTO(
     val id: Long? = null
 )
 
+data class UserPreferenceRequest(
+    val roomPreference: RoomPreferenceDTO?,
+    val roommatePreference: RoommatePreferenceDTO?
+)
+
 data class UserDataDTO(
     // User information
     val firstName: String,

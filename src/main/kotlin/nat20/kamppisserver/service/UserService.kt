@@ -4,6 +4,8 @@ import exception.DuplicateEmailException
 import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.*
+import nat20.kamppisserver.domain.enums.City
+import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.*
 import org.springframework.stereotype.Service
@@ -57,23 +59,6 @@ class UserService(private val userRepository: UserRepository,
             ?: throw EntityNotFoundException("User with email $email not found")
 
         return user.toDTO()
-    }
-
-    /**
-     * Find user preferences for active User.
-     */
-    fun getPreferences(id: Long): UserPreferenceDTO {
-        val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
-            ?: throw EntityNotFoundException("User with id $id not found")
-
-        val roomPreference = roomPreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
-        val roommatePreference = roommatePreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
-
-        return UserPreferenceDTO(
-            roomPreference = roomPreference?.toRoomPreferenceDTO(),
-            roommatePreference = roommatePreference?.toRoommatePreferenceDTO(),
-            id = user.id!!
-        )
     }
 
     /**
@@ -210,4 +195,57 @@ class UserService(private val userRepository: UserRepository,
         return restoredUser.toDTO()
     }
 
+    /**
+     * Find user preferences for active User.
+     */
+    fun getPreferences(id: Long): UserPreferenceDTO {
+        val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("User with id $id not found")
+
+        val roomPreference = roomPreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
+        val roommatePreference = roommatePreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
+
+        return UserPreferenceDTO(
+            roomPreference = roomPreference?.toRoomPreferenceDTO(),
+            roommatePreference = roommatePreference?.toRoommatePreferenceDTO(),
+            id = user.id!!
+        )
+    }
+
+    /**
+     * Update user preferences for active User.
+     */
+    @Transactional
+    fun updatePreferences(request: UserPreferenceRequest, id: Long): UserPreferenceDTO {
+        val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("User with id $id not found")
+
+        user.roomPreference = request.roomPreference?.let { dto ->
+            RoomPreference(
+                user = user,
+                maxRent = dto.maxRent,
+                hasPrivateRoom = dto.hasPrivateRoom,
+                maxRoommates = dto.maxRoommates,
+                locationPreferences = dto.locationPreferences?.map { City.valueOf(it.toString()) }?.toMutableList() ?: mutableListOf(),
+                id = dto.id
+            )
+        } // If request.roomPreference is null, user.roomPreference will also be set to null
+
+        user.roommatePreference = request.roommatePreference?.let { dto ->
+            RoommatePreference(
+                user = user,
+                minAgePreference = dto.minAgePreference,
+                maxAgePreference = dto.maxAgePreference,
+                genderPreferences = dto.genderPreferences?.map { Gender.valueOf(it.toString()) }?.toMutableList() ?: mutableListOf(),
+                locationPreferences = dto.locationPreferences?.map { City.valueOf(it.toString()) }?.toMutableList() ?: mutableListOf(),
+                id = dto.id
+            )
+        } // Same logic as above
+
+        return UserPreferenceDTO(
+            roomPreference = user.roomPreference?.toRoomPreferenceDTO(),
+            roommatePreference = user.roommatePreference?.toRoommatePreferenceDTO(),
+            id = id
+        )
+    }
 }
