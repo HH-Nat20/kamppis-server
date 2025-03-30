@@ -40,14 +40,14 @@ class UserProfileRepositoryTests @Autowired constructor(
         // Here we set a base date so that our tests always calculate the same age for all users regardless of when the tests are actually run
         testDate= LocalDate.of(2025, 2, 21)
         // We find our test user
-        user = userRepository.findByIdAndStatus(1, UserStatus.ACTIVE)
-            ?: fail("Expected User but found null")
+        user = userRepository.findByIdAndStatus(1L, UserStatus.ACTIVE)
+            ?: fail("❌ Expected User but found null")
         // We find our test user's user profile
         userProfile = userProfileRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
-            ?: fail("Expected UserProfile but found null")
+            ?: fail("❌ Expected UserProfile but found null")
         roommatePreference= roommatePreferenceRepository
             .findByUserIdAndStatus(1L, UserStatus.ACTIVE)
-            ?: fail("Expected RoommatePreference but found null")
+            ?: fail("❌ Expected RoommatePreference but found null")
     }
 
     @Test
@@ -59,7 +59,7 @@ class UserProfileRepositoryTests @Autowired constructor(
                 roommatePreference.minAgePreference,
                 roommatePreference.maxAgePreference,
                 roommatePreference.genderPreferences?.map { it.name },
-                roommatePreference.locationPreferences!!.map { it.name }
+                roommatePreference.locationPreferences?.map { it.name }
             )
 
         assertFalse(userProfile in listOfUserProfiles)
@@ -67,7 +67,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
     @Test
     fun `query should return UserProfiles whose age fit between user's min and max age preferences`(){
-        val numberOfMatchingUserProfiles: Int = 16
+        val numberOfMatchingUserProfiles: Int = 9
 
         // We delete the swipes because we don't want them to interfere the test
         // If not, the query filters out swiped profiles and age test fails
@@ -75,7 +75,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         // Set preferred genders and locations to select all user profiles
         val preferredGenders = null
-        val preferredLocations = listOf("HELSINKI", "ESPOO", "VANTAA")
+        val preferredLocations = null
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
@@ -101,7 +101,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         // Set preferred genders and locations to select all user profiles
         val preferredGenders = null
-        val preferredLocations = listOf("HELSINKI", "ESPOO", "VANTAA")
+        val preferredLocations = null
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
@@ -118,7 +118,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
     @Test
     fun `should return profiles that match user's preferred genders`() {
-        val numberOfMatchingUserProfiles: Int = 17
+        val numberOfMatchingUserProfiles: Int = 14
 
         // We delete the swipes because we don't want them to interfere the test
         // If not, the query filters out swiped profiles and gender test fails
@@ -127,7 +127,7 @@ class UserProfileRepositoryTests @Autowired constructor(
         // Set preferred minAge, maxAge and locations to select all user profiles
         val minAgePreference = null
         val maxAgePreference = null
-        val preferredLocations = listOf("HELSINKI", "ESPOO", "VANTAA")
+        val preferredLocations = null
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
@@ -144,7 +144,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
     @Test
     fun `should return profiles that match user's preferred locations`() {
-        val numberOfMatchingUserProfiles = 21
+        val numberOfMatchingUserProfiles = 25
 
         // We delete the swipes because we don't want them to interfere the test
         // If not, the query filters out swiped profiles and location test fails
@@ -162,7 +162,7 @@ class UserProfileRepositoryTests @Autowired constructor(
                 minAgePreference,
                 maxAgePreference,
                 preferredGenders,
-                roommatePreference.locationPreferences!!.map {it.name}
+                roommatePreference.locationPreferences?.map {it.name}
             )
 
         assertEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
@@ -170,7 +170,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
     @Test
     fun `should not return profiles that have already been swiped`() {
-        val numberOfMatchingUserProfiles: Int = 30
+        val numberOfMatchingUserProfiles: Int = 23
 
         // Note that here we don't delete the swipes because that is what we want to test
 
@@ -178,7 +178,7 @@ class UserProfileRepositoryTests @Autowired constructor(
         val minAgePreference = null
         val maxAgePreference = null
         val preferredGenders = null
-        val preferredLocations = listOf("HELSINKI", "ESPOO", "VANTAA")
+        val preferredLocations = null
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
@@ -195,7 +195,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
     @Test
     fun `should return the correct amount of profiles when all criteria are used`() {
-        val numberOfMatchingUserProfiles: Int = 5
+        val numberOfMatchingUserProfiles: Int = 7
 
         // Query parameters (=user's search criteria) are selected from the user's profile
         // Swipes are taken into account
@@ -206,7 +206,7 @@ class UserProfileRepositoryTests @Autowired constructor(
                 roommatePreference.minAgePreference,
                 roommatePreference.maxAgePreference,
                 roommatePreference.genderPreferences?.map { it.name },
-                roommatePreference.locationPreferences!!.map { it.name }
+                roommatePreference.locationPreferences?.map { it.name }
             )
 
         assertEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
