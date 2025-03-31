@@ -15,7 +15,8 @@ class UserProfileTest {
             firstName = "Alice",
             lastName = "Smith",
             dateOfBirth = LocalDate.of(1990, 5, 14),
-            gender = Gender.FEMALE
+            gender = Gender.FEMALE,
+            lookingFor = LookingFor.OTHER_USER_PROFILES
         )
 
         val profile = UserProfile(

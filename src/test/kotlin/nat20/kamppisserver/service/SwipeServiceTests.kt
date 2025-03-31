@@ -9,6 +9,7 @@ import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.enums.Cleanliness
 import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.Lifestyle
+import nat20.kamppisserver.domain.enums.LookingFor
 import nat20.kamppisserver.domain.getUsersFromProfile
 import nat20.kamppisserver.repository.SwipeRepository
 import org.junit.jupiter.api.BeforeEach
@@ -26,7 +27,8 @@ class SwipeServiceTests {
         firstName = "Alice",
         lastName = "Smith",
         dateOfBirth = LocalDate.of(1990, 5, 14),
-        gender = Gender.FEMALE
+        gender = Gender.FEMALE,
+        lookingFor = LookingFor.OTHER_USER_PROFILES
     )
 
     val profile1 = UserProfile(
@@ -40,7 +42,8 @@ class SwipeServiceTests {
         firstName = "Bob",
         lastName = "Smith",
         dateOfBirth = LocalDate.of(1990, 5, 14),
-        gender = Gender.MALE
+        gender = Gender.MALE,
+        lookingFor = LookingFor.OTHER_USER_PROFILES
     )
 
     val profile2 = UserProfile(

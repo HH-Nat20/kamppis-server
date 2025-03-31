@@ -1,12 +1,10 @@
 package nat20.kamppisserver.service
 
 import exception.DuplicateEmailException
-import jakarta.persistence.EntityNotFoundException
+import exception.EntityNotFoundException
 import jakarta.validation.Valid
-import nat20.kamppisserver.domain.User
-import nat20.kamppisserver.domain.UserDTO
-import nat20.kamppisserver.domain.UserDataDTO
-import nat20.kamppisserver.domain.UserPreferenceDTO
+import nat20.kamppisserver.domain.*
+import nat20.kamppisserver.domain.enums.LookingFor
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.*
 import org.springframework.stereotype.Service
@@ -63,23 +61,6 @@ class UserService(private val userRepository: UserRepository,
     }
 
     /**
-     * Find user preferences for active User.
-     */
-    fun getPreferences(id: Long): UserPreferenceDTO {
-        val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
-            ?: throw EntityNotFoundException("User with id $id not found")
-
-        val roomPreference = roomPreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
-        val roommatePreference = roommatePreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
-
-        return UserPreferenceDTO(
-            roomPreference = roomPreference?.toRoomPreferenceDTO(),
-            roommatePreference = roommatePreference?.toRoommatePreferenceDTO(),
-            id = user.id!!
-        )
-    }
-
-    /**
      * Function for GDPR-compliant Copy of Information functionality. The User receives
      * a copy of
      * - profile information
@@ -121,13 +102,21 @@ class UserService(private val userRepository: UserRepository,
      * @param user the user to be created.
      * @return the created user.
      */
-    fun add(@Valid user: User): UserDTO {
+    fun add(@Valid request: UserRequest): UserDTO {
         // Check for all e-mails, even INACTIVE ones
-        userRepository.findByEmail(user.email)
+        userRepository.findByEmail(request.email)
             ?.let { throw DuplicateEmailException("User with this email already exists") }
 
-        val addedUser = userRepository.save(user)
+        val user = User(
+            firstName = request.firstName,
+            lastName = request.lastName,
+            email = request.email,
+            dateOfBirth = request.dateOfBirth,
+            gender = request.gender,
+            lookingFor = request.lookingFor ?: LookingFor.OTHER_USER_PROFILES_OR_ROOM_PROFILES,
+        )
 
+        val addedUser = userRepository.save(user)
         return addedUser.toDTO()
     }
 
@@ -138,22 +127,21 @@ class UserService(private val userRepository: UserRepository,
      * @param id the id of the user to be updated.
      * @return the updated user.
      */
-    fun update(@Valid user: UserDTO, id: Long): UserDTO {
-        val updateUser = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+    @Transactional
+    fun update(@Valid request: UserRequest, id: Long): UserDTO {
+        val existingUser = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("User with id $id not found")
-        // Check for all e-mails, even INACTIVE ones
-        val existingUser = userRepository.findByEmail(updateUser.email)
-        if (existingUser != null && existingUser.id != id) {
-            throw DuplicateEmailException("User with this email already exists")
-        }
 
-        updateUser.firstName = user.firstName
-        updateUser.lastName = user.lastName
-        updateUser.email = user.email
-        updateUser.gender = user.gender
-        updateUser.updatedAt = LocalDateTime.now()
+        request.firstName.let { existingUser.firstName = it }
+        request.lastName.let { existingUser.lastName = it }
+        request.email.let { existingUser.email = it }
+        request.dateOfBirth.let { existingUser.dateOfBirth = it }
+        request.gender.let { existingUser.gender = it }
+        request.lookingFor?.let {existingUser.lookingFor = it}
 
-        val updatedUser = userRepository.save(updateUser)
+        existingUser.updatedAt = LocalDateTime.now()
+
+        val updatedUser = userRepository.save(existingUser)
 
         return updatedUser.toDTO()
     }
@@ -208,4 +196,55 @@ class UserService(private val userRepository: UserRepository,
         return restoredUser.toDTO()
     }
 
+    /**
+     * Find user preferences for active User.
+     */
+    fun getPreferences(id: Long): UserPreferenceDTO {
+        val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("User with id $id not found")
+
+        val roomPreference = roomPreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
+        val roommatePreference = roommatePreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
+
+        return UserPreferenceDTO(
+            roomPreference = roomPreference?.toRoomPreferenceDTO(),
+            roommatePreference = roommatePreference?.toRoommatePreferenceDTO(),
+            id = user.id!!
+        )
+    }
+
+    /**
+     * Update user preferences for active User.
+     */
+    @Transactional
+    fun updatePreferences(request: UserPreferenceRequest, id: Long): UserPreferenceDTO {
+        val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+            ?: throw EntityNotFoundException("User with id $id not found")
+
+        // Initialize RoomPreference and RoommatePreference if null
+        user.roomPreference = user.roomPreference ?: RoomPreference(user = user)
+        user.roommatePreference = user.roommatePreference ?: RoommatePreference(user = user)
+
+        // Set RoomPreferences
+        request.roomPreference?.maxRent.let { user.roomPreference?.maxRent = it }
+        request.roomPreference?.hasPrivateRoom.let { user.roomPreference?.hasPrivateRoom = it }
+        request.roomPreference?.maxRoommates.let { user.roomPreference?.maxRoommates = it }
+        request.roomPreference?.locationPreferences.let { user.roomPreference?.locationPreferences = it }
+
+        // Set RoommatePreferences
+        request.roommatePreference?.minAgePreference.let { user.roommatePreference?.minAgePreference = it }
+        request.roommatePreference?.maxAgePreference.let { user.roommatePreference?.maxAgePreference = it }
+        request.roommatePreference?.genderPreferences.let { user.roommatePreference?.genderPreferences = it }
+        request.roommatePreference?.locationPreferences.let { user.roommatePreference?.locationPreferences = it }
+
+        user.updatedAt = LocalDateTime.now()
+
+        val updatedUser = userRepository.save(user)
+
+        return UserPreferenceDTO(
+            roomPreference = updatedUser.roomPreference?.toRoomPreferenceDTO(),
+            roommatePreference = updatedUser.roommatePreference?.toRoommatePreferenceDTO(),
+            id = updatedUser.id
+        )
+    }
 }

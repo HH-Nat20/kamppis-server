@@ -2,6 +2,7 @@ package nat20.kamppisserver.configuration.mockdataconfigs
 
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.enums.Gender
+import nat20.kamppisserver.domain.enums.LookingFor
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
 import java.time.LocalDate
@@ -22,6 +23,7 @@ class MockUsersConfig {
                 lastName = "Smith",
                 dateOfBirth = LocalDate.of(1990, 5, 14),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -30,6 +32,7 @@ class MockUsersConfig {
                 lastName = "Johnson",
                 dateOfBirth = LocalDate.of(1985, 11, 22),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -38,6 +41,7 @@ class MockUsersConfig {
                 lastName = "Davis",
                 dateOfBirth = LocalDate.of(1998, 2, 3),
                 gender = Gender.OTHER,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -46,6 +50,7 @@ class MockUsersConfig {
                 lastName = "Lee",
                 dateOfBirth = LocalDate.of(2000, 2, 3),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -53,7 +58,8 @@ class MockUsersConfig {
                 firstName = "Eve",
                 lastName = "Brown",
                 dateOfBirth = LocalDate.of(1995, 8, 19),
-                gender = Gender.NOT_IMPORTANT,
+                gender = Gender.OTHER,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -62,6 +68,7 @@ class MockUsersConfig {
                 lastName = "Miller",
                 dateOfBirth = LocalDate.of(1988, 3, 22),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -70,6 +77,7 @@ class MockUsersConfig {
                 lastName = "Wilson",
                 dateOfBirth = LocalDate.of(1992, 7, 15),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -78,6 +86,7 @@ class MockUsersConfig {
                 lastName = "Moore",
                 dateOfBirth = LocalDate.of(1985, 1, 10),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -86,6 +95,7 @@ class MockUsersConfig {
                 lastName = "Taylor",
                 dateOfBirth = LocalDate.of(1999, 12, 5),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -94,6 +104,7 @@ class MockUsersConfig {
                 lastName = "Anderson",
                 dateOfBirth = LocalDate.of(1990, 6, 30),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -102,6 +113,7 @@ class MockUsersConfig {
                 lastName = "Thomas",
                 dateOfBirth = LocalDate.of(1982, 8, 20),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -110,6 +122,7 @@ class MockUsersConfig {
                 lastName = "Jackson",
                 dateOfBirth = LocalDate.of(1995, 4, 2),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -118,6 +131,7 @@ class MockUsersConfig {
                 lastName = "White",
                 dateOfBirth = LocalDate.of(2000, 2, 17),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -126,6 +140,7 @@ class MockUsersConfig {
                 lastName = "Harris",
                 dateOfBirth = LocalDate.of(1987, 9, 9),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -134,6 +149,7 @@ class MockUsersConfig {
                 lastName = "Martin",
                 dateOfBirth = LocalDate.of(1993, 11, 11),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -142,6 +158,7 @@ class MockUsersConfig {
                 lastName = "Thompson",
                 dateOfBirth = LocalDate.of(1980, 5, 5),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -150,6 +167,7 @@ class MockUsersConfig {
                 lastName = "Garcia",
                 dateOfBirth = LocalDate.of(1998, 3, 3),
                 gender = Gender.OTHER,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -158,6 +176,7 @@ class MockUsersConfig {
                 lastName = "Martinez",
                 dateOfBirth = LocalDate.of(1989, 10, 25),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -166,6 +185,7 @@ class MockUsersConfig {
                 lastName = "Robinson",
                 dateOfBirth = LocalDate.of(1978, 12, 1),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -174,6 +194,7 @@ class MockUsersConfig {
                 lastName = "Clark",
                 dateOfBirth = LocalDate.of(1996, 7, 19),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -182,6 +203,7 @@ class MockUsersConfig {
                 lastName = "Rodriguez",
                 dateOfBirth = LocalDate.of(1991, 1, 29),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -190,6 +212,7 @@ class MockUsersConfig {
                 lastName = "Lewis",
                 dateOfBirth = LocalDate.of(1984, 4, 14),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -198,6 +221,7 @@ class MockUsersConfig {
                 lastName = "Walker",
                 dateOfBirth = LocalDate.of(1994, 6, 8),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -206,6 +230,7 @@ class MockUsersConfig {
                 lastName = "Hall",
                 dateOfBirth = LocalDate.of(1986, 9, 30),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -214,6 +239,7 @@ class MockUsersConfig {
                 lastName = "Allen",
                 dateOfBirth = LocalDate.of(1997, 2, 22),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -222,6 +248,7 @@ class MockUsersConfig {
                 lastName = "Young",
                 dateOfBirth = LocalDate.of(1983, 11, 12),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES,
                 status = UserStatus.ACTIVE
             )
         )
@@ -234,6 +261,7 @@ class MockUsersConfig {
                 lastName = "Oaks",
                 dateOfBirth = LocalDate.of(1990, 5, 14),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -242,6 +270,7 @@ class MockUsersConfig {
                 lastName = "Johnson",
                 dateOfBirth = LocalDate.of(1987, 8, 22),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -250,6 +279,7 @@ class MockUsersConfig {
                 lastName = "Davis",
                 dateOfBirth = LocalDate.of(2002, 3, 9),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -258,6 +288,7 @@ class MockUsersConfig {
                 lastName = "Miller",
                 dateOfBirth = LocalDate.of(1995, 12, 30),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -266,6 +297,7 @@ class MockUsersConfig {
                 lastName = "Wilson",
                 dateOfBirth = LocalDate.of(2000, 7, 18),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -274,6 +306,7 @@ class MockUsersConfig {
                 lastName = "Atwood",
                 dateOfBirth = LocalDate.of(1992, 11, 3),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -282,6 +315,7 @@ class MockUsersConfig {
                 lastName = "Taylor",
                 dateOfBirth = LocalDate.of(1998, 11, 3),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -290,6 +324,7 @@ class MockUsersConfig {
                 lastName = "Anderson",
                 dateOfBirth = LocalDate.of(1993, 6, 17),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -298,6 +333,7 @@ class MockUsersConfig {
                 lastName = "Thomas",
                 dateOfBirth = LocalDate.of(2001, 9, 29),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -306,6 +342,7 @@ class MockUsersConfig {
                 lastName = "Jackson",
                 dateOfBirth = LocalDate.of(1996, 2, 14),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -314,6 +351,7 @@ class MockUsersConfig {
                 lastName = "White",
                 dateOfBirth = LocalDate.of(1989, 12, 5),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -322,6 +360,7 @@ class MockUsersConfig {
                 lastName = "Harris",
                 dateOfBirth = LocalDate.of(1997, 3, 21),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -330,6 +369,7 @@ class MockUsersConfig {
                 lastName = "Martin",
                 dateOfBirth = LocalDate.of(2004, 8, 10),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -338,6 +378,7 @@ class MockUsersConfig {
                 lastName = "Lee",
                 dateOfBirth = LocalDate.of(1992, 1, 7),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -346,6 +387,7 @@ class MockUsersConfig {
                 lastName = "Walker",
                 dateOfBirth = LocalDate.of(1994, 10, 23),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -354,6 +396,7 @@ class MockUsersConfig {
                 lastName = "Hall",
                 dateOfBirth = LocalDate.of(1986, 5, 30),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -362,6 +405,7 @@ class MockUsersConfig {
                 lastName = "Allen",
                 dateOfBirth = LocalDate.of(2003, 7, 19),
                 gender = Gender.OTHER,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -370,6 +414,7 @@ class MockUsersConfig {
                 lastName = "Young",
                 dateOfBirth = LocalDate.of(1991, 11, 11),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -378,6 +423,7 @@ class MockUsersConfig {
                 lastName = "King",
                 dateOfBirth = LocalDate.of(1999, 6, 6),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -386,6 +432,7 @@ class MockUsersConfig {
                 lastName = "Scott",
                 dateOfBirth = LocalDate.of(1990, 4, 15),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -394,6 +441,7 @@ class MockUsersConfig {
                 lastName = "Brown",
                 dateOfBirth = LocalDate.of(1998, 12, 2),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -402,6 +450,7 @@ class MockUsersConfig {
                 lastName = "Adams",
                 dateOfBirth = LocalDate.of(1995, 3, 15),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -410,6 +459,7 @@ class MockUsersConfig {
                 lastName = "Brown",
                 dateOfBirth = LocalDate.of(1998, 7, 22),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -418,6 +468,7 @@ class MockUsersConfig {
                 lastName = "Clark",
                 dateOfBirth = LocalDate.of(1992, 11, 30),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -426,6 +477,7 @@ class MockUsersConfig {
                 lastName = "Davis",
                 dateOfBirth = LocalDate.of(2000, 5, 10),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -434,6 +486,7 @@ class MockUsersConfig {
                 lastName = "Evans",
                 dateOfBirth = LocalDate.of(1997, 8, 5),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.ROOM_PROFILES,
                 status = UserStatus.ACTIVE
             )
         )
@@ -446,6 +499,7 @@ class MockUsersConfig {
                 lastName = "Baker",
                 dateOfBirth = LocalDate.of(1991, 2, 5),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -454,6 +508,7 @@ class MockUsersConfig {
                 lastName = "Evans",
                 dateOfBirth = LocalDate.of(1993, 7, 12),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -462,6 +517,7 @@ class MockUsersConfig {
                 lastName = "Green",
                 dateOfBirth = LocalDate.of(1988, 11, 20),
                 gender = Gender.OTHER,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -470,6 +526,7 @@ class MockUsersConfig {
                 lastName = "Hill",
                 dateOfBirth = LocalDate.of(1999, 4, 8),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -478,6 +535,7 @@ class MockUsersConfig {
                 lastName = "James",
                 dateOfBirth = LocalDate.of(2000, 9, 25),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -486,6 +544,7 @@ class MockUsersConfig {
                 lastName = "Kelly",
                 dateOfBirth = LocalDate.of(1995, 6, 3),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -494,6 +553,7 @@ class MockUsersConfig {
                 lastName = "Lewis",
                 dateOfBirth = LocalDate.of(1986, 12, 14),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -502,6 +562,7 @@ class MockUsersConfig {
                 lastName = "Morris",
                 dateOfBirth = LocalDate.of(1992, 3, 19),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -510,6 +571,7 @@ class MockUsersConfig {
                 lastName = "Morgan",
                 dateOfBirth = LocalDate.of(1994, 8, 30),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -518,6 +580,7 @@ class MockUsersConfig {
                 lastName = "Parker",
                 dateOfBirth = LocalDate.of(2003, 5, 22),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -526,6 +589,7 @@ class MockUsersConfig {
                 lastName = "Reed",
                 dateOfBirth = LocalDate.of(1997, 1, 10),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -534,6 +598,7 @@ class MockUsersConfig {
                 lastName = "Ross",
                 dateOfBirth = LocalDate.of(2002, 11, 27),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -542,6 +607,7 @@ class MockUsersConfig {
                 lastName = "Scott",
                 dateOfBirth = LocalDate.of(1989, 6, 15),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -550,6 +616,7 @@ class MockUsersConfig {
                 lastName = "Turner",
                 dateOfBirth = LocalDate.of(1996, 10, 5),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -558,6 +625,7 @@ class MockUsersConfig {
                 lastName = "Lee",
                 dateOfBirth = LocalDate.of(1996, 9, 30),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -566,6 +634,7 @@ class MockUsersConfig {
                 lastName = "Martin",
                 dateOfBirth = LocalDate.of(1991, 11, 25),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -574,6 +643,7 @@ class MockUsersConfig {
                 lastName = "Nelson",
                 dateOfBirth = LocalDate.of(1993, 4, 18),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -582,6 +652,7 @@ class MockUsersConfig {
                 lastName = "Owens",
                 dateOfBirth = LocalDate.of(2000, 8, 7),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -590,6 +661,7 @@ class MockUsersConfig {
                 lastName = "Parker",
                 dateOfBirth = LocalDate.of(1997, 12, 3),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -598,6 +670,7 @@ class MockUsersConfig {
                 lastName = "Quinn",
                 dateOfBirth = LocalDate.of(1995, 5, 19),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -606,6 +679,7 @@ class MockUsersConfig {
                 lastName = "Roberts",
                 dateOfBirth = LocalDate.of(1998, 1, 12),
                 gender = Gender.MALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -614,6 +688,7 @@ class MockUsersConfig {
                 lastName = "Smith",
                 dateOfBirth = LocalDate.of(1992, 3, 27),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -622,6 +697,7 @@ class MockUsersConfig {
                 lastName = "Thompson",
                 dateOfBirth = LocalDate.of(1994, 10, 15),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -630,6 +706,7 @@ class MockUsersConfig {
                 lastName = "Underwood",
                 dateOfBirth = LocalDate.of(1996, 6, 9),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -638,6 +715,7 @@ class MockUsersConfig {
                 lastName = "Vasquez",
                 dateOfBirth = LocalDate.of(2001, 7, 23),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             ),
             User(
@@ -646,6 +724,7 @@ class MockUsersConfig {
                 lastName = "Williams",
                 dateOfBirth = LocalDate.of(1990, 11, 5),
                 gender = Gender.FEMALE,
+                lookingFor = LookingFor.USER_PROFILES,
                 status = UserStatus.ACTIVE
             )
         )

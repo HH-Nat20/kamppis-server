@@ -10,7 +10,6 @@ import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.enums.*
 import nat20.kamppisserver.repository.ProfileRepository
-import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.service.SwipeService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -44,7 +43,8 @@ class SwipeControllerTests @Autowired constructor(
             firstName = "Alice",
             lastName = "Smith",
             dateOfBirth = LocalDate.of(1990, 5, 14),
-            gender = Gender.FEMALE
+            gender = Gender.FEMALE,
+            lookingFor = LookingFor.OTHER_USER_PROFILES
         )
 
         val profile1 = UserProfile(
@@ -59,7 +59,8 @@ class SwipeControllerTests @Autowired constructor(
             firstName = "Bob",
             lastName = "Smith",
             dateOfBirth = LocalDate.of(1990, 5, 14),
-            gender = Gender.MALE
+            gender = Gender.MALE,
+            lookingFor = LookingFor.OTHER_USER_PROFILES
         )
 
         val profile2 = UserProfile(

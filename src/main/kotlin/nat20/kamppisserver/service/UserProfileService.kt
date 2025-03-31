@@ -6,6 +6,7 @@ import jakarta.validation.Valid
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.domain.ProfilePhoto
+import nat20.kamppisserver.domain.UserProfileRequest
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
@@ -51,9 +52,29 @@ class UserProfileService(
      * @param userProfile the profile to be created.
      * @return the created profile.
      */
-    fun add(userProfile: UserProfile): UserProfileDTO {
-        userProfile.user.id?.let { userRepository.findByIdAndStatus(it, UserStatus.ACTIVE) }
-            ?: throw EntityNotFoundException("User ${userProfile.user.id} not found")
+    fun add(request: UserProfileRequest): UserProfileDTO {
+        val user = request.userId.let { userRepository.findByIdAndStatus(it, UserStatus.ACTIVE) }
+            ?: throw EntityNotFoundException("User ${request.userId} not found")
+
+        val userProfile = UserProfile(
+            user = user,
+            bio = request.bio ?: "Write bio here",
+            cleanliness = request.cleanliness,
+            lifestyle = request.lifestyle,
+            photos = mutableListOf()
+        )
+
+        // Convert ProfilePhotoDTOs to ProfilePhoto entities
+        request.photos?.takeIf { it.isNotEmpty() }?.let { photos ->
+            userProfile.photos = photos.map { dto ->
+                ProfilePhoto(
+                    profile = userProfile,
+                    url = dto.url,
+                    isProfilePhoto = dto.isProfilePhoto,
+                    id = dto.id
+                )
+            }.toMutableList()
+        }
 
         val addedUserProfile = userProfileRepository.save(userProfile)
         return addedUserProfile.toDTO(includeUserSummary = true)
@@ -67,25 +88,34 @@ class UserProfileService(
      * @return the updated profile.
      */
     @Transactional
-    fun update(@Valid userProfile: UserProfileDTO, id: Long): UserProfileDTO {
+    fun update(@Valid request: UserProfileRequest, id: Long): UserProfileDTO {
         val existingProfile = userProfileRepository.findByIdActive(id)
             ?: throw EntityNotFoundException("User profile with id $id not found")
 
+        val user = request.userId.let { userRepository.findByIdAndStatus(it, UserStatus.ACTIVE) }
+            ?: throw EntityNotFoundException("User ${request.userId} not found")
+
+        existingProfile.user = user
+
         // Apply updates only if new values are not null
-        userProfile.bio.let { existingProfile.bio = it }
-        userProfile.cleanliness?.let { existingProfile.cleanliness = it }
-        userProfile.lifestyle?.let { existingProfile.lifestyle = it }
+        request.bio.let { existingProfile.bio = it ?: "Write bio here" }
+        request.cleanliness?.let { existingProfile.cleanliness = it }
+        request.lifestyle?.let { existingProfile.lifestyle = it }
 
         // Convert ProfilePhotoDTOs to ProfilePhoto entities
-        userProfile.photos.let {
-            existingProfile.photos = it.map { dto ->
-                ProfilePhoto(
-                    profile = existingProfile,
-                    url = dto.url,
-                    isProfilePhoto = dto.isProfilePhoto,
-                    id = dto.id
-                )
-            }.toMutableList()
+        request.photos?.let { photos ->
+            existingProfile.photos = if (photos.isNotEmpty()) {
+                photos.map { dto ->
+                    ProfilePhoto(
+                        profile = existingProfile,
+                        url = dto.url,
+                        isProfilePhoto = dto.isProfilePhoto,
+                        id = dto.id
+                    )
+                }.toMutableList()
+            } else {
+                existingProfile.photos // Keep existing photos if request is empty
+            }
         }
 
         existingProfile.updatedAt = LocalDateTime.now()

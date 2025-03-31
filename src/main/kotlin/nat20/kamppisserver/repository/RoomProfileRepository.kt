@@ -27,7 +27,7 @@ interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
     WHERE NOT EXISTS (
         SELECT 1
         FROM swipes s
-        WHERE s.swiping_profile_id = :id
+        WHERE s.swiping_profile_id = :userProfileId
         AND s.swiped_profile_id = rp.id
     )
     AND (:maxRent IS NULL OR rp.rent <= :maxRent)
@@ -36,7 +36,7 @@ interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
     AND (COALESCE(:locationPreferences) IS NULL OR f.location IN (:locationPreferences))
     """, nativeQuery = true)
     fun findRoomProfilesThatMeetCriteria(
-        @Param("id") id: Long,
+        @Param("userProfileId") userProfileId: Long,
         @Param("maxRent") maxRent: Int?,
         @Param("hasPrivateRoom") hasPrivateRoom: Boolean?,
         @Param("maxRoommates") maxRoommates: Int?,

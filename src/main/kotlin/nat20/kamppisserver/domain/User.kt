@@ -34,6 +34,10 @@ class User(
     @NotNull(message = "Gender cannot be null.")
     var gender: Gender,
 
+    @Column(name = "looking_for")
+    @Enumerated(EnumType.STRING)
+    var lookingFor: LookingFor? = LookingFor.OTHER_USER_PROFILES_OR_ROOM_PROFILES,
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     var status: UserStatus = UserStatus.ACTIVE,
@@ -55,7 +59,7 @@ class User(
 
     @JsonIgnore
     @ManyToMany(mappedBy = "users") // This makes it bidirectional
-    var matches: MutableSet<Match> = mutableSetOf(),
+    var matches: MutableSet<Match>? = mutableSetOf(),
 
     @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var userProfile: UserProfile? = null,
@@ -79,13 +83,27 @@ class User(
             firstName = firstName,
             lastName = lastName,
             email = email,
+            dateOfBirth = dateOfBirth,
             age = ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now()),
             gender = gender,
+            lookingFor = lookingFor,
             status = status,
             isOnline = isOnline,
-            matchIds = matches.mapNotNull { it.id }.toSet(),
+            matchIds = matches?.mapNotNull { it.id }?.toSet() ?: emptySet(),
             userProfile = userProfile?.toDTO(),
             roomProfiles = roomProfiles?.map { it.toDTO() },
+            id = id
+        )
+    }
+
+    fun toUserRequest(): UserRequest {
+        return UserRequest(
+            firstName = firstName,
+            lastName = lastName,
+            email = email,
+            gender = gender,
+            lookingFor = lookingFor,
+            dateOfBirth = dateOfBirth,
             id = id
         )
     }
@@ -106,13 +124,25 @@ data class UserDTO(
     @NotEmpty val firstName: String,
     @NotEmpty val lastName: String,
     @NotEmpty @Email val email: String,
+    val dateOfBirth: LocalDate,
     val age: Long? = null,
     @NotNull val gender: Gender,
+    val lookingFor: LookingFor? = LookingFor.OTHER_USER_PROFILES_OR_ROOM_PROFILES,
     val status: UserStatus,
     val isOnline: Boolean,
-    val matchIds: Set<Long>,
+    val matchIds: Set<Long>? = null,
     val userProfile: UserProfileDTO? = null,
     val roomProfiles: List<RoomProfileDTO>? = listOf(),
+    val id: Long? = null
+)
+
+data class UserRequest(
+    @NotEmpty val firstName: String,
+    @NotEmpty val lastName: String,
+    @NotEmpty @Email val email: String,
+    @NotNull val gender: Gender,
+    val lookingFor: LookingFor? = LookingFor.OTHER_USER_PROFILES_OR_ROOM_PROFILES,
+    val dateOfBirth: LocalDate,
     val id: Long? = null
 )
 
@@ -129,6 +159,11 @@ data class UserPreferenceDTO(
     val roomPreference: RoomPreferenceDTO?,
     val roommatePreference: RoommatePreferenceDTO?,
     val id: Long? = null
+)
+
+data class UserPreferenceRequest(
+    val roomPreference: RoomPreferenceDTO?,
+    val roommatePreference: RoommatePreferenceDTO?
 )
 
 data class UserDataDTO(

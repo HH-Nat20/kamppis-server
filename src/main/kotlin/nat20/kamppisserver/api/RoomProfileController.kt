@@ -44,9 +44,9 @@ class RoomProfileController(private val service: RoomProfileService,
      * @return ResponseEntity with list of room profiles and status code 200 OK if room profiles have been found.
      * @return ResponseEntity with status code 204 NO_CONTENT if no room profiles have been found.
      */
-    @GetMapping("/{id}/query")
-    fun findRoomProfilesThatMeetCriteria(@PathVariable id: Long): ResponseEntity<List<RoomProfileDTO>> {
-        val roomProfileList: List<RoomProfileDTO> = queryService.findRoomProfilesThatMeetCriteria(id)
+    @GetMapping("/{userId}/query")
+    fun findRoomProfilesThatMeetCriteria(@PathVariable userId: Long): ResponseEntity<List<RoomProfileDTO>> {
+        val roomProfileList: List<RoomProfileDTO> = queryService.findRoomProfilesThatMeetCriteria(userId)
 
         if (roomProfileList.isEmpty()) {
             return ResponseEntity(HttpStatus.NO_CONTENT)

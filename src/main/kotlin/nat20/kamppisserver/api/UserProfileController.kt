@@ -3,6 +3,7 @@ package nat20.kamppisserver.api
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
+import nat20.kamppisserver.domain.UserProfileRequest
 import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserProfileService
 import org.springframework.http.HttpStatus
@@ -45,8 +46,8 @@ class UserProfileController(private val service: UserProfileService,
      * @return ResponseEntity with status code 201 CREATED.
      */
     @PostMapping
-    fun addUserProfile(@Valid @RequestBody userProfile: UserProfile): ResponseEntity<UserProfileDTO>
-        = ResponseEntity.status(HttpStatus.CREATED).body(service.add(userProfile))
+    fun addUserProfile(@Valid @RequestBody request: UserProfileRequest): ResponseEntity<UserProfileDTO>
+        = ResponseEntity.status(HttpStatus.CREATED).body(service.add(request))
 
     /**
      * Updates user profile.
@@ -56,8 +57,8 @@ class UserProfileController(private val service: UserProfileService,
      * @return ResponseEntity with status code 200 OK.
      */
     @PutMapping("/{id}")
-    fun updateUserProfile(@Valid @RequestBody userProfile: UserProfileDTO, @PathVariable id: Long): ResponseEntity<UserProfileDTO>
-        = ResponseEntity.ok(service.update(userProfile, id))
+    fun updateUserProfile(@Valid @RequestBody request: UserProfileRequest, @PathVariable id: Long): ResponseEntity<UserProfileDTO>
+        = ResponseEntity.ok(service.update(request, id))
 
     /**
      * Finds all the user profiles that match the user's search criteria.
@@ -66,9 +67,9 @@ class UserProfileController(private val service: UserProfileService,
      * @return ResponseEntity with list of user profiles and status code 200 OK if user profiles have been found.
      * @return ResponseEntity with status code 204 NO_CONTENT if no user profiles have been found.
      */
-    @GetMapping("/{id}/query")
-    fun findUserProfilesThatMeetCriteria(@PathVariable id: Long): ResponseEntity<List<UserProfileDTO>> {
-        val userProfileList: List<UserProfileDTO> = queryService.findUserProfilesThatMeetCriteria(id)
+    @GetMapping("/{userId}/query")
+    fun findUserProfilesThatMeetCriteria(@PathVariable userId: Long): ResponseEntity<List<UserProfileDTO>> {
+        val userProfileList: List<UserProfileDTO> = queryService.findUserProfilesThatMeetCriteria(userId)
 
         if (userProfileList.isEmpty()) {
             return ResponseEntity(HttpStatus.NO_CONTENT)

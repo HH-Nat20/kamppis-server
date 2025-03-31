@@ -114,7 +114,7 @@ data class RoomProfileRequest(
 )
 
 data class RoomProfileDataDTO(
-    // Only used by UserDataExportService
+    // Only used by Copy of Data
     val flat: FlatDataDTO,
     val rent: Int,
     val isPrivateRoom: Boolean,
