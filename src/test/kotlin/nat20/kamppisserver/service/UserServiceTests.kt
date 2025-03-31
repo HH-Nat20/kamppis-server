@@ -2,9 +2,7 @@ package nat20.kamppisserver.service
 
 import exception.DuplicateEmailException
 import exception.EntityNotFoundException
-import nat20.kamppisserver.domain.User
-import nat20.kamppisserver.domain.UserProfile
-import nat20.kamppisserver.domain.UserRequest
+import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.*
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
@@ -20,12 +18,11 @@ import org.junit.jupiter.api.assertThrows
 
 /**
  * Test class for UserService.
- * TODO: Test get preferences, create and update
  */
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-class UserServiceTest @Autowired constructor(
+class UserServiceTests @Autowired constructor(
     val userService: UserService,
     val userRepository: UserRepository,
     val userProfileRepository: UserProfileRepository
@@ -34,6 +31,7 @@ class UserServiceTest @Autowired constructor(
     lateinit var testUser: User
     lateinit var testUserProfile: UserProfile
     lateinit var testUserRequest: UserRequest
+    lateinit var testUserPreferenceRequest: UserPreferenceRequest
 
     @BeforeEach
     fun setup() {
@@ -60,6 +58,21 @@ class UserServiceTest @Autowired constructor(
             dateOfBirth = LocalDate.of(1999, 1, 1),
             gender = Gender.FEMALE,
             lookingFor = LookingFor.ROOM_PROFILES
+        )
+
+        testUserPreferenceRequest = UserPreferenceRequest(
+            roomPreference = RoomPreferenceDTO(
+                maxRent = 1200,
+                hasPrivateRoom = true,
+                maxRoommates = 1,
+                locationPreferences = mutableListOf(City.HELSINKI)
+            ),
+            roommatePreference = RoommatePreferenceDTO(
+                minAgePreference = 22,
+                maxAgePreference = 30,
+                genderPreferences = mutableListOf(Gender.MALE),
+                locationPreferences = mutableListOf(City.HELSINKI)
+            )
         )
     }
 
@@ -96,11 +109,32 @@ class UserServiceTest @Autowired constructor(
     }
 
     @Test
-    fun `should throw EntityNotFoundException when user does not exist`() {
+    fun `should update user preferences successfully`() {
+        val result = userService.updatePreferences(testUserPreferenceRequest, testUser.id!!)
+
+        assertEquals(testUserPreferenceRequest.roomPreference?.maxRent, result.roomPreference?.maxRent)
+        assertEquals(testUserPreferenceRequest.roomPreference?.hasPrivateRoom, result.roomPreference?.hasPrivateRoom)
+        assertEquals(testUserPreferenceRequest.roomPreference?.maxRoommates, result.roomPreference?.maxRoommates)
+        assertEquals(testUserPreferenceRequest.roomPreference?.locationPreferences, result.roomPreference?.locationPreferences)
+
+        assertEquals(testUserPreferenceRequest.roommatePreference?.minAgePreference, result.roommatePreference?.minAgePreference)
+        assertEquals(testUserPreferenceRequest.roommatePreference?.maxAgePreference, result.roommatePreference?.maxAgePreference)
+        assertEquals(testUserPreferenceRequest.roommatePreference?.genderPreferences, result.roommatePreference?.genderPreferences)
+        assertEquals(testUserPreferenceRequest.roommatePreference?.locationPreferences, result.roommatePreference?.locationPreferences)
+
+        assertNotNull(testUser.updatedAt)
+    }
+
+    @Test
+    fun `update should throw EntityNotFoundException when user does not exist`() {
         val userId = 999L
 
         assertThrows<EntityNotFoundException> {
             userService.update(testUserRequest, userId)
+        }
+
+        assertThrows<EntityNotFoundException> {
+            userService.updatePreferences(testUserPreferenceRequest, userId)
         }
     }
 

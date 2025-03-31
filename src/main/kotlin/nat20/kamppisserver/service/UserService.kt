@@ -221,6 +221,10 @@ class UserService(private val userRepository: UserRepository,
         val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("User with id $id not found")
 
+        // Initialize RoomPreference and RoommatePreference if null
+        user.roomPreference = user.roomPreference ?: RoomPreference(user = user)
+        user.roommatePreference = user.roommatePreference ?: RoommatePreference(user = user)
+
         // Set RoomPreferences
         request.roomPreference?.maxRent.let { user.roomPreference?.maxRent = it }
         request.roomPreference?.hasPrivateRoom.let { user.roomPreference?.hasPrivateRoom = it }
