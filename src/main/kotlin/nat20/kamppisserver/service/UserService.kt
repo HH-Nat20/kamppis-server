@@ -1,11 +1,10 @@
 package nat20.kamppisserver.service
 
 import exception.DuplicateEmailException
-import jakarta.persistence.EntityNotFoundException
+import exception.EntityNotFoundException
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.*
-import nat20.kamppisserver.domain.enums.City
-import nat20.kamppisserver.domain.enums.Gender
+import nat20.kamppisserver.domain.enums.LookingFor
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.*
 import org.springframework.stereotype.Service
@@ -114,7 +113,7 @@ class UserService(private val userRepository: UserRepository,
             email = request.email,
             dateOfBirth = request.dateOfBirth,
             gender = request.gender,
-            lookingFor = request.lookingFor
+            lookingFor = request.lookingFor ?: LookingFor.OTHER_USER_PROFILES_OR_ROOM_PROFILES,
         )
 
         val addedUser = userRepository.save(user)
@@ -138,7 +137,7 @@ class UserService(private val userRepository: UserRepository,
         request.email.let { existingUser.email = it }
         request.dateOfBirth.let { existingUser.dateOfBirth = it }
         request.gender.let { existingUser.gender = it }
-        request.lookingFor.let {existingUser.lookingFor = it}
+        request.lookingFor?.let {existingUser.lookingFor = it}
 
         existingUser.updatedAt = LocalDateTime.now()
 

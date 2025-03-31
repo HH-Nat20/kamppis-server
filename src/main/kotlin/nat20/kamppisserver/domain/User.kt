@@ -36,7 +36,7 @@ class User(
 
     @Column(name = "looking_for")
     @Enumerated(EnumType.STRING)
-    var lookingFor: LookingFor,
+    var lookingFor: LookingFor? = LookingFor.OTHER_USER_PROFILES_OR_ROOM_PROFILES,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -83,13 +83,27 @@ class User(
             firstName = firstName,
             lastName = lastName,
             email = email,
+            dateOfBirth = dateOfBirth,
             age = ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now()),
             gender = gender,
+            lookingFor = lookingFor,
             status = status,
             isOnline = isOnline,
             matchIds = matches?.mapNotNull { it.id }?.toSet() ?: emptySet(),
             userProfile = userProfile?.toDTO(),
             roomProfiles = roomProfiles?.map { it.toDTO() },
+            id = id
+        )
+    }
+
+    fun toUserRequest(): UserRequest {
+        return UserRequest(
+            firstName = firstName,
+            lastName = lastName,
+            email = email,
+            gender = gender,
+            lookingFor = lookingFor,
+            dateOfBirth = dateOfBirth,
             id = id
         )
     }
@@ -110,8 +124,10 @@ data class UserDTO(
     @NotEmpty val firstName: String,
     @NotEmpty val lastName: String,
     @NotEmpty @Email val email: String,
+    val dateOfBirth: LocalDate,
     val age: Long? = null,
     @NotNull val gender: Gender,
+    val lookingFor: LookingFor? = LookingFor.OTHER_USER_PROFILES_OR_ROOM_PROFILES,
     val status: UserStatus,
     val isOnline: Boolean,
     val matchIds: Set<Long>? = null,
@@ -125,7 +141,7 @@ data class UserRequest(
     @NotEmpty val lastName: String,
     @NotEmpty @Email val email: String,
     @NotNull val gender: Gender,
-    val lookingFor: LookingFor,
+    val lookingFor: LookingFor? = LookingFor.OTHER_USER_PROFILES_OR_ROOM_PROFILES,
     val dateOfBirth: LocalDate,
     val id: Long? = null
 )

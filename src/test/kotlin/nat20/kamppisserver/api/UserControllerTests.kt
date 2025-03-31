@@ -14,6 +14,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.time.LocalDate
 import kotlin.test.Test
 
 @Import(SecurityConfig::class) // Import your security config
@@ -36,6 +37,7 @@ class UserControllerTests @Autowired constructor(
             firstName = "Bob",
             lastName = "Johnson",
             age = 39,
+            dateOfBirth = LocalDate.of(1990, 5, 14),
             gender = Gender.MALE,
             status = UserStatus.ACTIVE,
             isOnline = false,
@@ -47,6 +49,7 @@ class UserControllerTests @Autowired constructor(
             firstName = "Charlie",
             lastName = "Davis",
             age = 27,
+            dateOfBirth = LocalDate.of(1990, 5, 14),
             gender = Gender.OTHER,
             status = UserStatus.ACTIVE,
             isOnline = false,
@@ -69,6 +72,7 @@ class UserControllerTests @Autowired constructor(
             firstName = "Bob",
             lastName = "Johnson",
             age = 39,
+            dateOfBirth = LocalDate.of(1990, 5, 14),
             gender = Gender.MALE,
             status = UserStatus.ACTIVE,
             isOnline = false,

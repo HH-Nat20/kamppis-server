@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import java.time.LocalDate
 
 @WebMvcTest(LoginController::class)
 @Import(SecurityConfig::class) // Import your security config
@@ -40,6 +41,7 @@ class LoginControllerTests @Autowired constructor(
             email = "alice.smith@example.com",
             firstName = "Alice",
             lastName = "Smith",
+            dateOfBirth = LocalDate.of(1990, 5, 14),
             age = 34,
             gender = Gender.FEMALE,
             status = UserStatus.ACTIVE,
@@ -72,6 +74,7 @@ class LoginControllerTests @Autowired constructor(
             email = "alice.smith@example.com",
             firstName = "Alice",
             lastName = "Smith",
+            dateOfBirth = LocalDate.of(1990, 5, 14),
             age = 34,
             gender = Gender.FEMALE,
             status = UserStatus.ACTIVE,
