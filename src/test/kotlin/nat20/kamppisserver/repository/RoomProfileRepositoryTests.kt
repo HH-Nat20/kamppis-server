@@ -35,13 +35,13 @@ class RoomProfileRepositoryTests @Autowired constructor(
     fun testVariableSetUp() {
         // We find our test user
         user = userRepository.findByIdAndStatus(27L, UserStatus.ACTIVE)
-            ?: fail("Expected User but found null")
+            ?: fail("❌ Expected User but found null")
         // We find our test user's user profile
         userProfile = userProfileRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
-            ?: fail("Expected UserProfile but found null")
+            ?: fail("❌ Expected UserProfile but found null")
         // We find our test user's room preferences
         roomPreference = roomPreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
-            ?: fail("Expected RoomPreference but found null")
+            ?: fail("❌ Expected RoomPreference but found null")
     }
 
     @Test

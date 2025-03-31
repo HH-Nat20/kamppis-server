@@ -60,23 +60,40 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     * More criteria and parameters will be added */
 
     @Query("""
-    SELECT up.id, up.user_id, up.cleanliness, u.gender, f.location, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at
+    SELECT DISTINCT up.id, up.user_id, up.cleanliness, u.gender, rpl.location_preferences, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at
     FROM user_profiles up
-    JOIN users u ON up.user_id = u.id
-    JOIN room_profiles_users rpu ON rpu.user_id = u.id
-    JOIN room_profiles rp ON rp.id = rpu.room_profile_id
-    JOIN flats f ON rp.flat_id = f.id
+    JOIN users u ON u.id = up.user_id
+    JOIN roommate_preferences rp ON rp.user_id = u.id
+    LEFT JOIN (
+        SELECT rp.user_id, 
+               ARRAY_AGG(rpl.location_preferences) AS location_preferences
+        FROM roommate_preferences rp
+        LEFT JOIN roommate_preferences_location rpl ON rpl.roommate_preferences_id = rp.id
+        GROUP BY rp.user_id
+    ) rpl ON rpl.user_id = u.id
     LEFT JOIN profiles p ON up.id = p.id  -- Join with profiles to get bio, status, etc.
     WHERE up.id != :userProfileId
+    AND u.looking_for = 'OTHER_USER_PROFILES' -- Check and filter user profiles on what the user is looking for
     AND NOT EXISTS (
         SELECT 1
         FROM swipes s
         WHERE s.swiping_profile_id = :userProfileId
         AND s.swiped_profile_id = up.id
     )
-    AND EXTRACT(YEAR FROM AGE(:queryDate, u.date_of_birth)) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000)
-    AND (u.gender IN (:genderPreferences) OR 'NOT_IMPORTANT' IN (:genderPreferences))
-    AND f.location IN (:locationPreferences)
+    AND (EXTRACT(YEAR FROM AGE(:queryDate, u.date_of_birth)) BETWEEN COALESCE(:minAgePreference, 0) AND COALESCE(:maxAgePreference, 1000))
+    AND (COALESCE(:genderPreferences) IS NULL OR u.gender IN (:genderPreferences))
+   
+    AND (COALESCE(:locationPreferences) IS NULL 
+        OR rp.id NOT IN (
+            SELECT rpl.roommate_preferences_id
+            FROM roommate_preferences_location rpl
+        )
+        OR EXISTS (
+            SELECT 1
+            FROM UNNEST(rpl.location_preferences) AS location
+            WHERE location IN (:locationPreferences)
+        )
+    )
     """, nativeQuery = true)
     fun findUserProfilesThatMeetCriteria(
         @Param("userProfileId") userProfileId: Long?,
@@ -86,5 +103,4 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
         @Param("genderPreferences") genderPreferences: List<String>?,
         @Param("locationPreferences") locationPreferences: List<String>?
     ): List<UserProfile>
-
 }

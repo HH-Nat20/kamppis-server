@@ -14,6 +14,7 @@ import io.mockk.*
 import nat20.kamppisserver.domain.UserProfileRequest
 import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.Lifestyle
+import nat20.kamppisserver.domain.enums.LookingFor
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.UserRepository
 import java.time.LocalDate
@@ -42,7 +43,8 @@ class UserProfileServiceTests {
             firstName = "Alice",
             lastName = "Smith",
             dateOfBirth = LocalDate.of(1990, 5, 14), // Age 34
-            gender = Gender.FEMALE
+            gender = Gender.FEMALE,
+            lookingFor = LookingFor.OTHER_USER_PROFILES
         )
 
         val existingProfile = UserProfile(
