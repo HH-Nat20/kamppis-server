@@ -34,6 +34,10 @@ class User(
     @NotNull(message = "Gender cannot be null.")
     var gender: Gender,
 
+    @Column(name = "looking_for")
+    @Enumerated(EnumType.STRING)
+    val lookingFor: LookingFor,
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     var status: UserStatus = UserStatus.ACTIVE,

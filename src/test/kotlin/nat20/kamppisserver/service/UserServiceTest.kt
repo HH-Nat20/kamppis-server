@@ -36,7 +36,8 @@ class UserServiceTest @Autowired constructor(
             firstName = "John",
             lastName = "Doe",
             dateOfBirth = LocalDate.of(1990, 5, 14),
-            gender = Gender.MALE
+            gender = Gender.MALE,
+            lookingFor = LookingFor.OTHER_USER_PROFILES
         ))
 
         testUserProfile = userProfileRepository.save(UserProfile(
