@@ -45,3 +45,7 @@ postgres_data/
 
 ### Production ###
 application-prod.properties
+
+### OAuth ###
+.secret
+
