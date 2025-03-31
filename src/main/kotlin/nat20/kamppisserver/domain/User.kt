@@ -36,7 +36,7 @@ class User(
 
     @Column(name = "looking_for")
     @Enumerated(EnumType.STRING)
-    val lookingFor: LookingFor,
+    var lookingFor: LookingFor,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -125,6 +125,7 @@ data class UserRequest(
     @NotEmpty val lastName: String,
     @NotEmpty @Email val email: String,
     @NotNull val gender: Gender,
+    val lookingFor: LookingFor,
     val dateOfBirth: LocalDate,
     val id: Long? = null
 )

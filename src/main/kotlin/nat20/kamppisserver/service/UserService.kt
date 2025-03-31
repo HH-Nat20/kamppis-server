@@ -113,7 +113,8 @@ class UserService(private val userRepository: UserRepository,
             lastName = request.lastName,
             email = request.email,
             dateOfBirth = request.dateOfBirth,
-            gender = request.gender
+            gender = request.gender,
+            lookingFor = request.lookingFor
         )
 
         val addedUser = userRepository.save(user)
@@ -137,6 +138,7 @@ class UserService(private val userRepository: UserRepository,
         request.email.let { existingUser.email = it }
         request.dateOfBirth.let { existingUser.dateOfBirth = it }
         request.gender.let { existingUser.gender = it }
+        request.lookingFor.let {existingUser.lookingFor = it}
 
         existingUser.updatedAt = LocalDateTime.now()
 
