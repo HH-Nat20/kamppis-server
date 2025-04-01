@@ -52,7 +52,8 @@ Content-Type: application/json
   "flatId": 2,
   "rent": 750,
   "isPrivateRoom": true,
-  "roomUtilities": [],
+  "furnished": true,
+  "furnishedInfo": "Heinäpaalisänky",
   "bio": "Kiva lato. Heinäpaalit kullekin."
 }
 
@@ -65,7 +66,7 @@ Content-Type: application/json
   "flatId": 2,
   "rent": 150,
   "isPrivateRoom": true,
-  "roomUtilities": [],
+  "furnished":  false,
   "bio": "Lato paloi. Samoin heinäpaalit. Kiva tuhkakasa missä lämmin yöpyä."
 }
 
