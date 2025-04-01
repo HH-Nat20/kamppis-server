@@ -114,6 +114,7 @@ class User(
             lastName = lastName,
             age = ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now()),
             gender = gender,
+            lookingFor = lookingFor,
             isOnline = isOnline,
             id = id,
         )
@@ -151,6 +152,7 @@ data class UserSummaryDTO(
     val lastName: String,
     val age: Long? = null,
     val gender: Gender,
+    val lookingFor: LookingFor?,
     val isOnline: Boolean,
     val id: Long? = null,
 )
@@ -173,6 +175,7 @@ data class UserDataDTO(
     val email: String,
     val dateOfBirth: LocalDate,
     val gender: Gender,
+    val lookingFor: LookingFor?,
     val status: UserStatus,
     val isOnline: Boolean,
     // Metadata

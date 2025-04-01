@@ -47,5 +47,5 @@ postgres_data/
 application-prod.properties
 
 ### OAuth ###
-.secret
+.env
 
