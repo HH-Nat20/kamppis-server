@@ -42,7 +42,8 @@ class RoomProfileService(
             flat = flat,
             rent = request.rent,
             isPrivateRoom = request.isPrivateRoom,
-            roomUtilities = request.roomUtilities,
+            furnished = request.furnished,
+            furnishedInfo = request.furnishedInfo,
             bio = request.bio,
         )
 
@@ -63,7 +64,8 @@ class RoomProfileService(
         existingProfile.users = users
         request.bio.let { existingProfile.bio = it }
         request.isPrivateRoom.let { existingProfile.isPrivateRoom = it }
-        request.roomUtilities.let { existingProfile.roomUtilities = it }
+        request.furnished.let {existingProfile.furnished = it }
+        request.furnishedInfo.let {existingProfile.furnishedInfo = it }
         request.rent.let { existingProfile.rent = it }
 
         existingProfile.updatedAt = LocalDateTime.now()

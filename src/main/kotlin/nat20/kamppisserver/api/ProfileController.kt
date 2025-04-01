@@ -68,7 +68,8 @@ class ProfileController(private val profileService: ProfileService,
                     flatId = profile.flat.id!!,
                     rent = profile.rent,
                     isPrivateRoom = profile.isPrivateRoom,
-                    roomUtilities = profile.roomUtilities,
+                    furnished = profile.furnished,
+                    furnishedInfo = profile.furnishedInfo,
                     bio = profile.bio,
                     id = profile.id
                 )

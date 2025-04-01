@@ -84,6 +84,8 @@ class ProfileControllerTests @Autowired constructor(
             location = City.HELSINKI,
             rent = 500,
             isPrivateRoom = true,
+            furnished = true,
+            furnishedInfo = "Wardrobe, bed",
             bio = "Write bio here",
             id = roomProfileId
         )
