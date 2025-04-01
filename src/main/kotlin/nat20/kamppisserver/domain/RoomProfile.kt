@@ -6,9 +6,11 @@ import jakarta.validation.constraints.PositiveOrZero
 import nat20.kamppisserver.domain.enums.City
 import nat20.kamppisserver.domain.enums.ProfileStatus
 import java.time.LocalDateTime
+import nat20.kamppisserver.service.ValidationService
 
 @Entity
 @Table(name = "room_profiles")
+@ValidationService.ValidFurnishedInfo
 class RoomProfile(
 
     @ManyToMany(fetch = FetchType.EAGER)
