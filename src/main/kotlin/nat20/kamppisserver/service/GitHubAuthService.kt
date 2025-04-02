@@ -7,10 +7,10 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @Service
 class GitHubAuthService {
-    @Value("\${github.client-id}")
+    @Value("\${GITHUB_CLIENT_ID}")
     final lateinit var clientId: String
 
-    @Value("\${github.client-secret}")
+    @Value("\${GITHUB_CLIENT_SECRET}")
     final lateinit var clientSecret: String
 
     private val webClient = WebClient.builder()
