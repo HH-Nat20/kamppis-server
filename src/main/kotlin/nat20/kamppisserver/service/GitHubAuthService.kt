@@ -50,7 +50,7 @@ class GitHubAuthService {
         }
     }
 
-    suspend fun getGitHubEmail(accessToken: String): String? {
+    suspend fun getGitHubUserInfo(accessToken: String): GitHubUserResponse? {
         return try {
             val responseString = webClient.get()
                 .uri("https://api.github.com/user")
@@ -66,7 +66,7 @@ class GitHubAuthService {
             val response = objectMapper.readValue(responseString, GitHubUserResponse::class.java)
 
             println("Parsed GitHub User response: $response")
-            response.email
+            response
         } catch (e: WebClientResponseException) { // Handles HTTP errors properly
             println("GitHub User API Error: ${e.statusCode} - ${e.responseBodyAsString}")
             null
@@ -80,4 +80,4 @@ class GitHubAuthService {
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class GitHubTokenResponse(val access_token: String?, val token_type: String?, val scope: String?)
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class GitHubUserResponse(val email: String?)
+data class GitHubUserResponse(val id: Long, val login: String, val email: String?, )

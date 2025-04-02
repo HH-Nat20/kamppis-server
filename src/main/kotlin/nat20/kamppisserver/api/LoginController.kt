@@ -2,6 +2,7 @@ package nat20.kamppisserver.api
 
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.service.GitHubAuthService
+import nat20.kamppisserver.service.GitHubUserResponse
 import nat20.kamppisserver.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -39,9 +40,10 @@ class LoginController(
         val accessToken = gitHubAuthService.exchangeCodeForToken(code)
             ?: return ResponseEntity.badRequest().body(mapOf("error" to "Invalid GitHub code"))
 
-        val email = gitHubAuthService.getGitHubEmail(accessToken)
-            ?: return ResponseEntity.badRequest().body(mapOf("error" to "No GitHub email found"))
+        val userInfo: GitHubUserResponse = gitHubAuthService.getGitHubUserInfo(accessToken)
+            ?: return ResponseEntity.badRequest().body(mapOf("error" to "No GitHub user found"))
 
+        val email = userInfo.email ?: "dummy-email@example.com"
         val jwt = JwtUtils.generateJwtToken(email)
 
         return ResponseEntity.ok(mapOf("token" to jwt))
