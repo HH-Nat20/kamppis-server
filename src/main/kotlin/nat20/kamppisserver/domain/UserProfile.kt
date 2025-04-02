@@ -20,7 +20,7 @@ class UserProfile (
     var cleanliness: Cleanliness? = null,
 
     @Enumerated(EnumType.STRING)
-    var pets: Pets,
+    var pets: Pets? = null,
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Lifestyle::class)
     @CollectionTable(name = "user_profiles_lifestyle", joinColumns = [JoinColumn(name = "user_profile_id")])
@@ -78,7 +78,7 @@ data class UserProfileDTO(
     val user: UserSummaryDTO? = null,
     val bio: String,
     val cleanliness: Cleanliness? = null,
-    val pets: Pets,
+    val pets: Pets? = null,
     val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
     val photos: MutableList<ProfilePhotoDTO> = mutableListOf(),
     val id: Long? = null
@@ -88,7 +88,7 @@ data class UserProfileRequest(
     val userId: Long,
     val bio: String? = "Write bio here",
     val cleanliness: Cleanliness? = null,
-    val pets: Pets,
+    val pets: Pets? = null,
     val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
     val photos: MutableList<ProfilePhotoDTO>? = mutableListOf(),
     val id: Long? = null
@@ -98,8 +98,8 @@ data class UserProfileDataDTO(
     // Only used by Copy of Data
     val bio: String,
     val cleanliness: Cleanliness? = null,
+    val pets: Pets? = null,
     val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
-    val pets: Pets,
     val photos: MutableList<ProfilePhotoDataDTO> = mutableListOf(),
     val status: ProfileStatus,
     val createdAt: LocalDateTime,
