@@ -168,3 +168,21 @@ Content-Type: application/json
   "swipedProfileId": 27,
   "isRightSwipe": true
 }
+
+
+### Get authentication token for alice smith (save it in auth_token for the following request)
+POST https://kamppis.hellmanstudios.fi/api/login?
+    email=alice.smith@example.com
+
+> {%
+    client.global.set("auth_token", response.body.token);
+%}
+
+### Use the above token to access a protected endpoint
+GET https://kamppis.hellmanstudios.fi/api/login/protected
+Authorization: Bearer {{auth_token}}
+
+### Example using expired token
+GET https://kamppis.hellmanstudios.fi/api/login/protected
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbGljZS5zbWl0aEBleGFtcGxlLmNvbSIsImlhdCI6MTc0MjA3MDA1MCwiZXhwIjoxNzQyMDczNjUwfQ.hRqdcGM3hDrXdbRZShNzhmWcqiTHmOIbKYXRdZnY6V_XPortA-LaZAFvn-ru4t8WTMsGYsv8BtEqzhbCUImfnw
+

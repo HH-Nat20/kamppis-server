@@ -35,7 +35,7 @@ class LoginController(
     }
 
     @PostMapping("/github")
-    fun loginWithGitHub(@RequestParam code: String): ResponseEntity<Map<String, String>> {
+    suspend fun loginWithGitHub(@RequestParam code: String): ResponseEntity<Map<String, String>> {
         val accessToken = gitHubAuthService.exchangeCodeForToken(code)
             ?: return ResponseEntity.badRequest().body(mapOf("error" to "Invalid GitHub code"))
 
