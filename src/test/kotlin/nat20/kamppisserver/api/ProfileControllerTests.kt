@@ -77,6 +77,7 @@ class ProfileControllerTests @Autowired constructor(
                 description = "Test",
                 location = City.HELSINKI,
                 totalRoommates = 2,
+                petHousehold = true,
                 flatUtilities = mutableListOf(Utilities.WIFI),
                 id = 10L
             ),

@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import nat20.kamppisserver.domain.enums.Cleanliness
 import nat20.kamppisserver.domain.enums.Lifestyle
 import nat20.kamppisserver.domain.enums.ProfileStatus
+import nat20.kamppisserver.domain.enums.Pets
 import nat20.kamppisserver.domain.enums.UserStatus
 import java.time.LocalDateTime
 
@@ -17,6 +18,9 @@ class UserProfile (
 
     @Enumerated(EnumType.STRING)
     var cleanliness: Cleanliness? = null,
+
+    @Enumerated(EnumType.STRING)
+    var pets: Pets? = null,
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Lifestyle::class)
     @CollectionTable(name = "user_profiles_lifestyle", joinColumns = [JoinColumn(name = "user_profile_id")])
@@ -33,8 +37,8 @@ class UserProfile (
     }
 
     // Secondary constructor allows setting id explicitly (mainly for tests)
-    constructor(id: Long, user: User, cleanliness: Cleanliness?, lifestyle: MutableSet<Lifestyle>?) : this(
-        user, cleanliness, lifestyle
+    constructor(id: Long, user: User, cleanliness: Cleanliness?, pets: Pets, lifestyle: MutableSet<Lifestyle>?) : this(
+        user, cleanliness, pets, lifestyle
     ) {
         this.id = id
     }
@@ -45,6 +49,7 @@ class UserProfile (
             user = if (includeUserSummary) user.toSummaryDTO() else null,
             bio = bio,
             cleanliness = cleanliness,
+            pets = pets,
             lifestyle = lifestyle,
             photos = photos.map { it.toProfilePhotoDTO() }
                 .toMutableList(),
@@ -57,6 +62,7 @@ class UserProfile (
             bio = bio,
             cleanliness = cleanliness,
             lifestyle = lifestyle,
+            pets = pets,
             photos = photos.map { it.toProfilePhotoDataDTO() }
                 .toMutableList(),
             status = status,
@@ -72,6 +78,7 @@ data class UserProfileDTO(
     val user: UserSummaryDTO? = null,
     val bio: String,
     val cleanliness: Cleanliness? = null,
+    val pets: Pets? = null,
     val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
     val photos: MutableList<ProfilePhotoDTO> = mutableListOf(),
     val id: Long? = null
@@ -81,6 +88,7 @@ data class UserProfileRequest(
     val userId: Long,
     val bio: String? = "Write bio here",
     val cleanliness: Cleanliness? = null,
+    val pets: Pets? = null,
     val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
     val photos: MutableList<ProfilePhotoDTO>? = mutableListOf(),
     val id: Long? = null
@@ -90,6 +98,7 @@ data class UserProfileDataDTO(
     // Only used by Copy of Data
     val bio: String,
     val cleanliness: Cleanliness? = null,
+    val pets: Pets? = null,
     val lifestyle: MutableSet<Lifestyle>? = mutableSetOf(),
     val photos: MutableList<ProfilePhotoDataDTO> = mutableListOf(),
     val status: ProfileStatus,

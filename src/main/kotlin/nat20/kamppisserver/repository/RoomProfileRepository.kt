@@ -20,7 +20,7 @@ interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
     fun findByUserIdAndStatus(@Param("id") id: Long, @Param("status") status: UserStatus): List<RoomProfile?>
 
     @Query("""
-    SELECT DISTINCT rp.id, rp.rent, rp.is_private_room, rp.furnished, rp.furnished_info, rp.flat_id, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at
+    SELECT DISTINCT rp.id, rp.rent, rp.is_private_room, rp.furnished, rp.furnished_info, rp.flat_id, f.pet_household, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at
     FROM room_profiles rp
     JOIN flats f ON rp.flat_id = f.id
     LEFT JOIN profiles p ON rp.id = p.id

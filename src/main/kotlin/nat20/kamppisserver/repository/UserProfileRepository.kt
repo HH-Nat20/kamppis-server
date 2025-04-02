@@ -60,7 +60,7 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
     * More criteria and parameters will be added */
 
     @Query("""
-    SELECT DISTINCT up.id, up.user_id, up.cleanliness, u.gender, rpl.location_preferences, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at
+    SELECT DISTINCT up.id, up.user_id, up.cleanliness, up.pets, u.gender, rpl.location_preferences, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at
     FROM user_profiles up
     JOIN users u ON u.id = up.user_id
     JOIN roommate_preferences rp ON rp.user_id = u.id

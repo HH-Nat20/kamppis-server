@@ -60,6 +60,7 @@ class UserProfileService(
             user = user,
             bio = request.bio ?: "Write bio here",
             cleanliness = request.cleanliness,
+            pets = request.pets,
             lifestyle = request.lifestyle,
             photos = mutableListOf()
         )

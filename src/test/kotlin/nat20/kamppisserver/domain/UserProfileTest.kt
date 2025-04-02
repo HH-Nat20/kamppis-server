@@ -22,7 +22,8 @@ class UserProfileTest {
         val profile = UserProfile(
             user = user,
             cleanliness = Cleanliness.TIDY,
-            lifestyle = mutableSetOf(Lifestyle.STUDENT)
+            lifestyle = mutableSetOf(Lifestyle.STUDENT),
+            pets = Pets.OK_WITH_PETS
         )
 
         val dto = profile.toDTO()

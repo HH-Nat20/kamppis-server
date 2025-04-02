@@ -56,6 +56,7 @@ class ProfileController(private val profileService: ProfileService,
                     bio = profile.bio,
                     cleanliness = profile.cleanliness,
                     lifestyle = profile.lifestyle,
+                    pets = profile.pets,
                     photos = profile.photos,
                     id = profile.id
                 )

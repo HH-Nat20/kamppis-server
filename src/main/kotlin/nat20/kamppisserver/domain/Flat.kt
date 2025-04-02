@@ -24,6 +24,9 @@ class Flat(
     @PositiveOrZero(message = "Total roommates must be a positive integer")
     var totalRoommates: Int,
 
+    @Column(name = "pet_household")
+    var petHousehold: Boolean?,
+
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Utilities::class)
     @CollectionTable(name = "flat_utilities", joinColumns = [JoinColumn(name = "flat_id")])
     @Enumerated(EnumType.STRING)
@@ -43,6 +46,7 @@ class Flat(
             description = description,
             location = location,
             totalRoommates = totalRoommates,
+            petHousehold = petHousehold,
             flatUtilities = flatUtilities,
             roomProfileIds = roomProfiles?.map { it.id!! },
             id = id
@@ -55,6 +59,7 @@ class Flat(
             description = description,
             location = location,
             totalRoommates = totalRoommates,
+            petHousehold = petHousehold,
             flatUtilities = flatUtilities,
         )
     }
@@ -65,6 +70,7 @@ data class FlatDTO(
     val description: String,
     val location: City,
     val totalRoommates: Int,
+    val petHousehold: Boolean?,
     val flatUtilities: MutableList<Utilities>? = mutableListOf(),
     val roomProfileIds: List<Long>? = listOf(),
     val id: Long?
@@ -76,5 +82,6 @@ data class FlatDataDTO(
     val description: String,
     val location: City,
     val totalRoommates: Int,
+    val petHousehold: Boolean?,
     val flatUtilities: MutableList<Utilities>? = mutableListOf(),
 )

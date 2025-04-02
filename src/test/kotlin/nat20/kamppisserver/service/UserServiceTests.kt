@@ -48,6 +48,7 @@ class UserServiceTests @Autowired constructor(
             user = testUser,
             cleanliness = Cleanliness.SPOTLESS,
             lifestyle = mutableSetOf(Lifestyle.EARLY_BIRD),
+            pets = Pets.OK_WITH_PETS,
             bio = "Test bio"
         ))
 

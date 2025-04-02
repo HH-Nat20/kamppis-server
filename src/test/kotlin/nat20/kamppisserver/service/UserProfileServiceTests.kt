@@ -7,15 +7,11 @@ import jakarta.persistence.EntityNotFoundException
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
-import nat20.kamppisserver.domain.enums.Cleanliness
 import nat20.kamppisserver.repository.UserProfileRepository
 import org.junit.jupiter.api.BeforeEach
 import io.mockk.*
 import nat20.kamppisserver.domain.UserProfileRequest
-import nat20.kamppisserver.domain.enums.Gender
-import nat20.kamppisserver.domain.enums.Lifestyle
-import nat20.kamppisserver.domain.enums.LookingFor
-import nat20.kamppisserver.domain.enums.UserStatus
+import nat20.kamppisserver.domain.enums.*
 import nat20.kamppisserver.repository.UserRepository
 import java.time.LocalDate
 
@@ -50,14 +46,16 @@ class UserProfileServiceTests {
         val existingProfile = UserProfile(
             user = user,
             cleanliness = Cleanliness.TIDY,
-            lifestyle = mutableSetOf(Lifestyle.STUDENT)
+            lifestyle = mutableSetOf(Lifestyle.STUDENT),
+            pets = Pets.OK_WITH_PETS
         )
 
         val updateRequest = UserProfileRequest(
             userId = user.id!!,
             bio = "New bio",
             cleanliness = Cleanliness.MESSY,
-            lifestyle = mutableSetOf(Lifestyle.NIGHT_OWL)
+            lifestyle = mutableSetOf(Lifestyle.NIGHT_OWL),
+            pets = Pets.PET_OWNER
         )
 
         every { userRepository.findByIdAndStatus(999L, UserStatus.ACTIVE) } returns user
