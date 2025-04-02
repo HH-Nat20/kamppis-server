@@ -1,6 +1,7 @@
 package nat20.kamppisserver.api
 
 import nat20.kamppisserver.security.JwtUtils
+import nat20.kamppisserver.service.GitHubAuthService
 import nat20.kamppisserver.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -8,7 +9,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/login")
 class LoginController(
-    private val userService: UserService
+    private val userService: UserService,
+    private val gitHubAuthService: GitHubAuthService
 ) {
 
     @PostMapping
@@ -29,6 +31,19 @@ class LoginController(
     @GetMapping("/protected")
     fun getProtectedData(@RequestAttribute("email") email: String): String {
         return "Hello, $email! This is protected data."
+    }
+
+    @PostMapping("/github")
+    fun loginWithGitHub(@RequestParam code: String): ResponseEntity<Map<String, String>> {
+        val accessToken = gitHubAuthService.exchangeCodeForToken(code)
+            ?: return ResponseEntity.badRequest().body(mapOf("error" to "Invalid GitHub code"))
+
+        val email = gitHubAuthService.getGitHubEmail(accessToken)
+            ?: return ResponseEntity.badRequest().body(mapOf("error" to "No GitHub email found"))
+
+        val jwt = JwtUtils.generateJwtToken(email)
+
+        return ResponseEntity.ok(mapOf("token" to jwt))
     }
 
 }
