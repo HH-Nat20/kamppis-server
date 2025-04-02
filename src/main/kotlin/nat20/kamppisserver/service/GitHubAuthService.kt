@@ -7,10 +7,10 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @Service
 class GitHubAuthService {
-    @Value("\${GITHUB_CLIENT_ID}")
+    @Value("\${GITHUB_CLIENT_ID:dummy-client-id}")
     final lateinit var clientId: String
 
-    @Value("\${GITHUB_CLIENT_SECRET}")
+    @Value("\${GITHUB_CLIENT_SECRET:dummy-client-secret}")
     final lateinit var clientSecret: String
 
     private val webClient = WebClient.builder()
@@ -24,7 +24,8 @@ class GitHubAuthService {
             .retrieve()
             .bodyToMono(Map::class.java)
             .block() // Blocking for simplicity; use reactive programming in production.
-
+        println("Used client-id: $clientId")
+        println("GitHub Auth response: $response")
         return response?.get("access_token") as? String
     }
 

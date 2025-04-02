@@ -30,6 +30,7 @@ class LoginController(
 
     @GetMapping("/protected")
     fun getProtectedData(@RequestAttribute("email") email: String): ResponseEntity<String> {
+        // The request attribute is set in the jwtAuthenticationFilter during token authentication
         return ResponseEntity.ok("Hello, $email! This is protected data.")
     }
 
