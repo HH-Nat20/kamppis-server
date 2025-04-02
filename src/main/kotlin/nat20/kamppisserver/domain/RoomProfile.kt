@@ -5,11 +5,12 @@ import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.PositiveOrZero
 import nat20.kamppisserver.domain.enums.City
 import nat20.kamppisserver.domain.enums.ProfileStatus
-import nat20.kamppisserver.domain.enums.Utilities
 import java.time.LocalDateTime
+import nat20.kamppisserver.service.ValidationService
 
 @Entity
 @Table(name = "room_profiles")
+@ValidationService.ValidFurnishedInfo
 class RoomProfile(
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -31,10 +32,10 @@ class RoomProfile(
     @Column(name = "is_private_room")
     var isPrivateRoom: Boolean,
 
-    @ElementCollection(fetch = FetchType.EAGER, targetClass = Utilities::class)
-    @CollectionTable(name = "room_profiles_utilities", joinColumns = [JoinColumn(name = "profile_id")])
-    @Enumerated(EnumType.STRING)
-    var roomUtilities: MutableList<Utilities>? = mutableListOf(),
+    var furnished: Boolean,
+
+    @Column(name = "furnished_info")
+    var furnishedInfo: String?,
 
     bio: String = "Write bio here", // Default value from Profile
 
@@ -52,7 +53,8 @@ class RoomProfile(
             location = flat.location,
             rent = rent,
             isPrivateRoom = isPrivateRoom,
-            roomUtilities = roomUtilities,
+            furnished = furnished,
+            furnishedInfo = furnishedInfo,
             photos = photos.map { it.toProfilePhotoDTO() }
                 .toMutableList(),
             bio = bio,
@@ -66,7 +68,8 @@ class RoomProfile(
             flatId = flat.id!!,
             rent = rent,
             isPrivateRoom = isPrivateRoom,
-            roomUtilities = roomUtilities,
+            furnished = furnished,
+            furnishedInfo = furnishedInfo,
             bio = bio,
             id = id
         )
@@ -77,7 +80,8 @@ class RoomProfile(
             flat = flat.toFlatDataDTO(),
             rent = rent,
             isPrivateRoom = isPrivateRoom,
-            roomUtilities = roomUtilities,
+            furnished = furnished,
+            furnishedInfo = furnishedInfo,
             photos = photos.map { it.toProfilePhotoDataDTO() }
                 .toMutableList(),
             bio = bio,
@@ -97,7 +101,8 @@ data class RoomProfileDTO(
     val location: City,
     @PositiveOrZero val rent: Int,
     val isPrivateRoom: Boolean,
-    val roomUtilities: MutableList<Utilities>? = mutableListOf(),
+    val furnished: Boolean,
+    val furnishedInfo: String?,
     val photos: MutableList<ProfilePhotoDTO>? = mutableListOf(),
     val bio: String,
     val id: Long? = null
@@ -108,7 +113,8 @@ data class RoomProfileRequest(
     val flatId: Long,
     @PositiveOrZero val rent: Int,
     val isPrivateRoom: Boolean,
-    val roomUtilities: MutableList<Utilities>? = mutableListOf(),
+    val furnished: Boolean,
+    val furnishedInfo: String?,
     val bio: String,
     val id: Long? = null
 )
@@ -118,7 +124,8 @@ data class RoomProfileDataDTO(
     val flat: FlatDataDTO,
     val rent: Int,
     val isPrivateRoom: Boolean,
-    val roomUtilities: MutableList<Utilities>? = mutableListOf(),
+    val furnished: Boolean,
+    val furnishedInfo: String?,
     val photos: MutableList<ProfilePhotoDataDTO>? = mutableListOf(),
     val bio: String,
     val status: ProfileStatus,
