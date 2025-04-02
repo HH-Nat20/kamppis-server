@@ -36,6 +36,7 @@ class FlatService(
             description = request.description,
             location = request.location,
             totalRoommates = request.totalRoommates,
+            petHousehold = request.petHousehold,
             flatUtilities = request.flatUtilities,
             roomProfiles = mutableListOf(),
         )
@@ -56,6 +57,7 @@ class FlatService(
         existingFlat.description = request.description
         existingFlat.location = request.location
         existingFlat.totalRoommates = request.totalRoommates
+        existingFlat.petHousehold = request.petHousehold
         existingFlat.flatUtilities = request.flatUtilities
         existingFlat.roomProfiles = roomProfiles
 
