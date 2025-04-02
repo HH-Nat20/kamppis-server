@@ -51,7 +51,8 @@ class SwipeControllerTests @Autowired constructor(
             id = 1L,
             user = user1,
             cleanliness = Cleanliness.TIDY,
-            lifestyle = mutableSetOf(Lifestyle.STUDENT)
+            lifestyle = mutableSetOf(Lifestyle.STUDENT),
+            pets = Pets.OK_WITH_PETS
         )
         val user2 = User(
             id = 2L,
@@ -67,7 +68,8 @@ class SwipeControllerTests @Autowired constructor(
             id = 2L,
             user = user2,
             cleanliness = Cleanliness.TIDY,
-            lifestyle = mutableSetOf(Lifestyle.STUDENT)
+            lifestyle = mutableSetOf(Lifestyle.STUDENT),
+            pets = Pets.OK_WITH_PETS
         )
 
         val swipeRequest = SwipeRequest(

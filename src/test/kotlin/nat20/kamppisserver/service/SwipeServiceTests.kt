@@ -6,10 +6,7 @@ import io.mockk.verify
 import nat20.kamppisserver.domain.Swipe
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
-import nat20.kamppisserver.domain.enums.Cleanliness
-import nat20.kamppisserver.domain.enums.Gender
-import nat20.kamppisserver.domain.enums.Lifestyle
-import nat20.kamppisserver.domain.enums.LookingFor
+import nat20.kamppisserver.domain.enums.*
 import nat20.kamppisserver.domain.getUsersFromProfile
 import nat20.kamppisserver.repository.SwipeRepository
 import org.junit.jupiter.api.BeforeEach
@@ -34,7 +31,8 @@ class SwipeServiceTests {
     val profile1 = UserProfile(
         user = user1,
         cleanliness = Cleanliness.TIDY,
-        lifestyle = mutableSetOf(Lifestyle.STUDENT)
+        lifestyle = mutableSetOf(Lifestyle.STUDENT),
+        pets = Pets.OK_WITH_PETS
     )
     val user2 = User(
         id = 2L,
@@ -49,7 +47,8 @@ class SwipeServiceTests {
     val profile2 = UserProfile(
         user = user2,
         cleanliness = Cleanliness.TIDY,
-        lifestyle = mutableSetOf(Lifestyle.STUDENT)
+        lifestyle = mutableSetOf(Lifestyle.STUDENT),
+        pets = Pets.OK_WITH_PETS
     )
 
     @BeforeEach
