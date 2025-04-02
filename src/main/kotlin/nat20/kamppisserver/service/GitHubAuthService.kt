@@ -1,5 +1,8 @@
 package nat20.kamppisserver.service
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import kotlinx.coroutines.reactor.awaitSingle
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
@@ -19,21 +22,27 @@ class GitHubAuthService {
         .baseUrl("https://github.com")
         .build()
 
+    private val objectMapper = ObjectMapper().registerKotlinModule()
+
     suspend fun exchangeCodeForToken(code: String): String? {
         return try {
-            val response = webClient.post()
+            val responseString = webClient.post()
                 .uri("/login/oauth/access_token?client_id=$clientId&client_secret=$clientSecret&code=$code")
-                .header("Accept", "application/json")
+                .header(HttpHeaders.ACCEPT, "application/json")
                 .retrieve()
-                .bodyToMono(GitHubTokenResponse::class.java)
-                //.block() // Blocking for simplicity; use reactive programming in production.
-                .awaitSingle() // From coroutines reactor
+                .bodyToMono(String::class.java) // Get raw JSON as a String first
+                .awaitSingle()
 
             println("Used client-id: $clientId")
-            println("GitHub Auth response: $response")
+            println("Raw GitHub Auth response: $responseString")
+
+            // Now, manually parse it into our expected object
+            val response = objectMapper.readValue(responseString, GitHubTokenResponse::class.java)
+
+            println("Parsed GitHub Token response: $response")
             response.access_token
         } catch (e: WebClientResponseException) { // Handles HTTP errors properly
-            println("GitHub Auth error: ${e.statusCode} - ${e.responseBodyAsString}")
+            println("GitHub Auth API error: ${e.statusCode} - ${e.responseBodyAsString}")
             null
         } catch (e: Exception) {
             println("Unexpected error: ${e.message}")
@@ -43,16 +52,23 @@ class GitHubAuthService {
 
     suspend fun getGitHubEmail(accessToken: String): String? {
         return try {
-            val response = webClient.get()
+            val responseString = webClient.get()
                 .uri("https://api.github.com/user")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
+                .header(HttpHeaders.ACCEPT, "application/json") // Ensures JSON response
                 .retrieve()
-                .bodyToMono(GitHubUserResponse::class.java)
+                .bodyToMono(String::class.java) // Get raw JSON as a String first
                 .awaitSingle()
 
+            println("Raw GitHub User response: $responseString")
+
+            // Now, manually parse it into our expected object
+            val response = objectMapper.readValue(responseString, GitHubUserResponse::class.java)
+
+            println("Parsed GitHub User response: $response")
             response.email
         } catch (e: WebClientResponseException) { // Handles HTTP errors properly
-            println("Error fetching GitHub User email: ${e.statusCode} - ${e.responseBodyAsString}")
+            println("GitHub User API Error: ${e.statusCode} - ${e.responseBodyAsString}")
             null
         } catch (e: Exception) {
             println("Unexpected error: ${e.message}")
@@ -61,6 +77,7 @@ class GitHubAuthService {
     }
 
 }
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class GitHubTokenResponse(val access_token: String?, val token_type: String?, val scope: String?)
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class GitHubUserResponse(val email: String?)
