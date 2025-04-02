@@ -29,8 +29,8 @@ class LoginController(
     }
 
     @GetMapping("/protected")
-    fun getProtectedData(@RequestAttribute("email") email: String): String {
-        return "Hello, $email! This is protected data."
+    fun getProtectedData(@RequestAttribute("email") email: String): ResponseEntity<String> {
+        return ResponseEntity.ok("Hello, $email! This is protected data.")
     }
 
     @PostMapping("/github")
