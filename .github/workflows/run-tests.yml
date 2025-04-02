@@ -67,4 +67,6 @@ jobs:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/${{ secrets.DB_TEST_NAME }}
           SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          GITHUB_CLIENT_ID: "dummy-client-id"
+          GITHUB_CLIENT_SECRET: "dummy-client-secret"
         run: ./gradlew test
