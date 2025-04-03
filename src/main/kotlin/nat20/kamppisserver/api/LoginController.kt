@@ -1,5 +1,6 @@
 package nat20.kamppisserver.api
 
+import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -55,8 +56,9 @@ class LoginController(
         return ResponseEntity.ok(mapOf("token" to jwt))
     }
 
+
     @PostMapping("/signup")
-    // Create new user for github authenticated user
+    @Transactional
     suspend fun signup(@RequestParam code: String, @Valid @RequestBody request: UserRequest): ResponseEntity<Map<String, String>> {
         val accessToken = gitHubAuthService.exchangeCodeForToken(code)
             ?: return ResponseEntity.badRequest().body(mapOf("error" to "Invalid GitHub code"))
@@ -66,13 +68,10 @@ class LoginController(
 
         val userDTO = userService.add(request)
 
-        val user = withContext(Dispatchers.IO) {
-            userRepository.findByEmail(userDTO.email)
-        } ?: return ResponseEntity.badRequest().build()
+        val user = userRepository.findByEmail(userDTO.email)
+            ?: return ResponseEntity.badRequest().body(mapOf("error" to "User creation failed"))
 
-        withContext(Dispatchers.IO) {
-            authService.signUpWithOAuth(Provider.GITHUB, userInfo.id, user)
-        }
+        authService.signUpWithOAuth(Provider.GITHUB, userInfo.id, user)
 
         val jwt = JwtUtils.generateJwtToken(user.email)
         return ResponseEntity.ok(mapOf("token" to jwt))
