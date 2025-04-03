@@ -60,21 +60,25 @@ class LoginController(
     @PostMapping("/signup")
     @Transactional
     suspend fun signup(@RequestParam code: String, @Valid @RequestBody request: UserRequest): ResponseEntity<Map<String, String>> {
-        val accessToken = gitHubAuthService.exchangeCodeForToken(code)
-            ?: return ResponseEntity.badRequest().body(mapOf("error" to "Invalid GitHub code"))
+        try {
+            val accessToken = gitHubAuthService.exchangeCodeForToken(code)
+                ?: return ResponseEntity.badRequest().body(mapOf("error" to "Invalid GitHub code"))
 
-        val userInfo: GitHubUserResponse = gitHubAuthService.getGitHubUserInfo(accessToken)
-            ?: return ResponseEntity.badRequest().body(mapOf("error" to "No GitHub user found"))
+            val userInfo: GitHubUserResponse = gitHubAuthService.getGitHubUserInfo(accessToken)
+                ?: return ResponseEntity.badRequest().body(mapOf("error" to "No GitHub user found"))
 
-        val userDTO = userService.add(request)
+            val userDTO = userService.add(request)
 
-        val user = userRepository.findByEmail(userDTO.email)
-            ?: return ResponseEntity.badRequest().body(mapOf("error" to "User creation failed"))
+            val user = userRepository.findByEmail(userDTO.email)
+                ?: return ResponseEntity.badRequest().body(mapOf("error" to "User creation failed"))
 
-        authService.signUpWithOAuth(Provider.GITHUB, userInfo.id, user)
+            authService.signUpWithOAuth(Provider.GITHUB, userInfo.id, user)
 
-        val jwt = JwtUtils.generateJwtToken(user.email)
-        return ResponseEntity.ok(mapOf("token" to jwt))
+            val jwt = JwtUtils.generateJwtToken(user.email)
+            return ResponseEntity.ok(mapOf("token" to jwt))
+        } catch (error: Error) {
+            return ResponseEntity.badRequest().build()
+        }
     }
 
 }
