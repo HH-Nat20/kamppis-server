@@ -60,6 +60,7 @@ class LoginController(
     }
 
     @PostMapping("/signup")
+    // Create new user for github authenticated user
     suspend fun signup(@RequestParam code: String, @Valid @RequestBody request: UserRequest): ResponseEntity<Map<String, String>> {
         val accessToken = gitHubAuthService.exchangeCodeForToken(code)
             ?: return ResponseEntity.badRequest().body(mapOf("error" to "Invalid GitHub code"))
