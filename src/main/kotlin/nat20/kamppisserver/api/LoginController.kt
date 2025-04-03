@@ -25,15 +25,11 @@ class LoginController(
 
     @PostMapping
     fun login(@RequestParam email: String): ResponseEntity<Map<String, String>> {
-        if (email.endsWith("@example.com")) {
-            try {
-                userService.findActiveUserByEmail(email)
-                val token = JwtUtils.generateJwtToken(email)
-                return mapOf("token" to token).let { ResponseEntity.ok(it) }
-            } catch (e: Error) {
-                return ResponseEntity.badRequest().build()
-            }
-        } else {
+        try {
+            userService.findActiveUserByEmail(email)
+            val token = JwtUtils.generateJwtToken(email)
+            return mapOf("token" to token).let { ResponseEntity.ok(it) }
+        } catch (e: Error) {
             return ResponseEntity.badRequest().build()
         }
     }
