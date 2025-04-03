@@ -5,5 +5,5 @@ import nat20.kamppisserver.domain.enums.Provider
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface UserAuthProviderRepository : JpaRepository<UserAuthProvider, Long> {
-    fun findByProviderAndProviderUserId(provider: Provider, providerUserId: String): UserAuthProvider?
+    fun findByProviderAndProviderUserId(provider: Provider, providerUserId: Long): UserAuthProvider?
 }

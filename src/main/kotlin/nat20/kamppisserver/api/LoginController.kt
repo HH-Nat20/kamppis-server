@@ -1,8 +1,15 @@
 package nat20.kamppisserver.api
 
-import nat20.kamppisserver.security.JwtUtils
+import jakarta.validation.Valid
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import nat20.kamppisserver.domain.UserRequest
+import nat20.kamppisserver.domain.enums.Provider
+import nat20.kamppisserver.repository.UserRepository
+import nat20.kamppisserver.security.AuthService
 import nat20.kamppisserver.security.GitHubAuthService
 import nat20.kamppisserver.security.GitHubUserResponse
+import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -11,7 +18,9 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/login")
 class LoginController(
     private val userService: UserService,
-    private val gitHubAuthService: GitHubAuthService
+    private val gitHubAuthService: GitHubAuthService,
+    private val authService: AuthService,
+    private val userRepository: UserRepository
 ) {
 
     @PostMapping
@@ -43,9 +52,32 @@ class LoginController(
         val userInfo: GitHubUserResponse = gitHubAuthService.getGitHubUserInfo(accessToken)
             ?: return ResponseEntity.badRequest().body(mapOf("error" to "No GitHub user found"))
 
-        val email = userInfo.email ?: "dummy-email@example.com"
-        val jwt = JwtUtils.generateJwtToken(email)
+        val user = authService.getExistingOAuthUser(Provider.GITHUB, userInfo.id)
+            ?: return ResponseEntity.badRequest().body(mapOf("error" to "No user found linked to given GitHub credentials. Use a different OAuth provider, or sign up."))
 
+        val jwt = JwtUtils.generateJwtToken(user.email)
+        return ResponseEntity.ok(mapOf("token" to jwt))
+    }
+
+    @PostMapping("/signup")
+    suspend fun signup(@RequestParam code: String, @Valid @RequestBody request: UserRequest): ResponseEntity<Map<String, String>> {
+        val accessToken = gitHubAuthService.exchangeCodeForToken(code)
+            ?: return ResponseEntity.badRequest().body(mapOf("error" to "Invalid GitHub code"))
+
+        val userInfo: GitHubUserResponse = gitHubAuthService.getGitHubUserInfo(accessToken)
+            ?: return ResponseEntity.badRequest().body(mapOf("error" to "No GitHub user found"))
+
+        val userDTO = userService.add(request)
+
+        val user = withContext(Dispatchers.IO) {
+            userRepository.findByEmail(userDTO.email)
+        } ?: return ResponseEntity.badRequest().build()
+
+        withContext(Dispatchers.IO) {
+            authService.signUpWithOAuth(Provider.GITHUB, userInfo.id, user)
+        }
+
+        val jwt = JwtUtils.generateJwtToken(user.email)
         return ResponseEntity.ok(mapOf("token" to jwt))
     }
 

@@ -21,7 +21,7 @@ class UserAuthProvider(
     var provider: Provider,
 
     @Column(name = "provider_user_id",nullable = false)
-    var providerUserId: String,
+    var providerUserId: Long,
 
     @PastOrPresent(message = "Creation date cannot be in the future.")
     var createdAt: LocalDateTime = LocalDateTime.now(),
