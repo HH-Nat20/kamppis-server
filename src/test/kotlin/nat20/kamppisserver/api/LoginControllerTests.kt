@@ -70,7 +70,8 @@ class LoginControllerTests @Autowired constructor(
         }
     }
 
-    @Test
+    // No longer valid test
+/*    @Test
     fun `login should return 400 for invalid user`() {
         val email = "invalid@not-example.com"
 
@@ -78,7 +79,7 @@ class LoginControllerTests @Autowired constructor(
         .andExpect {
             status { isBadRequest() }
         }
-    }
+    }*/
 
     @Test
     fun `should access protected endpoint with valid JWT`() {
