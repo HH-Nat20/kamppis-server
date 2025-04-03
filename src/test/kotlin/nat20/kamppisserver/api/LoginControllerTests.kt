@@ -8,7 +8,7 @@ import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.security.SecurityConfig
-import nat20.kamppisserver.service.GitHubAuthService
+import nat20.kamppisserver.security.GitHubAuthService
 import nat20.kamppisserver.service.UserService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test

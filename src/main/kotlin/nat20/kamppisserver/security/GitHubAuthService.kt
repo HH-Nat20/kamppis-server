@@ -1,4 +1,4 @@
-package nat20.kamppisserver.service
+package nat20.kamppisserver.security
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.ObjectMapper

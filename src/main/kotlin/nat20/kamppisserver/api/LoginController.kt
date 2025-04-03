@@ -1,8 +1,8 @@
 package nat20.kamppisserver.api
 
 import nat20.kamppisserver.security.JwtUtils
-import nat20.kamppisserver.service.GitHubAuthService
-import nat20.kamppisserver.service.GitHubUserResponse
+import nat20.kamppisserver.security.GitHubAuthService
+import nat20.kamppisserver.security.GitHubUserResponse
 import nat20.kamppisserver.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

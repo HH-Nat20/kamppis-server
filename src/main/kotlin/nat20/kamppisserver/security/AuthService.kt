@@ -1,0 +1,40 @@
+package nat20.kamppisserver.security
+
+import jakarta.transaction.Transactional
+import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.UserAuthProvider
+import nat20.kamppisserver.domain.enums.Provider
+import nat20.kamppisserver.repository.UserAuthProviderRepository
+import nat20.kamppisserver.repository.UserRepository
+import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.stereotype.Service
+
+@Service
+class AuthService(
+    private val userRepository: UserRepository,
+    private val userAuthProviderRepository: UserAuthProviderRepository
+) {
+    @Transactional
+    fun loginWithOAuth(provider: Provider, providerUserId: String, email: String?): User {
+
+        val existingAuthProvider = userAuthProviderRepository.findByProviderAndProviderUserId(provider, providerUserId)
+
+        if (existingAuthProvider != null) {
+            return existingAuthProvider.user
+        }
+
+        val user = email?.let { userRepository.findByEmail(it) }
+
+        if (user == null) {
+            // TODO: Direct to create a new User
+            // Throw an error for now
+            throw UsernameNotFoundException("User not found")
+/*            user = userRepository.save(User(email = email))
+
+            // Link the new OAuth provider to the user
+            val newAuthProvider = UserAuthProvider(user = user, provider = provider, providerUserId = providerUserId)
+            userAuthProviderRepository.save(newAuthProvider)*/
+        }
+        return user
+    }
+}
