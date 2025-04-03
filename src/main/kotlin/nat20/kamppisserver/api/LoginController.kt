@@ -72,11 +72,15 @@ class LoginController(
             val user = userRepository.findByEmail(userDTO.email)
                 ?: return ResponseEntity.badRequest().body(mapOf("error" to "User creation failed"))
 
-            authService.signUpWithOAuth(Provider.GITHUB, userInfo.id, user)
+            try {
+                authService.signUpWithOAuth(Provider.GITHUB, userInfo.id, user)
+            } catch (e: IllegalArgumentException) {
+                return ResponseEntity.badRequest().body(mapOf("error" to e.message!!))
+            }
 
             val jwt = JwtUtils.generateJwtToken(user.email)
             return ResponseEntity.ok(mapOf("token" to jwt))
-        } catch (error: Error) {
+        } catch (e: Exception) {
             return ResponseEntity.badRequest().build()
         }
     }

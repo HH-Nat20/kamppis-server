@@ -17,11 +17,6 @@ class AuthService(
             throw IllegalArgumentException("Provider for $providerUserId already exists")
         }
 
-        // We already created the user in the controller, so ofc the email exists
-/*        if (userRepository.findByEmail(user.email) != null) {
-            throw IllegalArgumentException("User with this email already exists")
-        }*/
-
         // Link the new OAuth provider to the user
         val newAuthProvider = UserAuthProvider(user = user, provider = provider, providerUserId = providerUserId)
 
