@@ -63,7 +63,7 @@ class LoginController(
         return ResponseEntity.ok(mapOf("token" to jwt))
     }
 
-
+    //TODO Add Kdoc to explain /signup
     @PostMapping("/signup")
     @Transactional
     suspend fun signup(@RequestParam code: String, @Valid @RequestBody request: UserRequest): ResponseEntity<Map<String, String>> {
