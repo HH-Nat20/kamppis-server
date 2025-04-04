@@ -6,6 +6,7 @@ import io.mockk.every
 import nat20.kamppisserver.domain.UserDTO
 import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.UserStatus
+import nat20.kamppisserver.repository.ProfileRepository
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.security.AuthService
@@ -44,7 +45,7 @@ class LoginControllerTests @Autowired constructor(
     private lateinit var userRepository: UserRepository
 
     @MockkBean
-    private lateinit var userProfileRepository: UserProfileRepository
+    private lateinit var profileRepository: ProfileRepository
 
     @AfterEach
     fun tearDown() {
