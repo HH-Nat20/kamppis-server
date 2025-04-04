@@ -69,22 +69,19 @@ class LoginController(
 
         val userDTO = userService.add(request)
 
-        var user = userRepository.findByEmail(userDTO.email)
+        val user = userRepository.findByEmail(userDTO.email)
             ?: return ResponseEntity.badRequest().body(mapOf("error" to "User creation failed"))
-
-        val userProfile = profileRepository.save(
-            UserProfile(
-                user = user
-            )
-        )
-        user.userProfile = userProfile
-        user = userRepository.save(user)
 
         try {
             authService.signUpWithOAuth(Provider.GITHUB, userInfo.id, user)
         } catch (e: IllegalArgumentException) {
             return ResponseEntity.badRequest().body(mapOf("error" to e.message!!))
         }
+
+        // Add blank user profile
+        val profile = UserProfile(user = user)
+        user.userProfile = profile // Important for cascade/bidirectional sync
+        profileRepository.save(profile)
 
         val jwt = JwtUtils.generateJwtToken(user.email)
         return ResponseEntity.ok(mapOf("token" to jwt))
