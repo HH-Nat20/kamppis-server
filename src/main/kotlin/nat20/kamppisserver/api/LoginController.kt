@@ -2,10 +2,14 @@ package nat20.kamppisserver.api
 
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
+import nat20.kamppisserver.domain.RoomPreference
+import nat20.kamppisserver.domain.RoommatePreference
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserRequest
 import nat20.kamppisserver.domain.enums.Provider
 import nat20.kamppisserver.repository.ProfileRepository
+import nat20.kamppisserver.repository.RoomPreferenceRepository
+import nat20.kamppisserver.repository.RoommatePreferenceRepository
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.security.AuthService
 import nat20.kamppisserver.security.GitHubAuthService
@@ -23,6 +27,8 @@ class LoginController(
     private val authService: AuthService,
     private val userRepository: UserRepository,
     private val profileRepository: ProfileRepository,
+    private val roomPreferenceRepository: RoomPreferenceRepository,
+    private val roommatePreferenceRepository: RoommatePreferenceRepository,
 ) {
 
     @PostMapping
@@ -82,6 +88,14 @@ class LoginController(
         val profile = UserProfile(user = user)
         user.userProfile = profile // Important for cascade/bidirectional sync
         profileRepository.save(profile)
+
+        // Add blank preferences
+        val roomPreference = RoomPreference(user = user)
+        val roommatePreference = RoommatePreference(user = user)
+        user.roomPreference = roomPreference
+        user.roommatePreference = roommatePreference
+        roomPreferenceRepository.save(roomPreference)
+        roommatePreferenceRepository.save(roommatePreference)
 
         val jwt = JwtUtils.generateJwtToken(user.email)
         return ResponseEntity.ok(mapOf("token" to jwt))

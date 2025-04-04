@@ -3,11 +3,13 @@ package nat20.kamppisserver.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import nat20.kamppisserver.domain.RoomPreference
 import nat20.kamppisserver.domain.UserDTO
 import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.ProfileRepository
-import nat20.kamppisserver.repository.UserProfileRepository
+import nat20.kamppisserver.repository.RoomPreferenceRepository
+import nat20.kamppisserver.repository.RoommatePreferenceRepository
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.security.AuthService
 import nat20.kamppisserver.security.JwtUtils
@@ -46,6 +48,12 @@ class LoginControllerTests @Autowired constructor(
 
     @MockkBean
     private lateinit var profileRepository: ProfileRepository
+
+    @MockkBean
+    private lateinit var roomPreferenceRepository: RoomPreferenceRepository
+
+    @MockkBean
+    private lateinit var roommatePreferenceRepository: RoommatePreferenceRepository
 
     @AfterEach
     fun tearDown() {
