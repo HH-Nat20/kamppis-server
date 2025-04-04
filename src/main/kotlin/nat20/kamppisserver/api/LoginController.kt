@@ -66,37 +66,33 @@ class LoginController(
     @PostMapping("/signup")
     @Transactional
     suspend fun signup(@RequestParam code: String, @Valid @RequestBody request: UserRequest): ResponseEntity<Map<String, String>> {
-        try {
-            val accessToken = gitHubAuthService.exchangeCodeForToken(code)
-                ?: return ResponseEntity.badRequest().body(mapOf("error" to "Invalid GitHub code"))
+        val accessToken = gitHubAuthService.exchangeCodeForToken(code)
+            ?: return ResponseEntity.badRequest().body(mapOf("error" to "Invalid GitHub code"))
 
-            val userInfo: GitHubUserResponse = gitHubAuthService.getGitHubUserInfo(accessToken)
-                ?: return ResponseEntity.badRequest().body(mapOf("error" to "No GitHub user found"))
+        val userInfo: GitHubUserResponse = gitHubAuthService.getGitHubUserInfo(accessToken)
+            ?: return ResponseEntity.badRequest().body(mapOf("error" to "No GitHub user found"))
 
-            val userDTO = userService.add(request)
+        val userDTO = userService.add(request)
 
-            var user = userRepository.findByEmail(userDTO.email)
-                ?: return ResponseEntity.badRequest().body(mapOf("error" to "User creation failed"))
+        var user = userRepository.findByEmail(userDTO.email)
+            ?: return ResponseEntity.badRequest().body(mapOf("error" to "User creation failed"))
 
-            val userProfile = userProfileRepository.save(
-                UserProfile(
-                    user = user
-                )
+        val userProfile = userProfileRepository.save(
+            UserProfile(
+                user = user
             )
-            user.userProfile = userProfile
-            user = userRepository.save(user)
+        )
+        user.userProfile = userProfile
+        user = userRepository.save(user)
 
-            try {
-                authService.signUpWithOAuth(Provider.GITHUB, userInfo.id, user)
-            } catch (e: IllegalArgumentException) {
-                return ResponseEntity.badRequest().body(mapOf("error" to e.message!!))
-            }
-
-            val jwt = JwtUtils.generateJwtToken(user.email)
-            return ResponseEntity.ok(mapOf("token" to jwt))
-        } catch (e: Exception) {
-            return ResponseEntity.badRequest().build()
+        try {
+            authService.signUpWithOAuth(Provider.GITHUB, userInfo.id, user)
+        } catch (e: IllegalArgumentException) {
+            return ResponseEntity.badRequest().body(mapOf("error" to e.message!!))
         }
+
+        val jwt = JwtUtils.generateJwtToken(user.email)
+        return ResponseEntity.ok(mapOf("token" to jwt))
     }
 
 }
