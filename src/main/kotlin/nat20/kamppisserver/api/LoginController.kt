@@ -4,13 +4,18 @@ import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import nat20.kamppisserver.domain.UserProfile
+import nat20.kamppisserver.domain.UserProfileDTO
+import nat20.kamppisserver.domain.UserProfileRequest
 import nat20.kamppisserver.domain.UserRequest
 import nat20.kamppisserver.domain.enums.Provider
+import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.security.AuthService
 import nat20.kamppisserver.security.GitHubAuthService
 import nat20.kamppisserver.security.GitHubUserResponse
 import nat20.kamppisserver.security.JwtUtils
+import nat20.kamppisserver.service.UserProfileService
 import nat20.kamppisserver.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -21,7 +26,8 @@ class LoginController(
     private val userService: UserService,
     private val gitHubAuthService: GitHubAuthService,
     private val authService: AuthService,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val userProfileRepository: UserProfileRepository,
 ) {
 
     @PostMapping
@@ -69,8 +75,16 @@ class LoginController(
 
             val userDTO = userService.add(request)
 
-            val user = userRepository.findByEmail(userDTO.email)
+            var user = userRepository.findByEmail(userDTO.email)
                 ?: return ResponseEntity.badRequest().body(mapOf("error" to "User creation failed"))
+
+            val userProfile = userProfileRepository.save(
+                UserProfile(
+                    user = user
+                )
+            )
+            user.userProfile = userProfile
+            user = userRepository.save(user)
 
             try {
                 authService.signUpWithOAuth(Provider.GITHUB, userInfo.id, user)
