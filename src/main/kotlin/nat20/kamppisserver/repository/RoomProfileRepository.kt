@@ -42,4 +42,17 @@ interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
         @Param("maxRoommates") maxRoommates: Int?,
         @Param("locationPreferences") locationPreferences: List<String>?
     ): List<RoomProfile>
+
+    @Query("""
+        SELECT CASE WHEN COUNT(up.*) > 0 THEN TRUE ELSE FALSE END
+        FROM room_profiles_users rpu
+        JOIN profiles p ON rpu.room_profile_id = p.id
+        JOIN user_profiles up ON rpu.user_id = up.user_id
+        WHERE rpu.room_profile_id = :roomProfileId
+        AND up.pets = 'PET_OWNER'
+        AND p.deleted_at IS NULL
+    """, nativeQuery = true)
+    fun findIfFlatIsPetHousehold(
+        @Param("roomProfileId") roomProfileId: Long?
+    ): Boolean
 }

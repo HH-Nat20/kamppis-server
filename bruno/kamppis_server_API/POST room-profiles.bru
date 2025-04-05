@@ -1,0 +1,23 @@
+meta {
+  name: POST room-profiles
+  type: http
+  seq: 26
+}
+
+post {
+  url: {{baseUrl}}/api/room-profiles
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "userIds": [1,2],
+    "flatId": 16,
+    "rent": 750,
+    "isPrivateRoom": true,
+    "furnished": true,
+    "furnishedInfo": "Heinäpaalisänky",
+    "bio": "Kiva lato. Heinäpaalit kullekin."
+  }
+}

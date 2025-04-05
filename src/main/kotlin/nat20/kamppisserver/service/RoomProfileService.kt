@@ -18,7 +18,8 @@ import java.time.LocalDateTime
 class RoomProfileService(
     private val roomProfileRepository: RoomProfileRepository,
     private val userRepository: UserRepository,
-    private val flatRepository: FlatRepository
+    private val flatRepository: FlatRepository,
+    private val flatService: FlatService
 ) {
 
     fun findAll(): List<RoomProfileDTO> {
@@ -48,6 +49,9 @@ class RoomProfileService(
         )
 
         val addedRoomProfile = roomProfileRepository.save(roomProfile)
+
+        flatService.updatePetHouseholdStatus(roomProfile.flat.id!!, roomProfile.id!!)
+
         return addedRoomProfile.toDTO(includeUserSummary = true)
     }
 
@@ -70,7 +74,9 @@ class RoomProfileService(
 
         existingProfile.updatedAt = LocalDateTime.now()
 
-        val updatedProfile = roomProfileRepository.save(existingProfile)
+        val updatedProfile = roomProfileRepository.saveAndFlush(existingProfile)
+
+        flatService.updatePetHouseholdStatus(updatedProfile.flat.id!!, updatedProfile.id!!)
 
         return updatedProfile.toDTO(includeUserSummary = true)
     }
@@ -81,6 +87,8 @@ class RoomProfileService(
 
         roomProfile.deletedAt = LocalDateTime.now()
         roomProfileRepository.save(roomProfile)
+
+        flatService.updatePetHouseholdStatus(roomProfile.flat.id!!, roomProfile.id!!)
 
         return true
     }

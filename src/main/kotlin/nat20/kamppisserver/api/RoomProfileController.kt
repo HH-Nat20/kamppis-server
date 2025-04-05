@@ -37,6 +37,12 @@ class RoomProfileController(private val service: RoomProfileService,
         return ResponseEntity.ok(service.update(roomProfile, id))
     }
 
+    @DeleteMapping("/{id}")
+    fun delete(@PathVariable("id") id: Long): ResponseEntity<Void> {
+        service.delete(id)
+        return ResponseEntity(HttpStatus.NO_CONTENT)
+    }
+
     /**
      * Finds all the room profiles that match the user's search criteria.
      *
