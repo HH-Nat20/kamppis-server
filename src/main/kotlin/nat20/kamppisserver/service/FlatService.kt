@@ -5,6 +5,8 @@ import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.Flat
 import nat20.kamppisserver.domain.FlatDTO
+import nat20.kamppisserver.domain.RoomProfile
+import nat20.kamppisserver.domain.enums.Pets
 import nat20.kamppisserver.repository.FlatRepository
 import nat20.kamppisserver.repository.RoomProfileRepository
 import org.springframework.stereotype.Service
@@ -36,7 +38,7 @@ class FlatService(
             description = request.description,
             location = request.location,
             totalRoommates = request.totalRoommates,
-            petHousehold = request.petHousehold,
+            petHousehold = false,
             flatUtilities = request.flatUtilities,
             roomProfiles = mutableListOf(),
         )
@@ -57,7 +59,6 @@ class FlatService(
         existingFlat.description = request.description
         existingFlat.location = request.location
         existingFlat.totalRoommates = request.totalRoommates
-        existingFlat.petHousehold = request.petHousehold
         existingFlat.flatUtilities = request.flatUtilities
         existingFlat.roomProfiles = roomProfiles
 
@@ -66,4 +67,11 @@ class FlatService(
         return updatedFlat.toDTO()
     }
 
+    fun updatePetHouseholdStatus(flatId: Long, roomProfileId: Long) {
+        val existingFlat = flatRepository.findById(flatId).getOrNull()
+            ?: throw EntityNotFoundException("Flat with id $flatId not found")
+
+        existingFlat.petHousehold = roomProfileRepository.findIfFlatIsPetHousehold(roomProfileId)
+        flatRepository.save(existingFlat)
+    }
 }
