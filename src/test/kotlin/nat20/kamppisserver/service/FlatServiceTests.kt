@@ -59,7 +59,7 @@ class FlatServiceTests @Autowired constructor(
     fun `flat's pet household status should be false by default when added to database`() {
         val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
 
-        assertEquals(false, petHouseholdStatus)
+        assertFalse(petHouseholdStatus!!)
     }
 
     @Test
@@ -67,7 +67,7 @@ class FlatServiceTests @Autowired constructor(
         roomProfileService.add(testRoomProfileRequest)
         val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
 
-        assertEquals(true, petHouseholdStatus)
+        assertTrue(petHouseholdStatus!!)
     }
 
     @Test
@@ -86,7 +86,7 @@ class FlatServiceTests @Autowired constructor(
         roomProfileService.update(updateRoomProfileRequest, addedRoomProfile.id!!)
         val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
 
-        assertEquals(false, petHouseholdStatus)
+        assertFalse(petHouseholdStatus!!)
     }
 
     @Test
@@ -95,6 +95,6 @@ class FlatServiceTests @Autowired constructor(
         roomProfileService.delete(addedRoomProfile.id!!)
         val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
 
-        assertEquals(false, petHouseholdStatus)
+        assertFalse(petHouseholdStatus!!)
     }
 }
