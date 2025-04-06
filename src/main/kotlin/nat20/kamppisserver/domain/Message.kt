@@ -36,6 +36,8 @@ class Message(
             senderEmail = sender.email,
             senderId = sender.id ?: throw IllegalStateException("Sender ID is null"),
             matchId = match.id ?: throw IllegalStateException("Match ID is null"),
+            senderFirstName = sender.firstName,
+            senderLastName = sender.lastName,
             content = content,
             createdAt = createdAt,
         )
@@ -46,6 +48,8 @@ data class MessageDTO(
     val id: Long? = null,
     @NotNull val senderEmail: String,
     @NotNull val senderId: Long,
+    @NotNull val senderFirstName: String,
+    @NotNull val senderLastName: String,
     @NotNull val matchId: Long,
     @NotEmpty val content: String,
     @PastOrPresent val createdAt: LocalDateTime?,
