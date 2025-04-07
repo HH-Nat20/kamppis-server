@@ -55,4 +55,18 @@ interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
     fun findIfFlatIsPetHousehold(
         @Param("roomProfileId") roomProfileId: Long?
     ): Boolean
+
+    @Query("""
+        SELECT rp.id, rp.rent, rp.is_private_room, rp.furnished, rp.furnished_info, rp.flat_id, f.pet_household, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at, up.id AS user_profile_id
+        FROM room_profiles rp
+        JOIN room_profiles_users rpu ON rp.id = rpu.room_profile_id
+        JOIN users u ON u.id = rpu.user_id
+        JOIN user_profiles up ON up.user_id = u.id
+        JOIN flats f ON f.id = rp.flat_id
+        LEFT JOIN profiles p ON rp.id = p.id
+        WHERE :userProfileId = up.id
+    """, nativeQuery = true)
+    fun findRoomProfileByUserProfileId(
+        @Param("userProfileId") userProfileId: Long?
+    ): List<RoomProfile>
 }
