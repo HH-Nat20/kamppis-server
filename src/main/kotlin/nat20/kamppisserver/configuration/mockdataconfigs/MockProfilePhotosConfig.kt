@@ -177,10 +177,126 @@ class MockProfilePhotosConfig {
             ),
         )
 
-        // These will be profile photos for room profiles
-        //val roomProfilePhotos = listOf()
+        // These are profile photos for room profiles
+        val roomProfilePhotos = mutableListOf(
+            ProfilePhoto(
+                profile = profileRepository.findById(79L).get(),
+                url = "https://images.pexels.com/photos/2416932/pexels-photo-2416932.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(79L).get(),
+                url = "https://images.pexels.com/photos/2416931/pexels-photo-2416931.jpeg",
+                isProfilePhoto = false
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(79L).get(),
+                url = "https://images.pexels.com/photos/2416933/pexels-photo-2416933.jpeg",
+                isProfilePhoto = false
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(80L).get(),
+                url = "https://images.pexels.com/photos/1743229/pexels-photo-1743229.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(80L).get(),
+                url = "https://images.pexels.com/photos/1743231/pexels-photo-1743231.jpeg",
+                isProfilePhoto = false
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(81L).get(),
+                url = "https://images.pexels.com/photos/3935340/pexels-photo-3935340.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(82L).get(),
+                url = "https://images.pexels.com/photos/1666389/pexels-photo-1666389.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(82L).get(),
+                url = "https://images.pexels.com/photos/1666388/pexels-photo-1666388.jpeg",
+                isProfilePhoto = false
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(83L).get(),
+                url = "https://images.pexels.com/photos/817781/pexels-photo-817781.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(83L).get(),
+                url = "https://images.pexels.com/photos/817781/pexels-photo-817781.jpeg",
+                isProfilePhoto = false
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(84L).get(),
+                url = "https://images.pexels.com/photos/2631746/pexels-photo-2631746.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(85L).get(),
+                url = "https://images.pexels.com/photos/7031616/pexels-photo-7031616.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(86L).get(),
+                url = "https://images.pexels.com/photos/237371/pexels-photo-237371.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(87L).get(),
+                url = "https://images.pexels.com/photos/271649/pexels-photo-271649.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(88L).get(),
+                url = "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(89L).get(),
+                url = "https://images.pexels.com/photos/31495986/pexels-photo-31495986/free-photo-of-serene-minimalist-interior-with-soft-light.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(90L).get(),
+                url = "https://images.pexels.com/photos/210604/pexels-photo-210604.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(91L).get(),
+                url = "https://images.pexels.com/photos/1879061/pexels-photo-1879061.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(92L).get(),
+                url = "https://images.pexels.com/photos/8146335/pexels-photo-8146335.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(93L).get(),
+                url = "https://images.pexels.com/photos/2082087/pexels-photo-2082087.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(94L).get(),
+                url = "https://images.pexels.com/photos/11784665/pexels-photo-11784665.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(95L).get(),
+                url = "https://images.pexels.com/photos/1743231/pexels-photo-1743231.jpeg",
+                isProfilePhoto = true
+            ),
+            ProfilePhoto(
+                profile = profileRepository.findById(96L).get(),
+                url = "https://images.pexels.com/photos/4553183/pexels-photo-4553183.jpeg",
+                isProfilePhoto = true
+            )
+        )
 
         // Save photos to database
-        profilePhotoRepository.saveAll(userProfilePhotos)
+        profilePhotoRepository.saveAll(userProfilePhotos + roomProfilePhotos)
     }
 }
