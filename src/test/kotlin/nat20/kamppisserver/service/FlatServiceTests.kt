@@ -3,7 +3,10 @@ package nat20.kamppisserver.service
 import nat20.kamppisserver.domain.Flat
 import nat20.kamppisserver.domain.FlatDTO
 import nat20.kamppisserver.domain.RoomProfileRequest
+import nat20.kamppisserver.domain.UserProfileRequest
 import nat20.kamppisserver.domain.enums.*
+import nat20.kamppisserver.repository.FlatRepository
+import nat20.kamppisserver.repository.UserProfileRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +24,10 @@ import kotlin.test.*
 @Transactional
 class FlatServiceTests @Autowired constructor(
     val flatService: FlatService,
-    val roomProfileService: RoomProfileService
+    val flatRepository: FlatRepository,
+    val roomProfileService: RoomProfileService,
+    val userProfileService: UserProfileService,
+    val userProfileRepository: UserProfileRepository
 ) {
     /*
      * Here we declare variables that are used in every test
@@ -96,5 +102,59 @@ class FlatServiceTests @Autowired constructor(
         val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
 
         assertFalse(petHouseholdStatus!!)
+    }
+
+    @Test
+    fun `should update flat's pet household status to false when a user profile linked to flat is no longer a pet owner`() {
+        roomProfileService.add(testRoomProfileRequest)
+        val updatePetHousehold = flatRepository.findById(addedFlat.id!!).get()
+        updatePetHousehold.petHousehold = true
+        flatRepository.save(updatePetHousehold)
+
+        val updateUserProfileRequest = UserProfileRequest(
+            userId = 2L,
+            bio = "New bio",
+            cleanliness = Cleanliness.MESSY,
+            lifestyle = mutableSetOf(Lifestyle.NIGHT_OWL),
+            pets = Pets.OK_WITH_PETS
+        )
+
+        val updateUserProfileId = userProfileRepository.findByUserIdAndStatus(updateUserProfileRequest.userId, UserStatus.ACTIVE)!!.id!!
+        userProfileService.update(updateUserProfileRequest, updateUserProfileId)
+
+        val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
+
+        assertFalse(petHouseholdStatus!!)
+    }
+
+    @Test
+    fun `should update flat's pet household status to true when a user profile linked to flat becomes a pet owner`() {
+        val updateRoomProfileRequest = RoomProfileRequest(
+            userIds = listOf(1L),
+            flatId = addedFlat.id!!,
+            rent = 750,
+            isPrivateRoom = true,
+            furnished = true,
+            furnishedInfo = "Heinäpaalisänky",
+            bio = "Kiva lato. Kämppis ja koira lähti."
+        )
+
+        val addedRoomProfile = roomProfileService.add(testRoomProfileRequest)
+        roomProfileService.update(updateRoomProfileRequest, addedRoomProfile.id!!)
+
+        val updateUserProfileRequest = UserProfileRequest(
+            userId = 1L,
+            bio = "New bio",
+            cleanliness = Cleanliness.MESSY,
+            lifestyle = mutableSetOf(Lifestyle.NIGHT_OWL),
+            pets = Pets.PET_OWNER
+        )
+
+        val updateUserProfileId = userProfileRepository.findByUserIdAndStatus(updateUserProfileRequest.userId, UserStatus.ACTIVE)!!.id!!
+        userProfileService.update(updateUserProfileRequest, updateUserProfileId)
+
+        val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
+
+        assertTrue(petHouseholdStatus!!)
     }
 }

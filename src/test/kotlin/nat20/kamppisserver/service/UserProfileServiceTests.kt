@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach
 import io.mockk.*
 import nat20.kamppisserver.domain.UserProfileRequest
 import nat20.kamppisserver.domain.enums.*
+import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import java.time.LocalDate
 
@@ -23,12 +24,16 @@ class UserProfileServiceTests {
     private lateinit var userRepository: UserRepository
     private lateinit var userProfileRepository: UserProfileRepository
     private lateinit var service: UserProfileService
+    private lateinit var flatService: FlatService
+    private lateinit var roomProfileRepository: RoomProfileRepository
 
     @BeforeEach
     fun setUp() {
         userRepository = mockk()
         userProfileRepository = mockk()
-        service = UserProfileService(userRepository, userProfileRepository)
+        flatService = mockk()
+        roomProfileRepository = mockk()
+        service = UserProfileService(userRepository, userProfileRepository, flatService, roomProfileRepository)
     }
 
     @Test
