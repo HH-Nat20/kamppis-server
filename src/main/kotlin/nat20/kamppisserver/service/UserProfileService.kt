@@ -6,8 +6,10 @@ import jakarta.validation.Valid
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.domain.ProfilePhoto
+import nat20.kamppisserver.domain.RoomProfile
 import nat20.kamppisserver.domain.UserProfileRequest
 import nat20.kamppisserver.domain.enums.UserStatus
+import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import org.springframework.stereotype.Service
@@ -19,7 +21,9 @@ import java.time.LocalDateTime
 @Service
 class UserProfileService(
     private val userRepository: UserRepository,
-    private val userProfileRepository: UserProfileRepository
+    private val userProfileRepository: UserProfileRepository,
+    private val flatService: FlatService,
+    private val roomProfileRepository: RoomProfileRepository
 ) {
 
     /**
@@ -102,6 +106,7 @@ class UserProfileService(
         request.bio.let { existingProfile.bio = it ?: "Write bio here" }
         request.cleanliness?.let { existingProfile.cleanliness = it }
         request.lifestyle?.let { existingProfile.lifestyle = it }
+        request.pets?.let {existingProfile.pets = it}
 
         // Convert ProfilePhotoDTOs to ProfilePhoto entities
         request.photos?.let { photos ->
@@ -122,6 +127,11 @@ class UserProfileService(
         existingProfile.updatedAt = LocalDateTime.now()
 
         val updatedProfile = userProfileRepository.save(existingProfile)
+
+        if (updatedProfile.id != null) {
+            val roomProfiles: List<RoomProfile> = roomProfileRepository.findRoomProfileByUserProfileId(updatedProfile.id)
+            flatService.updatePetHouseholdStatus(roomProfiles[0].flat.id!!, roomProfiles[0].id!!)
+        }
 
         return updatedProfile.toDTO(includeUserSummary = true)
     }
