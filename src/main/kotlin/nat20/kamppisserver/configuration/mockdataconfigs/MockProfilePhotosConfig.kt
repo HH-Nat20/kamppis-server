@@ -14,7 +14,7 @@ class MockProfilePhotosConfig {
         profilePhotoRepository: ProfilePhotoRepository
     ) {
         // These are profile photos for user profiles
-        val userProfilePhotos = listOf(
+        val userProfilePhotos = mutableListOf(
             ProfilePhoto(
                 profile = profileRepository.findById(1L).get(),
                 url = "https://cdn.stocksnap.io/img-thumbs/960w/woman-portrait_CLTJPNEBUL.jpg",
