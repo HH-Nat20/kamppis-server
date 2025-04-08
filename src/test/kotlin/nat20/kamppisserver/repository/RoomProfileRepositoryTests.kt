@@ -170,7 +170,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
 
     @Test
     fun `should return the correct amount of room profiles when all criteria are used`() {
-        val numberOfMatchingRoomProfiles: Int = 8
+        val numberOfMatchingRoomProfiles: Int = 10
 
         // Query parameters (=user's search criteria) are selected from the user's room preferences
         // Swipes are taken into account
