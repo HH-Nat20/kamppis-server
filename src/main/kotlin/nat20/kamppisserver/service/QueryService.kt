@@ -20,6 +20,7 @@ class QueryService(
     private val roommatePreferenceRepository: RoommatePreferenceRepository,
     private val roomPreferenceRepository: RoomPreferenceRepository,
     private val roomProfileRepository: RoomProfileRepository,
+    private val swipeRepository: SwipeRepository
 ) {
 
     /**
@@ -103,5 +104,22 @@ class QueryService(
         val roomProfileDTOList: List<RoomProfileDTO> = roomProfileList.map {it.toDTO(includeUserSummary = true) }
 
         return roomProfileDTOList
+    }
+
+    fun findUserProfilesThatHaveSwipedUsersRoom(userId: Long): Map<Long, List<UserProfileDTO>> {
+        val roomProfileIds: List<Long?>? = userRepository.findByIdAndStatus(userId, UserStatus.ACTIVE)?.roomProfiles?.map {it.id}
+
+        val swiperUserProfileMap: MutableMap<Long, List<UserProfileDTO>> = mutableMapOf()
+
+        if (roomProfileIds != null) {
+            var userProfileIdList: MutableList<Long>
+
+            for (roomProfileId in roomProfileIds) {
+                userProfileIdList = swipeRepository.findUseProfilesThatHaveSwipedRoomProfile(roomProfileId!!)
+                swiperUserProfileMap[roomProfileId] = userProfileIdList.map { userProfileRepository.findById(it).get().toDTO(includeUserSummary = true) }
+            }
+        }
+
+        return swiperUserProfileMap
     }
 }

@@ -3,6 +3,7 @@ package nat20.kamppisserver.api
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
+import nat20.kamppisserver.domain.RoomProfileDTO
 import nat20.kamppisserver.domain.UserProfileRequest
 import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserProfileService
@@ -76,5 +77,16 @@ class UserProfileController(private val service: UserProfileService,
         }
 
         return ResponseEntity(userProfileList, HttpStatus.OK)
+    }
+
+    @GetMapping("/{userId}/roomswipesquery")
+    fun findUserProfilesWhoHaveSwipedUsersRoom(@PathVariable userId: Long): ResponseEntity<Map<Long, List<UserProfileDTO>>> {
+        val userProfileMap: Map<Long, List<UserProfileDTO>> = queryService.findUserProfilesThatHaveSwipedUsersRoom(userId)
+
+        if (userProfileMap.isEmpty()) {
+            return ResponseEntity(HttpStatus.NO_CONTENT)
+        }
+
+        return ResponseEntity(userProfileMap, HttpStatus.OK)
     }
 }
