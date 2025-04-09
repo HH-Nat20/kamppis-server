@@ -9,6 +9,8 @@ import nat20.kamppisserver.repository.*
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.repository.findByIdOrNull
 import java.time.LocalDate
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 
 /**
  * Service class for querying user profiles.
@@ -44,7 +46,7 @@ class QueryService(
      * @param id the id of the user for whom matching profiles are returned.
      * @return a list of matching user profiles.
      */
-    fun findUserProfilesThatMeetCriteria(userId: Long): List<UserProfileDTO> {
+    fun findUserProfilesThatMeetCriteria(pageable: Pageable, userId: Long): Page<UserProfileDTO> {
         /* We first find user's user profile by user's id
         * From the profile, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in UserProfileRepository */
@@ -62,7 +64,8 @@ class QueryService(
         val genderPreferences: List<String>? = roommatePreference.genderPreferences?.map { it.name }
         val locationPreferences: List<String>? = roommatePreference.locationPreferences?.map { it.name }
 
-        val userProfileList: List<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(
+        val userProfileList: Page<UserProfile> = userProfileRepository.findUserProfilesThatMeetCriteria(
+            pageable,
             userProfileId,
             queryDate,
             minAgePreference,
@@ -71,7 +74,7 @@ class QueryService(
             locationPreferences
         )
 
-        val userProfileDTOList: List<UserProfileDTO> = userProfileList.map { it.toDTO(includeUserSummary = true) }
+        val userProfileDTOList: Page<UserProfileDTO> = userProfileList.map { it.toDTO(includeUserSummary = true) }
 
         return userProfileDTOList
     }

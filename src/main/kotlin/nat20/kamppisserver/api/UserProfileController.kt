@@ -7,6 +7,8 @@ import nat20.kamppisserver.domain.RoomProfileDTO
 import nat20.kamppisserver.domain.UserProfileRequest
 import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserProfileService
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -69,8 +71,12 @@ class UserProfileController(private val service: UserProfileService,
      * @return ResponseEntity with status code 204 NO_CONTENT if no user profiles have been found.
      */
     @GetMapping("/{userId}/query")
-    fun findUserProfilesThatMeetCriteria(@PathVariable userId: Long): ResponseEntity<List<UserProfileDTO>> {
-        val userProfileList: List<UserProfileDTO> = queryService.findUserProfilesThatMeetCriteria(userId)
+    fun findUserProfilesThatMeetCriteria(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam size: Int,
+        @PathVariable userId: Long): ResponseEntity<Page<UserProfileDTO>>
+    {
+        val userProfileList: Page<UserProfileDTO> = queryService.findUserProfilesThatMeetCriteria(PageRequest.of(page, size), userId)
 
         if (userProfileList.isEmpty()) {
             return ResponseEntity(HttpStatus.NO_CONTENT)
