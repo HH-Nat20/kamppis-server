@@ -130,10 +130,11 @@ class UserProfileService(
 
         if (updatedProfile.id != null) {
             val roomProfiles: List<RoomProfile> = roomProfileRepository.findRoomProfileByUserProfileId(updatedProfile.id)
-            flatService.updatePetHouseholdStatus(roomProfiles[0].flat.id!!, roomProfiles[0].id!!)
+            if (roomProfiles.isNotEmpty()) {
+                flatService.updatePetHouseholdStatus(roomProfiles[0].flat.id!!, roomProfiles[0].id!!)
+            }
         }
 
         return updatedProfile.toDTO(includeUserSummary = true)
     }
-
 }
