@@ -79,7 +79,7 @@ class QueryService(
         return userProfileDTOList
     }
 
-    fun findRoomProfilesThatMeetCriteria(userId: Long): List<RoomProfileDTO> {
+    fun findRoomProfilesThatMeetCriteria(pageable: Pageable, userId: Long): Page<RoomProfileDTO> {
         /* We first find user's room preferences
         * From the preferences, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in RoomProfileRepository */
@@ -96,7 +96,8 @@ class QueryService(
         val maxRoommates: Int? = roomPreference.maxRoommates
         val locationPreferences: List<String>? = roomPreference.locationPreferences?.map {it.name}
 
-        val roomProfileList: List<RoomProfile> = roomProfileRepository.findRoomProfilesThatMeetCriteria(
+        val roomProfileList: Page<RoomProfile> = roomProfileRepository.findRoomProfilesThatMeetCriteria(
+            pageable,
             userProfileId,
             maxRent,
             hasPrivateRoom,
@@ -104,7 +105,7 @@ class QueryService(
             locationPreferences
         )
 
-        val roomProfileDTOList: List<RoomProfileDTO> = roomProfileList.map {it.toDTO(includeUserSummary = true) }
+        val roomProfileDTOList: Page<RoomProfileDTO> = roomProfileList.map {it.toDTO(includeUserSummary = true) }
 
         return roomProfileDTOList
     }

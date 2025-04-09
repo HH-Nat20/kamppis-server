@@ -2,6 +2,8 @@ package nat20.kamppisserver.repository
 
 import nat20.kamppisserver.domain.RoomProfile
 import nat20.kamppisserver.domain.enums.UserStatus
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.Query
@@ -36,12 +38,13 @@ interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
     AND (COALESCE(:locationPreferences) IS NULL OR f.location IN (:locationPreferences))
     """, nativeQuery = true)
     fun findRoomProfilesThatMeetCriteria(
+        pageable: Pageable,
         @Param("userProfileId") userProfileId: Long,
         @Param("maxRent") maxRent: Int?,
         @Param("hasPrivateRoom") hasPrivateRoom: Boolean?,
         @Param("maxRoommates") maxRoommates: Int?,
         @Param("locationPreferences") locationPreferences: List<String>?
-    ): List<RoomProfile>
+    ): Page<RoomProfile>
 
     @Query("""
         SELECT CASE WHEN COUNT(up.*) > 0 THEN TRUE ELSE FALSE END

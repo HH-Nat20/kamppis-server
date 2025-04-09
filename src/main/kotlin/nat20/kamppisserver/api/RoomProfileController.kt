@@ -6,6 +6,8 @@ import nat20.kamppisserver.domain.RoomProfile
 import nat20.kamppisserver.domain.RoomProfileRequest
 import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.RoomProfileService
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -51,10 +53,13 @@ class RoomProfileController(private val service: RoomProfileService,
      * @return ResponseEntity with status code 204 NO_CONTENT if no room profiles have been found.
      */
     @GetMapping("/{userId}/query")
-    fun findRoomProfilesThatMeetCriteria(@PathVariable userId: Long): ResponseEntity<List<RoomProfileDTO>> {
-        val roomProfileList: List<RoomProfileDTO> = queryService.findRoomProfilesThatMeetCriteria(userId)
+    fun findRoomProfilesThatMeetCriteria(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam size: Int,
+        @PathVariable userId: Long): ResponseEntity<Page<RoomProfileDTO>> {
+        val roomProfileList: Page<RoomProfileDTO> = queryService.findRoomProfilesThatMeetCriteria(PageRequest.of(page, size), userId)
 
-        if (roomProfileList.isEmpty()) {
+        if (roomProfileList.isEmpty) {
             return ResponseEntity(HttpStatus.NO_CONTENT)
         }
 
