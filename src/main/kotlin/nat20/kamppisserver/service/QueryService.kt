@@ -10,6 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.repository.findByIdOrNull
 import java.time.LocalDate
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 
 /**
@@ -110,20 +111,10 @@ class QueryService(
         return roomProfileDTOList
     }
 
-    fun findUserProfilesThatHaveSwipedUsersRoom(userId: Long): Map<Long, List<UserProfileDTO>> {
-        val roomProfileIds: List<Long?>? = userRepository.findByIdAndStatus(userId, UserStatus.ACTIVE)?.roomProfiles?.map {it.id}
+    fun findUserProfilesThatHaveSwipedRoomProfile(pageable: Pageable, roomProfileId: Long): Page<UserProfileDTO> {
+        val userProfileList: Page<UserProfile> = userProfileRepository.findUserProfilesWhoHaveSwipedRoomProfile(pageable, roomProfileId)
+        val userProfileDTOList: Page<UserProfileDTO> = userProfileList.map { it.toDTO(includeUserSummary = true) }
 
-        val swiperUserProfileMap: MutableMap<Long, List<UserProfileDTO>> = mutableMapOf()
-
-        if (roomProfileIds != null) {
-            var userProfileIdList: MutableList<Long>
-
-            for (roomProfileId in roomProfileIds) {
-                userProfileIdList = swipeRepository.findUseProfilesThatHaveSwipedRoomProfile(roomProfileId!!)
-                swiperUserProfileMap[roomProfileId] = userProfileIdList.map { userProfileRepository.findById(it).get().toDTO(includeUserSummary = true) }
-            }
-        }
-
-        return swiperUserProfileMap
+        return userProfileDTOList
     }
 }

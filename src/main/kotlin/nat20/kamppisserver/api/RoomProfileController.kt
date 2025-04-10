@@ -4,6 +4,7 @@ import jakarta.validation.Valid
 import nat20.kamppisserver.domain.RoomProfileDTO
 import nat20.kamppisserver.domain.RoomProfile
 import nat20.kamppisserver.domain.RoomProfileRequest
+import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.RoomProfileService
 import org.springframework.data.domain.PageRequest
@@ -64,5 +65,26 @@ class RoomProfileController(private val service: RoomProfileService,
         }
 
         return ResponseEntity(roomProfileList, HttpStatus.OK)
+    }
+
+    /**
+     * Finds all the user profiles that have swiped a room profile.
+     *
+     * @param id the id of the room profile whose swipers (user profiles) we want to find.
+     * @return ResponseEntity with a list of user profiles and status code 200 OK if user profiles have swiped the room profile.
+     * @return ResponseEntity with status code 204 NO_CONTENT if no user profiles have swiped the room profile.
+     */
+    @GetMapping("/{roomProfileId}/swipersquery")
+    fun findUserProfilesWhoHaveSwipedUsersRoom(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam size: Int,
+        @PathVariable roomProfileId: Long): ResponseEntity<Page<UserProfileDTO>> {
+        val userProfileList: Page<UserProfileDTO> = queryService.findUserProfilesThatHaveSwipedRoomProfile(PageRequest.of(page, size), roomProfileId)
+
+        if (userProfileList.isEmpty) {
+            return ResponseEntity(HttpStatus.NO_CONTENT)
+        }
+
+        return ResponseEntity(userProfileList, HttpStatus.OK)
     }
 }

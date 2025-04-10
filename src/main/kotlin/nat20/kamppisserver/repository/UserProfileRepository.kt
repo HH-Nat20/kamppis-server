@@ -107,4 +107,19 @@ interface UserProfileRepository: JpaRepository<UserProfile, Long> {
         @Param("genderPreferences") genderPreferences: List<String>?,
         @Param("locationPreferences") locationPreferences: List<String>?
     ): Page<UserProfile>
+
+    @Query("""
+        SELECT DISTINCT up.id, up.user_id, up.cleanliness, up.pets, u.gender, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at
+        FROM user_profiles up
+        JOIN users u ON u.id = up.user_id
+        JOIN swipes s ON up.id = s.swiping_profile_id
+        JOIN room_profiles rp on rp.id = s.swiped_profile_id
+        LEFT JOIN profiles p ON up.id = p.id
+        WHERE s.swiped_profile_id = :roomProfileId
+        AND s.is_right_swipe = TRUE
+    """, nativeQuery = true)
+    fun findUserProfilesWhoHaveSwipedRoomProfile(
+        pageable: Pageable,
+        @Param("roomProfileId") roomProfileId: Long
+    ): Page<UserProfile>
 }
