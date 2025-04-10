@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.ActiveProfiles
 import java.time.LocalDate
 import kotlin.test.*
@@ -34,6 +35,7 @@ class UserProfileRepositoryTests @Autowired constructor(
     lateinit var user: User
     lateinit var userProfile: UserProfile
     lateinit var roommatePreference: RoommatePreference
+    lateinit var pageRequest: PageRequest
 
     @BeforeEach
     fun testVariableSetUp() {
@@ -48,12 +50,14 @@ class UserProfileRepositoryTests @Autowired constructor(
         roommatePreference= roommatePreferenceRepository
             .findByUserIdAndStatus(1L, UserStatus.ACTIVE)
             ?: fail("❌ Expected RoommatePreference but found null")
+        pageRequest = PageRequest.of(0, 25)
     }
 
     @Test
     fun `query should not return the user's own profile`() {
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
+                pageRequest,
                 userProfile.id!!,
                 testDate,
                 roommatePreference.minAgePreference,
@@ -79,6 +83,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
+                pageRequest,
                 userProfile.id!!,
                 testDate,
                 roommatePreference.minAgePreference,
@@ -105,6 +110,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
+                pageRequest,
                 userProfile.id!!,
                 incorrectDate,
                 roommatePreference.minAgePreference,
@@ -131,6 +137,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
+                pageRequest,
                 userProfile.id!!,
                 testDate,
                 minAgePreference,
@@ -157,6 +164,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
+                pageRequest,
                 userProfile.id!!,
                 testDate,
                 minAgePreference,
@@ -182,6 +190,7 @@ class UserProfileRepositoryTests @Autowired constructor(
 
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
+                pageRequest,
                 userProfile.id!!,
                 testDate,
                 minAgePreference,
@@ -201,6 +210,7 @@ class UserProfileRepositoryTests @Autowired constructor(
         // Swipes are taken into account
         val listOfUserProfiles: Iterable<UserProfile> =
             userProfileRepository.findUserProfilesThatMeetCriteria(
+                pageRequest,
                 userProfile.id!!,
                 testDate,
                 roommatePreference.minAgePreference,
