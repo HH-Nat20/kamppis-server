@@ -73,12 +73,12 @@ class UserProfileController(private val service: UserProfileService,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam size: Int,
         @PathVariable userId: Long): ResponseEntity<Page<UserProfileDTO>> {
-        val userProfileList: Page<UserProfileDTO> = queryService.findUserProfilesThatMeetCriteria(PageRequest.of(page, size), userId)
+        val userProfilePage: Page<UserProfileDTO> = queryService.findUserProfilesThatMeetCriteria(PageRequest.of(page, size), userId)
 
-        if (userProfileList.isEmpty) {
+        if (userProfilePage.isEmpty) {
             return ResponseEntity(HttpStatus.NO_CONTENT)
         }
 
-        return ResponseEntity(userProfileList, HttpStatus.OK)
+        return ResponseEntity(userProfilePage, HttpStatus.OK)
     }
 }

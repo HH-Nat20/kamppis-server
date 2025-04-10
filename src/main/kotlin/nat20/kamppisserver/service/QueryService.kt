@@ -3,14 +3,11 @@ package nat20.kamppisserver.service
 import exception.EntityNotFoundException
 import nat20.kamppisserver.domain.*
 import org.springframework.stereotype.Service
-
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.*
 import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.data.repository.findByIdOrNull
 import java.time.LocalDate
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 
 /**
@@ -23,7 +20,7 @@ class QueryService(
     private val roommatePreferenceRepository: RoommatePreferenceRepository,
     private val roomPreferenceRepository: RoomPreferenceRepository,
     private val roomProfileRepository: RoomProfileRepository,
-    private val swipeRepository: SwipeRepository
+
 ) {
 
     /**
@@ -42,10 +39,11 @@ class QueryService(
     }
 
     /**
-     * Finds a list of UserProfiles that match the user's own profile and search criteria.
+     * Finds a page of UserProfiles that match the user's own profile and search criteria.
      *
-     * @param id the id of the user for whom matching profiles are returned.
-     * @return a list of matching user profiles.
+     * @param pageable pagination configuration.
+     * @param userId the id of the user for whom matching profiles are returned.
+     * @return a page of matching user profiles.
      */
     fun findUserProfilesThatMeetCriteria(pageable: Pageable, userId: Long): Page<UserProfileDTO> {
         /* We first find user's user profile by user's id
@@ -80,6 +78,13 @@ class QueryService(
         return userProfileDTOList
     }
 
+    /**
+     * Finds a page of RoomProfiles that match the user's search criteria and room profiles.
+     *
+     * @param pageable pagination configuration.
+     * @param userId the id of the user for whom matching room profiles are returned.
+     * @return a page of matching room profiles.
+     */
     fun findRoomProfilesThatMeetCriteria(pageable: Pageable, userId: Long): Page<RoomProfileDTO> {
         /* We first find user's room preferences
         * From the preferences, we set user's search criteria to individual variables
@@ -111,6 +116,13 @@ class QueryService(
         return roomProfileDTOList
     }
 
+    /**
+     * Finds a page of UserProfiles who have swiped right on a room profile.
+     *
+     * @param pageable pagination configuration.
+     * @param roomProfileId the id of the room profile whose right swipers are returned.
+     * @return a page of matching room profiles.
+     */
     fun findUserProfilesThatHaveSwipedRoomProfile(pageable: Pageable, roomProfileId: Long): Page<UserProfileDTO> {
         val userProfileList: Page<UserProfile> = userProfileRepository.findUserProfilesWhoHaveSwipedRoomProfile(pageable, roomProfileId)
         val userProfileDTOList: Page<UserProfileDTO> = userProfileList.map { it.toDTO(includeUserSummary = true) }

@@ -2,7 +2,6 @@ package nat20.kamppisserver.api
 
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.RoomProfileDTO
-import nat20.kamppisserver.domain.RoomProfile
 import nat20.kamppisserver.domain.RoomProfileRequest
 import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.service.QueryService
@@ -58,13 +57,13 @@ class RoomProfileController(private val service: RoomProfileService,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam size: Int,
         @PathVariable userId: Long): ResponseEntity<Page<RoomProfileDTO>> {
-        val roomProfileList: Page<RoomProfileDTO> = queryService.findRoomProfilesThatMeetCriteria(PageRequest.of(page, size), userId)
+        val roomProfilePage: Page<RoomProfileDTO> = queryService.findRoomProfilesThatMeetCriteria(PageRequest.of(page, size), userId)
 
-        if (roomProfileList.isEmpty) {
+        if (roomProfilePage.isEmpty) {
             return ResponseEntity(HttpStatus.NO_CONTENT)
         }
 
-        return ResponseEntity(roomProfileList, HttpStatus.OK)
+        return ResponseEntity(roomProfilePage, HttpStatus.OK)
     }
 
     /**
@@ -79,12 +78,12 @@ class RoomProfileController(private val service: RoomProfileService,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam size: Int,
         @PathVariable roomProfileId: Long): ResponseEntity<Page<UserProfileDTO>> {
-        val userProfileList: Page<UserProfileDTO> = queryService.findUserProfilesThatHaveSwipedRoomProfile(PageRequest.of(page, size), roomProfileId)
+        val userProfilePage: Page<UserProfileDTO> = queryService.findUserProfilesThatHaveSwipedRoomProfile(PageRequest.of(page, size), roomProfileId)
 
-        if (userProfileList.isEmpty) {
+        if (userProfilePage.isEmpty) {
             return ResponseEntity(HttpStatus.NO_CONTENT)
         }
 
-        return ResponseEntity(userProfileList, HttpStatus.OK)
+        return ResponseEntity(userProfilePage, HttpStatus.OK)
     }
 }
