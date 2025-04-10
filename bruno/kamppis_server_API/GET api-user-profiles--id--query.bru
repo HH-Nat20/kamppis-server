@@ -5,11 +5,16 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/api/user-profiles/:id/query
+  url: {{baseUrl}}/api/user-profiles/:id/query?page&size=3
   body: none
   auth: none
 }
 
+params:query {
+  page: 
+  size: 3
+}
+
 params:path {
-  id: 
+  id: 1
 }
