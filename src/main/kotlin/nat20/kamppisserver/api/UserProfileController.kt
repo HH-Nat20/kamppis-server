@@ -1,9 +1,7 @@
 package nat20.kamppisserver.api
 
 import jakarta.validation.Valid
-import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
-import nat20.kamppisserver.domain.RoomProfileDTO
 import nat20.kamppisserver.domain.UserProfileRequest
 import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserProfileService
@@ -82,24 +80,5 @@ class UserProfileController(private val service: UserProfileService,
         }
 
         return ResponseEntity(userProfileList, HttpStatus.OK)
-    }
-
-    /**
-     * Finds all the user profiles that have swiped user's room profile(s)
-     *
-     * @param id the id of the user who initiated the query.
-     * @return ResponseEntity with map (key: roomProfileId, value: list of userProfiles) and status code 200 OK if user profiles have swiped the room profile.
-     * @return ResponseEntity with map (key: roomProfileId, value: empty list of userProfiles) and status code 200 OK if no user profiles have swiped the room profile.
-     * @return ResponseEntity with status code 204 NO_CONTENT if the user has no room profiles.
-     */
-    @GetMapping("/{userId}/roomswipesquery")
-    fun findUserProfilesWhoHaveSwipedUsersRoom(@PathVariable userId: Long): ResponseEntity<Map<Long, List<UserProfileDTO>>> {
-        val userProfileMap: Map<Long, List<UserProfileDTO>> = queryService.findUserProfilesThatHaveSwipedUsersRoom(userId)
-
-        if (userProfileMap.isEmpty()) {
-            return ResponseEntity(HttpStatus.NO_CONTENT)
-        }
-
-        return ResponseEntity(userProfileMap, HttpStatus.OK)
     }
 }
