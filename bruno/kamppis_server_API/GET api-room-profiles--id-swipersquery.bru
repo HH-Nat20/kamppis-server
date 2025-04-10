@@ -1,11 +1,11 @@
 meta {
-  name: GET api-room-profiles--id-swipersquery
+  name: GET api-room-profiles--roomProfileId-swipersquery
   type: http
   seq: 32
 }
 
 get {
-  url: {{baseUrl}}/api/room-profiles/:id/swipers?page&size=2
+  url: {{baseUrl}}/api/room-profiles/:roomProfileId/swipersquery?page&size=2
   body: none
   auth: inherit
 }

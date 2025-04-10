@@ -1,11 +1,11 @@
 meta {
-  name: GET api-user-profiles--id--query
+  name: GET api-user-profiles--id-query
   type: http
   seq: 10
 }
 
 get {
-  url: {{baseUrl}}/api/user-profiles/:id/query?page&size=3
+  url: {{baseUrl}}/api/user-profiles/:userId/query?page&size=3
   body: none
   auth: none
 }
