@@ -1,0 +1,20 @@
+meta {
+  name: GET api-room-profiles--roomProfileId-swipersquery
+  type: http
+  seq: 32
+}
+
+get {
+  url: {{baseUrl}}/api/room-profiles/:roomProfileId/swipersquery?page&size=2
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 
+  size: 2
+}
+
+params:path {
+  roomProfileId: 81
+}

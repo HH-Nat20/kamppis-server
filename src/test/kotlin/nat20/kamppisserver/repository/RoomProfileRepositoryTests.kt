@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.ActiveProfiles
 import kotlin.test.*
 
@@ -30,6 +31,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
     lateinit var user: User
     lateinit var userProfile: UserProfile
     lateinit var roomPreference: RoomPreference
+    lateinit var pageRequest: PageRequest
 
     @BeforeEach
     fun testVariableSetUp() {
@@ -42,6 +44,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
         // We find our test user's room preferences
         roomPreference = roomPreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
             ?: fail("❌ Expected RoomPreference but found null")
+        pageRequest = PageRequest.of(0, 25)
     }
 
     @Test
@@ -59,6 +62,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
 
         val listOfRoomProfiles: Iterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
+                pageRequest,
                 userProfile.id!!,
                 roomPreference.maxRent,
                 hasPrivateRoom,
@@ -84,6 +88,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
 
         val listOfRoomProfiles: Iterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
+                pageRequest,
                 userProfile.id!!,
                 maxRent,
                 roomPreference.hasPrivateRoom,
@@ -109,6 +114,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
 
         val listOfRoomProfiles: Iterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
+                pageRequest,
                 userProfile.id!!,
                 maxRent,
                 hasPrivateRoom,
@@ -134,6 +140,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
 
         val listOfRoomProfiles: Iterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
+                pageRequest,
                 userProfile.id!!,
                 maxRent,
                 hasPrivateRoom,
@@ -158,6 +165,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
 
         val listOfRoomProfiles: Iterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
+                pageRequest,
                 userProfile.id!!,
                 maxRent,
                 hasPrivateRoom,
@@ -176,6 +184,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
         // Swipes are taken into account
         val listOfRoomProfiles: Iterable<RoomProfile> =
             roomProfileRepository.findRoomProfilesThatMeetCriteria(
+                pageRequest,
                 userProfile.id!!,
                 roomPreference.maxRent,
                 roomPreference.hasPrivateRoom,

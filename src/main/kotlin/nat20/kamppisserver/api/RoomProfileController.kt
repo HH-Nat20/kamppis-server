@@ -2,10 +2,12 @@ package nat20.kamppisserver.api
 
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.RoomProfileDTO
-import nat20.kamppisserver.domain.RoomProfile
 import nat20.kamppisserver.domain.RoomProfileRequest
+import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.RoomProfileService
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -51,13 +53,37 @@ class RoomProfileController(private val service: RoomProfileService,
      * @return ResponseEntity with status code 204 NO_CONTENT if no room profiles have been found.
      */
     @GetMapping("/{userId}/query")
-    fun findRoomProfilesThatMeetCriteria(@PathVariable userId: Long): ResponseEntity<List<RoomProfileDTO>> {
-        val roomProfileList: List<RoomProfileDTO> = queryService.findRoomProfilesThatMeetCriteria(userId)
+    fun findRoomProfilesThatMeetCriteria(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam size: Int,
+        @PathVariable userId: Long): ResponseEntity<Page<RoomProfileDTO>> {
+        val roomProfilePage: Page<RoomProfileDTO> = queryService.findRoomProfilesThatMeetCriteria(PageRequest.of(page, size), userId)
 
-        if (roomProfileList.isEmpty()) {
+        if (roomProfilePage.isEmpty) {
             return ResponseEntity(HttpStatus.NO_CONTENT)
         }
 
-        return ResponseEntity(roomProfileList, HttpStatus.OK)
+        return ResponseEntity(roomProfilePage, HttpStatus.OK)
+    }
+
+    /**
+     * Finds all the user profiles that have swiped a room profile.
+     *
+     * @param id the id of the room profile whose swipers (user profiles) we want to find.
+     * @return ResponseEntity with a list of user profiles and status code 200 OK if user profiles have swiped the room profile.
+     * @return ResponseEntity with status code 204 NO_CONTENT if no user profiles have swiped the room profile.
+     */
+    @GetMapping("/{roomProfileId}/swipersquery")
+    fun findUserProfilesWhoHaveSwipedUsersRoom(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam size: Int,
+        @PathVariable roomProfileId: Long): ResponseEntity<Page<UserProfileDTO>> {
+        val userProfilePage: Page<UserProfileDTO> = queryService.findUserProfilesThatHaveSwipedRoomProfile(PageRequest.of(page, size), roomProfileId)
+
+        if (userProfilePage.isEmpty) {
+            return ResponseEntity(HttpStatus.NO_CONTENT)
+        }
+
+        return ResponseEntity(userProfilePage, HttpStatus.OK)
     }
 }

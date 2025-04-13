@@ -1,0 +1,20 @@
+meta {
+  name: GET api-user-profiles--userId-query
+  type: http
+  seq: 32
+}
+
+get {
+  url: {{baseUrl}}/api/user-profiles/:userId/query?page&size=2
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 
+  size: 2
+}
+
+params:path {
+  userId: 1
+}

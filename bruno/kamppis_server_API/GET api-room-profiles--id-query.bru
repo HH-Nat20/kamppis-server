@@ -1,0 +1,20 @@
+meta {
+  name: GET api-room-profiles--userId-query
+  type: http
+  seq: 33
+}
+
+get {
+  url: {{baseUrl}}/api/room-profiles/:userId/query?page&size=2
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 
+  size: 2
+}
+
+params:path {
+  userId: 27
+}
