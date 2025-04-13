@@ -26,6 +26,8 @@ class RoomProfile(
     @JoinColumn(name = "flat_id", nullable = false)
     var flat: Flat,
 
+    var name: String? = null,
+
     @PositiveOrZero(message = "Rent must be a positive integer")
     var rent: Int,
 
@@ -49,6 +51,7 @@ class RoomProfile(
             userIds = users.map { it.id!! },
             users = if (includeUserSummary) users.map { it.toSummaryDTO() } else null,
             flat = flat.toDTO(),
+            name = name,
             totalRoommates = flat.totalRoommates,
             location = flat.location,
             rent = rent,
@@ -66,6 +69,7 @@ class RoomProfile(
         return RoomProfileRequest(
             userIds = users.map { it.id!! },
             flatId = flat.id!!,
+            name = name,
             rent = rent,
             isPrivateRoom = isPrivateRoom,
             furnished = furnished,
@@ -79,6 +83,7 @@ class RoomProfile(
         return RoomProfileDataDTO(
             flat = flat.toFlatDataDTO(),
             rent = rent,
+            name = name,
             isPrivateRoom = isPrivateRoom,
             furnished = furnished,
             furnishedInfo = furnishedInfo,
@@ -97,6 +102,7 @@ data class RoomProfileDTO(
     @NotEmpty val userIds : List<Long>,
     val users: List<UserSummaryDTO>? = null,
     val flat: FlatDTO,
+    val name: String? = null,
     val totalRoommates: Int,
     val location: City,
     @PositiveOrZero val rent: Int,
@@ -111,6 +117,7 @@ data class RoomProfileDTO(
 data class RoomProfileRequest(
     @NotEmpty val userIds: List<Long>,
     val flatId: Long,
+    val name: String? = null,
     @PositiveOrZero val rent: Int,
     val isPrivateRoom: Boolean,
     val furnished: Boolean,
@@ -122,6 +129,7 @@ data class RoomProfileRequest(
 data class RoomProfileDataDTO(
     // Only used by Copy of Data
     val flat: FlatDataDTO,
+    val name: String? = null,
     val rent: Int,
     val isPrivateRoom: Boolean,
     val furnished: Boolean,

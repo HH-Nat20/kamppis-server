@@ -19,6 +19,7 @@ class MockRoomProfilesConfig {
             RoomProfile( //#79
                 users = mutableListOf(userRepository.findById(53L).get(), userRepository.findById(54L).get()),
                 flat = flatRepository.findById(1L).get(),
+                name = "Spacious room",
                 rent = 450,
                 isPrivateRoom = true,
                 bio = "Spacious private room with a large window offering plenty of natural light. Furnished with a comfortable bed, desk, and wardrobe.",
@@ -28,6 +29,7 @@ class MockRoomProfilesConfig {
             RoomProfile( //#80
                 users = mutableListOf(userRepository.findById(53L).get(), userRepository.findById(54L).get()),
                 flat = flatRepository.findById(1L).get(),
+                name = "Cozy room",
                 rent = 600,
                 isPrivateRoom = true,
                 bio = "Cozy private room with a balcony access. Perfect for enjoying fresh air and relaxing outdoors. Includes a bed, nightstand, and closet.",
@@ -37,6 +39,7 @@ class MockRoomProfilesConfig {
             RoomProfile( //#81
                 users = mutableListOf(userRepository.findById(55L).get()),
                 flat = flatRepository.findById(2L).get(),
+                name = "Modern room",
                 rent = 700,
                 isPrivateRoom = true,
                 bio = "Modern private room with an en-suite bathroom.",
@@ -46,6 +49,7 @@ class MockRoomProfilesConfig {
             RoomProfile( //#82
                 users = mutableListOf(userRepository.findById(56L).get()),
                 flat = flatRepository.findById(3L).get(),
+                name = "Bright room",
                 rent = 550,
                 isPrivateRoom = true,
                 bio = "Bright private room with a sea-side view. Furnished with a single bed, desk, and bookshelf. Ideal for quiet study sessions.",
@@ -55,6 +59,7 @@ class MockRoomProfilesConfig {
             RoomProfile( //#83
                 users = mutableListOf(userRepository.findById(56L).get()),
                 flat = flatRepository.findById(3L).get(),
+                name = "Comfortable room",
                 rent = 450,
                 isPrivateRoom = true,
                 bio = "Comfortable private room with a large wardrobe and a cozy reading nook. Includes a double bed and a desk.",
@@ -118,6 +123,7 @@ class MockRoomProfilesConfig {
             RoomProfile( //#90
                 users = mutableListOf(userRepository.findById(70L).get(), userRepository.findById(71L).get()),
                 flat = flatRepository.findById(10L).get(),
+                name = "Skyline room",
                 rent = 700,
                 isPrivateRoom = true,
                 bio = "Private room with a balcony and skyline view. Features a bed, desk, and wardrobe. Perfect for enjoying the city lights.",
@@ -127,6 +133,7 @@ class MockRoomProfilesConfig {
             RoomProfile( //#91
                 users = mutableListOf(userRepository.findById(72L).get()),
                 flat = flatRepository.findById(11L).get(),
+                name = "Private room",
                 rent = 750,
                 isPrivateRoom = true,
                 bio = "Private room with a private bathroom. Furnished with a bed, desk, and wardrobe. Ideal for those who value privacy.",
@@ -145,6 +152,7 @@ class MockRoomProfilesConfig {
             RoomProfile( //#93
                 users = mutableListOf(userRepository.findById(73L).get()),
                 flat = flatRepository.findById(12L).get(),
+                name = "Shared room",
                 rent = 450,
                 isPrivateRoom = false,
                 bio = "Shared room with two single beds and a large window. Includes desks and wardrobes for each roommate.",

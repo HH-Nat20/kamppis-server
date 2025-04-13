@@ -41,6 +41,7 @@ class RoomProfileService(
         val roomProfile = RoomProfile(
             users = users,
             flat = flat,
+            name = request.name,
             rent = request.rent,
             isPrivateRoom = request.isPrivateRoom,
             furnished = request.furnished,
@@ -66,6 +67,7 @@ class RoomProfileService(
 
         existingProfile.flat = flat
         existingProfile.users = users
+        request.name.let { existingProfile.name = it }
         request.bio.let { existingProfile.bio = it }
         request.isPrivateRoom.let { existingProfile.isPrivateRoom = it }
         request.furnished.let {existingProfile.furnished = it }
