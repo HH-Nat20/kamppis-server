@@ -10,8 +10,7 @@ import org.springframework.stereotype.Component
 import kotlin.reflect.KClass
 
 /**
- * Service class for input validation and sanitization. Can be used to sanitize
- * user inputs in forms and search bars, GET and POST requests, cookies, and more.
+ * Service class for input validation.
  */
 class ValidationService {
 
