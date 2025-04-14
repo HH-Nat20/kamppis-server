@@ -205,7 +205,8 @@ class UserService(private val userRepository: UserRepository,
      * Permanently anonymizes deleted User after a retention period of 30 days. This
      * function runs every day at 3 a.m.
      */
-    @Scheduled(cron = "0 0 3 * * ?")
+    @Scheduled(cron = "\${cron.expression}", zone = "Europe/Helsinki")
+    @Transactional
     fun permanentlyAnonymizeDeletedUsers() {
         val cutoffDate = LocalDateTime.now().minusDays(30)
         val users = userRepository.findAllByStatusAndDeletedAtBefore(UserStatus.INACTIVE, cutoffDate)
