@@ -15,6 +15,7 @@ import java.time.LocalDate
 import kotlin.test.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
+import java.time.LocalDateTime
 
 /**
  * Test class for UserService.
@@ -29,6 +30,7 @@ class UserServiceTests @Autowired constructor(
 ) {
 
     lateinit var testUser: User
+    lateinit var deletedTestUser: User
     lateinit var testUserProfile: UserProfile
     lateinit var testUserRequest: UserRequest
     lateinit var testUserPreferenceRequest: UserPreferenceRequest
@@ -42,6 +44,17 @@ class UserServiceTests @Autowired constructor(
             dateOfBirth = LocalDate.of(1990, 5, 14),
             gender = Gender.MALE,
             lookingFor = LookingFor.OTHER_USER_PROFILES
+        ))
+
+        deletedTestUser = userRepository.save(User(
+            email = "deleted.user@example.com",
+            firstName = "Deleted",
+            lastName = "User",
+            dateOfBirth = LocalDate.of(1990, 5, 14),
+            gender = Gender.MALE,
+            lookingFor = LookingFor.OTHER_USER_PROFILES,
+            status = UserStatus.INACTIVE,
+            deletedAt = LocalDateTime.now().minusDays(31)
         ))
 
         testUserProfile = userProfileRepository.save(UserProfile(
@@ -161,5 +174,20 @@ class UserServiceTests @Autowired constructor(
 
         val restoredUserProfile = userProfileRepository.findByIdActive(testUser.id!!)
         assertNull(restoredUserProfile?.deletedAt)
+    }
+
+    @Test
+    fun `should anonymize users deleted 30+ days ago`() {
+        userService.permanentlyAnonymizeDeletedUsers()
+
+        val anonymizedUser = userRepository.findById(deletedTestUser.id!!).get()
+
+        assertEquals("****", anonymizedUser.firstName)
+        assertEquals("****", anonymizedUser.lastName)
+        assertEquals(LocalDate.of(2000, 1, 1), anonymizedUser.dateOfBirth)
+        assertEquals(Gender.NOT_IMPORTANT, anonymizedUser.gender)
+        assertEquals(LookingFor.OTHER_USER_PROFILES_OR_ROOM_PROFILES, anonymizedUser.lookingFor)
+        assertEquals(UserStatus.DELETED, anonymizedUser.status)
+        assertNotEquals("deleted.user@example.com", anonymizedUser.email)
     }
 }
