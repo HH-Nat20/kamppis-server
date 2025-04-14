@@ -15,9 +15,18 @@ import org.springframework.web.filter.OncePerRequestFilter
 class JwtAuthenticationFilter : OncePerRequestFilter() {
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
-        // ✅ Only apply JWT filtering to /api/login/protected
-        println("Checking if request should be filtered: ${request.requestURI}")
-        return !request.requestURI.startsWith("/api/login/protected")
+        // Disable filter in order to:
+        // Allow GET requests to /api/db-health and /api/health
+        // Allow POST requests to /api/login/**
+
+        val uri = request.requestURI
+        val method = request.method
+
+        return when {
+            method == "GET" && (uri == "/api/db-health" || uri == "/api/health") -> true
+            method == "POST" && uri.startsWith("/api/login") -> true
+            else -> false
+        }
     }
 
     override fun doFilterInternal(

@@ -6,10 +6,12 @@ import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.domain.UserDTO
 import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.UserStatus
+import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.MockMvc
@@ -58,7 +60,9 @@ class UserControllerTests @Autowired constructor(
 
         every { userService.findAll() } returns listOf(bobJohnson, charlieDavis)
 
-        mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON))
+        val jwt = JwtUtils.generateJwtToken("fake@example.com")
+
+        mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, "Bearer $jwt"))
         .andExpect(status().isOk)
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("\$.[0].email").value(bobJohnson.email))
@@ -81,7 +85,9 @@ class UserControllerTests @Autowired constructor(
 
         every { userService.findById(1) } returns bobJohnson
 
-        mockMvc.perform(get("/api/users/1").accept(MediaType.APPLICATION_JSON))
+        val jwt = JwtUtils.generateJwtToken("fake@example.com")
+
+        mockMvc.perform(get("/api/users/1").accept(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, "Bearer $jwt"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("\$.email").value(bobJohnson.email))

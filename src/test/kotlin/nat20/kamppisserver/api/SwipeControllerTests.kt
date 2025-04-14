@@ -10,11 +10,13 @@ import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.enums.*
 import nat20.kamppisserver.repository.ProfileRepository
+import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.service.SwipeService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
@@ -90,9 +92,12 @@ class SwipeControllerTests @Autowired constructor(
         every { profileRepository.findByIdAndStatus(2L, ProfileStatus.ACTIVE)} returns profile2
         every { swipeService.swipe(any(),any(), any()) } returns swipeResponse
 
+        val jwt = JwtUtils.generateJwtToken("fake@example.com")
+
         mockMvc.post("/api/swipes") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(swipeRequest)
+            header(HttpHeaders.AUTHORIZATION, "Bearer $jwt")
         }
             .andExpect {
                 status { isCreated() }

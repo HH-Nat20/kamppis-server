@@ -17,12 +17,14 @@ class SecurityConfig(
             .cors { } // Enable CORS
             .csrf { it.disable() } // Disable CSRF for development
             .authorizeHttpRequests { auth ->
-                auth.requestMatchers("/api/login").permitAll() // Always allow login
+                auth.requestMatchers("/api/login").permitAll() // Allow login for mock users
+                auth.requestMatchers("/api/health").permitAll() // Allow health checks
+                auth.requestMatchers("/api/login/github").permitAll() // Allow fetching GitHub code
+                auth.requestMatchers("/api/login/signup").permitAll() // Allow signup after fetching GitHub code
 
-                auth.requestMatchers("/api/login/protected").authenticated() // Maybe this works?
+                auth.requestMatchers("/api/login/protected").authenticated()
 
-                auth.anyRequest().permitAll() // Allow all other requests for now
-                // TODO: Apply authentication to all endpoints
+                auth.anyRequest().authenticated() // JWT token required for all other endpoints
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
         return http.build()

@@ -8,6 +8,7 @@ import nat20.kamppisserver.domain.enums.City
 import nat20.kamppisserver.domain.enums.Utilities
 import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserProfileRepository
+import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.service.RoomProfileService
 import nat20.kamppisserver.service.UserProfileService
@@ -51,6 +52,8 @@ class ProfileControllerTests @Autowired constructor(
         )
         val userProfile = mockk<UserProfile>(relaxed = true)
 
+        val jwt = JwtUtils.generateJwtToken("fake@example.com")
+
         every { userProfileRepository.findByIdActive(userProfileId) } returns userProfile
         every { roomProfileRepository.findByIdActive(userProfileId) } returns null
         every { userProfileService.update(match { it.id == userProfileId }, userProfileId) } returns userProfileDTO
@@ -58,6 +61,7 @@ class ProfileControllerTests @Autowired constructor(
         mockMvc.put("/api/profiles/$userProfileId") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(userProfileDTO)
+            header("Authorization", "Bearer $jwt")
         }
             .andExpect {
                 status { isOk() }
@@ -92,6 +96,8 @@ class ProfileControllerTests @Autowired constructor(
         )
         val roomProfile = mockk<RoomProfile>(relaxed = true)
 
+        val jwt = JwtUtils.generateJwtToken("fake@example.com")
+
         every { roomProfileRepository.findByIdActive(roomProfileId) } returns roomProfile
         every { userProfileRepository.findByIdActive(roomProfileId) } returns null
         every { roomProfileService.update(match { it.id == roomProfileId }, roomProfileId) } returns roomProfileDTO
@@ -99,6 +105,7 @@ class ProfileControllerTests @Autowired constructor(
         mockMvc.put("/api/profiles/$roomProfileId") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(roomProfileDTO)
+            header("Authorization", "Bearer $jwt")
         }
             .andExpect {
                 status { isOk() }
@@ -118,12 +125,15 @@ class ProfileControllerTests @Autowired constructor(
             id = profileId
         )
 
+        val jwt = JwtUtils.generateJwtToken("fake@example.com")
+
         every { userProfileRepository.findByIdActive(profileId) } returns null
         every { roomProfileRepository.findByIdActive(profileId) } returns null
 
         mockMvc.put("/api/profiles/$profileId") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(userProfileDTO)
+            header("Authorization", "Bearer $jwt")
         }
             .andExpect {
                 status { isNotFound() }
