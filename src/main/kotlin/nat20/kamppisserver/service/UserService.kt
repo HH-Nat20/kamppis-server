@@ -4,13 +4,17 @@ import exception.DuplicateEmailException
 import exception.EntityNotFoundException
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.*
+import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.LookingFor
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.*
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.annotation.Validated
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.*
 
 /**
  * Service class for User.
@@ -195,6 +199,35 @@ class UserService(private val userRepository: UserRepository,
         val restoredUser = userRepository.save(restoreUser)
 
         return restoredUser.toDTO()
+    }
+
+    /**
+     * Permanently anonymizes deleted User after a retention period of 30 days. This
+     * function runs every day at 3 a.m.
+     */
+    @Scheduled(cron = "0 0 3 * * ?")
+    fun permanentlyAnonymizeDeletedUsers() {
+        val cutoffDate = LocalDateTime.now().minusDays(30)
+        val users = userRepository.findAllByStatusAndDeletedAtBefore(UserStatus.INACTIVE, cutoffDate)
+
+        for (user in users) {
+            if (user.deletedAt != null) {
+                user.firstName = "****"
+                user.lastName = "****"
+                user.email = "${UUID.randomUUID()}@****.****"
+                user.dateOfBirth = LocalDate.of(2000, 1, 1)
+                user.gender = Gender.NOT_IMPORTANT
+                user.lookingFor = LookingFor.OTHER_USER_PROFILES_OR_ROOM_PROFILES
+                user.status = UserStatus.DELETED
+                user.matches = mutableSetOf()
+                user.userProfile = null
+                user.roomProfiles = mutableListOf()
+                user.roommatePreference = null
+                user.roomPreference = null
+
+                userRepository.save(user)
+            }
+        }
     }
 
     /**

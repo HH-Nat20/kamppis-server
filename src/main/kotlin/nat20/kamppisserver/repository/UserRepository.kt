@@ -7,6 +7,7 @@ import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.enums.UserStatus
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import java.time.LocalDateTime
 
 interface UserRepository : JpaRepository<User, Long> {
     fun findByEmail(email: String): User?
@@ -26,4 +27,7 @@ interface UserRepository : JpaRepository<User, Long> {
     @EntityGraph(attributePaths = ["userProfile", "roomProfiles"])
     @Query("SELECT u FROM User u WHERE u.email = :email AND u.status = :status")
     fun findByEmailAndStatus(@Param("email") email: String, @Param("status") status: UserStatus): User?
+
+    @Query("SELECT u FROM User u WHERE u.status = :status AND u.deletedAt <= :dateTime")
+    fun findAllByStatusAndDeletedAtBefore(status: UserStatus, dateTime: LocalDateTime): List<User>
 }
