@@ -23,7 +23,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
         val method = request.method
 
         return when {
-            method == "GET" && (uri == "/api/db-health" || uri == "/api/health") -> true
+            method == "GET" && (uri == "/api/db-health" || uri == "/api/health" || uri == "/api/users") -> true // TODO: Remove "/api/users"
             method == "POST" && uri.startsWith("/api/login") -> true
             else -> false
         }

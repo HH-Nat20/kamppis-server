@@ -23,6 +23,8 @@ class SecurityConfig(
                 auth.requestMatchers("/api/login/github").permitAll() // Allow fetching GitHub code
                 auth.requestMatchers("/api/login/signup").permitAll() // Allow signup after fetching GitHub code
 
+                auth.requestMatchers("/api/users").permitAll() // TODO: Remove "/api/users"
+
                 auth.requestMatchers("/api/login/protected").authenticated()
 
                 auth.anyRequest().authenticated() // JWT token required for all other endpoints
