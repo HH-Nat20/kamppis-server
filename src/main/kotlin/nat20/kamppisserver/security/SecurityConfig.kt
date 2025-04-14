@@ -18,7 +18,8 @@ class SecurityConfig(
             .csrf { it.disable() } // Disable CSRF for development
             .authorizeHttpRequests { auth ->
                 auth.requestMatchers("/api/login").permitAll() // Allow login for mock users
-                auth.requestMatchers("/api/health").permitAll() // Allow health checks
+                auth.requestMatchers("/api/health").permitAll()
+                auth.requestMatchers("/api/db-health").permitAll()
                 auth.requestMatchers("/api/login/github").permitAll() // Allow fetching GitHub code
                 auth.requestMatchers("/api/login/signup").permitAll() // Allow signup after fetching GitHub code
 

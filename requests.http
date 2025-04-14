@@ -186,3 +186,9 @@ Authorization: Bearer {{auth_token}}
 GET https://kamppis.hellmanstudios.fi/api/login/protected
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbGljZS5zbWl0aEBleGFtcGxlLmNvbSIsImlhdCI6MTc0MjA3MDA1MCwiZXhwIjoxNzQyMDczNjUwfQ.hRqdcGM3hDrXdbRZShNzhmWcqiTHmOIbKYXRdZnY6V_XPortA-LaZAFvn-ru4t8WTMsGYsv8BtEqzhbCUImfnw
 
+### Get server health
+GET https://kamppis.hellmanstudios.fi/api/health
+
+### Get db health
+GET https://kamppis.hellmanstudios.fi/api/db-health
+
