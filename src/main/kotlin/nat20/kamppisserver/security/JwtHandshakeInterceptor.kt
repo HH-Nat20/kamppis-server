@@ -3,6 +3,8 @@ package nat20.kamppisserver.security
 import org.springframework.http.server.ServerHttpRequest
 import org.springframework.http.server.ServerHttpResponse
 import org.springframework.http.server.ServletServerHttpRequest
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketHandler
 import org.springframework.web.socket.server.HandshakeInterceptor
@@ -27,6 +29,8 @@ class JwtHandshakeInterceptor : HandshakeInterceptor {
             if (email != null) {
                 attributes["email"] = email
                 println("Websocket authenticated for email: $email")
+                val auth = UsernamePasswordAuthenticationToken(email, null, emptyList())
+                SecurityContextHolder.getContext().authentication = auth
                 return true
             }
         }
