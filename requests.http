@@ -192,3 +192,7 @@ GET https://kamppis.hellmanstudios.fi/api/health
 ### Get db health
 GET https://kamppis.hellmanstudios.fi/api/db-health
 
+###
+GET https://kamppis.hellmanstudios.fi/api/user-profiles/1/query
+Authorization: Bearer {{auth_token}}
+

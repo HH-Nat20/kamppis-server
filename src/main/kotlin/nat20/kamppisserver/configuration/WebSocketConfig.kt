@@ -1,6 +1,7 @@
 package nat20.kamppisserver.configuration
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import nat20.kamppisserver.security.JwtHandshakeInterceptor
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.converter.DefaultContentTypeResolver
 import org.springframework.messaging.converter.MappingJackson2MessageConverter
@@ -17,7 +18,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
  */
 @Configuration
 @EnableWebSocketMessageBroker
-class WebSocketConfig : WebSocketMessageBrokerConfigurer {
+class WebSocketConfig(
+    private val jwtHandshakeInterceptor: JwtHandshakeInterceptor,
+) : WebSocketMessageBrokerConfigurer {
 
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
         // Clients subscribe to messages at ("/user/matches/{matchId}/messages")
@@ -32,7 +35,7 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
         registry.addEndpoint("/ws") // WebSocket entry point
             .setAllowedOrigins("*")
-            //.withSockJS()
+            .addInterceptors(jwtHandshakeInterceptor)
     }
 
 }
