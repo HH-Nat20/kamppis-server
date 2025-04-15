@@ -1,12 +1,15 @@
 package nat20.kamppisserver.security
 
+import jakarta.servlet.DispatcherType
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
+@EnableWebSecurity
 class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter
 ) {
@@ -16,11 +19,12 @@ class SecurityConfig(
         http
             .cors { } // Enable CORS
             .csrf { it.disable() } // Disable CSRF for development
-            .exceptionHandling {
-                it.authenticationEntryPoint(null) // Let Spring MVC handle the error
-                it.accessDeniedHandler(null)
-            }
+
             .authorizeHttpRequests { auth ->
+
+                auth.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll() // Authorize forward and error dispatches to expose our custom exceptions and descriptive response codes and messages
+                auth.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll() // Source: https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html
+
                 auth.requestMatchers("/api/login").permitAll() // Allow login for mock users
                 auth.requestMatchers("/api/health").permitAll()
                 auth.requestMatchers("/api/db-health").permitAll()
@@ -34,6 +38,7 @@ class SecurityConfig(
 
                 auth.anyRequest().authenticated() // JWT token required for all other endpoints
             }
+
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
     }
