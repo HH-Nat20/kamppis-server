@@ -141,7 +141,7 @@ Authorization: Bearer {{auth_token}}
 
 {
   "swipingProfileId": 1,
-  "swipedProfileId": 80,
+  "swipedProfileId": 71,
   "isRightSwipe": true
 }
 

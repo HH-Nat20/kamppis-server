@@ -16,6 +16,10 @@ class SecurityConfig(
         http
             .cors { } // Enable CORS
             .csrf { it.disable() } // Disable CSRF for development
+            .exceptionHandling {
+                it.authenticationEntryPoint(null) // Let Spring MVC handle the error
+                it.accessDeniedHandler(null)
+            }
             .authorizeHttpRequests { auth ->
                 auth.requestMatchers("/api/login").permitAll() // Allow login for mock users
                 auth.requestMatchers("/api/health").permitAll()
