@@ -31,12 +31,16 @@ class LoginController(
     private val roommatePreferenceRepository: RoommatePreferenceRepository,
 ) {
 
-    @PostMapping
+    @PostMapping("/mock")
     fun login(@RequestParam email: String): ResponseEntity<Map<String, String>> {
         try {
             userService.findActiveUserByEmail(email)
-            val token = JwtUtils.generateJwtToken(email)
-            return mapOf("token" to token).let { ResponseEntity.ok(it) }
+            if (email.endsWith("@example.com")) {
+                val token = JwtUtils.generateJwtToken(email)
+                return mapOf("token" to token).let { ResponseEntity.ok(it) }
+            } else {
+                return ResponseEntity.badRequest().body(mapOf("error" to "Invalid email"))
+            }
         } catch (e: Error) {
             return ResponseEntity.badRequest().build()
         }

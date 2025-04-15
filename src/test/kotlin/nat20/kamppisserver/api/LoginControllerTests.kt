@@ -76,7 +76,7 @@ class LoginControllerTests @Autowired constructor(
 
         every { userService.findActiveUserByEmail(mockUserDTO.email) } returns mockUserDTO
 
-        mockMvc.post("/api/login?email=${mockUserDTO.email}")
+        mockMvc.post("/api/login/mock?email=${mockUserDTO.email}")
         .andExpect {
             status { isOk() }
             jsonPath("$.token") { isNotEmpty() }
@@ -111,7 +111,7 @@ class LoginControllerTests @Autowired constructor(
         every { userService.findActiveUserByEmail(mockUserDTO.email) } returns mockUserDTO
 
         // Step 1: Perform login and extract the token
-        val token = mockMvc.post("/api/login?email=${mockUserDTO.email}")
+        val token = mockMvc.post("/api/login/mock?email=${mockUserDTO.email}")
             .andExpect {
                 status { isOk() }
                 jsonPath("$.token") { isNotEmpty() }
