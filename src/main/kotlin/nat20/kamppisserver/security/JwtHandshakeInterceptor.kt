@@ -39,7 +39,7 @@ class JwtHandshakeInterceptor : HandshakeInterceptor {
                 attributes["email"] = email
                 println("Websocket authenticated for email: $email")
                 val auth = UsernamePasswordAuthenticationToken(email, null, emptyList())
-                SecurityContextHolder.getContext().authentication = auth
+                SecurityContextHolder.getContext().authentication = auth // Set user auth context to be used in controllers as principal
                 return true
             }
         }
