@@ -37,7 +37,7 @@ class RoomProfile(
     var furnished: Boolean,
 
     @Column(name = "furnished_info")
-    var furnishedInfo: String?,
+    var furnishedInfo: String? = null,
 
     bio: String = "Write bio here", // Default value from Profile
 
