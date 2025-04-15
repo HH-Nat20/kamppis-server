@@ -16,7 +16,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 /**
  * WebSocket config class. Specifies destinations from which to send and receive
- * chat messages. Also includes a message converter.
+ * chat messages.
  */
 @Configuration
 @Order(HIGHEST_PRECEDENCE + 50)

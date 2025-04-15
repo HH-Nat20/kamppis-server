@@ -28,8 +28,6 @@ class UserController(
     fun findUserById(@PathVariable id: Long): ResponseEntity<UserDTO>
             = ResponseEntity.ok(userService.findById(id))
 
-
-
     /**
      * Get copy of all user data.
     */
@@ -59,7 +57,8 @@ class UserController(
             = ResponseEntity.ok(userService.update(request, id))
 
     /**
-     * Soft deletes user and subsequent UserProfile.
+     * Soft deletes user and subsequent UserProfile. In 30 days, calls anonymization
+     * method.
      *
      * @param id the id of the user to be deleted.
      * @return ResponseEntity with status code 204 NO CONTENT.
