@@ -28,6 +28,9 @@ class UserController(
     fun findUserById(@PathVariable id: Long): ResponseEntity<UserDTO>
             = ResponseEntity.ok(userService.findById(id))
 
+    @GetMapping("/mock")
+    fun findAllMock(): ResponseEntity<List<UserDTO>>
+            = ResponseEntity.ok(userService.findAllMockUsers())
     /**
      * Get copy of all user data.
     */

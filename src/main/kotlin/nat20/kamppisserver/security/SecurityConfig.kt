@@ -31,7 +31,7 @@ class SecurityConfig(
                 auth.requestMatchers("/api/login/github").permitAll() // Allow signing in an existing account with a GitHub code
                 auth.requestMatchers("/api/login/signup").permitAll() // Allow signing up a new account with a GitHub code
 
-                auth.requestMatchers("/api/users").permitAll() // TODO: Remove "/api/users"
+                auth.requestMatchers("/api/users/mock").permitAll() // Allow fetching all mock users
                 auth.requestMatchers("/ws").permitAll()
 
                 auth.requestMatchers("/api/login/protected").authenticated()

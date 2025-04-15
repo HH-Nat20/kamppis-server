@@ -30,4 +30,5 @@ interface UserRepository : JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.status = :status AND u.deletedAt <= :dateTime")
     fun findAllByStatusAndDeletedAtBefore(status: UserStatus, dateTime: LocalDateTime): List<User>
+    fun findAllByStatusAndEmailEndsWith(status: UserStatus, email: String): MutableList<User>
 }
