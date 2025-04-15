@@ -3,23 +3,40 @@ GET http://localhost:8080/api/users
 
 ### Get user with id = 1
 GET http://localhost:8080/api/users/1
+Authorization: Bearer {{auth_token}}
 
 ### Get all user profiles
 GET http://localhost:8080/api/user-profiles
+Authorization: Bearer {{auth_token}}
+
+### Get user profile with id = 1
+GET http://localhost:8080/api/user-profiles/1
+Authorization: Bearer {{auth_token}}
+
+### Get profile with id = 1
+GET http://localhost:8080/api/profiles/1
+Authorization: Bearer {{auth_token}}
+
+### Get profile with id = 79
+GET http://localhost:8080/api/profiles/79
+Authorization: Bearer {{auth_token}}
+
 
 ### Get all users who meet search criteria
 // This requests initiates an SQL query from the database
 // The request gets the user's id as a path variable
 // The server looks up this user's search criteria (by user's id)
 // And returns all profiles that meet the user's search criteria
-GET http://localhost:8080/api/user-profiles/1/query
+GET http://localhost:8080/api/user-profiles/1/query?size=2
+Authorization: Bearer {{auth_token}}
 
 ### Get all rooms that meet search criteria
 // This requests initiates an SQL query from the database
 // The request gets the user's id as a path variable
 // The server looks up this user's search criteria (by user's id)
 // And returns all rooms that meet the user's search criteria
-GET http://localhost:8080/api/room-profiles/27/query
+GET http://localhost:8080/api/room-profiles/27/query?size=2
+Authorization: Bearer {{auth_token}}
 
 ### Get authentication token for alice smith (save it in auth_token for the following request)
 POST http://localhost:8080/api/login?
@@ -39,13 +56,16 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbGljZS5zbWl0aEBleGFtcGxlL
 
 ### Get all room profiles
 GET http://localhost:8080/api/room-profiles
+Authorization: Bearer {{auth_token}}
 
 ### Get room profile by id
 GET http://localhost:8080/api/room-profiles/96
+Authorization: Bearer {{auth_token}}
 
 ### Post a new room profile
 POST http://localhost:8080/api/room-profiles
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
   "userIds": [5,6],
@@ -60,6 +80,7 @@ Content-Type: application/json
 ### Update a room profile
 PUT http://localhost:8080/api/room-profiles/97
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
   "userIds": [5,6,7],
@@ -72,14 +93,17 @@ Content-Type: application/json
 
 ### Get all flats
 GET http://localhost:8080/api/flats
+Authorization: Bearer {{auth_token}}
 
 ### Get flat by id
 GET http://localhost:8080/api/flats/1
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 ### Post a new flat
 POST http://localhost:8080/api/flats
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
   "name": "McMansion",
@@ -95,6 +119,7 @@ Content-Type: application/json
 ### Update flat
 PUT http://localhost:8080/api/flats/3
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
   "name": "McMansion2",
@@ -112,16 +137,18 @@ Content-Type: application/json
 ### UserProfile swipes RoomProfile
 POST http://localhost:8080/api/swipes
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
   "swipingProfileId": 1,
-  "swipedProfileId": 79,
+  "swipedProfileId": 80,
   "isRightSwipe": true
 }
 
 ### RoomProfile swipes UserProfile
 POST http://localhost:8080/api/swipes
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
   "swipingProfileId": 4,
@@ -132,9 +159,10 @@ Content-Type: application/json
 ### UserProfile swipes RoomProfile
 POST http://localhost:8080/api/swipes
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
-  "swipingProfileId": 27,
+  "swipingProfileId": 12,
   "swipedProfileId": 81,
   "isRightSwipe": true
 }
@@ -142,9 +170,10 @@ Content-Type: application/json
 ### RoomProfile swipes UserProfile
 POST http://localhost:8080/api/swipes
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
-  "swipingProfileId": 81,
+  "swipingProfileId": 1,
   "swipedProfileId": 27,
   "isRightSwipe": true
 }
@@ -152,6 +181,7 @@ Content-Type: application/json
 ### UserProfile swipes RoomProfile
 POST https://kamppis.hellmanstudios.fi/api/swipes
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
   "swipingProfileId": 27,
@@ -162,6 +192,7 @@ Content-Type: application/json
 ### RoomProfile swipes UserProfile
 POST https://kamppis.hellmanstudios.fi/api/swipes
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
   "swipingProfileId": 81,
@@ -195,4 +226,5 @@ GET https://kamppis.hellmanstudios.fi/api/db-health
 ###
 GET https://kamppis.hellmanstudios.fi/api/user-profiles/1/query
 Authorization: Bearer {{auth_token}}
+
 
