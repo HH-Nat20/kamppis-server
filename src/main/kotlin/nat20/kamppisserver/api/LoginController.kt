@@ -64,7 +64,12 @@ class LoginController(
             ?: return ResponseEntity.badRequest().body(mapOf("error" to "No user found linked to given GitHub credentials. Use a different OAuth provider, or sign up."))
 
         val jwt = JwtUtils.generateJwtToken(user.email)
-        return ResponseEntity.ok(mapOf("token" to jwt))
+        return ResponseEntity.ok(
+            mapOf(
+            "token" to jwt,
+            "userId" to user.id.toString()
+            )
+        )
     }
 
     //TODO Add Kdoc to explain /signup
@@ -102,7 +107,12 @@ class LoginController(
         roommatePreferenceRepository.save(roommatePreference)
 
         val jwt = JwtUtils.generateJwtToken(user.email)
-        return ResponseEntity.ok(mapOf("token" to jwt))
+        return ResponseEntity.ok(
+            mapOf(
+                "token" to jwt,
+                "userId" to user.id.toString()
+            )
+        )
     }
 
 }

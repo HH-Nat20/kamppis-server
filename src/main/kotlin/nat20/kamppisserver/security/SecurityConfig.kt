@@ -28,9 +28,8 @@ class SecurityConfig(
                 auth.requestMatchers("/api/login/mock").permitAll() // Allow login for mock users
                 auth.requestMatchers("/api/health").permitAll()
                 auth.requestMatchers("/api/db-health").permitAll()
-                auth.requestMatchers("/api/login/github").permitAll() // Allow fetching GitHub code
-                auth.requestMatchers("/api/login/signup").permitAll() // Allow signup after fetching GitHub code
-                auth.requestMatchers("/api/login").permitAll() // Allow login with GitHub code
+                auth.requestMatchers("/api/login/github").permitAll() // Allow signing in an existing account with a GitHub code
+                auth.requestMatchers("/api/login/signup").permitAll() // Allow signing up a new account with a GitHub code
 
                 auth.requestMatchers("/api/users").permitAll() // TODO: Remove "/api/users"
                 auth.requestMatchers("/ws").permitAll()
