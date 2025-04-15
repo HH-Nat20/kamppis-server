@@ -9,6 +9,7 @@ import nat20.kamppisserver.domain.SwipeResponse
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.enums.*
+import nat20.kamppisserver.domain.getUsersFromProfile
 import nat20.kamppisserver.repository.ProfileRepository
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.service.SwipeService
@@ -91,8 +92,9 @@ class SwipeControllerTests @Autowired constructor(
         every { profileRepository.findByIdAndStatus(1L, ProfileStatus.ACTIVE)} returns profile1
         every { profileRepository.findByIdAndStatus(2L, ProfileStatus.ACTIVE)} returns profile2
         every { swipeService.swipe(any(),any(), any()) } returns swipeResponse
+        every { swipeService.principalInSwipingProfile(any(), any()) } returns true
 
-        val jwt = JwtUtils.generateJwtToken("fake@example.com")
+        val jwt = JwtUtils.generateJwtToken("alice.smith@test.com")
 
         mockMvc.post("/api/swipes") {
             contentType = MediaType.APPLICATION_JSON

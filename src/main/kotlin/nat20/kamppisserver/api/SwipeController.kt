@@ -32,7 +32,7 @@ class SwipeController(private val swipeService: SwipeService,
               principal: Principal): ResponseEntity<SwipeResponse> {
         val swipingProfile: Profile = profileRepository.findByIdAndStatus(swipeRequest.swipingProfileId, ProfileStatus.ACTIVE)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Profile with id ${swipeRequest.swipingProfileId} not found")
-        if (principal.name !in getUsersFromProfile(swipingProfile).map { it.email }) {
+        if (!swipeService.principalInSwipingProfile(principal.name, swipingProfile)) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Swiping profile ${principal.name} cannot swipe on someone else's behalf")
         }
         val swipedProfile: Profile = profileRepository.findByIdAndStatus(swipeRequest.swipedProfileId, ProfileStatus.ACTIVE)

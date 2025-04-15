@@ -45,6 +45,10 @@ class SwipeService(
         )
     }
 
+    fun principalInSwipingProfile(email: String, swipingProfile: Profile): Boolean {
+        return email !in getUsersFromProfile(swipingProfile).map { it.email }
+    }
+
     fun findAll(): List<SwipeDTO> {
         return swipeRepository.findAll().map { it.toDTO() }
     }
