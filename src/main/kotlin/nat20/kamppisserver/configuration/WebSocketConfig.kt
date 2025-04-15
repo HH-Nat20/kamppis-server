@@ -3,6 +3,8 @@ package nat20.kamppisserver.configuration
 import com.fasterxml.jackson.databind.ObjectMapper
 import nat20.kamppisserver.security.JwtHandshakeInterceptor
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.Ordered.HIGHEST_PRECEDENCE
+import org.springframework.core.annotation.Order
 import org.springframework.messaging.converter.DefaultContentTypeResolver
 import org.springframework.messaging.converter.MappingJackson2MessageConverter
 import org.springframework.messaging.converter.MessageConverter
@@ -17,6 +19,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
  * chat messages. Also includes a message converter.
  */
 @Configuration
+@Order(HIGHEST_PRECEDENCE + 50)
 @EnableWebSocketMessageBroker
 class WebSocketConfig(
     private val jwtHandshakeInterceptor: JwtHandshakeInterceptor,

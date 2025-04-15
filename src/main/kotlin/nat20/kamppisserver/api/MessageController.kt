@@ -17,6 +17,7 @@ import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.messaging.simp.annotation.SubscribeMapping
 import org.springframework.web.bind.annotation.*
+import java.security.Principal
 
 /**
  * Controller for Message.
@@ -33,10 +34,10 @@ class MessageController(
     fun sendMessage(
         @DestinationVariable matchId: Long,
         @Payload messageDTO: MessageDTO,
-        @Header("email") userEmail: String
+        principal: Principal
     )
         {
-        if (messageDTO.senderEmail != userEmail) {
+        if (messageDTO.senderEmail != principal.name) {
             throw IllegalAccessException("Unauthorized: Email mismatch")
         }
 
@@ -71,9 +72,9 @@ class MessageController(
 
     @SubscribeMapping("/matches/{matchId}/messages")
     fun sendHistory(@DestinationVariable matchId: Long,
-                    @Header("email") userEmail: String) {
+                    principal: Principal) {
 
-        val user : User = userRepository.findByEmailAndStatus(userEmail, UserStatus.ACTIVE)
+        val user : User = userRepository.findByEmailAndStatus(principal.name, UserStatus.ACTIVE)
             ?: throw IllegalAccessException("Unauthorized: User does not exist")
 
         val match : Match = matchRepository.findByIdWithUsers(matchId)

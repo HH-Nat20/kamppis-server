@@ -1,8 +1,10 @@
 package nat20.kamppisserver.security
 
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.server.ServerHttpRequest
 import org.springframework.http.server.ServerHttpResponse
 import org.springframework.http.server.ServletServerHttpRequest
+import org.springframework.http.server.ServletServerHttpResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
@@ -19,12 +21,19 @@ class JwtHandshakeInterceptor : HandshakeInterceptor {
         wsHandler: WebSocketHandler,
         attributes: MutableMap<String, Any>
     ): Boolean {
-        if (request is ServletServerHttpRequest) {
+        if (request is ServletServerHttpRequest && response is ServletServerHttpResponse) {
             val servletRequest = request.servletRequest
+            val servletResponse = response.servletResponse
             val token = servletRequest.getHeader("Authorization")?.removePrefix("Bearer ")?.trim()
                 ?: servletRequest.getParameter("token")
-
-            val email = token?.let { JwtUtils.validateTokenAndGetEmail(it) }
+            val email: String?
+            try {
+                email = token?.let { JwtUtils.validateTokenAndGetEmail(it) }
+            } catch (ex: Exception){
+                println("Invalid token: ${ex.message}")
+                servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid token")
+                return false
+            }
 
             if (email != null) {
                 attributes["email"] = email

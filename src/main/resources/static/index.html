@@ -53,10 +53,13 @@
       let subscription = null; // Store the subscription
       let messages = {}; // Store messages for each matchId
 
+      let token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbGljZS5zbWl0aEBleGFtcGxlLmNvbSIsImlhdCI6MTc0NDcwNzU3NywiZXhwIjoxNzQ0NzExMTc3fQ.P_1bDe241vn0kXhoqOdwnGr7ejpju_K--Kgn6FO2UgrNLPd2B-QEKgPBSEa9obuHkZxXkd3yqs6uVdmrX7tMtw";
+
+
       function connect() {
         stompClient = new Client({
-          //brokerURL: "ws://localhost:8080/ws",
-          brokerURL: "ws://95.217.239.74:8087/ws",
+          brokerURL: `ws://localhost:8080/ws?token=${token}`,
+          //brokerURL: "ws://95.217.239.74:8087/ws",
           //brokerURL: "wss://kamppis.hellmanstudios.fi:8087/ws",
           onConnect: (frame) => {
             console.log("Connected: " + frame);
@@ -113,7 +116,7 @@
               const msg = JSON.parse(message.body);
               showMessage(msg); // Display each new message
             },
-            { email: userEmail } // Add user email to headers
+            { email: userEmail, Authorization: `Bearer ${token}` } // Add user email to headers
           );
         }
       };
@@ -139,6 +142,8 @@
           const messageDTO = {
             content: messageContent,
             senderEmail: userEmail, // Email only
+            senderFirstName: "firstName",
+                  senderLastName: "lastName",
             matchId: matchId, // Match ID for backend processing
             createdAt: new Date().toISOString(),
           };
@@ -146,7 +151,7 @@
           stompClient.publish({
             destination: `/app/matches/${matchId}/messages`,
             body: JSON.stringify(messageDTO),
-            headers: { email: userEmail }, // Add user email to headers
+            headers: { email: userEmail, Authorization: `Bearer ${token}` }, // Add user email to headers
           });
         }
       }
