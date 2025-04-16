@@ -40,11 +40,11 @@ class User(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    var status: UserStatus = UserStatus.ACTIVE,
+    var status: UserStatus? = UserStatus.ACTIVE,
 
     // Specifically for use in chat
     @Column(name = "is_online")
-    var isOnline: Boolean = false,
+    var isOnline: Boolean? = false,
 
     @PastOrPresent(message = "Creation date cannot be in the future.")
     var createdAt: LocalDateTime = LocalDateTime.now(),
@@ -129,8 +129,8 @@ data class UserDTO(
     val age: Long? = null,
     @NotNull val gender: Gender,
     val lookingFor: LookingFor? = LookingFor.OTHER_USER_PROFILES_OR_ROOM_PROFILES,
-    val status: UserStatus,
-    val isOnline: Boolean,
+    val status: UserStatus? = UserStatus.ACTIVE,
+    val isOnline: Boolean? = false,
     val matchIds: Set<Long>? = null,
     val userProfile: UserProfileDTO? = null,
     val roomProfiles: List<RoomProfileDTO>? = listOf(),
@@ -153,7 +153,7 @@ data class UserSummaryDTO(
     val age: Long? = null,
     val gender: Gender,
     val lookingFor: LookingFor?,
-    val isOnline: Boolean,
+    val isOnline: Boolean? = false,
     val id: Long? = null,
 )
 
@@ -176,8 +176,8 @@ data class UserDataDTO(
     val dateOfBirth: LocalDate,
     val gender: Gender,
     val lookingFor: LookingFor?,
-    val status: UserStatus,
-    val isOnline: Boolean,
+    val status: UserStatus? = UserStatus.ACTIVE,
+    val isOnline: Boolean? = false,
     // Metadata
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime? = null,

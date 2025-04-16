@@ -28,7 +28,7 @@ class Flat(
     var totalRoommates: Int,
 
     @Column(name = "pet_household")
-    var petHousehold: Boolean?,
+    var petHousehold: Boolean? = false,
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Utilities::class)
     @CollectionTable(name = "flat_utilities", joinColumns = [JoinColumn(name = "flat_id")])
@@ -83,7 +83,7 @@ data class FlatDTO(
     val description: String,
     val location: City,
     val totalRoommates: Int,
-    val petHousehold: Boolean?,
+    val petHousehold: Boolean? = false,
     val flatUtilities: MutableList<Utilities>? = mutableListOf(),
     val roomProfileIds: List<Long>? = listOf(),
     val id: Long? = null
@@ -95,6 +95,6 @@ data class FlatDataDTO(
     val description: String,
     val location: City,
     val totalRoommates: Int,
-    val petHousehold: Boolean?,
+    val petHousehold: Boolean? = false,
     val flatUtilities: MutableList<Utilities>? = mutableListOf(),
 )

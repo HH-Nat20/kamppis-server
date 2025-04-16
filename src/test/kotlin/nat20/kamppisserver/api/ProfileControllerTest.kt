@@ -5,6 +5,7 @@ import com.ninjasquad.springmockk.MockkBean
 import io.mockk.*
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.City
+import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.Utilities
 import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserProfileRepository
@@ -13,13 +14,16 @@ import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.service.ProfileService
 import nat20.kamppisserver.service.RoomProfileService
 import nat20.kamppisserver.service.UserProfileService
+import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.http.MediaType
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.put
+import java.time.LocalDate
 
 @WebMvcTest(ProfileController::class)
 @Import(SecurityConfig::class)
@@ -42,6 +46,81 @@ class ProfileControllerTest @Autowired constructor(
 
     @MockkBean
     private lateinit var userProfileService: UserProfileService
+
+    lateinit var user: UserDTO
+    lateinit var flat: FlatDTO
+    lateinit var userProfile: ProfileDTO
+    lateinit var roomProfile: ProfileDTO
+
+    @BeforeEach
+    fun setup() {
+        user = UserDTO(
+            firstName = "John",
+            lastName = "Doe",
+            email = "john.doe@example.com",
+            dateOfBirth = LocalDate.of(1980, 1, 1),
+            gender = Gender.MALE,
+            id = 1L
+        )
+
+        userProfile = UserProfileDTO(
+            userId = user.id!!,
+            bio = "Test bio",
+            id = 1L
+        )
+
+        flat = FlatDTO(
+            name = "Test flat",
+            description = "Test description",
+            location = City.HELSINKI,
+            totalRoommates = 2
+        )
+
+        roomProfile = RoomProfileDTO(
+            userIds = listOf(user.id!!),
+            flat = flat,
+            totalRoommates = 2,
+            location = City.HELSINKI,
+            rent = 500,
+            isPrivateRoom = true,
+            furnished = false,
+            bio = "Test room"
+        )
+    }
+
+    @Test
+    fun `GET all profiles returns 200 with list`() {
+        val flats = listOf(userProfile, roomProfile)
+
+        every { profileService.findAll() } returns flats
+
+        val jwt = JwtUtils.generateJwtToken("test@example.com")
+
+        mockMvc.get("/api/profiles") {
+            header("Authorization", "Bearer $jwt")
+        }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.size()") { value(flats.size) }
+            }
+    }
+
+    @Test
+    fun `GET profile by id returns 200 with matching profile`() {
+        val id = 1L
+        every { profileService.findById(id) } returns userProfile
+
+        val jwt = JwtUtils.generateJwtToken("test@example.com")
+
+        mockMvc.get("/api/profiles/$id") {
+            header("Authorization", "Bearer $jwt")
+        }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.id") { value(id) }
+                jsonPath("$.bio") { value("Test bio") }
+            }
+    }
 
     @Test
     fun `should update UserProfile successfully`() {

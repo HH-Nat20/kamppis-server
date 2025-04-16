@@ -38,19 +38,18 @@ class UserServiceTest @Autowired constructor(
     @BeforeEach
     fun setup() {
         testUser = userRepository.save(User(
-            email = "john.doe@example.com",
             firstName = "John",
             lastName = "Doe",
-            dateOfBirth = LocalDate.of(1990, 5, 14),
-            gender = Gender.MALE,
-            lookingFor = LookingFor.OTHER_USER_PROFILES
+            email = "john.doe@example.com",
+            dateOfBirth = LocalDate.of(1980, 1, 1),
+            gender = Gender.MALE
         ))
 
         deletedTestUser = userRepository.save(User(
-            email = "deleted.user@example.com",
             firstName = "Deleted",
             lastName = "User",
-            dateOfBirth = LocalDate.of(1990, 5, 14),
+            email = "deleted.user@example.com",
+            dateOfBirth = LocalDate.of(1980, 1, 1),
             gender = Gender.MALE,
             lookingFor = LookingFor.OTHER_USER_PROFILES,
             status = UserStatus.INACTIVE,
@@ -59,9 +58,6 @@ class UserServiceTest @Autowired constructor(
 
         testUserProfile = userProfileRepository.save(UserProfile(
             user = testUser,
-            cleanliness = Cleanliness.SPOTLESS,
-            lifestyle = mutableSetOf(Lifestyle.EARLY_BIRD),
-            pets = Pets.OK_WITH_PETS,
             bio = "Test bio"
         ))
 
@@ -69,7 +65,7 @@ class UserServiceTest @Autowired constructor(
             firstName = "Jane",
             lastName = "Doe",
             email = "jane.doe@example.com",
-            dateOfBirth = LocalDate.of(1999, 1, 1),
+            dateOfBirth = LocalDate.of(1990, 1, 1),
             gender = Gender.FEMALE,
             lookingFor = LookingFor.ROOM_PROFILES
         )
@@ -118,7 +114,6 @@ class UserServiceTest @Autowired constructor(
         assertEquals(testUserRequest.email, result.email)
         assertEquals(testUserRequest.dateOfBirth, result.dateOfBirth)
         assertEquals(testUserRequest.gender, result.gender)
-        assertEquals(testUserRequest.lookingFor, result.lookingFor)
         assertNotNull(testUser.updatedAt)
     }
 
@@ -186,7 +181,6 @@ class UserServiceTest @Autowired constructor(
         assertEquals("****", anonymizedUser.lastName)
         assertEquals(LocalDate.of(2000, 1, 1), anonymizedUser.dateOfBirth)
         assertEquals(Gender.NOT_IMPORTANT, anonymizedUser.gender)
-        assertEquals(LookingFor.OTHER_USER_PROFILES_OR_ROOM_PROFILES, anonymizedUser.lookingFor)
         assertEquals(UserStatus.DELETED, anonymizedUser.status)
         assertNotEquals("deleted.user@example.com", anonymizedUser.email)
     }

@@ -44,6 +44,7 @@ class FlatControllerTest @Autowired constructor(
                 petHousehold = false,
                 flatUtilities = mutableListOf(Utilities.WIFI)
             )
+
         flat2 = FlatDTO(
                 id = 2,
                 name = "Cozy loft",

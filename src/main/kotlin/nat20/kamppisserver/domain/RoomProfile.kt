@@ -108,7 +108,7 @@ data class RoomProfileDTO(
     @PositiveOrZero val rent: Int,
     val isPrivateRoom: Boolean,
     val furnished: Boolean,
-    val furnishedInfo: String?,
+    val furnishedInfo: String? = null,
     val photos: MutableList<ProfilePhotoDTO>? = mutableListOf(),
     val bio: String,
     val id: Long? = null
