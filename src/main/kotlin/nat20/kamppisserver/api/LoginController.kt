@@ -31,12 +31,16 @@ class LoginController(
     private val roommatePreferenceRepository: RoommatePreferenceRepository,
 ) {
 
-    @PostMapping
+    @PostMapping("/mock")
     fun login(@RequestParam email: String): ResponseEntity<Map<String, String>> {
         try {
             userService.findActiveUserByEmail(email)
-            val token = JwtUtils.generateJwtToken(email)
-            return mapOf("token" to token).let { ResponseEntity.ok(it) }
+            if (email.endsWith("@example.com")) {
+                val token = JwtUtils.generateJwtToken(email)
+                return mapOf("token" to token).let { ResponseEntity.ok(it) }
+            } else {
+                return ResponseEntity.badRequest().body(mapOf("error" to "Invalid email"))
+            }
         } catch (e: Error) {
             return ResponseEntity.badRequest().build()
         }
@@ -60,7 +64,12 @@ class LoginController(
             ?: return ResponseEntity.badRequest().body(mapOf("error" to "No user found linked to given GitHub credentials. Use a different OAuth provider, or sign up."))
 
         val jwt = JwtUtils.generateJwtToken(user.email)
-        return ResponseEntity.ok(mapOf("token" to jwt))
+        return ResponseEntity.ok(
+            mapOf(
+            "token" to jwt,
+            "userId" to user.id.toString()
+            )
+        )
     }
 
     //TODO Add Kdoc to explain /signup
@@ -98,7 +107,12 @@ class LoginController(
         roommatePreferenceRepository.save(roommatePreference)
 
         val jwt = JwtUtils.generateJwtToken(user.email)
-        return ResponseEntity.ok(mapOf("token" to jwt))
+        return ResponseEntity.ok(
+            mapOf(
+                "token" to jwt,
+                "userId" to user.id.toString()
+            )
+        )
     }
 
 }

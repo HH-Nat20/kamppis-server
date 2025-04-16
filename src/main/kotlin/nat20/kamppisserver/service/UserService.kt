@@ -42,6 +42,16 @@ class UserService(
     }
 
     /**
+     * Returns all active Mock Users (email ends with @example.com).
+     *
+     * @return all Mock Users as DTOs.
+     */
+    fun findAllMockUsers(): List<UserDTO> {
+        val users = userRepository.findAllByStatusAndEmailEndsWith(UserStatus.ACTIVE, "@example.com")
+        return users.map { it.toDTO() }
+    }
+
+    /**
      * Returns active User by id.
      *
      * @param id the id of the User to be returned.

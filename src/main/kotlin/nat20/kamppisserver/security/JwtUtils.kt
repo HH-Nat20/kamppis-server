@@ -17,7 +17,7 @@ object JwtUtils {
             .claims()
             .subject(email)
             .issuedAt(Date())
-            .expiration(Date(System.currentTimeMillis() + 3600000)) // Expires in 1h
+            .expiration(Date(System.currentTimeMillis() + 3600000 * 72)) // Expires in 72h
             .and()
             .signWith(secretKey)
             .compact()

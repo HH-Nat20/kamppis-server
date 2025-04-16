@@ -58,11 +58,11 @@ class UserControllerTests @Autowired constructor(
             matchIds = setOf(1, 2)
         )
 
-        every { userService.findAll() } returns listOf(bobJohnson, charlieDavis)
+        every { userService.findAllMockUsers() } returns listOf(bobJohnson, charlieDavis)
 
         val jwt = JwtUtils.generateJwtToken("fake@example.com")
 
-        mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, "Bearer $jwt"))
+        mockMvc.perform(get("/api/users/mock").accept(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, "Bearer $jwt"))
         .andExpect(status().isOk)
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("\$.[0].email").value(bobJohnson.email))
@@ -85,7 +85,7 @@ class UserControllerTests @Autowired constructor(
 
         every { userService.findById(1) } returns bobJohnson
 
-        val jwt = JwtUtils.generateJwtToken("fake@example.com")
+        val jwt = JwtUtils.generateJwtToken("bob.johnson@example.com")
 
         mockMvc.perform(get("/api/users/1").accept(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, "Bearer $jwt"))
             .andExpect(status().isOk)

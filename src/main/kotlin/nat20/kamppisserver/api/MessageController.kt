@@ -8,10 +8,7 @@ import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.MatchRepository
 import nat20.kamppisserver.repository.MessageRepository
 import nat20.kamppisserver.repository.UserRepository
-import nat20.kamppisserver.service.UserService
-//import nat20.kamppisserver.service.MessageService
 import org.springframework.messaging.handler.annotation.DestinationVariable
-import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.simp.SimpMessagingTemplate
