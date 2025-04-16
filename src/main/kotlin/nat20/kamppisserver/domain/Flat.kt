@@ -86,7 +86,7 @@ data class FlatDTO(
     val petHousehold: Boolean?,
     val flatUtilities: MutableList<Utilities>? = mutableListOf(),
     val roomProfileIds: List<Long>? = listOf(),
-    val id: Long?
+    val id: Long? = null
 )
 
 data class FlatDataDTO(
