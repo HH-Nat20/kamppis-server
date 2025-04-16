@@ -33,7 +33,7 @@ import java.time.LocalDate
 class LoginControllerTests @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper
-){
+) {
     @MockkBean
     private lateinit var userService: UserService
 
@@ -77,22 +77,11 @@ class LoginControllerTests @Autowired constructor(
         every { userService.findActiveUserByEmail(mockUserDTO.email) } returns mockUserDTO
 
         mockMvc.post("/api/login/mock?email=${mockUserDTO.email}")
-        .andExpect {
-            status { isOk() }
-            jsonPath("$.token") { isNotEmpty() }
-        }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.token") { isNotEmpty() }
+            }
     }
-
-    // No longer valid test
-/*    @Test
-    fun `login should return 400 for invalid user`() {
-        val email = "invalid@not-example.com"
-
-        mockMvc.post("/api/login?email=$email")
-        .andExpect {
-            status { isBadRequest() }
-        }
-    }*/
 
     @Test
     fun `should access protected endpoint with valid JWT`() {
@@ -140,7 +129,7 @@ class LoginControllerTests @Autowired constructor(
     @Test
     fun `should not access protected endpoint without JWT`() {
         mockMvc.get("/api/login/protected")
-        .andExpect {
+            .andExpect {
                 status { isForbidden() }
             }
     }
@@ -152,7 +141,7 @@ class LoginControllerTests @Autowired constructor(
 
         val result = mockMvc.get("/api/login/protected") {
             header("Authorization", "Bearer $token")
-            }
+        }
             .andExpect {
                 status { isForbidden() }
             }

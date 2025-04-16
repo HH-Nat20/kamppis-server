@@ -21,9 +21,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.web.servlet.put
 import org.springframework.boot.test.context.SpringBootTest
 
+@AutoConfigureMockMvc
 @Import(SecurityConfig::class)
 @SpringBootTest
-@AutoConfigureMockMvc
 class ProfileControllerTests @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper

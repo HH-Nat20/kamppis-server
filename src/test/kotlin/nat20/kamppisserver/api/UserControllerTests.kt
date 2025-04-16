@@ -19,8 +19,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.LocalDate
 import kotlin.test.Test
 
-@Import(SecurityConfig::class) // Import your security config
 @WebMvcTest(UserController::class)
+@Import(SecurityConfig::class) // Import your security config
 class UserControllerTests @Autowired constructor(
     val mockMvc: MockMvc
 ){

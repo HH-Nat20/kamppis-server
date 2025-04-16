@@ -258,6 +258,7 @@ class UserService(
      * function runs every day at 3 a.m.
      */
     @Scheduled(cron = "\${cron.expression}", zone = "Europe/Helsinki")
+    // TODO: @Scheduled(fixedDelay = 1000)
     @Transactional
     fun permanentlyAnonymizeDeletedUsers() {
         val cutoffDate = LocalDateTime.now().minusDays(30)

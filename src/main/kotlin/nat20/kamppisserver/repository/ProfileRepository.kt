@@ -6,5 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface ProfileRepository: JpaRepository<Profile, Long> {
     fun findByIdAndStatus(id: Long, status: ProfileStatus = ProfileStatus.ACTIVE): Profile?
-
 }
