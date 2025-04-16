@@ -6,7 +6,6 @@ import org.junit.jupiter.api.assertThrows
 import jakarta.persistence.EntityNotFoundException
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
-import nat20.kamppisserver.domain.UserProfileDTO
 import nat20.kamppisserver.repository.UserProfileRepository
 import org.junit.jupiter.api.BeforeEach
 import io.mockk.*
@@ -20,7 +19,7 @@ import java.time.LocalDate
  * Test class for UserProfileService. Tests that edit and delete methods return
  * values accordingly, and throw an exception in case of invalid id:s.
 */
-class UserProfileServiceTests {
+class UserProfileServiceTest {
     private lateinit var userRepository: UserRepository
     private lateinit var userProfileRepository: UserProfileRepository
     private lateinit var service: UserProfileService

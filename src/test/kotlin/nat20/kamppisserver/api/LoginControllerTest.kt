@@ -3,7 +3,6 @@ package nat20.kamppisserver.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import nat20.kamppisserver.domain.RoomPreference
 import nat20.kamppisserver.domain.UserDTO
 import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.UserStatus
@@ -30,7 +29,7 @@ import java.time.LocalDate
 
 @WebMvcTest(LoginController::class)
 @Import(SecurityConfig::class) // Import your security config
-class LoginControllerTests @Autowired constructor(
+class LoginControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper
 ) {

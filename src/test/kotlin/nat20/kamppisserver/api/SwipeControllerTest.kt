@@ -9,7 +9,6 @@ import nat20.kamppisserver.domain.SwipeResponse
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.enums.*
-import nat20.kamppisserver.domain.getUsersFromProfile
 import nat20.kamppisserver.repository.ProfileRepository
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.service.SwipeService
@@ -25,7 +24,7 @@ import java.time.LocalDate
 
 @WebMvcTest(SwipeController::class)
 @Import(SecurityConfig::class) // Import your security config
-class SwipeControllerTests @Autowired constructor(
+class SwipeControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper
 ){

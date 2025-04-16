@@ -22,7 +22,7 @@ import kotlin.test.*
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS )
 @Transactional
-class FlatServiceTests @Autowired constructor(
+class FlatServiceTest @Autowired constructor(
     val flatService: FlatService,
     val flatRepository: FlatRepository,
     val roomProfileService: RoomProfileService,

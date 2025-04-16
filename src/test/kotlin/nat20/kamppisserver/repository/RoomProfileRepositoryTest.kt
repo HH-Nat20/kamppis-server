@@ -19,7 +19,7 @@ import kotlin.test.*
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
-class RoomProfileRepositoryTests @Autowired constructor(
+class RoomProfileRepositoryTest @Autowired constructor(
     val userRepository: UserRepository,
     val userProfileRepository: UserProfileRepository,
     val roomPreferenceRepository: RoomPreferenceRepository,

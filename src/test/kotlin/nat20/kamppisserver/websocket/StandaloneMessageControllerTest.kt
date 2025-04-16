@@ -1,32 +1,6 @@
 package nat20.kamppisserver.websocket
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.mockk.*
-import nat20.kamppisserver.api.MessageController
-import nat20.kamppisserver.TestPrincipal
-import nat20.kamppisserver.domain.Match
-import nat20.kamppisserver.domain.Message
-import nat20.kamppisserver.domain.MessageDTO
-import nat20.kamppisserver.domain.User
-import nat20.kamppisserver.repository.MatchRepository
-import nat20.kamppisserver.repository.MessageRepository
-import nat20.kamppisserver.service.UserService
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.springframework.messaging.support.MessageBuilder
-import org.springframework.context.support.StaticApplicationContext
-import org.springframework.messaging.MessageChannel
-import org.springframework.messaging.simp.SimpMessageSendingOperations
-import org.springframework.messaging.simp.SimpMessagingTemplate
-import org.springframework.messaging.simp.annotation.support.SimpAnnotationMethodMessageHandler
-import org.springframework.messaging.simp.stomp.StompCommand
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor
-import org.springframework.messaging.SubscribableChannel
-import java.util.HashMap
-import org.springframework.messaging.converter.MappingJackson2MessageConverter
-import java.time.LocalDateTime
 
 /**
  * Unit test class for MessageController that does NOT load the Spring

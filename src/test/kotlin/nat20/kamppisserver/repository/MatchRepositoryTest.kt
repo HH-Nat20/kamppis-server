@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertNotEquals
 
 @DataJpaTest
-class MatchRepositoryTests @Autowired constructor(
+class MatchRepositoryTest @Autowired constructor(
     val userRepository: UserRepository,
     val matchRepository: MatchRepository
 ){

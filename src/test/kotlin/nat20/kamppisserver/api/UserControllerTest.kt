@@ -21,7 +21,7 @@ import kotlin.test.Test
 
 @WebMvcTest(UserController::class)
 @Import(SecurityConfig::class) // Import your security config
-class UserControllerTests @Autowired constructor(
+class UserControllerTest @Autowired constructor(
     val mockMvc: MockMvc
 ){
 

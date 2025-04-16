@@ -22,7 +22,7 @@ import kotlin.test.*
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
-class UserProfileRepositoryTests @Autowired constructor(
+class UserProfileRepositoryTest @Autowired constructor(
     val userProfileRepository: UserProfileRepository,
     val roommatePreferenceRepository: RoommatePreferenceRepository,
     val userRepository: UserRepository,

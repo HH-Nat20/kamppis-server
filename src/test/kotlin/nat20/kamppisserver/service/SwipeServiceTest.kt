@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-class SwipeServiceTests {
+class SwipeServiceTest {
     private lateinit var swipeRepository: SwipeRepository
     private lateinit var matchService: MatchService
     private lateinit var swipeService: SwipeService

@@ -3,7 +3,6 @@ package nat20.kamppisserver.service
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.UserProfileDTO
-import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.RoommatePreferenceRepository
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.repository.UserProfileRepository
@@ -16,7 +15,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDate
 import kotlin.test.assertFalse
 
 /**
@@ -25,7 +23,7 @@ import kotlin.test.assertFalse
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-class QueryServiceTests @Autowired constructor(
+class QueryServiceTest @Autowired constructor(
     val queryService: QueryService,
     val userRepository: UserRepository,
     val userProfileRepository: UserProfileRepository

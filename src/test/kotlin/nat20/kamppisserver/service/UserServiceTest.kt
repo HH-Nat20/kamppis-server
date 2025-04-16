@@ -23,7 +23,7 @@ import java.time.LocalDateTime
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-class UserServiceTests @Autowired constructor(
+class UserServiceTest @Autowired constructor(
     val userService: UserService,
     val userRepository: UserRepository,
     val userProfileRepository: UserProfileRepository
