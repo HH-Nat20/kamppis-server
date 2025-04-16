@@ -10,6 +10,7 @@ import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserProfileRepository
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.security.SecurityConfig
+import nat20.kamppisserver.service.ProfileService
 import nat20.kamppisserver.service.RoomProfileService
 import nat20.kamppisserver.service.UserProfileService
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,29 +18,30 @@ import org.springframework.context.annotation.Import
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.http.MediaType
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.put
-import org.springframework.boot.test.context.SpringBootTest
 
-@AutoConfigureMockMvc
+@WebMvcTest(ProfileController::class)
 @Import(SecurityConfig::class)
-@SpringBootTest
 class ProfileControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper
 ){
 
     @MockkBean
-    private lateinit var userProfileRepository: UserProfileRepository
+    private lateinit var profileService: ProfileService
 
     @MockkBean
     private lateinit var roomProfileRepository: RoomProfileRepository
 
     @MockkBean
-    private lateinit var userProfileService: UserProfileService
+    private lateinit var userProfileRepository: UserProfileRepository
 
     @MockkBean
     private lateinit var roomProfileService: RoomProfileService
+
+    @MockkBean
+    private lateinit var userProfileService: UserProfileService
 
     @Test
     fun `should update UserProfile successfully`() {
@@ -52,7 +54,7 @@ class ProfileControllerTest @Autowired constructor(
         )
         val userProfile = mockk<UserProfile>(relaxed = true)
 
-        val jwt = JwtUtils.generateJwtToken("fake@example.com")
+        val jwt = JwtUtils.generateJwtToken("test@example.com")
 
         every { userProfileRepository.findByIdActive(userProfileId) } returns userProfile
         every { roomProfileRepository.findByIdActive(userProfileId) } returns null
@@ -96,7 +98,7 @@ class ProfileControllerTest @Autowired constructor(
         )
         val roomProfile = mockk<RoomProfile>(relaxed = true)
 
-        val jwt = JwtUtils.generateJwtToken("fake@example.com")
+        val jwt = JwtUtils.generateJwtToken("test@example.com")
 
         every { roomProfileRepository.findByIdActive(roomProfileId) } returns roomProfile
         every { userProfileRepository.findByIdActive(roomProfileId) } returns null
@@ -125,7 +127,7 @@ class ProfileControllerTest @Autowired constructor(
             id = profileId
         )
 
-        val jwt = JwtUtils.generateJwtToken("fake@example.com")
+        val jwt = JwtUtils.generateJwtToken("test@example.com")
 
         every { userProfileRepository.findByIdActive(profileId) } returns null
         every { roomProfileRepository.findByIdActive(profileId) } returns null
