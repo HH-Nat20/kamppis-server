@@ -3,9 +3,12 @@ package nat20.kamppisserver.domain
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.PastOrPresent
 import jakarta.validation.constraints.PositiveOrZero
 import nat20.kamppisserver.domain.enums.City
 import nat20.kamppisserver.domain.enums.Utilities
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "flats")
@@ -34,6 +37,16 @@ class Flat(
 
     @OneToMany(mappedBy = "flat", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     var roomProfiles: MutableList<RoomProfile>? = mutableListOf(),
+
+    @PastOrPresent(message = "Creation date cannot be in the future.")
+    var createdAt: LocalDateTime = LocalDateTime.now(),
+
+    @UpdateTimestamp
+    @PastOrPresent(message = "Update date cannot be in the future.")
+    var updatedAt: LocalDateTime? = null,
+
+    @PastOrPresent(message = "Deletion date cannot be in the future.")
+    var deletedAt: LocalDateTime? = null,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

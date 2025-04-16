@@ -2,6 +2,7 @@ package nat20.kamppisserver.repository
 
 import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.*
+import nat20.kamppisserver.domain.enums.ProfileStatus
 import nat20.kamppisserver.domain.enums.UserStatus
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
@@ -39,7 +40,7 @@ class RoomProfileRepositoryTests @Autowired constructor(
         user = userRepository.findByIdAndStatus(27L, UserStatus.ACTIVE)
             ?: fail("❌ Expected User but found null")
         // We find our test user's user profile
-        userProfile = userProfileRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
+        userProfile = userProfileRepository.findByUserIdAndStatus(user.id!!, ProfileStatus.ACTIVE)
             ?: fail("❌ Expected UserProfile but found null")
         // We find our test user's room preferences
         roomPreference = roomPreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)

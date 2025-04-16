@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.RoommatePreference
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.User
+import nat20.kamppisserver.domain.enums.ProfileStatus
 import nat20.kamppisserver.domain.enums.UserStatus
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
@@ -45,7 +46,7 @@ class UserProfileRepositoryTests @Autowired constructor(
         user = userRepository.findByIdAndStatus(1L, UserStatus.ACTIVE)
             ?: fail("❌ Expected User but found null")
         // We find our test user's user profile
-        userProfile = userProfileRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
+        userProfile = userProfileRepository.findByUserIdAndStatus(user.id!!, ProfileStatus.ACTIVE)
             ?: fail("❌ Expected UserProfile but found null")
         roommatePreference= roommatePreferenceRepository
             .findByUserIdAndStatus(1L, UserStatus.ACTIVE)

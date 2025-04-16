@@ -119,7 +119,7 @@ class FlatServiceTests @Autowired constructor(
             pets = Pets.OK_WITH_PETS
         )
 
-        val updateUserProfileId = userProfileRepository.findByUserIdAndStatus(updateUserProfileRequest.userId, UserStatus.ACTIVE)!!.id!!
+        val updateUserProfileId = userProfileRepository.findByUserIdAndStatus(updateUserProfileRequest.userId, ProfileStatus.ACTIVE)!!.id!!
         userProfileService.update(updateUserProfileRequest, updateUserProfileId)
 
         val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
@@ -150,7 +150,7 @@ class FlatServiceTests @Autowired constructor(
             pets = Pets.PET_OWNER
         )
 
-        val updateUserProfileId = userProfileRepository.findByUserIdAndStatus(updateUserProfileRequest.userId, UserStatus.ACTIVE)!!.id!!
+        val updateUserProfileId = userProfileRepository.findByUserIdAndStatus(updateUserProfileRequest.userId, ProfileStatus.ACTIVE)!!.id!!
         userProfileService.update(updateUserProfileRequest, updateUserProfileId)
 
         val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold

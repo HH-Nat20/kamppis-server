@@ -157,7 +157,7 @@ class UserServiceTests @Autowired constructor(
         userService.delete(testUser.id!!)
 
         val deletedUser = userRepository.findById(testUser.id!!).get()
-        val deletedUserProfile = userProfileRepository.findByUserIdAndStatus(testUser.id!!, UserStatus.INACTIVE)
+        val deletedUserProfile = userProfileRepository.findByUserIdAndStatus(testUser.id!!, ProfileStatus.INACTIVE)
 
         assertEquals(UserStatus.INACTIVE, deletedUser.status)
         assertNotNull(deletedUser.deletedAt)

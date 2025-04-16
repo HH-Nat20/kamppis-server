@@ -29,7 +29,7 @@ class UserProfile (
 
     bio: String = "Write bio here",
 
-    photos: MutableList<ProfilePhoto> = mutableListOf()
+    photos: MutableList<ProfilePhoto> = mutableListOf(),
 
 ) : Profile() {// Inherits id, bio, photos, and other attributes from Profile
     init {

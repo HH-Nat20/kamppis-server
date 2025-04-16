@@ -1,6 +1,7 @@
 package nat20.kamppisserver.repository
 
 import nat20.kamppisserver.domain.RoomProfile
+import nat20.kamppisserver.domain.enums.ProfileStatus
 import nat20.kamppisserver.domain.enums.UserStatus
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -18,8 +19,8 @@ interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
     @Query("SELECT rp FROM RoomProfile rp WHERE rp.id = :id AND rp.deletedAt IS NULL")
     fun findByIdActive(@Param("id") id: Long): RoomProfile?
 
-    @Query("SELECT rp FROM RoomProfile rp JOIN rp.users u WHERE u.id = :id AND u.status = :status")
-    fun findByUserIdAndStatus(@Param("id") id: Long, @Param("status") status: UserStatus): List<RoomProfile?>
+    @Query("SELECT rp FROM RoomProfile rp JOIN rp.users u WHERE u.id = :id AND rp.status = :status")
+    fun findByUserIdAndStatus(@Param("id") id: Long, @Param("status") status: ProfileStatus): List<RoomProfile>
 
     @Query("""
     SELECT DISTINCT rp.id, rp.name, rp.rent, rp.is_private_room, rp.furnished, rp.furnished_info, rp.flat_id, f.pet_household, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at

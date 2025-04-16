@@ -2,6 +2,7 @@ package nat20.kamppisserver.service
 
 import exception.EntityNotFoundException
 import nat20.kamppisserver.domain.*
+import nat20.kamppisserver.domain.enums.ProfileStatus
 import org.springframework.stereotype.Service
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.*
@@ -32,7 +33,7 @@ class QueryService(
      */
     fun findUserProfileByUserId(userId: Long): UserProfile? {
         return try {
-            userProfileRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
+            userProfileRepository.findByUserIdAndStatus(userId, ProfileStatus.ACTIVE)
         } catch (ex: EmptyResultDataAccessException) {
             throw EntityNotFoundException("UserId does not match to any user")
         }
@@ -50,7 +51,7 @@ class QueryService(
         * From the profile, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in UserProfileRepository */
 
-        val userProfile: UserProfile = userProfileRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
+        val userProfile: UserProfile = userProfileRepository.findByUserIdAndStatus(userId, ProfileStatus.ACTIVE)
             ?: throw EntityNotFoundException("UserId does not match to any user")
 
         val roommatePreference: RoommatePreference = roommatePreferenceRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
@@ -90,7 +91,7 @@ class QueryService(
         * From the preferences, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in RoomProfileRepository */
 
-        val userProfile: UserProfile = userProfileRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)
+        val userProfile: UserProfile = userProfileRepository.findByUserIdAndStatus(userId, ProfileStatus.ACTIVE)
             ?: throw EntityNotFoundException("UserId does not match to any user")
 
         val roomPreference: RoomPreference = roomPreferenceRepository.findByUserIdAndStatus(userId, UserStatus.ACTIVE)

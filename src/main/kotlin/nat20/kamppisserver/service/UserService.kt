@@ -6,6 +6,7 @@ import jakarta.validation.Valid
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.LookingFor
+import nat20.kamppisserver.domain.enums.ProfileStatus
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.*
 import org.springframework.scheduling.annotation.Scheduled
@@ -21,11 +22,13 @@ import java.util.*
  */
 @Service
 @Validated
-class UserService(private val userRepository: UserRepository,
-                  private val userProfileRepository: UserProfileRepository,
-                  private val roomProfileRepository: RoomProfileRepository,
-                  private val roommatePreferenceRepository: RoommatePreferenceRepository,
-                  private val roomPreferenceRepository: RoomPreferenceRepository
+class UserService(
+    private val userRepository: UserRepository,
+    private val userProfileRepository: UserProfileRepository,
+    private val roomProfileRepository: RoomProfileRepository,
+    private val roommatePreferenceRepository: RoommatePreferenceRepository,
+    private val roomPreferenceRepository: RoomPreferenceRepository,
+    private val flatRepository: FlatRepository
 ) {
 
     /**
@@ -77,8 +80,8 @@ class UserService(private val userRepository: UserRepository,
      fun getCopyOfUserData(id: Long): UserDataDTO {
          val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
              ?: throw EntityNotFoundException("User with id $id not found")
-        val userProfile = userProfileRepository.findByUserIdAndStatus(id, UserStatus.ACTIVE)
-        val roomProfiles = roomProfileRepository.findByUserIdAndStatus(id, UserStatus.ACTIVE)
+        val userProfile = userProfileRepository.findByUserIdAndStatus(id, ProfileStatus.ACTIVE)
+        val roomProfiles = roomProfileRepository.findByUserIdAndStatus(id, ProfileStatus.ACTIVE)
         val roommatePreference = roommatePreferenceRepository.findByUserIdAndStatus(id, UserStatus.ACTIVE)
         val roomPreference = roomPreferenceRepository.findByUserIdAndStatus(id, UserStatus.ACTIVE)
         return UserDataDTO(
@@ -94,7 +97,7 @@ class UserService(private val userRepository: UserRepository,
             updatedAt = user.updatedAt,
             deletedAt = user.deletedAt,
             userProfile = userProfile?.toUserProfileDataDTO(),
-            roomProfiles = roomProfiles.map { it?.toRoomProfileDataDTO() },
+            roomProfiles = roomProfiles.map { it.toRoomProfileDataDTO() },
             roommatePreference = roommatePreference?.toRoommatePreferenceDataDTO(),
             roomPreference = roomPreference?.toRoomPreferenceDataDTO()
         )
@@ -152,26 +155,45 @@ class UserService(private val userRepository: UserRepository,
     }
 
     /**
-     * Soft deletes given User and subsequent UserProfile.
+     * Soft deletes given User with subsequent Profile(s) and Flat.
      *
      * @param id the id of the user to be deleted.
      */
     @Transactional
     fun delete(id: Long) {
-        val deletedUser = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+        val now = LocalDateTime.now()
+
+        // Soft delete User
+        val user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("User with id $id not found")
+        user.deletedAt = now
+        user.updatedAt = now
+        user.status = UserStatus.INACTIVE
+        userRepository.save(user)
 
-        val deletedUserProfile = userProfileRepository.findByUserIdAndStatus(id, UserStatus.ACTIVE)
+        // Soft delete UserProfile
+        val userProfile = userProfileRepository.findByUserIdAndStatus(id, ProfileStatus.ACTIVE)
             ?: throw EntityNotFoundException("User profile with id $id not found")
+        userProfile.deletedAt = now
+        userProfile.updatedAt = now
+        userProfile.status = ProfileStatus.INACTIVE
+        userProfileRepository.save(userProfile)
 
-        deletedUser.deletedAt = LocalDateTime.now()
-        deletedUserProfile.updatedAt = LocalDateTime.now()
-        deletedUser.status = UserStatus.INACTIVE
-        deletedUserProfile.deletedAt = LocalDateTime.now()
-        deletedUserProfile.updatedAt = LocalDateTime.now()
+        // Check for (and soft delete) RoomProfile(s) and subsequent Flat
+        val roomProfiles = roomProfileRepository.findByUserIdAndStatus(id, ProfileStatus.ACTIVE)
+        for (roomProfile in roomProfiles) {
+            roomProfile.deletedAt = now
+            roomProfile.updatedAt = now
+            roomProfile.status = ProfileStatus.INACTIVE
+            roomProfileRepository.save(roomProfile)
 
-        userRepository.save(deletedUser)
-        userProfileRepository.save(deletedUserProfile)
+            val flat = roomProfile.flat.id?.let { flatRepository.findById(it).orElse(null) }
+            flat?.let {
+                flat.deletedAt = now
+                flat.updatedAt = now
+                flatRepository.save(it)
+            }
+        }
     }
 
     /**
@@ -183,20 +205,40 @@ class UserService(private val userRepository: UserRepository,
      */
     @Transactional
     fun restore(id: Long): UserDTO {
-        val restoreUser = userRepository.findByIdAndStatus(id, UserStatus.INACTIVE)
+        val now = LocalDateTime.now()
+
+        // Restore User
+        val user = userRepository.findByIdAndStatus(id, UserStatus.INACTIVE)
             ?: throw EntityNotFoundException("Deleted user with id $id not found")
+        user.deletedAt = null
+        user.updatedAt = now
+        user.status = UserStatus.ACTIVE
+        val restoredUser = userRepository.save(user)
 
-        val restoredUserProfile = userProfileRepository.findByUserIdAndStatus(id, UserStatus.INACTIVE)
+        // Restore UserProfile
+        val userProfile = userProfileRepository.findByUserIdAndStatus(id, ProfileStatus.INACTIVE)
             ?: throw EntityNotFoundException("Deleted user profile with id $id not found")
+        userProfile.deletedAt = null
+        userProfile.updatedAt = now
+        userProfile.status = ProfileStatus.ACTIVE
+        userProfileRepository.save(userProfile)
 
-        restoreUser.deletedAt = null
-        restoreUser.updatedAt = LocalDateTime.now()
-        restoreUser.status = UserStatus.ACTIVE
-        restoredUserProfile.deletedAt = null
-        restoredUserProfile.updatedAt = LocalDateTime.now()
+        // Check for (and restore) RoomProfile(s) and subsequent Flat
+        val roomProfiles = roomProfileRepository.findByUserIdAndStatus(id, ProfileStatus.INACTIVE)
+        for (roomProfile in roomProfiles) {
+            roomProfile.deletedAt = null
+            roomProfile.updatedAt = now
+            roomProfile.status = ProfileStatus.ACTIVE
+            roomProfileRepository.save(roomProfile)
 
-        userProfileRepository.save(restoredUserProfile)
-        val restoredUser = userRepository.save(restoreUser)
+
+            val flat = roomProfile.flat.id?.let { flatRepository.findById(it).orElse(null) }
+            flat?.let {
+                flat.deletedAt = null
+                flat.updatedAt = now
+                flatRepository.save(it)
+            }
+        }
 
         return restoredUser.toDTO()
     }
