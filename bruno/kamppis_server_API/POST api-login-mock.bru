@@ -1,0 +1,15 @@
+meta {
+  name: POST api-login-mock
+  type: http
+  seq: 36
+}
+
+post {
+  url: {{baseUrl}}/api/login/mock?email=bob.johnson@example.com
+  body: none
+  auth: inherit
+}
+
+params:query {
+  email: bob.johnson@example.com
+}
