@@ -6,6 +6,7 @@ import jakarta.validation.Valid
 import nat20.kamppisserver.domain.RoomProfile
 import nat20.kamppisserver.domain.RoomProfileDTO
 import nat20.kamppisserver.domain.RoomProfileRequest
+import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.FlatRepository
 import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserRepository
@@ -93,5 +94,9 @@ class RoomProfileService(
         flatService.updatePetHouseholdStatus(roomProfile.flat.id!!, roomProfile.id!!)
 
         return true
+    }
+
+    fun findUsersRoomProfiles(roomProfileId: Long, userId: Long): List<RoomProfile>? {
+        return roomProfileRepository.findUsersRoomProfiles(roomProfileId, userId)
     }
 }

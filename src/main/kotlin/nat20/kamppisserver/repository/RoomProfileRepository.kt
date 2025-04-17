@@ -22,6 +22,11 @@ interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
     @Query("SELECT rp FROM RoomProfile rp JOIN rp.users u WHERE u.id = :id AND rp.status = :status")
     fun findByUserIdAndStatus(@Param("id") id: Long, @Param("status") status: ProfileStatus): List<RoomProfile>
 
+    @Query("SELECT rp FROM RoomProfile rp JOIN rp.users u WHERE rp.id = :roomProfileId AND u.id = :userId")
+    fun findUsersRoomProfiles(
+        @Param("roomProfileId") roomProfileId: Long,
+        @Param("userId") userId: Long): List<RoomProfile>?
+
     @Query("""
     SELECT DISTINCT rp.id, rp.name, rp.rent, rp.is_private_room, rp.furnished, rp.furnished_info, rp.flat_id, f.pet_household, p.bio, p.status, p.created_at, p.updated_at, p.deleted_at
     FROM room_profiles rp
