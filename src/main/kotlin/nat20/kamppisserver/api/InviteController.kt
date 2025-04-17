@@ -28,6 +28,8 @@ class InviteController(
     @PostMapping("/generate-invitetoken/{roomProfileId}")
     fun addRoomProfileInvite(@PathVariable roomProfileId: Long): ResponseEntity<InviteResponse> {
         var invite: RoomProfileInvite? = inviteService.findInviteByRoomProfileId(roomProfileId)
+
+        // Check if invite already exists
         if (invite != null) {
             val inviteResponse = toInviteResponse(invite)
             inviteResponse.message = "Invite already exists, use code ${inviteResponse.inviteToken}"
@@ -46,6 +48,7 @@ class InviteController(
         val invite = roomProfileInviteRepository.findInviteByInviteToken(inviteToken)
         val inviteResponse = toInviteResponse(invite)
 
+        // Check if invite is expired
         if (invite.expiresAt.isBefore(LocalDateTime.now())) {
             inviteResponse.message = "Invite code ${invite.roomProfileInviteToken} has expired"
 
@@ -59,6 +62,7 @@ class InviteController(
 
         val roomProfileId = invite.roomProfileId
 
+        // Check that user is not already added to the room
         if (roomProfileService.findUsersRoomProfiles(roomProfileId, userIdAddedToRoom).isNullOrEmpty()) {
             val updatedRoom = inviteService.generateRoomProfileRequest(roomProfileId, userIdAddedToRoom)
 
