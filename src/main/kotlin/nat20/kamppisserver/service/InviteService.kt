@@ -33,7 +33,7 @@ class InviteService(
         val roomProfileInvite = RoomProfileInvite(
             roomProfileId = roomProfileId,
             roomProfileInviteToken = generateRoomInviteToken(),
-            expiresAt = LocalDateTime.now().plusSeconds(30),
+            expiresAt = LocalDateTime.now().plusDays(1),
         )
 
         roomProfileInviteRepository.save(roomProfileInvite)
