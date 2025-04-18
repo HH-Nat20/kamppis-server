@@ -90,8 +90,10 @@ class User(
             status = status,
             isOnline = isOnline,
             matchIds = matches?.mapNotNull { it.id }?.toSet() ?: emptySet(),
-            userProfile = userProfile?.toDTO(),
-            roomProfiles = roomProfiles?.map { it.toDTO() },
+            userProfile = this.userProfile?.takeIf { it.status == ProfileStatus.ACTIVE }?.toDTO(),
+            roomProfiles = this.roomProfiles
+                ?.filter { it.status == ProfileStatus.ACTIVE }
+                ?.map { it.toDTO() } ?: listOf(),
             id = id
         )
     }
@@ -131,7 +133,7 @@ data class UserDTO(
     val lookingFor: LookingFor? = LookingFor.OTHER_USER_PROFILES_OR_ROOM_PROFILES,
     val status: UserStatus? = UserStatus.ACTIVE,
     val isOnline: Boolean? = false,
-    val matchIds: Set<Long>? = null,
+    val matchIds: Set<Long>? = emptySet(),
     val userProfile: UserProfileDTO? = null,
     val roomProfiles: List<RoomProfileDTO>? = listOf(),
     val id: Long? = null
