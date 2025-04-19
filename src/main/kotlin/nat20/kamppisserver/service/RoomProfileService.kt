@@ -6,6 +6,7 @@ import jakarta.validation.Valid
 import nat20.kamppisserver.domain.RoomProfile
 import nat20.kamppisserver.domain.RoomProfileDTO
 import nat20.kamppisserver.domain.RoomProfileRequest
+import nat20.kamppisserver.domain.enums.ProfileStatus
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.FlatRepository
 import nat20.kamppisserver.repository.RoomProfileRepository
@@ -89,6 +90,7 @@ class RoomProfileService(
             ?: throw EntityNotFoundException("Room profile with id $id not found")
 
         roomProfile.deletedAt = LocalDateTime.now()
+        roomProfile.status = ProfileStatus.INACTIVE
         roomProfileRepository.save(roomProfile)
 
         flatService.updatePetHouseholdStatus(roomProfile.flat.id!!, roomProfile.id!!)
