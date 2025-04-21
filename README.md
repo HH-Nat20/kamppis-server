@@ -47,6 +47,7 @@ _Kämppiksen_ back-end on rakennettu käyttämällä seuraavia teknologioita:
 [![Gradle][gradle-logo]][gradle-url]
 [![PostgreSQL][postgres-logo]][postgres-url]
 [![GitHub][github-logo]][github-url]
+[![GitHub Actions][github-actions-logo]][github-actions-url]
 [![Docker][docker-logo]][docker-url]
 [![Bruno][bruno-logo]][bruno-url]
 [![IntelliJ IDEA][intellij-idea-logo]][intellij-idea-url]
@@ -106,6 +107,8 @@ Kehittäjien yhteystiedot löydät GitHub-profiileista.
 [postgres-url]: https://www.postgresql.org/
 [github-logo]: https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white&style=for-the-badge
 [github-url]: https://github.com/
+[github-actions-logo]: https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white
+[github-actions-url]: https://github.com/features/actions
 [docker-logo]: https://img.shields.io/badge/docker-257bd6?style=for-the-badge&logo=docker&logoColor=white
 [docker-url]: https://www.docker.com/
 [bruno-logo]: https://img.shields.io/badge/Bruno-FF6C37?style=for-the-badge&logo=Bruno&logoColor=white
