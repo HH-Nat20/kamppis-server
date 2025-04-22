@@ -98,10 +98,15 @@ Valmis! Jee!
 Sovelluksen ovat toteuttaneet
 - Janne Airaksinen: [devaajanne](https://github.com/devaajanne)
 - Paul Carlson: [Phoolis](https://github.com/Phoolis)
-- Jesse Hellman: [Bminor87](https://github.com/Bminor87)
 - Julia Hämäläinen: [marttyyriroskis](https://github.com/marttyyriroskis)
+- Jesse Hellman: [Bminor87](https://github.com/Bminor87)
 
 Kehittäjien yhteystiedot löydät GitHub-profiileista.
+  
+<a href="https://github.com/HH-Nat20/kamppis-server/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=HH-Nat20/kamppis-server" alt="contrib.rocks image" />
+</a>
+
 <p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
 
 <!-- LINKIT JA KUVAT -->
