@@ -18,7 +18,7 @@ class RoomProfileInvite (
 
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
-    val expiresAt: LocalDateTime,
+    var expiresAt: LocalDateTime,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -67,7 +67,7 @@ class InviteController(
             val updatedRoom = inviteService.generateRoomProfileRequest(roomProfileId, userIdAddedToRoom)
 
             roomProfileService.update(updatedRoom, roomProfileId)
-            inviteResponse.message = "Room joined succesfully"
+            inviteResponse.message = "Room joined successfully"
 
             return ResponseEntity(inviteResponse, HttpStatus.OK)
         }
