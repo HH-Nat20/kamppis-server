@@ -1,8 +1,8 @@
 package nat20.kamppisserver.api
 
 import com.ninjasquad.springmockk.MockkBean
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
+import nat20.kamppisserver.domain.ProfilePhoto
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.enums.Gender
@@ -19,7 +19,7 @@ import org.springframework.core.io.Resource
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.io.ByteArrayInputStream
@@ -65,6 +65,7 @@ class ImageControllerTest @Autowired constructor(
             bio = "Test bio",
             photos = mutableListOf()
         )
+        userProfile.id = 1L
     }
 
     @Test
@@ -121,4 +122,44 @@ class ImageControllerTest @Autowired constructor(
             .andExpect(jsonPath("$.original").value("url1"))
     }
 
+    @Test
+    fun `deleteImage deletes image if valid`() {
+        val photoId = 2L
+        val photo = ProfilePhoto(id = photoId, profile = userProfile, url = "url1", isProfilePhoto = true)
+
+        userProfile.photos = mutableListOf(photo)
+
+        every { user.id?.let { profileRepository.findById(it) } } returns Optional.of(userProfile)
+        every { profilePhotoRepository.findById(photoId) } returns Optional.of(photo)
+        every { storageService.delete(user.id!!, photo.url) } just Runs
+        every { profileRepository.save(any()) } returns userProfile
+        every { profilePhotoRepository.delete(photo) } just Runs
+
+        mockMvc.perform(
+            delete("/api/images/${user.id}/${photo.id}")
+                .header("Authorization", "Bearer $jwt")
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.message").value("Image deleted"))
+    }
+
+    @Test
+    fun `updateImage sets new profile photo if valid`() {
+        val photoId = 2L
+        val currentPhoto = ProfilePhoto(id = photoId, profile = userProfile, url = "url1", isProfilePhoto = false)
+
+        every { user.id?.let { profileRepository.findById(it) } } returns Optional.of(userProfile)
+        every { profilePhotoRepository.findById(photoId) } returns Optional.of(currentPhoto)
+        every { user.id?.let { profilePhotoRepository.findByProfileId(it) } } returns listOf(currentPhoto)
+        every { profilePhotoRepository.save(any()) } answers { firstArg() }
+
+        mockMvc.perform(
+            put("/api/images/${user.id}/$photoId")
+                .param("isProfilePhoto", "true")
+                .header("Authorization", "Bearer $jwt")
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.message").value("Image updated"))
+            .andExpect(jsonPath("$.isProfilePhoto").value("true"))
+    }
 }
