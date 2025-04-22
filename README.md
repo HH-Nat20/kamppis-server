@@ -36,6 +36,8 @@ Tämä repositorio sisältää sovelluksen back-endin. Mobiilisovelluksen reposi
 Lisätietoa koko projektista löydät täältä: <br>
 [![Project repository][project-repository-logo]][project-repository-url]
 
+Projekti on toteutettu osana Haaga-Helia ammattikorkeakoulun [Ohjelmistoprojekti 2](https://opinto-opas.haaga-helia.fi/course_unit/SOF007AS3A) -opintojaksoa.
+
 <p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
 
 ## Teknologiat
