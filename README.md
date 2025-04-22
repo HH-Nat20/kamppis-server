@@ -117,7 +117,7 @@ Kehittäjien yhteystiedot löydät GitHub-profiileista.
 [project-repository-url]: https://github.com/HH-Nat20
 [app-repository-logo]: https://img.shields.io/badge/App%20Repository-000000?style=for-the-badge
 [app-repository-url]: https://github.com/HH-Nat20/kamppis-app
-[back-end-issues-logo]: https://img.shields.io/badge/BackEnd%20Issues-000000?style=for-the-badge
+[back-end-issues-logo]: https://img.shields.io/badge/BackEnd%20Open%20Issues%20And%20Bugs-000000?style=for-the-badge
 [back-end-issues-url]: https://github.com/HH-Nat20/kamppis-server/issues
 
 <!-- TEKNOLOGIAT JA TYÖKALUT-->
