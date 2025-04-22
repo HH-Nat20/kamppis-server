@@ -105,16 +105,22 @@ Kehittäjien yhteystiedot löydät GitHub-profiileista.
 <p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
 
 <!-- LINKIT JA KUVAT -->
+
+<!-- CONTRIBUTORS JA ISSUES -->
 [contributors-shield]: https://img.shields.io/github/contributors/HH-Nat20/kamppis-server?style=for-the-badge
 [contributors-url]: https://img.shields.io/github/contributors/HH-Nat20/kamppis-server
 [issues-shield]: https://img.shields.io/github/issues/HH-Nat20/kamppis-server?style=for-the-badge
 [issues-url]: https://img.shields.io/github/issues/HH-Nat20/kamppis-server
+
+<!-- PROJEKTI JA REPOSITORIOT -->
 [project-repository-logo]: https://img.shields.io/badge/Project%20Repository-000000?style=for-the-badge
 [project-repository-url]: https://github.com/HH-Nat20
 [app-repository-logo]: https://img.shields.io/badge/App%20Repository-000000?style=for-the-badge
 [app-repository-url]: https://github.com/HH-Nat20/kamppis-app
 [back-end-issues-logo]: https://img.shields.io/badge/BackEnd%20Issues-000000?style=for-the-badge
 [back-end-issues-url]: https://github.com/HH-Nat20/kamppis-server/issues
+
+<!-- TEKNOLOGIAT JA TYÖKALUT-->
 [kotlin-logo]: https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=Kotlin&logoColor=white
 [kotlin-url]: https://kotlinlang.org/
 [spring-logo]: https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white
