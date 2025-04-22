@@ -115,7 +115,6 @@ class UserService(
 
     /**
      * Creates new User.
-     * TODO: Should not be able to create without redirecting to POST UserProfile!
      *
      * @param user the user to be created.
      * @return the created user.
