@@ -19,6 +19,9 @@
         <a href="#teknologiat">Teknologiat</a>
     </li>
     <li>
+        <a href="#cicd">CI/CD</a>
+    </li>
+    <li>
         <a href="#serverin-asennus">Serverin asennus</a>
     </li>
     <li>
@@ -53,6 +56,14 @@ _Kämppiksen_ back-end on rakennettu käyttämällä seuraavia teknologioita:
 [![Docker][docker-logo]][docker-url]
 [![Bruno][bruno-logo]][bruno-url]
 [![IntelliJ IDEA][intellij-idea-logo]][intellij-idea-url]
+
+<p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
+
+## CI/CD
+
+_Kämppiksen_ back-endissä on hyödynnetty jatkuvan integraation ja toimituksen prosessia GitHub Actionsin kautta. GitHub Actions määrittää automaatioputken, joka jokaisella `git push` -komennolla luo GitHubissa back-endille PostgreSQL-testitietokannan testidatasta ja ajaa back-endin yksikkö- ja integrointitestit käyttämällä testitietokantaa. Testien suorituksen jälkeen testitietokanta ajetaan alas.
+
+Testiautomaatiolla voidaan varmistaa sovelluksen toimivuus jatkuvasti muutoksia tehdessä. Lisätietoja automaatiosta löydät [workflow](./.github/workflows/run-tests.yml)-tiedostosta
 
 <p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
 
