@@ -33,6 +33,8 @@ class FlatControllerTest @Autowired constructor(
     lateinit var flat1: FlatDTO
     lateinit var flat2: FlatDTO
 
+    val jwt = JwtUtils.generateJwtToken("test@example.com")
+
     @BeforeEach
     fun setup() {
         flat1 = FlatDTO(
@@ -62,8 +64,6 @@ class FlatControllerTest @Autowired constructor(
 
         every { flatService.findAll() } returns flats
 
-        val jwt = JwtUtils.generateJwtToken("test@example.com")
-
         mockMvc.get("/api/flats") {
             header("Authorization", "Bearer $jwt")
         }
@@ -77,8 +77,6 @@ class FlatControllerTest @Autowired constructor(
     fun `GET flat by id returns 200 with matching flat`() {
         val id = flat1.id
         every { flatService.findById(id!!) } returns flat1
-
-        val jwt = JwtUtils.generateJwtToken("test@example.com")
 
         mockMvc.get("/api/flats/$id") {
             header("Authorization", "Bearer $jwt")
@@ -97,8 +95,6 @@ class FlatControllerTest @Autowired constructor(
 
         every { flatService.add(input) } returns saved
 
-        val jwt = JwtUtils.generateJwtToken("test@example.com")
-
         mockMvc.post("/api/flats") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(input)
@@ -116,8 +112,6 @@ class FlatControllerTest @Autowired constructor(
         val updated = input.copy(id = id)
 
         every { flatService.update(input, id!!) } returns updated
-
-        val jwt = JwtUtils.generateJwtToken("test@example.com")
 
         mockMvc.put("/api/flats/$id") {
             contentType = MediaType.APPLICATION_JSON
