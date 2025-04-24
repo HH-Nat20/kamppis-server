@@ -23,7 +23,8 @@ class InviteController(
     private val roomProfileService: RoomProfileService,
     private val roomProfileInviteRepository: RoomProfileInviteRepository,
     private val userRepository: UserRepository,
-    private val roomProfileRepository: RoomProfileRepository
+    private val roomProfileRepository: RoomProfileRepository,
+    private val jwtUtils: JwtUtils
 ) {
 
     @PostMapping("/generate-invitetoken/{roomProfileId}")
@@ -60,7 +61,7 @@ class InviteController(
 
         //Get userId from JWT token
         val token = authToken.removePrefix("Bearer ").trim()
-        val email = JwtUtils.validateTokenAndGetEmail(token)
+        val email = jwtUtils.validateTokenAndGetEmail(token)
         val userIdAddedToRoom = userRepository.findByEmail(email!!)!!.id!!
 
         val roomProfileId = invite.roomProfileId

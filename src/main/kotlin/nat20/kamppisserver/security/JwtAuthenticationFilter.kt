@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
-class JwtAuthenticationFilter : OncePerRequestFilter() {
+class JwtAuthenticationFilter(private val jwtUtils: JwtUtils) : OncePerRequestFilter()  {
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
         // Disable filter in order to:
@@ -41,7 +41,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
 
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 val token = authorizationHeader.removePrefix("Bearer ").trim()
-                val email = JwtUtils.validateTokenAndGetEmail(token)
+                val email = jwtUtils.validateTokenAndGetEmail(token)
 
                 if (email != null) {
                     println("Valid token found for email: $email")

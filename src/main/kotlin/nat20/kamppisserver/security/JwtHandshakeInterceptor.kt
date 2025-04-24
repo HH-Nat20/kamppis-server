@@ -13,7 +13,7 @@ import org.springframework.web.socket.server.HandshakeInterceptor
 import java.lang.Exception
 
 @Component
-class JwtHandshakeInterceptor : HandshakeInterceptor {
+class JwtHandshakeInterceptor(private val jwtUtils: JwtUtils) : HandshakeInterceptor {
 
     override fun beforeHandshake(
         request: ServerHttpRequest,
@@ -28,7 +28,7 @@ class JwtHandshakeInterceptor : HandshakeInterceptor {
                 ?: servletRequest.getParameter("token")
             val email: String?
             try {
-                email = token?.let { JwtUtils.validateTokenAndGetEmail(it) }
+                email = token?.let { jwtUtils.validateTokenAndGetEmail(it) }
             } catch (ex: Exception){
                 println("Invalid token: ${ex.message}")
                 servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid token")

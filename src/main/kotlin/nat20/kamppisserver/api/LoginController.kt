@@ -29,6 +29,7 @@ class LoginController(
     private val profileRepository: ProfileRepository,
     private val roomPreferenceRepository: RoomPreferenceRepository,
     private val roommatePreferenceRepository: RoommatePreferenceRepository,
+    private val jwtUtils: JwtUtils
 ) {
 
     @PostMapping("/mock")
@@ -36,7 +37,7 @@ class LoginController(
         try {
             userService.findActiveUserByEmail(email)
             if (email.endsWith("@example.com")) {
-                val token = JwtUtils.generateJwtToken(email)
+                val token = jwtUtils.generateJwtToken(email)
                 return mapOf("token" to token).let { ResponseEntity.ok(it) }
             } else {
                 return ResponseEntity.badRequest().body(mapOf("error" to "Invalid email"))
@@ -63,7 +64,7 @@ class LoginController(
         val user = authService.getExistingOAuthUser(Provider.GITHUB, userInfo.id)
             ?: return ResponseEntity.badRequest().body(mapOf("error" to "No user found linked to given GitHub credentials. Use a different OAuth provider, or sign up."))
 
-        val jwt = JwtUtils.generateJwtToken(user.email)
+        val jwt = jwtUtils.generateJwtToken(user.email)
         return ResponseEntity.ok(
             mapOf(
             "token" to jwt,
@@ -106,7 +107,7 @@ class LoginController(
         roomPreferenceRepository.save(roomPreference)
         roommatePreferenceRepository.save(roommatePreference)
 
-        val jwt = JwtUtils.generateJwtToken(user.email)
+        val jwt = jwtUtils.generateJwtToken(user.email)
         return ResponseEntity.ok(
             mapOf(
                 "token" to jwt,
