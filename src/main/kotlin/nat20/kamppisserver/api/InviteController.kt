@@ -1,5 +1,6 @@
 package nat20.kamppisserver.api
 
+import exception.EntityNotFoundException
 import nat20.kamppisserver.domain.InviteResponse
 import nat20.kamppisserver.domain.RoomProfileInvite
 import nat20.kamppisserver.domain.toInviteResponse
@@ -46,6 +47,8 @@ class InviteController(
     @PutMapping("/join/{inviteToken}")
     fun joinRoom(@PathVariable inviteToken: String, @RequestHeader(HttpHeaders.AUTHORIZATION) authToken: String): ResponseEntity<InviteResponse> {
         val invite = roomProfileInviteRepository.findInviteByInviteToken(inviteToken)
+            ?: throw EntityNotFoundException("Invite with token $inviteToken not found")
+
         val inviteResponse = toInviteResponse(invite)
 
         // Check if invite is expired

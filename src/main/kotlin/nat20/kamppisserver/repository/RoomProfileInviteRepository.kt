@@ -6,25 +6,28 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.time.LocalDateTime
 
-interface RoomProfileInviteRepository: JpaRepository<RoomProfileInvite, Long> {
-
-
-    @Query("""
+interface RoomProfileInviteRepository : JpaRepository<RoomProfileInvite, Long> {
+    @Query(
+        """
         SELECT rpi.*
         FROM room_profile_invites rpi
         WHERE rpi.room_profile_id = :roomProfileId
         AND rpi.expires_at > :dateTimeNow
-    """, nativeQuery = true)
+    """, nativeQuery = true
+    )
     fun findActiveInviteByRoomProfileId(
         @Param("roomProfileId") roomProfileId: Long,
         @Param("dateTimeNow") dateTimeNow: LocalDateTime
     ): RoomProfileInvite?
 
-    @Query("""
+    @Query(
+        """
         SELECT rpi.*
         FROM room_profile_invites rpi
         WHERE rpi.room_profile_invite_token = :roomProfileInviteToken
-    """, nativeQuery = true)
+    """, nativeQuery = true
+    )
     fun findInviteByInviteToken(
-        @Param("roomProfileInviteToken") roomProfileInviteToken: String): RoomProfileInvite
+        @Param("roomProfileInviteToken") roomProfileInviteToken: String
+    ): RoomProfileInvite?
 }
