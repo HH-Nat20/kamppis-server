@@ -6,7 +6,6 @@ import io.mockk.*
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.City
 import nat20.kamppisserver.domain.enums.Gender
-import nat20.kamppisserver.domain.enums.Utilities
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.service.QueryService

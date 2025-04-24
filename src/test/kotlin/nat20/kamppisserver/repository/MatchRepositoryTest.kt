@@ -26,21 +26,25 @@ class MatchRepositoryTest @Autowired constructor(
 
     @BeforeEach
     fun setup() {
-        user1 = userRepository.save(User(
-            firstName = "John",
-            lastName = "Doe",
-            email = "john.doe@example.com",
-            dateOfBirth = LocalDate.of(1980, 1, 1),
-            gender = Gender.MALE
-        ))
+        user1 = userRepository.save(
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                email = "john.doe@example.com",
+                dateOfBirth = LocalDate.of(1980, 1, 1),
+                gender = Gender.MALE
+            )
+        )
 
-        user2 = userRepository.save(User(
-            firstName = "Jane",
-            lastName = "Doe",
-            email = "jane.doe@example.com",
-            dateOfBirth = LocalDate.of(1990, 1, 1),
-            gender = Gender.FEMALE
-        ))
+        user2 = userRepository.save(
+            User(
+                firstName = "Jane",
+                lastName = "Doe",
+                email = "jane.doe@example.com",
+                dateOfBirth = LocalDate.of(1990, 1, 1),
+                gender = Gender.FEMALE
+            )
+        )
     }
 
     @Test

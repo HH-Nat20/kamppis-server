@@ -33,15 +33,13 @@ class UserRepositoryTest @Autowired constructor(
             )
         )
 
-        inactiveUser = userRepository.save(
-            User(
+        inactiveUser = User(
                 firstName = "Jane",
                 lastName = "Doe",
                 email = "jane.doe@example.com",
                 dateOfBirth = LocalDate.of(1990, 1, 1),
                 gender = Gender.FEMALE
             )
-        )
 
         val now = LocalDateTime.now()
         inactiveUser.status = UserStatus.INACTIVE

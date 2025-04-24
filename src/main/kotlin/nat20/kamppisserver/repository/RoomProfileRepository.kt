@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
 interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
-
     @EntityGraph(attributePaths = ["photos"])
     @Query("SELECT rp FROM RoomProfile rp WHERE rp.deletedAt IS NULL")
     fun findAllActive(): List<RoomProfile>
@@ -42,6 +41,7 @@ interface RoomProfileRepository: JpaRepository<RoomProfile, Long> {
     AND (:hasPrivateRoom IS NULL OR rp.is_private_room = :hasPrivateRoom)
     AND (:maxRoommates IS NULL OR f.total_roommates <= :maxRoommates)
     AND (COALESCE(:locationPreferences) IS NULL OR f.location IN (:locationPreferences))
+    AND p.deleted_at IS NULL
     """, nativeQuery = true)
     fun findRoomProfilesThatMeetCriteria(
         pageable: Pageable,

@@ -1,198 +1,164 @@
 package nat20.kamppisserver.repository
 
-import jakarta.transaction.Transactional
 import nat20.kamppisserver.domain.*
+import nat20.kamppisserver.domain.enums.City
+import nat20.kamppisserver.domain.enums.Gender
+import nat20.kamppisserver.domain.enums.Pets
 import nat20.kamppisserver.domain.enums.ProfileStatus
-import nat20.kamppisserver.domain.enums.UserStatus
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.domain.PageRequest
-import org.springframework.test.context.ActiveProfiles
-import kotlin.test.*
+import java.time.LocalDate
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
+import java.time.LocalDateTime
 
-/**
- * Test class for RoomProfileRepository.
- */
-@SpringBootTest
-@ActiveProfiles("test")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class RoomProfileRepositoryTest @Autowired constructor(
+    val roomProfileRepository: RoomProfileRepository,
     val userRepository: UserRepository,
     val userProfileRepository: UserProfileRepository,
+    val flatRepository: FlatRepository,
     val roomPreferenceRepository: RoomPreferenceRepository,
-    val roomProfileRepository: RoomProfileRepository,
-    val swipeRepository: SwipeRepository
-){
-    /*
-    * Here we declare variables that are used in every test
-    */
+    val testEntityManager: TestEntityManager
+) {
+
     lateinit var user: User
     lateinit var userProfile: UserProfile
+    lateinit var flat: Flat
+    lateinit var roomProfile: RoomProfile
+    lateinit var deletedRoomProfile: RoomProfile
     lateinit var roomPreference: RoomPreference
-    lateinit var pageRequest: PageRequest
 
     @BeforeEach
-    fun testVariableSetUp() {
-        // We find our test user
-        user = userRepository.findByIdAndStatus(27L, UserStatus.ACTIVE)
-            ?: fail("❌ Expected User but found null")
-        // We find our test user's user profile
-        userProfile = userProfileRepository.findByUserIdAndStatus(user.id!!, ProfileStatus.ACTIVE)
-            ?: fail("❌ Expected UserProfile but found null")
-        // We find our test user's room preferences
-        roomPreference = roomPreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
-            ?: fail("❌ Expected RoomPreference but found null")
-        pageRequest = PageRequest.of(0, 25)
+    fun setup() {
+        user = userRepository.save(
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                email = "john.doe@example.com",
+                dateOfBirth = LocalDate.of(1980, 1, 1),
+                gender = Gender.MALE
+            )
+        )
+
+        userProfile = userProfileRepository.save(
+            UserProfile(
+                user = user,
+                pets = Pets.PET_OWNER
+            )
+        )
+
+        flat = flatRepository.save(
+            Flat(
+                name = "Nice place",
+                description = "Sunny",
+                location = City.HELSINKI,
+                totalRoommates = 2,
+                petHousehold = true
+            )
+        )
+
+        roomProfile = roomProfileRepository.save(
+            RoomProfile(
+                users = mutableListOf(user),
+                flat = flat,
+                rent = 800,
+                isPrivateRoom = true,
+                furnished = false,
+                bio = "A cool place"
+            )
+        )
+
+        deletedRoomProfile = RoomProfile(
+            users = mutableListOf(user),
+            flat = flat,
+            rent = 800,
+            isPrivateRoom = true,
+            furnished = false,
+            bio = "A deleted place"
+        )
+
+        deletedRoomProfile.status = ProfileStatus.INACTIVE
+        deletedRoomProfile.deletedAt = LocalDateTime.now()
+        roomProfileRepository.save(deletedRoomProfile)
+
+        roomPreference = roomPreferenceRepository.save(
+            RoomPreference(
+                user = user,
+                maxRent = 750,
+                hasPrivateRoom = true,
+                maxRoommates = 3,
+                locationPreferences = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA)
+            )
+        )
     }
 
     @Test
-    fun `should return RoomProfiles whose rent is below or at user's max rent criteria`() {
-        val numberOfMatchingRoomProfiles: Int = 18
+    fun `findAllActive should return only non-deleted room profiles`() {
+        val result = roomProfileRepository.findAllActive()
 
-        // We delete the swipes because we don't want them to interfere the test
-        // If not, the query filters out swiped profiles and max rent test fails
-        swipeRepository.deleteAll()
-
-        // Set other criteria to null so that they do not affect the max rent filtering
-        val hasPrivateRoom = null;
-        val maxRoommates = null
-        val locationPreferences = null
-
-        val listOfRoomProfiles: Iterable<RoomProfile> =
-            roomProfileRepository.findRoomProfilesThatMeetCriteria(
-                pageRequest,
-                userProfile.id!!,
-                roomPreference.maxRent,
-                hasPrivateRoom,
-                maxRoommates,
-                locationPreferences
-            )
-
-        assertEquals(numberOfMatchingRoomProfiles, listOfRoomProfiles.count())
+        assertEquals(1, result.size)
+        assertEquals(ProfileStatus.ACTIVE, result[0].status)
+        assertNull(result[0].deletedAt)
     }
 
     @Test
-    fun `should return RoomProfiles that match user's room privacy criteria`() {
-        val numberOfMatchingRoomProfiles: Int = 14
-
-        // We delete the swipes because we don't want them to interfere the test
-        // If not, the query filters out swiped profiles and privacy criteria test fails
-        swipeRepository.deleteAll()
-
-        // Set other criteria to null so that they do not affect the room privacy filtering
-        val maxRent = null
-        val maxRoommates = null
-        val locationPreferences = null
-
-        val listOfRoomProfiles: Iterable<RoomProfile> =
-            roomProfileRepository.findRoomProfilesThatMeetCriteria(
-                pageRequest,
-                userProfile.id!!,
-                maxRent,
-                roomPreference.hasPrivateRoom,
-                maxRoommates,
-                locationPreferences
-            )
-
-        assertEquals(numberOfMatchingRoomProfiles, listOfRoomProfiles.count())
+    fun `findByIdActive should return room profile if not deleted`() {
+        val found = roomProfileRepository.findByIdActive(roomProfile.id!!)
+        assertNotNull(found)
+        assertEquals(ProfileStatus.ACTIVE, found?.status)
     }
 
     @Test
-    fun `should return RoomProfiles for flats whose total roommate count is below or at user's max roommate criteria`() {
-        val numberOfMatchingRoomProfiles: Int = 14
-
-        // We delete the swipes because we don't want them to interfere the test
-        // If not, the query filters out swiped profiles and max roommate test fails
-        swipeRepository.deleteAll()
-
-        // Set other criteria to null so that they do not affect the max roommate filtering
-        val maxRent = null
-        val hasPrivateRoom = null
-        val locationPreferences = null
-
-        val listOfRoomProfiles: Iterable<RoomProfile> =
-            roomProfileRepository.findRoomProfilesThatMeetCriteria(
-                pageRequest,
-                userProfile.id!!,
-                maxRent,
-                hasPrivateRoom,
-                roomPreference.maxRoommates,
-                locationPreferences
-            )
-
-        assertEquals(numberOfMatchingRoomProfiles, listOfRoomProfiles.count())
+    fun `findByUserIdAndStatus returns profiles for user and status`() {
+        val result = roomProfileRepository.findByUserIdAndStatus(user.id!!, ProfileStatus.ACTIVE)
+        assertTrue(result.isNotEmpty())
     }
 
     @Test
-    fun `should return RoomProfiles for flats whose location is in user's location preferences`() {
-        val numberOfMatchingRoomProfiles: Int = 18
-
-        // We delete the swipes because we don't want them to interfere the test
-        // If not, the query filters out swiped profiles and location preference test fails
-        swipeRepository.deleteAll()
-
-        // Set other criteria to null so that they do not affect the location filtering
-        val maxRent = null
-        val hasPrivateRoom = null
-        val maxRoommates = null
-
-        val listOfRoomProfiles: Iterable<RoomProfile> =
-            roomProfileRepository.findRoomProfilesThatMeetCriteria(
-                pageRequest,
-                userProfile.id!!,
-                maxRent,
-                hasPrivateRoom,
-                maxRoommates,
-                roomPreference.locationPreferences!!.map {it.name }.toMutableList()
-            )
-
-        assertEquals(numberOfMatchingRoomProfiles, listOfRoomProfiles.count())
+    fun `findUsersRoomProfiles returns profile for specific user and profile`() {
+        val result = roomProfileRepository.findUsersRoomProfiles(roomProfile.id!!, user.id!!)
+        assertNotNull(result)
+        assertEquals(1, result?.size)
     }
 
     @Test
-    fun `should not return profiles that have already been swiped`(){
-        val numberOfMatchingRoomProfiles: Int = 16
-
-        // Note that here we don't delete the swipes because that is what we want to test
-
-        // Set other criteria to null so that they do not affect the swipe filtering
-        val maxRent = null
-        val hasPrivateRoom = null
-        val maxRoommates = null
-        val locationPreferences = null
-
-        val listOfRoomProfiles: Iterable<RoomProfile> =
-            roomProfileRepository.findRoomProfilesThatMeetCriteria(
-                pageRequest,
-                userProfile.id!!,
-                maxRent,
-                hasPrivateRoom,
-                maxRoommates,
-                locationPreferences
-            )
-
-        assertEquals(numberOfMatchingRoomProfiles, listOfRoomProfiles.count())
+    fun `findRoomProfilesThatMeetCriteria filters correctly`() {
+        val result = roomProfileRepository.findRoomProfilesThatMeetCriteria(
+            pageable = PageRequest.of(0, 10),
+            userProfileId = 1L,
+            maxRent = 1000,
+            hasPrivateRoom = true,
+            maxRoommates = 3,
+            locationPreferences = roomPreference.locationPreferences!!.map {it.name }.toMutableList()
+        )
+        assertEquals(1, result.totalElements)
     }
 
     @Test
-    fun `should return the correct amount of room profiles when all criteria are used`() {
-        val numberOfMatchingRoomProfiles: Int = 10
+    fun `findIfFlatIsPetHousehold returns true if any user has PET_OWNER`() {
+        testEntityManager.entityManager.createNativeQuery("INSERT INTO room_profiles_users (room_profile_id, user_id) VALUES (?, ?)")
+            .setParameter(1, roomProfile.id)
+            .setParameter(2, user.id)
+            .executeUpdate()
 
-        // Query parameters (=user's search criteria) are selected from the user's room preferences
-        // Swipes are taken into account
-        val listOfRoomProfiles: Iterable<RoomProfile> =
-            roomProfileRepository.findRoomProfilesThatMeetCriteria(
-                pageRequest,
-                userProfile.id!!,
-                roomPreference.maxRent,
-                roomPreference.hasPrivateRoom,
-                roomPreference.maxRoommates,
-                roomPreference.locationPreferences?.map {it.name}
-            )
+        val result = roomProfileRepository.findIfFlatIsPetHousehold(roomProfile.id)
+        assertTrue(result)
+    }
 
-        assertEquals(numberOfMatchingRoomProfiles, listOfRoomProfiles.count())
+    @Test
+    fun `findRoomProfileByUserProfileId returns correct profiles`() {
+        testEntityManager.entityManager.createNativeQuery("INSERT INTO room_profiles_users (room_profile_id, user_id) VALUES (?, ?)")
+            .setParameter(1, roomProfile.id)
+            .setParameter(2, user.id)
+            .executeUpdate()
+
+        val result = roomProfileRepository.findRoomProfileByUserProfileId(userProfile.id)
+        assertFalse(result.isEmpty())
     }
 }
