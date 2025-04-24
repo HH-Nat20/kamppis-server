@@ -227,4 +227,17 @@ GET https://kamppis.hellmanstudios.fi/api/db-health
 GET https://kamppis.hellmanstudios.fi/api/user-profiles/2/query?size=2
 Authorization: Bearer {{auth_token}}
 
+### Get all matches
+GET http://localhost:8080/api/matches
+Authorization: Bearer {{auth_token}}
 
+### Remove user from match
+POST http://localhost:8080/api/matches/3
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+    "userIds": [1]
+}
+
+###

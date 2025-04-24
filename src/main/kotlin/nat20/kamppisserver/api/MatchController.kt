@@ -42,4 +42,11 @@ class MatchController(private val service: MatchService,
         val savedMatch = service.createMatch(request)
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMatch)
     }
+
+    @PostMapping("/{id}")
+    fun removeFromMatch(@PathVariable id: Long, @Valid @RequestBody request: MatchRequest): ResponseEntity<MatchDTO?> {
+        val match = service.removeUserFromMatch(id, request.userIds.single())
+            ?: return ResponseEntity.status(HttpStatus.OK).body(null)
+        return ResponseEntity.status(HttpStatus.OK).body(match)
+    }
 }

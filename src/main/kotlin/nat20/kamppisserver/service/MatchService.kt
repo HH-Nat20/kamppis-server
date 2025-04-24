@@ -32,14 +32,22 @@ class MatchService(
     }
 
     @Transactional
-    fun removeUserFromMatch(matchId: Long, userId: Long): MatchDTO {
+    fun removeUserFromMatch(matchId: Long, userId: Long): MatchDTO? {
         val match = matchRepository.findById(matchId).orElseThrow {
             throw EntityNotFoundException("Match not found")
         }
         val user = userRepository.findByIdAndStatus(userId, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("User not found")
 
-        match.removeUser(user)
+        // If more than two users in the match, remove user
+        if (match.users.size > 2) {
+            match.removeUser(user)
+        } else {
+            // Remove the whole match, since a match with just one user does not make sense
+            matchRepository.delete(match)
+            return null
+        }
+
         return matchRepository.save(match).toDTO()
     }
 
