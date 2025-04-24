@@ -2,7 +2,7 @@ package nat20.kamppisserver.repository
 
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.Gender
-import nat20.kamppisserver.domain.enums.ProfileStatus
+import nat20.kamppisserver.domain.enums.UserStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,10 +13,9 @@ import kotlin.test.Test
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class ProfileRepositoryTest @Autowired constructor(
-    val profileRepository: ProfileRepository,
+class RoommatePreferenceRepositoryTest @Autowired constructor(
     val userRepository: UserRepository,
-    val userProfileRepository: UserProfileRepository
+    val roommatePreferenceRepository: RoommatePreferenceRepository
 ) {
 
     lateinit var user: User
@@ -35,31 +34,30 @@ class ProfileRepositoryTest @Autowired constructor(
     }
 
     @Test
-    fun `findByIdAndStatus returns profile if status matches`() {
-        val userProfile = userProfileRepository.save(
-            UserProfile(
-                user = user,
-                status = ProfileStatus.ACTIVE
-            )
-        )
-
-        val found = profileRepository.findByIdAndStatus(userProfile.id!!)
-        assertThat(found).isNotNull
-        assertThat(found!!.status).isEqualTo(ProfileStatus.ACTIVE)
-    }
-
-    @Test
-    fun `findByIdAndStatus returns null if status does not match`() {
-        val userProfile = userProfileRepository.save(
-            UserProfile(
+    fun `findByUserIdAndStatus returns preference when user status matches`() {
+        val preference = roommatePreferenceRepository.save(
+            RoommatePreference(
                 user = user
             )
         )
 
-        userProfile.status = ProfileStatus.INACTIVE
-        userProfileRepository.save(userProfile)
+        val found = roommatePreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
+        assertThat(found).isNotNull
+        assertThat(found!!.user.id).isEqualTo(user.id)
+    }
 
-        val found = profileRepository.findByIdAndStatus(userProfile.id!!)
+    @Test
+    fun `findByUserIdAndStatus returns null when user status does not match`() {
+        user.status = UserStatus.DELETED
+        userRepository.save(user)
+
+        roommatePreferenceRepository.save(
+            RoommatePreference(
+                user = user
+            )
+        )
+
+        val found = roommatePreferenceRepository.findByUserIdAndStatus(user.id!!, UserStatus.ACTIVE)
         assertThat(found).isNull()
     }
 }
