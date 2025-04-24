@@ -26,6 +26,9 @@ class Match(
     @PastOrPresent(message = "Update date cannot be in the future.")
     var updatedAt: LocalDateTime? = null,
 
+    @OneToMany(mappedBy = "match", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var messages: MutableList<Message> = mutableListOf(),
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 

@@ -39,9 +39,13 @@ class MatchService(
         val user = userRepository.findByIdAndStatus(userId, UserStatus.ACTIVE)
             ?: throw EntityNotFoundException("User not found")
 
-        // If more than one user in the match, remove user
-        if (match.users.size > 1) {
+        // If more than two users in the match, remove user
+        if (match.users.size > 2) {
             match.removeUser(user)
+        } else {
+            // A match with a single user makes no sense, so we delete it
+            matchRepository.delete(match)
+            return null
         }
 
         return matchRepository.save(match).toDTO()
