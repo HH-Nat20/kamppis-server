@@ -2,12 +2,14 @@ package nat20.kamppisserver.security
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import org.springframework.beans.factory.annotation.Value
 import java.util.*
 
 // This is an "object" which is a singleton in Kotlin
 object JwtUtils {
 
-    private const val KEY = "b8c485dc1b1db98ab477d6028a258609d729a18bda824d11d44e50a63b935e50" // TODO: Replace with proper secret in env
+    @Value("\${JWT_SECRET}")
+    private lateinit var KEY: String
 
     private val secretKey = Keys.hmacShaKeyFor(KEY.toByteArray())
 
