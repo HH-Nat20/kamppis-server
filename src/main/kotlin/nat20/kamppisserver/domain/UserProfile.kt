@@ -30,6 +30,8 @@ class UserProfile (
 
     photos: MutableList<ProfilePhoto> = mutableListOf(),
 
+    status: ProfileStatus = ProfileStatus.ACTIVE
+
 ) : Profile() {// Inherits id, bio, photos, and other attributes from Profile
     init {
         this.bio = bio // This block is needed if you want to initialize the bio during instance creation!
