@@ -5,7 +5,6 @@ import nat20.kamppisserver.domain.enums.Cleanliness
 import nat20.kamppisserver.domain.enums.Lifestyle
 import nat20.kamppisserver.domain.enums.ProfileStatus
 import nat20.kamppisserver.domain.enums.Pets
-import nat20.kamppisserver.domain.enums.UserStatus
 import java.time.LocalDateTime
 
 @Entity

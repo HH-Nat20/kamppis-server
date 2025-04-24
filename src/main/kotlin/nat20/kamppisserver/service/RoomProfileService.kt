@@ -85,7 +85,7 @@ class RoomProfileService(
         return updatedProfile.toDTO(includeUserSummary = true)
     }
 
-    fun delete(id: Long): Boolean {
+    fun delete(id: Long) {
         val roomProfile = roomProfileRepository.findByIdActive(id)
             ?: throw EntityNotFoundException("Room profile with id $id not found")
 
@@ -94,8 +94,6 @@ class RoomProfileService(
         roomProfileRepository.save(roomProfile)
 
         flatService.updatePetHouseholdStatus(roomProfile.flat.id!!, roomProfile.id!!)
-
-        return true
     }
 
     fun findUsersRoomProfiles(roomProfileId: Long, userId: Long): List<RoomProfile>? {

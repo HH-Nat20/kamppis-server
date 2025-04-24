@@ -25,7 +25,9 @@ import org.springframework.http.MediaType
 
 @WebMvcTest(MatchController::class)
 @Import(SecurityConfig::class)
-class MatchControllerTest(@Autowired val mockMvc: MockMvc) {
+class MatchControllerTest @Autowired constructor(
+    val mockMvc: MockMvc
+) {
 
     @MockkBean
     private lateinit var service: MatchService

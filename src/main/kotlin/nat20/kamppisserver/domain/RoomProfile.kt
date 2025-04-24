@@ -121,7 +121,7 @@ data class RoomProfileRequest(
     @PositiveOrZero val rent: Int,
     val isPrivateRoom: Boolean,
     val furnished: Boolean,
-    val furnishedInfo: String?,
+    val furnishedInfo: String? = null,
     val bio: String,
     val id: Long? = null
 )
