@@ -28,11 +28,15 @@ import org.springframework.test.web.servlet.post
 import java.time.LocalDate
 
 @WebMvcTest(LoginController::class)
-@Import(SecurityConfig::class) // Import your security config
+@Import(SecurityConfig::class, JwtUtils::class) // Import your security config
 class LoginControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
-    val objectMapper: ObjectMapper
+    val objectMapper: ObjectMapper,
 ) {
+
+    @Autowired
+    lateinit var jwtUtils: JwtUtils
+
     @MockkBean
     private lateinit var userService: UserService
 
@@ -136,7 +140,7 @@ class LoginControllerTest @Autowired constructor(
     @Test
     fun `should not access protected endpoint with expired JWT`() {
         val email = "alice.smith@example.com"
-        val token = JwtUtils.generateExpiredToken(email)
+        val token = jwtUtils.generateExpiredToken(email)
 
         val result = mockMvc.get("/api/login/protected") {
             header("Authorization", "Bearer $token")

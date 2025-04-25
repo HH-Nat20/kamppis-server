@@ -26,11 +26,13 @@ import org.springframework.test.web.servlet.put
 import java.time.LocalDate
 
 @WebMvcTest(ProfileController::class)
-@Import(SecurityConfig::class)
+@Import(SecurityConfig::class, JwtUtils::class)
 class ProfileControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
-    val objectMapper: ObjectMapper
+    val objectMapper: ObjectMapper,
 ){
+    @Autowired
+    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var profileService: ProfileService
@@ -94,7 +96,7 @@ class ProfileControllerTest @Autowired constructor(
 
         every { profileService.findAll() } returns flats
 
-        val jwt = JwtUtils.generateJwtToken("test@example.com")
+        val jwt = jwtUtils.generateJwtToken("test@example.com")
 
         mockMvc.get("/api/profiles") {
             header("Authorization", "Bearer $jwt")
@@ -110,7 +112,7 @@ class ProfileControllerTest @Autowired constructor(
         val id = 1L
         every { profileService.findById(id) } returns userProfile
 
-        val jwt = JwtUtils.generateJwtToken("test@example.com")
+        val jwt = jwtUtils.generateJwtToken("test@example.com")
 
         mockMvc.get("/api/profiles/$id") {
             header("Authorization", "Bearer $jwt")
@@ -133,7 +135,7 @@ class ProfileControllerTest @Autowired constructor(
         )
         val userProfile = mockk<UserProfile>(relaxed = true)
 
-        val jwt = JwtUtils.generateJwtToken("test@example.com")
+        val jwt = jwtUtils.generateJwtToken("test@example.com")
 
         every { userProfileRepository.findByIdActive(userProfileId) } returns userProfile
         every { roomProfileRepository.findByIdActive(userProfileId) } returns null
@@ -177,7 +179,7 @@ class ProfileControllerTest @Autowired constructor(
         )
         val roomProfile = mockk<RoomProfile>(relaxed = true)
 
-        val jwt = JwtUtils.generateJwtToken("test@example.com")
+        val jwt = jwtUtils.generateJwtToken("test@example.com")
 
         every { roomProfileRepository.findByIdActive(roomProfileId) } returns roomProfile
         every { userProfileRepository.findByIdActive(roomProfileId) } returns null
@@ -206,7 +208,7 @@ class ProfileControllerTest @Autowired constructor(
             id = profileId
         )
 
-        val jwt = JwtUtils.generateJwtToken("test@example.com")
+        val jwt = jwtUtils.generateJwtToken("test@example.com")
 
         every { userProfileRepository.findByIdActive(profileId) } returns null
         every { roomProfileRepository.findByIdActive(profileId) } returns null

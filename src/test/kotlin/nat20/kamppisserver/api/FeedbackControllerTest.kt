@@ -18,11 +18,14 @@ import org.springframework.test.web.servlet.post
 import org.junit.jupiter.api.Test
 
 @WebMvcTest(FeedbackController::class)
-@Import(SecurityConfig::class)
+@Import(SecurityConfig::class, JwtUtils::class)
 class FeedbackControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
-    val objectMapper: ObjectMapper
+    val objectMapper: ObjectMapper,
 ) {
+
+    @Autowired
+    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var service: FeedbackService
@@ -34,7 +37,7 @@ class FeedbackControllerTest @Autowired constructor(
 
         every { service.findAll() } returns listOf(feedback1, feedback2)
 
-        val jwt = JwtUtils.generateJwtToken("test@example.com")
+        val jwt = jwtUtils.generateJwtToken("test@example.com")
 
         mockMvc.get("/api/feedback") {
             contentType = MediaType.APPLICATION_JSON
@@ -55,7 +58,7 @@ class FeedbackControllerTest @Autowired constructor(
 
         every { service.add(request) } returns saved
 
-        val jwt = JwtUtils.generateJwtToken("test@example.com")
+        val jwt = jwtUtils.generateJwtToken("test@example.com")
 
         mockMvc.post("/api/feedback") {
             contentType = MediaType.APPLICATION_JSON

@@ -21,10 +21,11 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.put
 
 @WebMvcTest(FlatController::class)
-@Import(SecurityConfig::class)
+@Import(SecurityConfig::class, JwtUtils::class)
 class FlatControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
-    val objectMapper: ObjectMapper
+    val objectMapper: ObjectMapper,
+    val jwtUtils: JwtUtils,  // Since the token is created outside test context, we need to inject JwtUtils here (I think)
 ) {
 
     @MockkBean
@@ -33,7 +34,7 @@ class FlatControllerTest @Autowired constructor(
     lateinit var flat1: FlatDTO
     lateinit var flat2: FlatDTO
 
-    val jwt = JwtUtils.generateJwtToken("test@example.com")
+    val jwt = jwtUtils.generateJwtToken("test@example.com")
 
     @BeforeEach
     fun setup() {

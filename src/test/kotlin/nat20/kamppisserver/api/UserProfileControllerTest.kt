@@ -24,11 +24,14 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 
 @WebMvcTest(UserProfileController::class)
-@Import(SecurityConfig::class)
+@Import(SecurityConfig::class, JwtUtils::class)
 class UserProfileControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
-    val objectMapper: ObjectMapper
+    val objectMapper: ObjectMapper,
 ) {
+
+    @Autowired
+    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var service: UserProfileService
@@ -43,7 +46,7 @@ class UserProfileControllerTest @Autowired constructor(
 
     @BeforeEach
     fun setup() {
-        jwt = JwtUtils.generateJwtToken("test@example.com")
+        jwt = jwtUtils.generateJwtToken("test@example.com")
 
         user = UserDTO(
             firstName = "John",

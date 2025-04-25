@@ -29,10 +29,13 @@ import java.util.*
 import kotlin.test.Test
 
 @WebMvcTest(ImageController::class)
-@Import(SecurityConfig::class)
+@Import(SecurityConfig::class, JwtUtils::class)
 class ImageControllerTest @Autowired constructor(
-    val mockMvc: MockMvc
+    val mockMvc: MockMvc,
 ) {
+
+    @Autowired
+    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var profileRepository: ProfileRepository
@@ -49,7 +52,7 @@ class ImageControllerTest @Autowired constructor(
 
     @BeforeEach
     fun setup() {
-        jwt = JwtUtils.generateJwtToken("test@example.com")
+        jwt = jwtUtils.generateJwtToken("test@example.com")
 
         user = User(
             firstName = "John",

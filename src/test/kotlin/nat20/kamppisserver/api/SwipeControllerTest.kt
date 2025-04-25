@@ -23,11 +23,15 @@ import org.springframework.test.web.servlet.post
 import java.time.LocalDate
 
 @WebMvcTest(SwipeController::class)
-@Import(SecurityConfig::class) // Import your security config
+@Import(SecurityConfig::class, JwtUtils::class) // Import your security config
 class SwipeControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
-    val objectMapper: ObjectMapper
+    val objectMapper: ObjectMapper,
 ){
+
+    @Autowired
+    lateinit var jwtUtils: JwtUtils
+
     @MockkBean
     private lateinit var swipeService: SwipeService
     @MockkBean
@@ -93,7 +97,7 @@ class SwipeControllerTest @Autowired constructor(
         every { swipeService.swipe(any(),any(), any()) } returns swipeResponse
         every { swipeService.principalInSwipingProfile(any(), any()) } returns true
 
-        val jwt = JwtUtils.generateJwtToken("alice.smith@test.com")
+        val jwt = jwtUtils.generateJwtToken("alice.smith@test.com")
 
         mockMvc.post("/api/swipes") {
             contentType = MediaType.APPLICATION_JSON

@@ -24,10 +24,13 @@ import kotlin.test.Test
 import org.springframework.http.MediaType
 
 @WebMvcTest(MatchController::class)
-@Import(SecurityConfig::class)
+@Import(SecurityConfig::class, JwtUtils::class)
 class MatchControllerTest @Autowired constructor(
-    val mockMvc: MockMvc
+    val mockMvc: MockMvc,
 ) {
+
+    @Autowired
+    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var service: MatchService
@@ -43,7 +46,7 @@ class MatchControllerTest @Autowired constructor(
 
     @BeforeEach
     fun setup() {
-        jwt = JwtUtils.generateJwtToken("test@example.com")
+        jwt = jwtUtils.generateJwtToken("test@example.com")
 
         user1 = User(
             firstName = "John",

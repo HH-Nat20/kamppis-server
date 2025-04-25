@@ -22,10 +22,13 @@ import java.time.LocalDateTime
 import kotlin.test.Test
 
 @WebMvcTest(InviteController::class)
-@Import(SecurityConfig::class)
+@Import(SecurityConfig::class, JwtUtils::class)
 class InviteControllerTest @Autowired constructor(
-    val mockMvc: MockMvc
+    val mockMvc: MockMvc,
 ) {
+
+    @Autowired
+    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var inviteService: InviteService
@@ -48,7 +51,7 @@ class InviteControllerTest @Autowired constructor(
 
     @BeforeEach
     fun setup() {
-        jwt = JwtUtils.generateJwtToken("test@example.com")
+        jwt = jwtUtils.generateJwtToken("test@example.com")
 
         user = User(
             firstName = "John",

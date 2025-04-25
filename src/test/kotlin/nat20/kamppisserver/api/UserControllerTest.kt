@@ -20,10 +20,13 @@ import java.time.LocalDate
 import kotlin.test.Test
 
 @WebMvcTest(UserController::class)
-@Import(SecurityConfig::class) // Import your security config
+@Import(SecurityConfig::class, JwtUtils::class) // Import your security config
 class UserControllerTest @Autowired constructor(
-    val mockMvc: MockMvc
+    val mockMvc: MockMvc,
 ){
+
+    @Autowired
+    lateinit var jwtUtils: JwtUtils
 
 /*      Probably needed later
     @MockkBean
@@ -60,7 +63,7 @@ class UserControllerTest @Autowired constructor(
 
         every { userService.findAllMockUsers() } returns listOf(bobJohnson, charlieDavis)
 
-        val jwt = JwtUtils.generateJwtToken("fake@example.com")
+        val jwt = jwtUtils.generateJwtToken("fake@example.com")
 
         mockMvc.perform(get("/api/users/mock").accept(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, "Bearer $jwt"))
         .andExpect(status().isOk)
@@ -85,7 +88,7 @@ class UserControllerTest @Autowired constructor(
 
         every { userService.findById(1) } returns bobJohnson
 
-        val jwt = JwtUtils.generateJwtToken("bob.johnson@example.com")
+        val jwt = jwtUtils.generateJwtToken("bob.johnson@example.com")
 
         mockMvc.perform(get("/api/users/1").accept(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, "Bearer $jwt"))
             .andExpect(status().isOk)
