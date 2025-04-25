@@ -1,0 +1,2203 @@
+openapi: "3.1.0"
+info:
+  title: "kamppis_server API"
+  description: "kamppis_server API"
+  version: "1.0.0"
+servers:
+  - url: "https://kamppis.hellmanstudios.fi"
+paths:
+  /api/matches:
+    post:
+      summary: "POST api/matches"
+      operationId: "addMatch"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatchRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MatchDTO"
+  /api/matches/{id}:
+    post:
+      summary: "POST api/matches/{id}"
+      operationId: "removeFromMatch"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatchRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MatchDTO"
+    get:
+      summary: "GET api/matches/{id}"
+      operationId: "findMatchById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MatchDTO"
+  /api/matches/:
+    get:
+      summary: "GET api/matches/"
+      operationId: "findAllForUser"
+      parameters:
+        - name: "userId"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/MatchDTO"
+  /api/matches/profiles/{id}:
+    get:
+      summary: "GET api/matches/profiles/{id}"
+      operationId: "findAllMatchesForUser"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/UserProfileDTO"
+  /api/invites/join/{inviteToken}:
+    put:
+      summary: "PUT api/invites/join/{inviteToken}"
+      operationId: "joinRoom"
+      parameters:
+        - name: "inviteToken"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "authToken"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/InviteResponse"
+  /api/invites/generate-invitetoken/{roomProfileId}:
+    post:
+      summary: "POST api/invites/generate-invitetoken/{roomProfileId}"
+      operationId: "addRoomProfileInvite"
+      parameters:
+        - name: "roomProfileId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/InviteResponse"
+  /api/login/mock:
+    post:
+      summary: "POST api/login/mock"
+      operationId: "login"
+      parameters:
+        - name: "email"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /api/login/github:
+    post:
+      summary: "POST api/login/github"
+      operationId: "loginWithGitHub"
+      parameters:
+        - name: "code"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Object"
+  /api/login/signup:
+    post:
+      summary: "POST api/login/signup"
+      operationId: "signup"
+      parameters:
+        - name: "code"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Object"
+  /api/login/protected:
+    get:
+      summary: "GET api/login/protected"
+      operationId: "getProtectedData"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /api/feedback:
+    post:
+      summary: "POST api/feedback"
+      operationId: "add"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FeedbackDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/FeedbackDTO"
+  /api/feedback/:
+    get:
+      summary: "GET api/feedback/"
+      operationId: "findAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/FeedbackDTO"
+  /api/profiles/{id}:
+    put:
+      summary: "PUT api/profiles/{id}"
+      operationId: "updateProfile"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProfileDTO"
+    get:
+      summary: "GET api/profiles/{id}"
+      operationId: "findById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProfileDTO"
+  /api/profiles:
+    get:
+      summary: "GET api/profiles"
+      operationId: "findAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ProfileDTO"
+  /api/users/{id}:
+    put:
+      summary: "PUT api/users/{id}"
+      operationId: "updateUser"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+    delete:
+      summary: "DELETE api/users/{id}"
+      operationId: "deleteById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+    get:
+      summary: "GET api/users/{id}"
+      operationId: "findUserById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+  /api/users/{id}/restore:
+    put:
+      summary: "PUT api/users/{id}/restore"
+      operationId: "restoreById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+  /api/users/{id}/preferences:
+    put:
+      summary: "PUT api/users/{id}/preferences"
+      operationId: "updateUserPreferences"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserPreferenceRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserPreferenceDTO"
+    get:
+      summary: "GET api/users/{id}/preferences"
+      operationId: "getUserPreferences"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserPreferenceDTO"
+  /api/users:
+    post:
+      summary: "POST api/users"
+      operationId: "addUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+  /api/users/:
+    get:
+      summary: "GET api/users/"
+      operationId: "findAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/UserDTO"
+  /api/users/mock:
+    get:
+      summary: "GET api/users/mock"
+      operationId: "findAllMock"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/UserDTO"
+  /api/users/{id}/copy:
+    get:
+      summary: "GET api/users/{id}/copy"
+      operationId: "getCopyOfUserData"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDataDTO"
+  /api/user-profiles/{id}:
+    put:
+      summary: "PUT api/user-profiles/{id}"
+      operationId: "updateUserProfile"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserProfileDTO"
+    get:
+      summary: "GET api/user-profiles/{id}"
+      operationId: "findById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserProfileDTO"
+  /api/user-profiles:
+    post:
+      summary: "POST api/user-profiles"
+      operationId: "addUserProfile"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserProfileDTO"
+  /api/user-profiles/:
+    get:
+      summary: "GET api/user-profiles/"
+      operationId: "findAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/UserProfileDTO"
+  /api/user-profiles/{userId}/query:
+    get:
+      summary: "GET api/user-profiles/{userId}/query"
+      operationId: "findUserProfilesThatMeetCriteria"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: "0"
+        - name: "size"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserProfileDTO"
+  /api/swipes:
+    post:
+      summary: "POST api/swipes"
+      operationId: "swipe"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SwipeRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SwipeResponse"
+  /api/swipes/:
+    get:
+      summary: "GET api/swipes/"
+      operationId: "findAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SwipeDTO"
+  /api/room-profiles/{id}:
+    put:
+      summary: "PUT api/room-profiles/{id}"
+      operationId: "update"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoomProfileRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RoomProfileDTO"
+    delete:
+      summary: "DELETE api/room-profiles/{id}"
+      operationId: "delete"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+    get:
+      summary: "GET api/room-profiles/{id}"
+      operationId: "findById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RoomProfileDTO"
+  /api/room-profiles:
+    post:
+      summary: "POST api/room-profiles"
+      operationId: "add"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoomProfileRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RoomProfileDTO"
+  /api/room-profiles/:
+    get:
+      summary: "GET api/room-profiles/"
+      operationId: "findAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/RoomProfileDTO"
+  /api/room-profiles/{userId}/query:
+    get:
+      summary: "GET api/room-profiles/{userId}/query"
+      operationId: "findRoomProfilesThatMeetCriteria"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: "0"
+        - name: "size"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RoomProfileDTO"
+  /api/room-profiles/{roomProfileId}/swipersquery:
+    get:
+      summary: "GET api/room-profiles/{roomProfileId}/swipersquery"
+      operationId: "findUserProfilesWhoHaveSwipedUsersRoom"
+      parameters:
+        - name: "roomProfileId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: "0"
+        - name: "size"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserProfileDTO"
+  /api/db-health:
+    get:
+      summary: "GET api/db-health"
+      operationId: "dbHealth"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /api/flats/{id}:
+    put:
+      summary: "PUT api/flats/{id}"
+      operationId: "update"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FlatDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/FlatDTO"
+    get:
+      summary: "GET api/flats/{id}"
+      operationId: "findById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/FlatDTO"
+  /api/flats:
+    post:
+      summary: "POST api/flats"
+      operationId: "add"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FlatDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/FlatDTO"
+  /api/flats/:
+    get:
+      summary: "GET api/flats/"
+      operationId: "findAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/FlatDTO"
+  /api/health:
+    get:
+      summary: "GET api/health"
+      operationId: "serverHealth"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /api/images/{userId}/{photoId}:
+    put:
+      summary: "PUT api/images/{userId}/{photoId}"
+      operationId: "updateImage"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "photoId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "isProfilePhoto"
+          in: "query"
+          required: false
+          schema:
+            type: "boolean"
+            default: "false"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+    delete:
+      summary: "DELETE api/images/{userId}/{photoId}"
+      operationId: "deleteImage"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "photoId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /api/images/{userId}:
+    post:
+      summary: "POST api/images/{userId}"
+      operationId: "uploadImage"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "image"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+            format: "binary"
+        - name: "isProfilePhoto"
+          in: "query"
+          required: false
+          schema:
+            type: "boolean"
+            default: "false"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /api/images/get/{userId}/{filename}:
+    get:
+      summary: "GET api/images/get/{userId}/{filename}"
+      operationId: "getImage"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "filename"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Resource"
+components:
+  schemas:
+    MatchRequest:
+      type: "object"
+      properties:
+        userIds:
+          type: "array"
+          items:
+            type: "integer"
+            format: "int64"
+          uniqueItems: true
+      required:
+        - "userIds"
+    UserSummaryDTO:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        age:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        gender:
+          type: "string"
+          enum:
+            - "MALE"
+            - "FEMALE"
+            - "OTHER"
+            - "NOT_IMPORTANT"
+        lookingFor:
+          type: "string"
+          nullable: true
+          enum:
+            - "OTHER_USER_PROFILES"
+            - "ROOM_PROFILES"
+            - "OTHER_USER_PROFILES_OR_ROOM_PROFILES"
+            - "USER_PROFILES"
+        isOnline:
+          type: "boolean"
+          nullable: true
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "firstName"
+        - "lastName"
+        - "gender"
+    MatchDTO:
+      type: "object"
+      properties:
+        userIds:
+          type: "array"
+          items:
+            type: "integer"
+            format: "int64"
+          uniqueItems: true
+        users:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UserSummaryDTO"
+          uniqueItems: true
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+          nullable: true
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "userIds"
+        - "users"
+        - "createdAt"
+    ProfilePhotoDTO:
+      type: "object"
+      properties:
+        profileId:
+          type: "integer"
+          format: "int64"
+        url:
+          type: "string"
+        isProfilePhoto:
+          type: "boolean"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "profileId"
+        - "url"
+        - "isProfilePhoto"
+    UserProfileDTO:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
+        user:
+          nullable: true
+          $ref: "#/components/schemas/UserSummaryDTO"
+        bio:
+          type: "string"
+        cleanliness:
+          type: "string"
+          nullable: true
+          enum:
+            - "SPOTLESS"
+            - "TIDY"
+            - "CASUAL"
+            - "MESSY"
+            - "CAREFREE"
+        pets:
+          type: "string"
+          nullable: true
+          enum:
+            - "PET_OWNER"
+            - "OK_WITH_PETS"
+            - "PREFER_NO_PETS"
+        lifestyle:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "EARLY_BIRD"
+              - "NIGHT_OWL"
+              - "PARTY_GOER"
+              - "HOMEBODY"
+              - "STUDENT"
+              - "WORKING"
+          uniqueItems: true
+        photos:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ProfilePhotoDTO"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "userId"
+        - "bio"
+        - "photos"
+    InviteResponse:
+      type: "object"
+      properties:
+        inviteToken:
+          type: "string"
+        expiresAt:
+          type: "string"
+          format: "date-time"
+        message:
+          type: "string"
+          nullable: true
+      required:
+        - "inviteToken"
+        - "expiresAt"
+    Object:
+      type: "object"
+      properties: { }
+    UserRequest:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        email:
+          type: "string"
+        gender:
+          type: "string"
+          enum:
+            - "MALE"
+            - "FEMALE"
+            - "OTHER"
+            - "NOT_IMPORTANT"
+        lookingFor:
+          type: "string"
+          nullable: true
+          enum:
+            - "OTHER_USER_PROFILES"
+            - "ROOM_PROFILES"
+            - "OTHER_USER_PROFILES_OR_ROOM_PROFILES"
+            - "USER_PROFILES"
+        dateOfBirth:
+          type: "string"
+          format: "date"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "firstName"
+        - "lastName"
+        - "email"
+        - "gender"
+        - "dateOfBirth"
+    FeedbackDTO:
+      type: "object"
+      properties:
+        feedback:
+          type: "string"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "feedback"
+    ProfileDTO:
+      type: "object"
+      properties: { }
+    FlatDTO:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        description:
+          type: "string"
+        location:
+          type: "string"
+          enum:
+            - "HELSINKI"
+            - "ESPOO"
+            - "TAMPERE"
+            - "VANTAA"
+            - "OULU"
+            - "TURKU"
+            - "JYVASKYLA"
+            - "KUOPIO"
+            - "LAHTI"
+            - "PORI"
+            - "KOUVOLA"
+            - "JOENSUU"
+            - "LAPPEENRANTA"
+            - "HAMEENLINNA"
+            - "VAASA"
+            - "SEINAJOKA"
+            - "ROVANIEMI"
+            - "MIKKELI"
+            - "SALO"
+            - "KOTKA"
+            - "PORVOO"
+            - "KOKKOLA"
+            - "HYVINKAA"
+            - "LOHJA"
+            - "JARVENPAA"
+            - "NURMIJARVI"
+            - "KIRKKONUMMI"
+            - "TUUSULA"
+            - "RAUMA"
+            - "KERAVA"
+            - "KAJAANI"
+            - "KAARINA"
+            - "NOKIA"
+            - "YLOJARVI"
+            - "KANGASALA"
+            - "SAVONLINNA"
+            - "VIHTI"
+            - "RIIHIMAKI"
+            - "RAASEPORI"
+            - "IMATRA"
+            - "RAISIO"
+            - "RAAHE"
+            - "LEMPAALA"
+            - "SASTAMALA"
+            - "HOLLOLA"
+            - "SIPOO"
+            - "TORNIO"
+            - "SIILINJARVI"
+            - "IISALMI"
+            - "MANTSALA"
+        totalRoommates:
+          type: "integer"
+          format: "int32"
+        petHousehold:
+          type: "boolean"
+          nullable: true
+        flatUtilities:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "WIFI"
+              - "DISHWASHER"
+              - "LAUNDRY_MACHINE"
+              - "BALCONY"
+              - "PRIVATE_BATHROOM"
+              - "SEPARATE_BATHROOM_AND_SHOWER"
+        roomProfileIds:
+          type: "array"
+          nullable: true
+          items:
+            type: "integer"
+            format: "int64"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "name"
+        - "description"
+        - "location"
+        - "totalRoommates"
+    RoomProfileDTO:
+      type: "object"
+      properties:
+        userIds:
+          type: "array"
+          items:
+            type: "integer"
+            format: "int64"
+        users:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/UserSummaryDTO"
+        flat:
+          $ref: "#/components/schemas/FlatDTO"
+        name:
+          type: "string"
+          nullable: true
+        totalRoommates:
+          type: "integer"
+          format: "int32"
+        location:
+          type: "string"
+          enum:
+            - "HELSINKI"
+            - "ESPOO"
+            - "TAMPERE"
+            - "VANTAA"
+            - "OULU"
+            - "TURKU"
+            - "JYVASKYLA"
+            - "KUOPIO"
+            - "LAHTI"
+            - "PORI"
+            - "KOUVOLA"
+            - "JOENSUU"
+            - "LAPPEENRANTA"
+            - "HAMEENLINNA"
+            - "VAASA"
+            - "SEINAJOKA"
+            - "ROVANIEMI"
+            - "MIKKELI"
+            - "SALO"
+            - "KOTKA"
+            - "PORVOO"
+            - "KOKKOLA"
+            - "HYVINKAA"
+            - "LOHJA"
+            - "JARVENPAA"
+            - "NURMIJARVI"
+            - "KIRKKONUMMI"
+            - "TUUSULA"
+            - "RAUMA"
+            - "KERAVA"
+            - "KAJAANI"
+            - "KAARINA"
+            - "NOKIA"
+            - "YLOJARVI"
+            - "KANGASALA"
+            - "SAVONLINNA"
+            - "VIHTI"
+            - "RIIHIMAKI"
+            - "RAASEPORI"
+            - "IMATRA"
+            - "RAISIO"
+            - "RAAHE"
+            - "LEMPAALA"
+            - "SASTAMALA"
+            - "HOLLOLA"
+            - "SIPOO"
+            - "TORNIO"
+            - "SIILINJARVI"
+            - "IISALMI"
+            - "MANTSALA"
+        rent:
+          type: "integer"
+          format: "int32"
+        isPrivateRoom:
+          type: "boolean"
+        furnished:
+          type: "boolean"
+        furnishedInfo:
+          type: "string"
+          nullable: true
+        photos:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ProfilePhotoDTO"
+        bio:
+          type: "string"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "userIds"
+        - "flat"
+        - "totalRoommates"
+        - "location"
+        - "rent"
+        - "isPrivateRoom"
+        - "furnished"
+        - "bio"
+    UserDTO:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        email:
+          type: "string"
+        dateOfBirth:
+          type: "string"
+          format: "date"
+        age:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        gender:
+          type: "string"
+          enum:
+            - "MALE"
+            - "FEMALE"
+            - "OTHER"
+            - "NOT_IMPORTANT"
+        lookingFor:
+          type: "string"
+          nullable: true
+          enum:
+            - "OTHER_USER_PROFILES"
+            - "ROOM_PROFILES"
+            - "OTHER_USER_PROFILES_OR_ROOM_PROFILES"
+            - "USER_PROFILES"
+        status:
+          type: "string"
+          nullable: true
+          enum:
+            - "ACTIVE"
+            - "INACTIVE"
+            - "DELETED"
+        isOnline:
+          type: "boolean"
+          nullable: true
+        matchIds:
+          type: "array"
+          nullable: true
+          items:
+            type: "integer"
+            format: "int64"
+          uniqueItems: true
+        userProfile:
+          nullable: true
+          $ref: "#/components/schemas/UserProfileDTO"
+        roomProfiles:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/RoomProfileDTO"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "firstName"
+        - "lastName"
+        - "email"
+        - "dateOfBirth"
+        - "gender"
+    RoomPreferenceDTO:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        maxRent:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        hasPrivateRoom:
+          type: "boolean"
+          nullable: true
+        maxRoommates:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        locationPreferences:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "HELSINKI"
+              - "ESPOO"
+              - "TAMPERE"
+              - "VANTAA"
+              - "OULU"
+              - "TURKU"
+              - "JYVASKYLA"
+              - "KUOPIO"
+              - "LAHTI"
+              - "PORI"
+              - "KOUVOLA"
+              - "JOENSUU"
+              - "LAPPEENRANTA"
+              - "HAMEENLINNA"
+              - "VAASA"
+              - "SEINAJOKA"
+              - "ROVANIEMI"
+              - "MIKKELI"
+              - "SALO"
+              - "KOTKA"
+              - "PORVOO"
+              - "KOKKOLA"
+              - "HYVINKAA"
+              - "LOHJA"
+              - "JARVENPAA"
+              - "NURMIJARVI"
+              - "KIRKKONUMMI"
+              - "TUUSULA"
+              - "RAUMA"
+              - "KERAVA"
+              - "KAJAANI"
+              - "KAARINA"
+              - "NOKIA"
+              - "YLOJARVI"
+              - "KANGASALA"
+              - "SAVONLINNA"
+              - "VIHTI"
+              - "RIIHIMAKI"
+              - "RAASEPORI"
+              - "IMATRA"
+              - "RAISIO"
+              - "RAAHE"
+              - "LEMPAALA"
+              - "SASTAMALA"
+              - "HOLLOLA"
+              - "SIPOO"
+              - "TORNIO"
+              - "SIILINJARVI"
+              - "IISALMI"
+              - "MANTSALA"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+    RoommatePreferenceDTO:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        minAgePreference:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        maxAgePreference:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        genderPreferences:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "MALE"
+              - "FEMALE"
+              - "OTHER"
+              - "NOT_IMPORTANT"
+        locationPreferences:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "HELSINKI"
+              - "ESPOO"
+              - "TAMPERE"
+              - "VANTAA"
+              - "OULU"
+              - "TURKU"
+              - "JYVASKYLA"
+              - "KUOPIO"
+              - "LAHTI"
+              - "PORI"
+              - "KOUVOLA"
+              - "JOENSUU"
+              - "LAPPEENRANTA"
+              - "HAMEENLINNA"
+              - "VAASA"
+              - "SEINAJOKA"
+              - "ROVANIEMI"
+              - "MIKKELI"
+              - "SALO"
+              - "KOTKA"
+              - "PORVOO"
+              - "KOKKOLA"
+              - "HYVINKAA"
+              - "LOHJA"
+              - "JARVENPAA"
+              - "NURMIJARVI"
+              - "KIRKKONUMMI"
+              - "TUUSULA"
+              - "RAUMA"
+              - "KERAVA"
+              - "KAJAANI"
+              - "KAARINA"
+              - "NOKIA"
+              - "YLOJARVI"
+              - "KANGASALA"
+              - "SAVONLINNA"
+              - "VIHTI"
+              - "RIIHIMAKI"
+              - "RAASEPORI"
+              - "IMATRA"
+              - "RAISIO"
+              - "RAAHE"
+              - "LEMPAALA"
+              - "SASTAMALA"
+              - "HOLLOLA"
+              - "SIPOO"
+              - "TORNIO"
+              - "SIILINJARVI"
+              - "IISALMI"
+              - "MANTSALA"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+    UserPreferenceRequest:
+      type: "object"
+      properties:
+        roomPreference:
+          nullable: true
+          $ref: "#/components/schemas/RoomPreferenceDTO"
+        roommatePreference:
+          nullable: true
+          $ref: "#/components/schemas/RoommatePreferenceDTO"
+    UserPreferenceDTO:
+      type: "object"
+      properties:
+        roomPreference:
+          nullable: true
+          $ref: "#/components/schemas/RoomPreferenceDTO"
+        roommatePreference:
+          nullable: true
+          $ref: "#/components/schemas/RoommatePreferenceDTO"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+    Void:
+      type: "object"
+      properties: { }
+    ProfilePhotoDataDTO:
+      type: "object"
+      properties:
+        url:
+          type: "string"
+        isProfilePhoto:
+          type: "boolean"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+          nullable: true
+        deletedAt:
+          type: "string"
+          format: "date-time"
+          nullable: true
+      required:
+        - "url"
+        - "isProfilePhoto"
+        - "createdAt"
+    UserProfileDataDTO:
+      type: "object"
+      properties:
+        bio:
+          type: "string"
+        cleanliness:
+          type: "string"
+          nullable: true
+          enum:
+            - "SPOTLESS"
+            - "TIDY"
+            - "CASUAL"
+            - "MESSY"
+            - "CAREFREE"
+        pets:
+          type: "string"
+          nullable: true
+          enum:
+            - "PET_OWNER"
+            - "OK_WITH_PETS"
+            - "PREFER_NO_PETS"
+        lifestyle:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "EARLY_BIRD"
+              - "NIGHT_OWL"
+              - "PARTY_GOER"
+              - "HOMEBODY"
+              - "STUDENT"
+              - "WORKING"
+          uniqueItems: true
+        photos:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ProfilePhotoDataDTO"
+        status:
+          type: "string"
+          enum:
+            - "ACTIVE"
+            - "INACTIVE"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+          nullable: true
+        deletedAt:
+          type: "string"
+          format: "date-time"
+          nullable: true
+      required:
+        - "bio"
+        - "photos"
+        - "status"
+        - "createdAt"
+    FlatDataDTO:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        description:
+          type: "string"
+        location:
+          type: "string"
+          enum:
+            - "HELSINKI"
+            - "ESPOO"
+            - "TAMPERE"
+            - "VANTAA"
+            - "OULU"
+            - "TURKU"
+            - "JYVASKYLA"
+            - "KUOPIO"
+            - "LAHTI"
+            - "PORI"
+            - "KOUVOLA"
+            - "JOENSUU"
+            - "LAPPEENRANTA"
+            - "HAMEENLINNA"
+            - "VAASA"
+            - "SEINAJOKA"
+            - "ROVANIEMI"
+            - "MIKKELI"
+            - "SALO"
+            - "KOTKA"
+            - "PORVOO"
+            - "KOKKOLA"
+            - "HYVINKAA"
+            - "LOHJA"
+            - "JARVENPAA"
+            - "NURMIJARVI"
+            - "KIRKKONUMMI"
+            - "TUUSULA"
+            - "RAUMA"
+            - "KERAVA"
+            - "KAJAANI"
+            - "KAARINA"
+            - "NOKIA"
+            - "YLOJARVI"
+            - "KANGASALA"
+            - "SAVONLINNA"
+            - "VIHTI"
+            - "RIIHIMAKI"
+            - "RAASEPORI"
+            - "IMATRA"
+            - "RAISIO"
+            - "RAAHE"
+            - "LEMPAALA"
+            - "SASTAMALA"
+            - "HOLLOLA"
+            - "SIPOO"
+            - "TORNIO"
+            - "SIILINJARVI"
+            - "IISALMI"
+            - "MANTSALA"
+        totalRoommates:
+          type: "integer"
+          format: "int32"
+        petHousehold:
+          type: "boolean"
+          nullable: true
+        flatUtilities:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "WIFI"
+              - "DISHWASHER"
+              - "LAUNDRY_MACHINE"
+              - "BALCONY"
+              - "PRIVATE_BATHROOM"
+              - "SEPARATE_BATHROOM_AND_SHOWER"
+      required:
+        - "name"
+        - "description"
+        - "location"
+        - "totalRoommates"
+    RoomProfileDataDTO:
+      type: "object"
+      properties:
+        flat:
+          $ref: "#/components/schemas/FlatDataDTO"
+        name:
+          type: "string"
+          nullable: true
+        rent:
+          type: "integer"
+          format: "int32"
+        isPrivateRoom:
+          type: "boolean"
+        furnished:
+          type: "boolean"
+        furnishedInfo:
+          type: "string"
+          nullable: true
+        photos:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ProfilePhotoDataDTO"
+        bio:
+          type: "string"
+        status:
+          type: "string"
+          enum:
+            - "ACTIVE"
+            - "INACTIVE"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+          nullable: true
+        deletedAt:
+          type: "string"
+          format: "date-time"
+          nullable: true
+      required:
+        - "flat"
+        - "rent"
+        - "isPrivateRoom"
+        - "furnished"
+        - "bio"
+        - "status"
+        - "createdAt"
+    RoommatePreferenceDataDTO:
+      type: "object"
+      properties:
+        minAgePreference:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        maxAgePreference:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        genderPreferences:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "MALE"
+              - "FEMALE"
+              - "OTHER"
+              - "NOT_IMPORTANT"
+        locationPreferences:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "HELSINKI"
+              - "ESPOO"
+              - "TAMPERE"
+              - "VANTAA"
+              - "OULU"
+              - "TURKU"
+              - "JYVASKYLA"
+              - "KUOPIO"
+              - "LAHTI"
+              - "PORI"
+              - "KOUVOLA"
+              - "JOENSUU"
+              - "LAPPEENRANTA"
+              - "HAMEENLINNA"
+              - "VAASA"
+              - "SEINAJOKA"
+              - "ROVANIEMI"
+              - "MIKKELI"
+              - "SALO"
+              - "KOTKA"
+              - "PORVOO"
+              - "KOKKOLA"
+              - "HYVINKAA"
+              - "LOHJA"
+              - "JARVENPAA"
+              - "NURMIJARVI"
+              - "KIRKKONUMMI"
+              - "TUUSULA"
+              - "RAUMA"
+              - "KERAVA"
+              - "KAJAANI"
+              - "KAARINA"
+              - "NOKIA"
+              - "YLOJARVI"
+              - "KANGASALA"
+              - "SAVONLINNA"
+              - "VIHTI"
+              - "RIIHIMAKI"
+              - "RAASEPORI"
+              - "IMATRA"
+              - "RAISIO"
+              - "RAAHE"
+              - "LEMPAALA"
+              - "SASTAMALA"
+              - "HOLLOLA"
+              - "SIPOO"
+              - "TORNIO"
+              - "SIILINJARVI"
+              - "IISALMI"
+              - "MANTSALA"
+    RoomPreferenceDataDTO:
+      type: "object"
+      properties:
+        maxRent:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        hasPrivateRoom:
+          type: "boolean"
+          nullable: true
+        maxRoommates:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        locationPreferences:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "HELSINKI"
+              - "ESPOO"
+              - "TAMPERE"
+              - "VANTAA"
+              - "OULU"
+              - "TURKU"
+              - "JYVASKYLA"
+              - "KUOPIO"
+              - "LAHTI"
+              - "PORI"
+              - "KOUVOLA"
+              - "JOENSUU"
+              - "LAPPEENRANTA"
+              - "HAMEENLINNA"
+              - "VAASA"
+              - "SEINAJOKA"
+              - "ROVANIEMI"
+              - "MIKKELI"
+              - "SALO"
+              - "KOTKA"
+              - "PORVOO"
+              - "KOKKOLA"
+              - "HYVINKAA"
+              - "LOHJA"
+              - "JARVENPAA"
+              - "NURMIJARVI"
+              - "KIRKKONUMMI"
+              - "TUUSULA"
+              - "RAUMA"
+              - "KERAVA"
+              - "KAJAANI"
+              - "KAARINA"
+              - "NOKIA"
+              - "YLOJARVI"
+              - "KANGASALA"
+              - "SAVONLINNA"
+              - "VIHTI"
+              - "RIIHIMAKI"
+              - "RAASEPORI"
+              - "IMATRA"
+              - "RAISIO"
+              - "RAAHE"
+              - "LEMPAALA"
+              - "SASTAMALA"
+              - "HOLLOLA"
+              - "SIPOO"
+              - "TORNIO"
+              - "SIILINJARVI"
+              - "IISALMI"
+              - "MANTSALA"
+    UserDataDTO:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        email:
+          type: "string"
+        dateOfBirth:
+          type: "string"
+          format: "date"
+        gender:
+          type: "string"
+          enum:
+            - "MALE"
+            - "FEMALE"
+            - "OTHER"
+            - "NOT_IMPORTANT"
+        lookingFor:
+          type: "string"
+          nullable: true
+          enum:
+            - "OTHER_USER_PROFILES"
+            - "ROOM_PROFILES"
+            - "OTHER_USER_PROFILES_OR_ROOM_PROFILES"
+            - "USER_PROFILES"
+        status:
+          type: "string"
+          nullable: true
+          enum:
+            - "ACTIVE"
+            - "INACTIVE"
+            - "DELETED"
+        isOnline:
+          type: "boolean"
+          nullable: true
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+          nullable: true
+        deletedAt:
+          type: "string"
+          format: "date-time"
+          nullable: true
+        userProfile:
+          nullable: true
+          $ref: "#/components/schemas/UserProfileDataDTO"
+        roomProfiles:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/RoomProfileDataDTO"
+        roommatePreference:
+          nullable: true
+          $ref: "#/components/schemas/RoommatePreferenceDataDTO"
+        roomPreference:
+          nullable: true
+          $ref: "#/components/schemas/RoomPreferenceDataDTO"
+      required:
+        - "firstName"
+        - "lastName"
+        - "email"
+        - "dateOfBirth"
+        - "gender"
+        - "createdAt"
+        - "roomProfiles"
+    UserProfileRequest:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
+        bio:
+          type: "string"
+          nullable: true
+          default: "Write bio here"
+        cleanliness:
+          type: "string"
+          nullable: true
+          enum:
+            - "SPOTLESS"
+            - "TIDY"
+            - "CASUAL"
+            - "MESSY"
+            - "CAREFREE"
+        pets:
+          type: "string"
+          nullable: true
+          enum:
+            - "PET_OWNER"
+            - "OK_WITH_PETS"
+            - "PREFER_NO_PETS"
+        lifestyle:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "EARLY_BIRD"
+              - "NIGHT_OWL"
+              - "PARTY_GOER"
+              - "HOMEBODY"
+              - "STUDENT"
+              - "WORKING"
+          uniqueItems: true
+        photos:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ProfilePhotoDTO"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "userId"
+    SwipeRequest:
+      type: "object"
+      properties:
+        swipingProfileId:
+          type: "integer"
+          format: "int64"
+        swipedProfileId:
+          type: "integer"
+          format: "int64"
+        isRightSwipe:
+          type: "boolean"
+      required:
+        - "swipingProfileId"
+        - "swipedProfileId"
+        - "isRightSwipe"
+    SwipeResponse:
+      type: "object"
+      properties:
+        swipeId:
+          type: "integer"
+          format: "int64"
+        swipingProfile:
+          $ref: "#/components/schemas/ProfileDTO"
+        swipedProfile:
+          $ref: "#/components/schemas/ProfileDTO"
+        isRightSwipe:
+          type: "boolean"
+        isMatch:
+          type: "boolean"
+      required:
+        - "swipeId"
+        - "swipingProfile"
+        - "swipedProfile"
+        - "isRightSwipe"
+        - "isMatch"
+    SwipeDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        swipingProfile:
+          $ref: "#/components/schemas/ProfileDTO"
+        swipedProfile:
+          $ref: "#/components/schemas/ProfileDTO"
+        isRightSwipe:
+          type: "boolean"
+        isMatch:
+          type: "boolean"
+        createdAt:
+          type: "string"
+          format: "date-time"
+      required:
+        - "swipingProfile"
+        - "swipedProfile"
+        - "isRightSwipe"
+        - "isMatch"
+        - "createdAt"
+    RoomProfileRequest:
+      type: "object"
+      properties:
+        userIds:
+          type: "array"
+          items:
+            type: "integer"
+            format: "int64"
+        flatId:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+          nullable: true
+        rent:
+          type: "integer"
+          format: "int32"
+        isPrivateRoom:
+          type: "boolean"
+        furnished:
+          type: "boolean"
+        furnishedInfo:
+          type: "string"
+          nullable: true
+        bio:
+          type: "string"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "userIds"
+        - "flatId"
+        - "rent"
+        - "isPrivateRoom"
+        - "furnished"
+        - "bio"
+    Resource:
+      type: "object"
+      properties: { }
