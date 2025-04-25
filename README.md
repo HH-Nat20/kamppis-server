@@ -68,6 +68,8 @@ _Kämppiksen_ back-endissä on hyödynnetty jatkuvan integraation ja toimituksen
 
 Testiautomaatiolla voidaan varmistaa sovelluksen toimivuus jatkuvasti muutoksia tehdessä. Lisätietoja automaatiosta löydät [workflow](./.github/workflows/run-tests.yml)-tiedostosta
 
+Palvelimelle asennettu sovelluksen back-end päivittää itsensä jokaisen repositorion dev-haaraan pusketun muutoksen, jotta front-end sovelluksen käyttämä rajapinta on aina ajan tasalla.
+
 <p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
 
 ## Serverin asennus
