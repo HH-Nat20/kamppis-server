@@ -19,6 +19,9 @@
         <a href="#teknologiat">Teknologiat</a>
     </li>
     <li>
+        <a href="#tietokanta">Tietokanta</a>
+    </li>
+    <li>
         <a href="#cicd">CI/CD</a>
     </li>
     <li>
@@ -59,6 +62,19 @@ _Kämppiksen_ back-end on rakennettu käyttämällä seuraavia teknologioita:
 [![Docker][docker-logo]][docker-url]
 [![Bruno][bruno-logo]][bruno-url]
 [![IntelliJ IDEA][intellij-idea-logo]][intellij-idea-url]
+
+<p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
+
+## Tietokanta
+
+_Kämppis_ hyödyntää tietokantaratkaisuna PostgreSQL:llä laadittua relaatiotietokantaa. Tietokantaa käytetään tallentamaan käyttäjien ja heidän preferenssinsä, huoneet ja kämpät, käyttäjien antamat swipet ja muodostuneet matchit sekä muita sovelluksen toiminnan kannalta tärkeitä tietoja.
+
+Tietokanta on oleellisessa osassa, kun käyttäjille etsitään SQL-lauseilla heidän preferenssiensä mukaisia käyttäjiä ja huoneita.
+
+<details>
+<summary>Klikkaa tietokantakaavio auki</summary>
+<img src="./documentation/database/Kämppis-db-schema.png">
+</details>
 
 <p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
 
