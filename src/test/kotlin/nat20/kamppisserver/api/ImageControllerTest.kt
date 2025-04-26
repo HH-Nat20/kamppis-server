@@ -5,12 +5,12 @@ import io.mockk.*
 import nat20.kamppisserver.domain.ProfilePhoto
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
-import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.repository.ProfileRepository
 import nat20.kamppisserver.repository.ProfilePhotoRepository
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.storage.FileSystemStorageService
 import nat20.kamppisserver.security.SecurityConfig
+import nat20.kamppisserver.setup.StandaloneSetup
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -24,7 +24,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.io.ByteArrayInputStream
 import java.io.File
-import java.time.LocalDate
 import java.util.*
 import kotlin.test.Test
 

@@ -6,10 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import nat20.kamppisserver.domain.FlatDTO
-import nat20.kamppisserver.domain.enums.City
-import nat20.kamppisserver.domain.enums.Utilities
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.service.FlatService
+import nat20.kamppisserver.setup.StandaloneSetup
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

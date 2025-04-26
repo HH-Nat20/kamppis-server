@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.*
 import nat20.kamppisserver.domain.*
-import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserProfileService
+import nat20.kamppisserver.setup.StandaloneSetup
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.test.Test
 import org.springframework.http.MediaType
-import java.time.LocalDate
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 

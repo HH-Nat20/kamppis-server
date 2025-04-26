@@ -2,6 +2,7 @@ package nat20.kamppisserver.repository
 
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.*
+import nat20.kamppisserver.setup.ContextSetup
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,6 +22,7 @@ class UserProfileRepositoryTest @Autowired constructor(
     val userProfileRepository: UserProfileRepository,
     val roomProfileRepository: RoomProfileRepository,
     val flatRepository: FlatRepository,
+    val roomPreferenceRepository: RoomPreferenceRepository,
     val roommatePreferenceRepository: RoommatePreferenceRepository,
     val userRepository: UserRepository,
     val swipeRepository: SwipeRepository
@@ -37,94 +39,28 @@ class UserProfileRepositoryTest @Autowired constructor(
     lateinit var flat: Flat
     lateinit var roomProfile: RoomProfile
     lateinit var roommatePreference: RoommatePreference
-    lateinit var swipingRoommatePreference: RoommatePreference
+    lateinit var contextSetup: ContextSetup
 
     @BeforeEach
-    fun setup() {
-        user = userRepository.save(
-            User(
-                firstName = "John",
-                lastName = "Doe",
-                email = "john.doe@example.com",
-                dateOfBirth = LocalDate.of(1980, 1, 1),
-                gender = Gender.MALE,
-                lookingFor = LookingFor.OTHER_USER_PROFILES
-            )
+    fun init() {
+        contextSetup = ContextSetup(
+            userRepository,
+            userProfileRepository,
+            flatRepository,
+            roomProfileRepository,
+            roomPreferenceRepository,
+            roommatePreferenceRepository
         )
-
-        swipingUser = userRepository.save(
-            User(
-                firstName = "Jane",
-                lastName = "Doe",
-                email = "jane.doe@example.com",
-                dateOfBirth = LocalDate.of(1990, 1, 1),
-                gender = Gender.FEMALE,
-                lookingFor = LookingFor.OTHER_USER_PROFILES
-            )
-        )
-
-        deletedUser = User(
-                firstName = "Deleted",
-                lastName = "Doe",
-                email = "deleted.doe@example.com",
-                dateOfBirth = LocalDate.of(2000, 1, 1),
-                gender = Gender.OTHER
-            )
-
-        deletedUser.status = UserStatus.INACTIVE
-        deletedUser.deletedAt = LocalDateTime.now()
-        userRepository.save(deletedUser)
-
-        userProfile = userProfileRepository.save(
-            UserProfile(
-                user = user
-            )
-        )
-
-        swipingProfile = userProfileRepository.save(
-            UserProfile(
-                user = swipingUser
-            )
-        )
-
-        deletedUserProfile = UserProfile(
-            user = deletedUser
-        )
-
-        deletedUserProfile.status = ProfileStatus.INACTIVE
-        deletedUserProfile.deletedAt = LocalDateTime.now()
-        userProfileRepository.save(deletedUserProfile)
-
-        flat = flatRepository.save(
-            Flat(
-                name = "Nice place",
-                description = "Sunny",
-                location = City.HELSINKI,
-                totalRoommates = 2
-            )
-        )
-
-        roomProfile = roomProfileRepository.save(
-            RoomProfile(
-                users = mutableListOf(user),
-                flat = flat,
-                rent = 500,
-                isPrivateRoom = true,
-                furnished = false
-            )
-        )
-
-        roommatePreference = roommatePreferenceRepository.save(
-            RoommatePreference(
-                user = user
-            )
-        )
-
-        swipingRoommatePreference = roommatePreferenceRepository.save(
-            RoommatePreference(
-                user = swipingUser
-            )
-        )
+        contextSetup.setup()
+        user = contextSetup.user
+        swipingUser = contextSetup.swipingUser
+        deletedUser = contextSetup.deletedUser
+        userProfile = contextSetup.userProfile
+        swipingProfile = contextSetup.swipingUserProfile
+        deletedUserProfile = contextSetup.deletedUserProfile
+        flat = contextSetup.flat
+        roomProfile = contextSetup.swipingRoomProfile
+        roommatePreference = contextSetup.roommatePreference
     }
 
     @Test

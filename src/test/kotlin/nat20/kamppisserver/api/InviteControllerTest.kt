@@ -8,6 +8,7 @@ import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.service.InviteService
 import nat20.kamppisserver.service.RoomProfileService
+import nat20.kamppisserver.setup.StandaloneSetup
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest

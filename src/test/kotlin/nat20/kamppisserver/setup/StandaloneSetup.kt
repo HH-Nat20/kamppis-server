@@ -1,4 +1,4 @@
-package nat20.kamppisserver.api
+package nat20.kamppisserver.setup
 
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.City

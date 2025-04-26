@@ -8,7 +8,7 @@ import nat20.kamppisserver.repository.*
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.service.MatchService
-import org.hamcrest.CoreMatchers.hasItem
+import nat20.kamppisserver.setup.StandaloneSetup
 import org.hamcrest.CoreMatchers.hasItems
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
