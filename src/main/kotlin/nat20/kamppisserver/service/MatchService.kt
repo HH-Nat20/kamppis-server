@@ -2,7 +2,7 @@ package nat20.kamppisserver.service
 
 import exception.DuplicateMatchException
 import exception.InvalidRequestException
-import jakarta.persistence.EntityNotFoundException
+import exception.EntityNotFoundException
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.*
@@ -126,5 +126,4 @@ class MatchService(
 
         return users[0].id!! to users[1].id!!
     }
-
 }
