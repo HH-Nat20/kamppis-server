@@ -6,6 +6,9 @@ import nat20.kamppisserver.repository.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+/**
+ * Sets up and populates a mini database for @DataJPATest classes (.repository package).
+ */
 class ContextSetup(
     val userRepository: UserRepository,
     val userProfileRepository: UserProfileRepository,

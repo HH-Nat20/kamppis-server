@@ -28,5 +28,5 @@ class Feedback(
 
 data class FeedbackDTO(
     val feedback: String,
-    val id: Long?
+    val id: Long? = null
 )

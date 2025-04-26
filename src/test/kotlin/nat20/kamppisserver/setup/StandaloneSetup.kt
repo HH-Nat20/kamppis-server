@@ -8,7 +8,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 /**
- * Sets up test data for use in WebMVC tests (.api package).
+ * Sets up test data for use in WebMVC (.api package) and unit (.service package) tests.
  */
 object StandaloneSetup {
 
@@ -22,6 +22,7 @@ object StandaloneSetup {
     lateinit var roomProfile: RoomProfile
     lateinit var invite: RoomProfileInvite
     lateinit var request: RoomProfileRequest
+    lateinit var feedback: Feedback
 
     fun setup() {
         flat1 = Flat(
@@ -102,6 +103,10 @@ object StandaloneSetup {
             furnished = false,
             bio = "Chill area",
             id = 1L
+        )
+
+        feedback = Feedback(
+            feedback = "Ain't this a surprise"
         )
     }
 }
