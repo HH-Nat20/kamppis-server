@@ -1,225 +1,274 @@
 package nat20.kamppisserver.repository
 
-import jakarta.transaction.Transactional
-import nat20.kamppisserver.domain.RoommatePreference
-import nat20.kamppisserver.domain.UserProfile
-import nat20.kamppisserver.domain.User
-import nat20.kamppisserver.domain.enums.ProfileStatus
-import nat20.kamppisserver.domain.enums.UserStatus
+import nat20.kamppisserver.domain.*
+import nat20.kamppisserver.domain.enums.*
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.domain.PageRequest
-import org.springframework.test.context.ActiveProfiles
 import java.time.LocalDate
+import java.time.LocalDateTime
 import kotlin.test.*
 
 /**
  * Test class for UserProfileRepository.
  */
-@SpringBootTest
-@ActiveProfiles("test")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserProfileRepositoryTest @Autowired constructor(
     val userProfileRepository: UserProfileRepository,
+    val roomProfileRepository: RoomProfileRepository,
+    val flatRepository: FlatRepository,
     val roommatePreferenceRepository: RoommatePreferenceRepository,
     val userRepository: UserRepository,
     val swipeRepository: SwipeRepository
 ) {
 
-    /*
-    * Here we declare variables that are used in every test
-    */
-    lateinit var testDate: LocalDate
+    val queryDate = LocalDate.of(2025, 2, 21)
+
     lateinit var user: User
+    lateinit var swipingUser: User
+    lateinit var deletedUser: User
     lateinit var userProfile: UserProfile
+    lateinit var swipingProfile: UserProfile
+    lateinit var deletedUserProfile: UserProfile
+    lateinit var flat: Flat
+    lateinit var roomProfile: RoomProfile
     lateinit var roommatePreference: RoommatePreference
-    lateinit var pageRequest: PageRequest
+    lateinit var swipingRoommatePreference: RoommatePreference
 
     @BeforeEach
-    fun testVariableSetUp() {
-        // Here we set a base date so that our tests always calculate the same age for all users regardless of when the tests are actually run
-        testDate= LocalDate.of(2025, 2, 21)
-        // We find our test user
-        user = userRepository.findByIdAndStatus(1L, UserStatus.ACTIVE)
-            ?: fail("❌ Expected User but found null")
-        // We find our test user's user profile
-        userProfile = userProfileRepository.findByUserIdAndStatus(user.id!!, ProfileStatus.ACTIVE)
-            ?: fail("❌ Expected UserProfile but found null")
-        roommatePreference= roommatePreferenceRepository
-            .findByUserIdAndStatus(1L, UserStatus.ACTIVE)
-            ?: fail("❌ Expected RoommatePreference but found null")
-        pageRequest = PageRequest.of(0, 25)
+    fun setup() {
+        user = userRepository.save(
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                email = "john.doe@example.com",
+                dateOfBirth = LocalDate.of(1980, 1, 1),
+                gender = Gender.MALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES
+            )
+        )
+
+        swipingUser = userRepository.save(
+            User(
+                firstName = "Jane",
+                lastName = "Doe",
+                email = "jane.doe@example.com",
+                dateOfBirth = LocalDate.of(1990, 1, 1),
+                gender = Gender.FEMALE,
+                lookingFor = LookingFor.OTHER_USER_PROFILES
+            )
+        )
+
+        deletedUser = User(
+                firstName = "Deleted",
+                lastName = "Doe",
+                email = "deleted.doe@example.com",
+                dateOfBirth = LocalDate.of(2000, 1, 1),
+                gender = Gender.OTHER
+            )
+
+        deletedUser.status = UserStatus.INACTIVE
+        deletedUser.deletedAt = LocalDateTime.now()
+        userRepository.save(deletedUser)
+
+        userProfile = userProfileRepository.save(
+            UserProfile(
+                user = user
+            )
+        )
+
+        swipingProfile = userProfileRepository.save(
+            UserProfile(
+                user = swipingUser
+            )
+        )
+
+        deletedUserProfile = UserProfile(
+            user = deletedUser
+        )
+
+        deletedUserProfile.status = ProfileStatus.INACTIVE
+        deletedUserProfile.deletedAt = LocalDateTime.now()
+        userProfileRepository.save(deletedUserProfile)
+
+        flat = flatRepository.save(
+            Flat(
+                name = "Nice place",
+                description = "Sunny",
+                location = City.HELSINKI,
+                totalRoommates = 2
+            )
+        )
+
+        roomProfile = roomProfileRepository.save(
+            RoomProfile(
+                users = mutableListOf(user),
+                flat = flat,
+                rent = 500,
+                isPrivateRoom = true,
+                furnished = false
+            )
+        )
+
+        roommatePreference = roommatePreferenceRepository.save(
+            RoommatePreference(
+                user = user
+            )
+        )
+
+        swipingRoommatePreference = roommatePreferenceRepository.save(
+            RoommatePreference(
+                user = swipingUser
+            )
+        )
     }
 
     @Test
-    fun `query should not return the user's own profile`() {
-        val listOfUserProfiles: Iterable<UserProfile> =
-            userProfileRepository.findUserProfilesThatMeetCriteria(
-                pageRequest,
-                userProfile.id!!,
-                testDate,
-                roommatePreference.minAgePreference,
-                roommatePreference.maxAgePreference,
-                roommatePreference.genderPreferences?.map { it.name },
-                roommatePreference.locationPreferences?.map { it.name }
-            )
+    fun `findAllActive should return only non-deleted user profiles`() {
+        val result = userProfileRepository.findAllActive()
 
-        assertFalse(userProfile in listOfUserProfiles)
+        assertEquals(2, result.size)
+        Assertions.assertEquals(ProfileStatus.ACTIVE, result[0].status)
+        assertNull(result[0].deletedAt)
     }
 
     @Test
-    fun `query should return UserProfiles whose age fit between user's min and max age preferences`(){
-        val numberOfMatchingUserProfiles: Int = 9
+    fun `findByIdActive should return the correct user profile`() {
+        val result = userProfileRepository.findByIdActive(userProfile.id!!)
 
-        // We delete the swipes because we don't want them to interfere the test
-        // If not, the query filters out swiped profiles and age test fails
-        swipeRepository.deleteAll()
-
-        // Set preferred genders and locations to select all user profiles
-        val preferredGenders = null
-        val preferredLocations = null
-
-        val listOfUserProfiles: Iterable<UserProfile> =
-            userProfileRepository.findUserProfilesThatMeetCriteria(
-                pageRequest,
-                userProfile.id!!,
-                testDate,
-                roommatePreference.minAgePreference,
-                roommatePreference.maxAgePreference,
-                preferredGenders,
-                preferredLocations
-            )
-
-        assertEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
+        assertNotNull(result)
+        assertEquals(userProfile.id, result.id)
+        assertNull(result.deletedAt)
     }
 
     @Test
-    fun `query should return incorrect amount of profiles when query date is incorrect`(){
-        val incorrectDate = LocalDate.of(2022, 2, 21)
-        val numberOfMatchingUserProfiles: Int = 9 // matching profile count is counted using ages calculated on 2025-2-21
+    fun `findByUserIdAndStatus should return the correct user profile based on userId and status`() {
+        val result = userProfileRepository.findByUserIdAndStatus(user.id!!, ProfileStatus.ACTIVE)
 
-        // We delete the swipes because we don't want them to interfere the test
-        // If not, the query filters out swiped profiles and test fails
-        swipeRepository.deleteAll()
-
-        // Set preferred genders and locations to select all user profiles
-        val preferredGenders = null
-        val preferredLocations = null
-
-        val listOfUserProfiles: Iterable<UserProfile> =
-            userProfileRepository.findUserProfilesThatMeetCriteria(
-                pageRequest,
-                userProfile.id!!,
-                incorrectDate,
-                roommatePreference.minAgePreference,
-                roommatePreference.maxAgePreference,
-                preferredGenders,
-                preferredLocations
-            )
-
-        assertNotEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
+        assertNotNull(result)
+        assertEquals(user.id, result.user.id)
+        assertEquals(ProfileStatus.ACTIVE, result.status)
     }
 
     @Test
-    fun `should return profiles that match user's preferred genders`() {
-        val numberOfMatchingUserProfiles: Int = 14
+    fun `should find user profiles without filters`() {
+        val result = userProfileRepository.findUserProfilesThatMeetCriteria(
+            pageable = PageRequest.of(0, 10),
+            userProfileId = swipingProfile.id,
+            queryDate = queryDate,
+            minAgePreference = null,
+            maxAgePreference = null,
+            genderPreferences = null,
+            locationPreferences = null
+        )
 
-        // We delete the swipes because we don't want them to interfere the test
-        // If not, the query filters out swiped profiles and gender test fails
-        swipeRepository.deleteAll()
+        userProfileRepository.findAll().forEach {
+            println("UserProfile: ${it.id}, status=${it.status}, user=${it.user.id}, userStatus=${it.user.status}")
+        }
 
-        // Set preferred minAge, maxAge and locations to select all user profiles
-        val minAgePreference = null
-        val maxAgePreference = null
-        val preferredLocations = null
+        val allRoomProfiles = roomProfileRepository.findAll()
+        println("RoomProfiles: ${allRoomProfiles.map { it.users.map { u -> u.id } }}")
 
-        val listOfUserProfiles: Iterable<UserProfile> =
-            userProfileRepository.findUserProfilesThatMeetCriteria(
-                pageRequest,
-                userProfile.id!!,
-                testDate,
-                minAgePreference,
-                maxAgePreference,
-                roommatePreference.genderPreferences?.map {it.name},
-                preferredLocations
-            )
-
-        assertEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
+        Assertions.assertEquals(1, result.totalElements)
     }
 
     @Test
-    fun `should return profiles that match user's preferred locations`() {
-        val numberOfMatchingUserProfiles = 25
+    fun `should filter by age`() {
+        roommatePreference.minAgePreference = 40
+        roommatePreference.maxAgePreference = 50
+        roommatePreferenceRepository.save(roommatePreference)
 
-        // We delete the swipes because we don't want them to interfere the test
-        // If not, the query filters out swiped profiles and location test fails
-        swipeRepository.deleteAll()
+        val result = userProfileRepository.findUserProfilesThatMeetCriteria(
+            pageable = PageRequest.of(0, 10),
+            userProfileId = swipingProfile.id,
+            queryDate = queryDate,
+            minAgePreference = roommatePreference.minAgePreference,
+            maxAgePreference = roommatePreference.maxAgePreference,
+            genderPreferences = null,
+            locationPreferences = null
+        )
 
-        // Set preferred minAge, maxAge and genders to select all user profiles
-        val minAgePreference = null
-        val maxAgePreference = null
-        val preferredGenders = null
-
-        val listOfUserProfiles: Iterable<UserProfile> =
-            userProfileRepository.findUserProfilesThatMeetCriteria(
-                pageRequest,
-                userProfile.id!!,
-                testDate,
-                minAgePreference,
-                maxAgePreference,
-                preferredGenders,
-                roommatePreference.locationPreferences?.map {it.name}
-            )
-
-        assertEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
+        Assertions.assertEquals(1, result.totalElements)
     }
 
     @Test
-    fun `should not return profiles that have already been swiped`() {
-        val numberOfMatchingUserProfiles: Int = 23
+    fun `should filter by gender preferences`() {
+        roommatePreference.genderPreferences = mutableListOf(Gender.MALE)
+        roommatePreferenceRepository.save(roommatePreference)
 
-        // Note that here we don't delete the swipes because that is what we want to test
+        val result = userProfileRepository.findUserProfilesThatMeetCriteria(
+            pageable = PageRequest.of(0, 10),
+            userProfileId = swipingProfile.id,
+            queryDate = queryDate,
+            minAgePreference = null,
+            maxAgePreference = null,
+            genderPreferences = roommatePreference.genderPreferences?.map {it.name},
+            locationPreferences = null
+        )
 
-        // Set preferred minAge, maxAge, genders and locations to select all user profiles
-        val minAgePreference = null
-        val maxAgePreference = null
-        val preferredGenders = null
-        val preferredLocations = null
-
-        val listOfUserProfiles: Iterable<UserProfile> =
-            userProfileRepository.findUserProfilesThatMeetCriteria(
-                pageRequest,
-                userProfile.id!!,
-                testDate,
-                minAgePreference,
-                maxAgePreference,
-                preferredGenders,
-                preferredLocations
-            )
-
-        assertEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
+        Assertions.assertEquals(1, result.totalElements)
     }
 
     @Test
-    fun `should return the correct amount of profiles when all criteria are used`() {
-        val numberOfMatchingUserProfiles: Int = 7
+    fun `should filter by location preferences`() {
+        roommatePreference.locationPreferences = mutableListOf(City.HELSINKI)
+        roommatePreferenceRepository.save(roommatePreference)
 
-        // Query parameters (=user's search criteria) are selected from the user's profile
-        // Swipes are taken into account
-        val listOfUserProfiles: Iterable<UserProfile> =
-            userProfileRepository.findUserProfilesThatMeetCriteria(
-                pageRequest,
-                userProfile.id!!,
-                testDate,
-                roommatePreference.minAgePreference,
-                roommatePreference.maxAgePreference,
-                roommatePreference.genderPreferences?.map { it.name },
-                roommatePreference.locationPreferences?.map { it.name }
+        val result = userProfileRepository.findUserProfilesThatMeetCriteria(
+            pageable = PageRequest.of(0, 10),
+            userProfileId = swipingProfile.id,
+            queryDate = queryDate,
+            minAgePreference = null,
+            maxAgePreference = null,
+            genderPreferences = null,
+            locationPreferences = roommatePreference.locationPreferences?.map {it.name}
+        )
+
+        Assertions.assertEquals(1, result.totalElements)
+    }
+
+    @Test
+    fun `should exclude profiles already swiped`() {
+        swipeRepository.save(
+            Swipe(
+                swipingProfile = swipingProfile,
+                swipedProfile = userProfile,
+                isRightSwipe = true
             )
+        )
 
-        assertEquals(numberOfMatchingUserProfiles, listOfUserProfiles.count())
+        val result = userProfileRepository.findUserProfilesThatMeetCriteria(
+            pageable = PageRequest.of(0, 10),
+            userProfileId = swipingProfile.id,
+            queryDate = queryDate,
+            minAgePreference = null,
+            maxAgePreference = null,
+            genderPreferences = null,
+            locationPreferences = null
+        )
+
+        Assertions.assertEquals(0, result.totalElements)
+    }
+
+    @Test
+    fun `findUserProfilesWhoHaveSwipedRoomProfile should return users who swiped on the given room profile`() {
+        val swipe = Swipe(
+            swipingProfile = userProfile,
+            swipedProfile = roomProfile,
+            isRightSwipe = true
+        )
+        swipeRepository.save(swipe)
+
+        val result = userProfileRepository.findUserProfilesWhoHaveSwipedRoomProfile(
+            pageable = PageRequest.of(0, 10),
+            roomProfileId = roomProfile.id!!
+        )
+
+        assertEquals(1, result.totalElements)
+        assertEquals(user.id, result.content[0].user.id)
     }
 }
