@@ -22,13 +22,13 @@ import org.junit.jupiter.api.Test
 class FeedbackControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper,
+    val jwtUtils: JwtUtils
 ) {
-
-    @Autowired
-    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var service: FeedbackService
+
+    val jwt = jwtUtils.generateJwtToken("test@example.com")
 
     @Test
     fun `findAll should return list of feedbacks`() {
@@ -36,8 +36,6 @@ class FeedbackControllerTest @Autowired constructor(
         val feedback2 = FeedbackDTO(feedback = "Baby don't hurt me", id = 2L)
 
         every { service.findAll() } returns listOf(feedback1, feedback2)
-
-        val jwt = jwtUtils.generateJwtToken("test@example.com")
 
         mockMvc.get("/api/feedback") {
             contentType = MediaType.APPLICATION_JSON
@@ -57,8 +55,6 @@ class FeedbackControllerTest @Autowired constructor(
         val saved = request.copy(id = 3)
 
         every { service.add(request) } returns saved
-
-        val jwt = jwtUtils.generateJwtToken("test@example.com")
 
         mockMvc.post("/api/feedback") {
             contentType = MediaType.APPLICATION_JSON

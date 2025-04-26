@@ -29,10 +29,8 @@ import org.springframework.data.domain.PageRequest
 class RoomProfileControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper,
+    val jwtUtils: JwtUtils
 ) {
-
-    @Autowired
-    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var service: RoomProfileService
@@ -40,53 +38,20 @@ class RoomProfileControllerTest @Autowired constructor(
     @MockkBean
     private lateinit var queryService: QueryService
 
-    lateinit var jwt: String
+    val jwt = jwtUtils.generateJwtToken("test@example.com")
+
     lateinit var user: User
     lateinit var flatDTO: FlatDTO
     lateinit var roomProfileDTO: RoomProfileDTO
     lateinit var request: RoomProfileRequest
 
     @BeforeEach
-    fun setup() {
-        jwt = jwtUtils.generateJwtToken("test@example.com")
-
-        user = User(firstName = "John",
-            lastName = "Doe",
-            email = "john.doe@example.com",
-            dateOfBirth = LocalDate.of(1980, 1, 1),
-            gender = Gender.MALE,
-            id = 1L
-        )
-
-        flatDTO = FlatDTO(
-            name = "Nice place",
-            description = "Sunny",
-            location = City.HELSINKI,
-            totalRoommates = 3,
-            id = 1L
-        )
-
-        roomProfileDTO = RoomProfileDTO(
-            userIds = listOf(user.id!!),
-            flat = flatDTO,
-            totalRoommates = 3,
-            location = City.HELSINKI,
-            rent = 500,
-            isPrivateRoom = false,
-            furnished = false,
-            bio = "A cool place",
-            id = 1L
-        )
-
-        request = RoomProfileRequest(
-            userIds = listOf(user.id!!),
-            flatId = flatDTO.id!!,
-            rent = 400,
-            isPrivateRoom = false,
-            furnished = false,
-            bio = "Chill area",
-            id = 1L
-        )
+    fun init() {
+        StandaloneSetup.setup()
+        user = StandaloneSetup.user1
+        flatDTO = StandaloneSetup.flat1.toDTO()
+        roomProfileDTO = StandaloneSetup.roomProfile.toDTO()
+        request = StandaloneSetup.request
     }
 
     @Test
@@ -98,7 +63,7 @@ class RoomProfileControllerTest @Autowired constructor(
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id").value(1))
-            .andExpect(jsonPath("$[0].bio").value("A cool place"))
+            .andExpect(jsonPath("$[0].bio").value("Write bio here"))
     }
 
     @Test

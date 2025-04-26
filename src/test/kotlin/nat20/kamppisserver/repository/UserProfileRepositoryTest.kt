@@ -166,13 +166,6 @@ class UserProfileRepositoryTest @Autowired constructor(
             locationPreferences = null
         )
 
-        userProfileRepository.findAll().forEach {
-            println("UserProfile: ${it.id}, status=${it.status}, user=${it.user.id}, userStatus=${it.user.status}")
-        }
-
-        val allRoomProfiles = roomProfileRepository.findAll()
-        println("RoomProfiles: ${allRoomProfiles.map { it.users.map { u -> u.id } }}")
-
         Assertions.assertEquals(1, result.totalElements)
     }
 

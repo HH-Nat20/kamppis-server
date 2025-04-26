@@ -3,13 +3,13 @@ package nat20.kamppisserver.api
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.*
 import nat20.kamppisserver.domain.*
-import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.*
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.service.MatchService
 import org.hamcrest.CoreMatchers.hasItem
+import org.hamcrest.CoreMatchers.hasItems
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -18,8 +18,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.time.LocalDate
-import java.time.LocalDateTime
 import kotlin.test.Test
 import org.springframework.http.MediaType
 
@@ -27,10 +25,8 @@ import org.springframework.http.MediaType
 @Import(SecurityConfig::class, JwtUtils::class)
 class MatchControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
+    val jwtUtils: JwtUtils
 ) {
-
-    @Autowired
-    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var service: MatchService
@@ -38,45 +34,20 @@ class MatchControllerTest @Autowired constructor(
     @MockkBean
     private lateinit var repository: UserRepository
 
-    lateinit var jwt: String
+    val jwt = jwtUtils.generateJwtToken("test@example.com")
+
     lateinit var user1: UserSummaryDTO
     lateinit var user2: UserSummaryDTO
     lateinit var sampleMatch: MatchDTO
     lateinit var sampleUserProfile: UserProfileDTO
 
     @BeforeEach
-    fun setup() {
-        jwt = jwtUtils.generateJwtToken("test@example.com")
-
-        user1 = User(
-            firstName = "John",
-            lastName = "Doe",
-            email = "john.doe@example.com",
-            dateOfBirth = LocalDate.of(1980, 1, 1),
-            gender = Gender.MALE,
-            id = 100L
-        ).toSummaryDTO()
-
-        user2 = User(
-            firstName = "Jane",
-            lastName = "Doe",
-            email = "jane.doe@example.com",
-            dateOfBirth = LocalDate.of(1990, 1, 1),
-            gender = Gender.FEMALE,
-            id = 200L
-        ).toSummaryDTO()
-
-        sampleMatch = MatchDTO(
-            id = 1L,
-            userIds = setOf(100L, 200L),
-            users = setOf(user1, user2),
-            createdAt = LocalDateTime.now()
-        )
-
-        sampleUserProfile = UserProfileDTO(
-            userId = 100L,
-            bio = "Hello!"
-        )
+    fun init() {
+        StandaloneSetup.setup()
+        user1 = StandaloneSetup.user1.toSummaryDTO()
+        user2 = StandaloneSetup.user2.toSummaryDTO()
+        sampleMatch = StandaloneSetup.match.toDTO()
+        sampleUserProfile = StandaloneSetup.userProfile.toDTO()
     }
 
     @Test
@@ -94,27 +65,26 @@ class MatchControllerTest @Autowired constructor(
     @Test
     fun `get matches for user when valid userId is provided`() {
         val sampleMatches = listOf(sampleMatch)
-        every { repository.findByIdAndStatus(100L, UserStatus.ACTIVE) } returns mockk()
-        every { service.findAllForUser(100L) } returns sampleMatches
+        every { repository.findByIdAndStatus(user1.id!!, UserStatus.ACTIVE) } returns mockk()
+        every { service.findAllForUser(user1.id!!) } returns sampleMatches
 
-        mockMvc.perform(get("/api/matches").param("userId", "100")
+        mockMvc.perform(get("/api/matches").param("userId", "${user1.id}")
             .header("Authorization", "Bearer $jwt")
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$[0].userIds", hasItem(100)))
-            .andExpect(jsonPath("$[0].userIds", hasItem(200)))
+            .andExpect(jsonPath("$[0].userIds", hasItems(user1.id?.toInt(), user2.id?.toInt())))
     }
 
     @Test
     fun `get matched profiles for user`() {
         val sampleUserProfiles = listOf(sampleUserProfile)
-        every { service.findUserProfilesThatMatchWithUser(100L) } returns sampleUserProfiles
+        every { service.findUserProfilesThatMatchWithUser(user1.id!!) } returns sampleUserProfiles
 
-        mockMvc.perform(get("/api/matches/profiles/100")
+        mockMvc.perform(get("/api/matches/profiles/${user1.id}")
             .header("Authorization", "Bearer $jwt")
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$[0].userId").value(100))
+            .andExpect(jsonPath("$[0].userId").value(user1.id))
     }
 
     @Test
@@ -130,7 +100,7 @@ class MatchControllerTest @Autowired constructor(
 
     @Test
     fun `create new match`() {
-        val request = MatchRequest(userIds = setOf(100L, 200L))
+        val request = MatchRequest(userIds = setOf(user1.id!!, user2.id!!))
         every { service.createMatch(request) } returns sampleMatch
 
         mockMvc.perform(
@@ -140,7 +110,7 @@ class MatchControllerTest @Autowired constructor(
                 .content(
                     """
                     {
-                        "userIds": [100, 200]
+                        "userIds": [${user1.id}, ${user2.id}]
                     }
                     """.trimIndent()
                 )

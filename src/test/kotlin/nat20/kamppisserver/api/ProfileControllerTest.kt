@@ -5,7 +5,6 @@ import com.ninjasquad.springmockk.MockkBean
 import io.mockk.*
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.domain.enums.City
-import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.Utilities
 import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserProfileRepository
@@ -23,16 +22,14 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.put
-import java.time.LocalDate
 
 @WebMvcTest(ProfileController::class)
 @Import(SecurityConfig::class, JwtUtils::class)
 class ProfileControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper,
+    val jwtUtils: JwtUtils
 ){
-    @Autowired
-    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var profileService: ProfileService
@@ -49,45 +46,20 @@ class ProfileControllerTest @Autowired constructor(
     @MockkBean
     private lateinit var userProfileService: UserProfileService
 
+    val jwt = jwtUtils.generateJwtToken("test@example.com")
+
     lateinit var user: UserDTO
     lateinit var flat: FlatDTO
     lateinit var userProfile: ProfileDTO
     lateinit var roomProfile: ProfileDTO
 
     @BeforeEach
-    fun setup() {
-        user = UserDTO(
-            firstName = "John",
-            lastName = "Doe",
-            email = "john.doe@example.com",
-            dateOfBirth = LocalDate.of(1980, 1, 1),
-            gender = Gender.MALE,
-            id = 1L
-        )
-
-        userProfile = UserProfileDTO(
-            userId = user.id!!,
-            bio = "Test bio",
-            id = 1L
-        )
-
-        flat = FlatDTO(
-            name = "Test flat",
-            description = "Test description",
-            location = City.HELSINKI,
-            totalRoommates = 2
-        )
-
-        roomProfile = RoomProfileDTO(
-            userIds = listOf(user.id!!),
-            flat = flat,
-            totalRoommates = 2,
-            location = City.HELSINKI,
-            rent = 500,
-            isPrivateRoom = true,
-            furnished = false,
-            bio = "Test room"
-        )
+    fun init() {
+        StandaloneSetup.setup()
+        user = StandaloneSetup.user1.toDTO()
+        flat = StandaloneSetup.flat1.toDTO()
+        userProfile = StandaloneSetup.userProfile.toDTO()
+        roomProfile = StandaloneSetup.roomProfile.toDTO()
     }
 
     @Test
@@ -95,8 +67,6 @@ class ProfileControllerTest @Autowired constructor(
         val flats = listOf(userProfile, roomProfile)
 
         every { profileService.findAll() } returns flats
-
-        val jwt = jwtUtils.generateJwtToken("test@example.com")
 
         mockMvc.get("/api/profiles") {
             header("Authorization", "Bearer $jwt")
@@ -111,8 +81,6 @@ class ProfileControllerTest @Autowired constructor(
     fun `GET profile by id returns 200 with matching profile`() {
         val id = 1L
         every { profileService.findById(id) } returns userProfile
-
-        val jwt = jwtUtils.generateJwtToken("test@example.com")
 
         mockMvc.get("/api/profiles/$id") {
             header("Authorization", "Bearer $jwt")
@@ -134,8 +102,6 @@ class ProfileControllerTest @Autowired constructor(
             id = userProfileId
         )
         val userProfile = mockk<UserProfile>(relaxed = true)
-
-        val jwt = jwtUtils.generateJwtToken("test@example.com")
 
         every { userProfileRepository.findByIdActive(userProfileId) } returns userProfile
         every { roomProfileRepository.findByIdActive(userProfileId) } returns null
@@ -179,8 +145,6 @@ class ProfileControllerTest @Autowired constructor(
         )
         val roomProfile = mockk<RoomProfile>(relaxed = true)
 
-        val jwt = jwtUtils.generateJwtToken("test@example.com")
-
         every { roomProfileRepository.findByIdActive(roomProfileId) } returns roomProfile
         every { userProfileRepository.findByIdActive(roomProfileId) } returns null
         every { roomProfileService.update(match { it.id == roomProfileId }, roomProfileId) } returns roomProfileDTO
@@ -207,8 +171,6 @@ class ProfileControllerTest @Autowired constructor(
             bio = "Nonexistent user",
             id = profileId
         )
-
-        val jwt = jwtUtils.generateJwtToken("test@example.com")
 
         every { userProfileRepository.findByIdActive(profileId) } returns null
         every { roomProfileRepository.findByIdActive(profileId) } returns null
