@@ -22,6 +22,7 @@ class FeedbackServiceTest {
     fun setup() {
         repository = mockk()
         service = FeedbackService(repository)
+
         StandaloneSetup.setup()
         feedback = StandaloneSetup.feedback
     }
