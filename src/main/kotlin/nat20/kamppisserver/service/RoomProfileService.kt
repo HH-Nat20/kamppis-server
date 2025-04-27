@@ -7,7 +7,6 @@ import nat20.kamppisserver.domain.RoomProfile
 import nat20.kamppisserver.domain.RoomProfileDTO
 import nat20.kamppisserver.domain.RoomProfileRequest
 import nat20.kamppisserver.domain.enums.ProfileStatus
-import nat20.kamppisserver.domain.enums.UserStatus
 import nat20.kamppisserver.repository.FlatRepository
 import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserRepository
@@ -53,7 +52,7 @@ class RoomProfileService(
 
         val addedRoomProfile = roomProfileRepository.save(roomProfile)
 
-        flatService.updatePetHouseholdStatus(roomProfile.flat.id!!, roomProfile.id!!)
+        flatService.updatePetHouseholdStatus(addedRoomProfile.flat.id!!, addedRoomProfile.id!!)
 
         return addedRoomProfile.toDTO(includeUserSummary = true)
     }

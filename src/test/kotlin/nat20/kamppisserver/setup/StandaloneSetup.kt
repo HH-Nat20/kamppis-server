@@ -98,9 +98,11 @@ object StandaloneSetup {
         request = RoomProfileRequest(
             userIds = listOf(user1.id!!),
             flatId = flat1.id!!,
+            name = "Test room",
             rent = 400,
             isPrivateRoom = false,
             furnished = false,
+            furnishedInfo = null,
             bio = "Chill area",
             id = 1L
         )
