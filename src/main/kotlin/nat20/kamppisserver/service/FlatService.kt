@@ -5,8 +5,6 @@ import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.Flat
 import nat20.kamppisserver.domain.FlatDTO
-import nat20.kamppisserver.domain.RoomProfile
-import nat20.kamppisserver.domain.enums.Pets
 import nat20.kamppisserver.repository.FlatRepository
 import nat20.kamppisserver.repository.RoomProfileRepository
 import org.springframework.stereotype.Service
@@ -49,10 +47,11 @@ class FlatService(
     @Transactional
     fun update(@Valid request: FlatDTO, id: Long): FlatDTO {
         val existingFlat = flatRepository.findById(id).getOrNull()
-        ?: throw EntityNotFoundException("Flat with id $id not found")
+            ?: throw EntityNotFoundException("Flat with id $id not found")
 
         val roomProfiles = request.roomProfileIds?.map {
-            roomProfileRepository.findByIdActive(it) ?: throw EntityNotFoundException("Room profile with id $it not found")
+            roomProfileRepository.findByIdActive(it)
+                ?: throw EntityNotFoundException("Room profile with id $it not found")
         }?.toMutableList() ?: mutableListOf()
 
         existingFlat.name = request.name
