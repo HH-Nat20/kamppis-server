@@ -93,7 +93,7 @@ Palvelimelle asennettu sovelluksen back-end päivittää itsensä jokaisen repos
 
 ## API
 
-_Kämppiksen_ API-dokumentaatio on laadittu yaml-tiedostoina OpenAPI 3.1 spesifikaation mukaisena. Dokumentaati on jaettu endpointien mukaan, ja kaikki API-spefikaatiot löydät täältä: [API](documentation/api)
+_Kämppiksen_ API-dokumentaatio on laadittu yaml-tiedostoina OpenAPI 3.1 spesifikaation mukaisena. Dokumentaatio on jaettu endpointien mukaan, ja kaikki API-spesifikaatiot löydät täältä: [API](documentation/api)
 
 <details>
 <summary>API-dokumentaatio endpointien mukaan</summary>
