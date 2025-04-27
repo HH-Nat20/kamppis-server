@@ -25,6 +25,9 @@
         <a href="#cicd">CI/CD</a>
     </li>
     <li>
+        <a href="#api">API</a>
+    </li>
+    <li>
         <a href="#serverin-asennus">Serverin asennus</a>
     </li>
     <li>
@@ -85,6 +88,31 @@ _Kämppiksen_ back-endissä on hyödynnetty jatkuvan integraation ja toimituksen
 Testiautomaatiolla voidaan varmistaa sovelluksen toimivuus jatkuvasti muutoksia tehdessä. Lisätietoja automaatiosta löydät [workflow](./.github/workflows/run-tests.yml)-tiedostosta
 
 Palvelimelle asennettu sovelluksen back-end päivittää itsensä jokaisen repositorion dev-haaraan pusketun muutoksen, jotta front-end sovelluksen käyttämä rajapinta on aina ajan tasalla.
+
+<p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
+
+## API
+
+_Kämppiksen_ API-dokumentaatio on laadittu yaml-tiedostoina OpenAPI 3.1 spesifikaation mukaisena. Dokumentaati on jaettu endpointien mukaan, ja kaikki API-spefikaatiot löydät täältä: [API](documentation/api)
+
+<details>
+<summary>API-dokumentaatio endpointien mukaan</summary>
+
+ - [dbHealth](documentation/api/dbHealth.yaml)
+ - [feedback](documentation/api/feedback.yaml)
+ - [flat](documentation/api/flat)
+ - [image](documentation/api/image.yaml)
+ - [invite](documentation/api/invite.yaml)
+ - [login](documentation/api/login.yaml)
+ - [match](documentation/api/match.yaml)
+ - [profile](documentation/api/profile)
+ - [roomProfile](documentation/api/roomProfile.yaml)
+ - [serverHealth](documentation/api/serverHealth.yaml)
+ - [swipe](documentation/api/swipe.yaml)
+ - [user](documentation/api/user.yaml)
+ - [userProfile](documentation/api/userProfile.yaml)
+
+</details>
 
 <p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
 

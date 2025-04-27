@@ -1,0 +1,64 @@
+openapi: "3.1.0"
+info:
+  title: "invite API"
+  description: "kamppis_server API for invites"
+  version: "1.0.0"
+servers:
+  - url: "https://kamppis.hellmanstudios.fi"
+paths:
+  /api/invites/generate-invitetoken/{roomProfileId}:
+    post:
+      summary: "Adds a new room profile invite"
+      operationId: "addRoomProfileInvite"
+      parameters:
+        - name: "roomProfileId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/InviteResponse"
+  /api/invites/join/{inviteToken}:
+    put:
+      summary: "Adds a user to a room through the invite"
+      operationId: "joinRoom"
+      parameters:
+        - name: "inviteToken"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "authToken"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/InviteResponse"
+components:
+  schemas:
+    InviteResponse:
+      type: "object"
+      properties:
+        inviteToken:
+          type: "string"
+        expiresAt:
+          type: "string"
+          format: "date-time"
+        message:
+          type: "string"
+          nullable: true
+      required:
+        - "inviteToken"
+        - "expiresAt"
