@@ -37,7 +37,7 @@
 </details><br>
 
 ## Mikä _Kämppis_?
-_Kämppis_ on mobiilisovellus, joka yhdistää kämppiksiä etsivät ihmiset toistensa kanssa.
+_Kämppis_ on mobiilisovellus, joka yhdistää kämppiksiä etsivät ihmiset toistensa kanssa. 
 
 Kaikki projektin back-endin avoimet issuet sekä tunnetut bugit löydät täältä: <br>
 [![Back-end issues][back-end-issues-logo]][back-end-issues-url]
