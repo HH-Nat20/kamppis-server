@@ -24,7 +24,7 @@ class JwtAuthenticationFilter(private val jwtUtils: JwtUtils) : OncePerRequestFi
 
         return when {
             uri.startsWith("/ws") -> true // skip WebSocket handshake from filter
-            method == "GET" && (uri == "/api/db-health" || uri == "/api/health" || uri == "/api/users") -> true // TODO: Remove "/api/users"
+            method == "GET" && (uri == "/api/db-health" || uri == "/api/health" || uri == "/api/users/mock") -> true
             method == "POST" && uri.startsWith("/api/login") -> true
             else -> false
         }
