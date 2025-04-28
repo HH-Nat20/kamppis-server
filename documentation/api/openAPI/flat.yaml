@@ -1,0 +1,173 @@
+openapi: "3.1.0"
+info:
+  title: "flat API"
+  description: "kamppis_server API for flats"
+  version: "1.0.0"
+servers:
+  - url: "https://kamppis.hellmanstudios.fi"
+paths:
+  /api/flats:
+    get:
+      summary: "Returns all flats"
+      operationId: "findAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/FlatDTO"
+    post:
+      summary: "Adds a new flat"
+      operationId: "add"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FlatDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/FlatDTO"
+  /api/flats/{id}:
+    get:
+      summary: "Returns a flat by its id"
+      operationId: "findById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/FlatDTO"
+    put:
+      summary: "Updates a flat"
+      operationId: "update"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FlatDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/FlatDTO"
+components:
+  schemas:
+    FlatDTO:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        description:
+          type: "string"
+        location:
+          type: "string"
+          enum:
+            - "HELSINKI"
+            - "ESPOO"
+            - "TAMPERE"
+            - "VANTAA"
+            - "OULU"
+            - "TURKU"
+            - "JYVASKYLA"
+            - "KUOPIO"
+            - "LAHTI"
+            - "PORI"
+            - "KOUVOLA"
+            - "JOENSUU"
+            - "LAPPEENRANTA"
+            - "HAMEENLINNA"
+            - "VAASA"
+            - "SEINAJOKA"
+            - "ROVANIEMI"
+            - "MIKKELI"
+            - "SALO"
+            - "KOTKA"
+            - "PORVOO"
+            - "KOKKOLA"
+            - "HYVINKAA"
+            - "LOHJA"
+            - "JARVENPAA"
+            - "NURMIJARVI"
+            - "KIRKKONUMMI"
+            - "TUUSULA"
+            - "RAUMA"
+            - "KERAVA"
+            - "KAJAANI"
+            - "KAARINA"
+            - "NOKIA"
+            - "YLOJARVI"
+            - "KANGASALA"
+            - "SAVONLINNA"
+            - "VIHTI"
+            - "RIIHIMAKI"
+            - "RAASEPORI"
+            - "IMATRA"
+            - "RAISIO"
+            - "RAAHE"
+            - "LEMPAALA"
+            - "SASTAMALA"
+            - "HOLLOLA"
+            - "SIPOO"
+            - "TORNIO"
+            - "SIILINJARVI"
+            - "IISALMI"
+            - "MANTSALA"
+        totalRoommates:
+          type: "integer"
+          format: "int32"
+        petHousehold:
+          type: "boolean"
+          nullable: true
+        flatUtilities:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "WIFI"
+              - "DISHWASHER"
+              - "LAUNDRY_MACHINE"
+              - "BALCONY"
+              - "PRIVATE_BATHROOM"
+              - "SEPARATE_BATHROOM_AND_SHOWER"
+        roomProfileIds:
+          type: "array"
+          nullable: true
+          items:
+            type: "integer"
+            format: "int64"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "name"
+        - "description"
+        - "location"
+        - "totalRoommates"

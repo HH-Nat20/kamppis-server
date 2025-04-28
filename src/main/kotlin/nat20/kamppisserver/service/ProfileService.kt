@@ -1,6 +1,6 @@
 package nat20.kamppisserver.service
 
-import jakarta.persistence.EntityNotFoundException
+import exception.EntityNotFoundException
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserProfileRepository
@@ -48,5 +48,4 @@ class ProfileService(
             else -> throw EntityNotFoundException("Profile with id $id not found")
         }
     }
-
 }

@@ -5,12 +5,12 @@ import io.mockk.*
 import nat20.kamppisserver.domain.ProfilePhoto
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
-import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.repository.ProfileRepository
 import nat20.kamppisserver.repository.ProfilePhotoRepository
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.storage.FileSystemStorageService
 import nat20.kamppisserver.security.SecurityConfig
+import nat20.kamppisserver.setup.StandaloneSetup
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -24,7 +24,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.io.ByteArrayInputStream
 import java.io.File
-import java.time.LocalDate
 import java.util.*
 import kotlin.test.Test
 
@@ -32,10 +31,8 @@ import kotlin.test.Test
 @Import(SecurityConfig::class, JwtUtils::class)
 class ImageControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
+    val jwtUtils: JwtUtils
 ) {
-
-    @Autowired
-    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var profileRepository: ProfileRepository
@@ -46,29 +43,16 @@ class ImageControllerTest @Autowired constructor(
     @MockkBean
     private lateinit var storageService: FileSystemStorageService
 
-    lateinit var jwt: String
+    val jwt = jwtUtils.generateJwtToken("test@example.com")
+
     lateinit var user: User
     lateinit var userProfile: UserProfile
 
     @BeforeEach
-    fun setup() {
-        jwt = jwtUtils.generateJwtToken("test@example.com")
-
-        user = User(
-            firstName = "John",
-            lastName = "Doe",
-            email = "john.doe@example.com",
-            dateOfBirth = LocalDate.of(1980, 1, 1),
-            gender = Gender.MALE,
-            id = 1L
-        )
-
-        userProfile = UserProfile(
-            user = user,
-            bio = "Test bio",
-            photos = mutableListOf()
-        )
-        userProfile.id = 1L
+    fun init() {
+        StandaloneSetup.setup()
+        user = StandaloneSetup.user1
+        userProfile = StandaloneSetup.userProfile
     }
 
     @Test

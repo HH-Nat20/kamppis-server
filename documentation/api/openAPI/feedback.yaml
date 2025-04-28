@@ -1,0 +1,50 @@
+openapi: "3.1.0"
+info:
+  title: "feedback API"
+  description: "kamppis_server API for feedbacks"
+  version: "1.0.0"
+servers:
+  - url: "https://kamppis.hellmanstudios.fi"
+paths:
+  /api/feedback:
+    get:
+      summary: "Returns all given user feedbacks"
+      operationId: "findAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/FeedbackDTO"
+    post:
+      summary: "Adds a new user feedback"
+      operationId: "add"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FeedbackDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/FeedbackDTO"
+components:
+  schemas:
+    FeedbackDTO:
+      type: "object"
+      properties:
+        feedback:
+          type: "string"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "feedback"

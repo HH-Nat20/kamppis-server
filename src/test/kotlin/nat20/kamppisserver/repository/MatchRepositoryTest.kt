@@ -1,14 +1,13 @@
 package nat20.kamppisserver.repository
 
 import nat20.kamppisserver.domain.*
-import nat20.kamppisserver.domain.enums.Gender
+import nat20.kamppisserver.setup.ContextSetup
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.annotation.DirtiesContext
-import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertNotEquals
 
@@ -17,34 +16,35 @@ import kotlin.test.assertNotEquals
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) // Ensures cleanup after each test
 class MatchRepositoryTest @Autowired constructor(
     val userRepository: UserRepository,
+    val flatRepository: FlatRepository,
+    val roomProfileRepository: RoomProfileRepository,
     val matchRepository: MatchRepository,
-    val userProfileRepository: UserProfileRepository
+    val userProfileRepository: UserProfileRepository,
+    val roomPreferenceRepository: RoomPreferenceRepository,
+    val roommatePreferenceRepository: RoommatePreferenceRepository
 ){
 
     lateinit var user1: User
     lateinit var user2: User
+    lateinit var userProfile1: UserProfile
+    lateinit var userProfile2: UserProfile
+    lateinit var contextSetup: ContextSetup
 
     @BeforeEach
-    fun setup() {
-        user1 = userRepository.save(
-            User(
-                firstName = "John",
-                lastName = "Doe",
-                email = "john.doe@example.com",
-                dateOfBirth = LocalDate.of(1980, 1, 1),
-                gender = Gender.MALE
-            )
+    fun init() {
+        contextSetup = ContextSetup(
+            userRepository,
+            userProfileRepository,
+            flatRepository,
+            roomProfileRepository,
+            roomPreferenceRepository,
+            roommatePreferenceRepository
         )
-
-        user2 = userRepository.save(
-            User(
-                firstName = "Jane",
-                lastName = "Doe",
-                email = "jane.doe@example.com",
-                dateOfBirth = LocalDate.of(1990, 1, 1),
-                gender = Gender.FEMALE
-            )
-        )
+        contextSetup.setup()
+        user1 = contextSetup.user
+        user2 = contextSetup.swipingUser
+        userProfile1 = contextSetup.userProfile
+        userProfile2 = contextSetup.swipingUserProfile
     }
 
     @Test
@@ -76,12 +76,6 @@ class MatchRepositoryTest @Autowired constructor(
 
     @Test
     fun `findUserProfilesThatMatchWithUser returns correct profiles`() {
-        val userProfile1 = UserProfile(user = user1)
-        userProfileRepository.save(userProfile1)
-
-        val userProfile2 = UserProfile(user = user2)
-        userProfileRepository.save(userProfile2)
-
         val managedUser1 = userRepository.findById(user1.id!!).get()
         val managedUser2 = userRepository.findById(user2.id!!).get()
 

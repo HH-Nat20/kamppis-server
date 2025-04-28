@@ -19,7 +19,13 @@
         <a href="#teknologiat">Teknologiat</a>
     </li>
     <li>
+        <a href="#tietokanta">Tietokanta</a>
+    </li>
+    <li>
         <a href="#cicd">CI/CD</a>
+    </li>
+    <li>
+        <a href="#api">API</a>
     </li>
     <li>
         <a href="#serverin-asennus">Serverin asennus</a>
@@ -31,7 +37,7 @@
 </details><br>
 
 ## Mikä _Kämppis_?
-_Kämppis_ on mobiilisovellus, joka yhdistää kämppiksiä etsivät ihmiset toistensa kanssa.
+_Kämppis_ on mobiilisovellus, joka yhdistää kämppiksiä etsivät ihmiset toistensa kanssa.  
 
 Kaikki projektin back-endin avoimet issuet sekä tunnetut bugit löydät täältä: <br>
 [![Back-end issues][back-end-issues-logo]][back-end-issues-url]
@@ -62,6 +68,19 @@ _Kämppiksen_ back-end on rakennettu käyttämällä seuraavia teknologioita:
 
 <p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
 
+## Tietokanta
+
+_Kämppis_ hyödyntää tietokantaratkaisuna PostgreSQL:llä laadittua relaatiotietokantaa. Tietokantaa käytetään tallentamaan käyttäjien ja heidän preferenssinsä, huoneet ja kämpät, käyttäjien antamat swipet ja muodostuneet matchit sekä muita sovelluksen toiminnan kannalta tärkeitä tietoja.
+
+Tietokanta on oleellisessa osassa, kun käyttäjille etsitään SQL-lauseilla heidän preferenssiensä mukaisia käyttäjiä ja huoneita.
+
+<details>
+<summary>Klikkaa tietokantakaavio auki</summary>
+<img src="./documentation/database/Kämppis-db-schema.png">
+</details>
+
+<p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
+
 ## CI/CD
 
 _Kämppiksen_ back-endissä on hyödynnetty jatkuvan integraation ja toimituksen prosessia GitHub Actionsin kautta. GitHub Actions määrittää automaatioputken, joka jokaisella `git push` -komennolla luo GitHubissa back-endille PostgreSQL-testitietokannan testidatasta ja ajaa back-endin yksikkö- ja integrointitestit käyttämällä testitietokantaa. Testien suorituksen jälkeen testitietokanta ajetaan alas.
@@ -69,6 +88,32 @@ _Kämppiksen_ back-endissä on hyödynnetty jatkuvan integraation ja toimituksen
 Testiautomaatiolla voidaan varmistaa sovelluksen toimivuus jatkuvasti muutoksia tehdessä. Lisätietoja automaatiosta löydät [workflow](./.github/workflows/run-tests.yml)-tiedostosta
 
 Palvelimelle asennettu sovelluksen back-end päivittää itsensä jokaisen repositorion dev-haaraan pusketun muutoksen, jotta front-end sovelluksen käyttämä rajapinta on aina ajan tasalla.
+
+<p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
+
+## API
+
+_Kämppiksen_ API-dokumentaatio on laadittu yaml-tiedostoina OpenAPI 3.1 spesifikaation mukaisena. Dokumentaatio on jaettu endpointien mukaan, ja kaikki API-spesifikaatiot löydät täältä: [openAPI](documentation/api/openAPI)
+Spesifikaatioista on laadittu helpommin luettavat markdown-tiedostot, jotka löytyvät alta. Markdown-tiedostojen luonnissa on hyödynnetty [Widdershins](https://www.npmjs.com/package/widdershins)-kirjastoa.
+
+<details>
+<summary>API-dokumentaatio endpointien mukaan</summary>
+
+ - [dbHealth](documentation/api/markdowns/dbHealthAPI.md)
+ - [feedback](documentation/api/markdowns/feedbackAPI.md)
+ - [flat](documentation/api/markdowns/flatAPI.md)
+ - [image](documentation/api/markdowns/imageAPI.md)
+ - [invite](documentation/api/markdowns/inviteAPI.md)
+ - [login](documentation/api/markdowns/loginAPI.md)
+ - [match](documentation/api/markdowns/matchAPI.md)
+ - [profile](documentation/api/markdowns/profileAPI.md)
+ - [roomProfile](documentation/api/markdowns/roomProfileAPI.md)
+ - [serverHealth](documentation/api/markdowns/serverHealthAPI.md)
+ - [swipe](documentation/api/markdowns/swipeAPI.md)
+ - [user](documentation/api/markdowns/userAPI.md)
+ - [userProfile](documentation/api/markdowns/userProfileAPI.md)
+
+</details>
 
 <p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
 
@@ -92,7 +137,7 @@ docker compose up
 ```bash
 docker compose down
 ```
-Valmis! Jee!
+Valmis!
 
 <p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
 

@@ -1,0 +1,19 @@
+openapi: "3.1.0"
+info:
+  title: "database health API"
+  description: "kamppis_server API for database health"
+  version: "1.0.0"
+servers:
+  - url: "https://kamppis.hellmanstudios.fi"
+paths:
+  /api/db-health:
+    get:
+      summary: "Checks database connection health"
+      operationId: "dbHealth"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"

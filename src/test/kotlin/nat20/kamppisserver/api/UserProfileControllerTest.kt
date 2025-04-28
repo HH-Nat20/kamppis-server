@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.*
 import nat20.kamppisserver.domain.*
-import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.service.QueryService
 import nat20.kamppisserver.service.UserProfileService
+import nat20.kamppisserver.setup.StandaloneSetup
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.test.Test
 import org.springframework.http.MediaType
-import java.time.LocalDate
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 
@@ -28,10 +27,8 @@ import org.springframework.data.domain.PageRequest
 class UserProfileControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper,
+    val jwtUtils: JwtUtils
 ) {
-
-    @Autowired
-    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var service: UserProfileService
@@ -39,34 +36,18 @@ class UserProfileControllerTest @Autowired constructor(
     @MockkBean
     private lateinit var queryService: QueryService
 
-    lateinit var jwt: String
+    val jwt = jwtUtils.generateJwtToken("test@example.com")
+
     lateinit var user: UserDTO
     lateinit var userProfileDTO: UserProfileDTO
     lateinit var userProfileRequest: UserProfileRequest
 
     @BeforeEach
-    fun setup() {
-        jwt = jwtUtils.generateJwtToken("test@example.com")
-
-        user = UserDTO(
-            firstName = "John",
-            lastName = "Doe",
-            email = "john.doe@example.com",
-            dateOfBirth = LocalDate.of(1980, 1, 1),
-            gender = Gender.MALE,
-            id = 1L
-        )
-
-        userProfileDTO = UserProfileDTO(
-            userId = user.id!!,
-            bio = "Test bio",
-            id = 1L
-        )
-
-        userProfileRequest = UserProfileRequest(
-            userId = user.id!!,
-            bio = "Test bio"
-        )
+    fun init() {
+        StandaloneSetup.setup()
+        user = StandaloneSetup.user1.toDTO()
+        userProfileDTO = StandaloneSetup.userProfile.toDTO()
+        userProfileRequest = StandaloneSetup.userProfileRequest
     }
 
     @Test

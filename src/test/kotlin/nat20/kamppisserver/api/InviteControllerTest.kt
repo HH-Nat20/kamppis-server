@@ -3,12 +3,12 @@ package nat20.kamppisserver.api
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.*
 import nat20.kamppisserver.domain.*
-import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.repository.*
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.security.SecurityConfig
 import nat20.kamppisserver.service.InviteService
 import nat20.kamppisserver.service.RoomProfileService
+import nat20.kamppisserver.setup.StandaloneSetup
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.test.Test
 
@@ -25,10 +24,8 @@ import kotlin.test.Test
 @Import(SecurityConfig::class, JwtUtils::class)
 class InviteControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
+    val jwtUtils: JwtUtils
 ) {
-
-    @Autowired
-    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var inviteService: InviteService
@@ -45,28 +42,16 @@ class InviteControllerTest @Autowired constructor(
     @MockkBean
     private lateinit var roomProfileRepository: RoomProfileRepository
 
-    lateinit var jwt: String
+    val jwt = jwtUtils.generateJwtToken("test@example.com")
+
     lateinit var user: User
     lateinit var testInvite: RoomProfileInvite
 
     @BeforeEach
-    fun setup() {
-        jwt = jwtUtils.generateJwtToken("test@example.com")
-
-        user = User(
-            firstName = "John",
-            lastName = "Doe",
-            email = "john.doe@example.com",
-            dateOfBirth = LocalDate.of(1980, 1, 1),
-            gender = Gender.MALE,
-            id = 1L
-        )
-
-        testInvite = RoomProfileInvite(
-            roomProfileId = 123L,
-            roomProfileInviteToken = "INV123",
-            expiresAt = LocalDateTime.now().plusDays(1)
-        )
+    fun init() {
+        StandaloneSetup.setup()
+        user = StandaloneSetup.user1
+        testInvite = StandaloneSetup.invite
     }
 
     @Test

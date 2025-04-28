@@ -1,0 +1,67 @@
+openapi: "3.1.0"
+info:
+  title: "profile API"
+  description: "kamppis_server API for profiles"
+  version: "1.0.0"
+servers:
+  - url: "https://kamppis.hellmanstudios.fi"
+paths:
+  /api/profiles:
+    get:
+      summary: "Returns all profiles"
+      operationId: "findAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ProfileDTO"
+  /api/profiles/{id}:
+    get:
+      summary: "Returns a profile by its id"
+      operationId: "findById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProfileDTO"
+    put:
+      summary: "Updates a profile"
+      operationId: "updateProfile"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProfileDTO"
+components:
+  schemas:
+    ProfileDTO:
+      type: "object"
+      properties: { }

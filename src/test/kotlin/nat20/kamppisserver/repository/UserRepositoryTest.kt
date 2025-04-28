@@ -1,50 +1,44 @@
 package nat20.kamppisserver.repository
 
 import nat20.kamppisserver.domain.*
-import nat20.kamppisserver.domain.enums.Gender
 import nat20.kamppisserver.domain.enums.UserStatus
+import nat20.kamppisserver.setup.ContextSetup
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.test.Test
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserRepositoryTest @Autowired constructor(
+    val userProfileRepository: UserProfileRepository,
+    val roomProfileRepository: RoomProfileRepository,
+    val flatRepository: FlatRepository,
+    val roomPreferenceRepository: RoomPreferenceRepository,
+    val roommatePreferenceRepository: RoommatePreferenceRepository,
     val userRepository: UserRepository
 ) {
 
     lateinit var activeUser: User
     lateinit var inactiveUser: User
+    lateinit var contextSetup: ContextSetup
 
     @BeforeEach
-    fun setup() {
-        activeUser = userRepository.save(
-            User(
-                firstName = "John",
-                lastName = "Doe",
-                email = "john.doe@example.com",
-                dateOfBirth = LocalDate.of(1980, 1, 1),
-                gender = Gender.MALE
-            )
+    fun init() {
+        contextSetup = ContextSetup(
+            userRepository,
+            userProfileRepository,
+            flatRepository,
+            roomProfileRepository,
+            roomPreferenceRepository,
+            roommatePreferenceRepository
         )
-
-        inactiveUser = User(
-                firstName = "Jane",
-                lastName = "Doe",
-                email = "jane.doe@example.com",
-                dateOfBirth = LocalDate.of(1990, 1, 1),
-                gender = Gender.FEMALE
-            )
-
-        val now = LocalDateTime.now()
-        inactiveUser.status = UserStatus.INACTIVE
-        inactiveUser.deletedAt = now.minusDays(1)
-        userRepository.save(inactiveUser)
+        contextSetup.setup()
+        activeUser = contextSetup.user
+        inactiveUser = contextSetup.deletedUser
     }
 
     @Test
@@ -86,7 +80,7 @@ class UserRepositoryTest @Autowired constructor(
         val now = LocalDateTime.now()
 
         val results = userRepository.findAllByStatusAndDeletedAtBefore(UserStatus.INACTIVE, now)
-        assertThat(results).extracting("email").contains("jane.doe@example.com")
+        assertThat(results).extracting("email").contains("deleted.doe@example.com")
     }
 
     @Test

@@ -1,20 +1,16 @@
 package nat20.kamppisserver.repository
 
 import nat20.kamppisserver.domain.*
-import nat20.kamppisserver.domain.enums.City
-import nat20.kamppisserver.domain.enums.Gender
-import nat20.kamppisserver.domain.enums.Pets
 import nat20.kamppisserver.domain.enums.ProfileStatus
+import nat20.kamppisserver.setup.ContextSetup
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.domain.PageRequest
-import java.time.LocalDate
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
-import java.time.LocalDateTime
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -24,6 +20,7 @@ class RoomProfileRepositoryTest @Autowired constructor(
     val userProfileRepository: UserProfileRepository,
     val flatRepository: FlatRepository,
     val roomPreferenceRepository: RoomPreferenceRepository,
+    val roommatePreferenceRepository: RoommatePreferenceRepository,
     val testEntityManager: TestEntityManager
 ) {
 
@@ -33,76 +30,32 @@ class RoomProfileRepositoryTest @Autowired constructor(
     lateinit var roomProfile: RoomProfile
     lateinit var deletedRoomProfile: RoomProfile
     lateinit var roomPreference: RoomPreference
+    lateinit var contextSetup: ContextSetup
 
     @BeforeEach
-    fun setup() {
-        user = userRepository.save(
-            User(
-                firstName = "John",
-                lastName = "Doe",
-                email = "john.doe@example.com",
-                dateOfBirth = LocalDate.of(1980, 1, 1),
-                gender = Gender.MALE
-            )
+    fun init() {
+        contextSetup = ContextSetup(
+            userRepository,
+            userProfileRepository,
+            flatRepository,
+            roomProfileRepository,
+            roomPreferenceRepository,
+            roommatePreferenceRepository
         )
-
-        userProfile = userProfileRepository.save(
-            UserProfile(
-                user = user,
-                pets = Pets.PET_OWNER
-            )
-        )
-
-        flat = flatRepository.save(
-            Flat(
-                name = "Nice place",
-                description = "Sunny",
-                location = City.HELSINKI,
-                totalRoommates = 2,
-                petHousehold = true
-            )
-        )
-
-        roomProfile = roomProfileRepository.save(
-            RoomProfile(
-                users = mutableListOf(user),
-                flat = flat,
-                rent = 800,
-                isPrivateRoom = true,
-                furnished = false,
-                bio = "A cool place"
-            )
-        )
-
-        deletedRoomProfile = RoomProfile(
-            users = mutableListOf(user),
-            flat = flat,
-            rent = 800,
-            isPrivateRoom = true,
-            furnished = false,
-            bio = "A deleted place"
-        )
-
-        deletedRoomProfile.status = ProfileStatus.INACTIVE
-        deletedRoomProfile.deletedAt = LocalDateTime.now()
-        roomProfileRepository.save(deletedRoomProfile)
-
-        roomPreference = roomPreferenceRepository.save(
-            RoomPreference(
-                user = user,
-                maxRent = 750,
-                hasPrivateRoom = true,
-                maxRoommates = 3,
-                locationPreferences = mutableListOf(City.HELSINKI, City.ESPOO, City.VANTAA)
-            )
-        )
+        contextSetup.setup()
+        user = contextSetup.user
+        userProfile = contextSetup.userProfile
+        flat = contextSetup.flat
+        roomProfile = contextSetup.roomProfile
+        deletedRoomProfile = contextSetup.deletedRoomProfile
+        roomPreference  = contextSetup.roomPreference
     }
 
     @Test
     fun `findAllActive should return only non-deleted room profiles`() {
         val result = roomProfileRepository.findAllActive()
 
-        assertEquals(1, result.size)
+        assertEquals(2, result.size)
         assertEquals(ProfileStatus.ACTIVE, result[0].status)
         assertNull(result[0].deletedAt)
     }
@@ -131,7 +84,7 @@ class RoomProfileRepositoryTest @Autowired constructor(
     fun `findRoomProfilesThatMeetCriteria filters correctly`() {
         val result = roomProfileRepository.findRoomProfilesThatMeetCriteria(
             pageable = PageRequest.of(0, 10),
-            userProfileId = 1L,
+            userProfileId = userProfile.id!!,
             maxRent = 1000,
             hasPrivateRoom = true,
             maxRoommates = 3,

@@ -6,10 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import nat20.kamppisserver.domain.FlatDTO
-import nat20.kamppisserver.domain.enums.City
-import nat20.kamppisserver.domain.enums.Utilities
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.service.FlatService
+import nat20.kamppisserver.setup.StandaloneSetup
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,7 +24,7 @@ import org.springframework.test.web.servlet.put
 class FlatControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper,
-    val jwtUtils: JwtUtils,  // Since the token is created outside test context, we need to inject JwtUtils here (I think)
+    val jwtUtils: JwtUtils  // Since the token is created outside test context, we need to inject JwtUtils here (I think)
 ) {
 
     @MockkBean
@@ -37,26 +36,10 @@ class FlatControllerTest @Autowired constructor(
     val jwt = jwtUtils.generateJwtToken("test@example.com")
 
     @BeforeEach
-    fun setup() {
-        flat1 = FlatDTO(
-                id = 1,
-                name = "Nice place",
-                description = "Sunny",
-                location = City.HELSINKI,
-                totalRoommates = 3,
-                petHousehold = false,
-                flatUtilities = mutableListOf(Utilities.WIFI)
-            )
-
-        flat2 = FlatDTO(
-                id = 2,
-                name = "Cozy loft",
-                description = "Downtown",
-                location = City.TAMPERE,
-                totalRoommates = 2,
-                petHousehold = true,
-                flatUtilities = mutableListOf(Utilities.LAUNDRY_MACHINE)
-            )
+    fun init() {
+        StandaloneSetup.setup()
+        flat1 = StandaloneSetup.flat1.toDTO()
+        flat2 = StandaloneSetup.flat2.toDTO()
     }
 
     @Test

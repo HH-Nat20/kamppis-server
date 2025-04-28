@@ -1,0 +1,101 @@
+openapi: "3.1.0"
+info:
+  title: "swipes API"
+  description: "kamppis_server API for swipes"
+  version: "1.0.0"
+servers:
+  - url: "https://kamppis.hellmanstudios.fi"
+paths:
+  /api/swipes:
+    get:
+      summary: "Returns all swipes"
+      operationId: "findAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SwipeDTO"
+    post:
+      summary: "Adds a new swipe"
+      operationId: "swipe"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SwipeRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SwipeResponse"
+components:
+  schemas:
+    ProfileDTO:
+      type: "object"
+      properties: { }
+    SwipeDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        swipingProfile:
+          $ref: "#/components/schemas/ProfileDTO"
+        swipedProfile:
+          $ref: "#/components/schemas/ProfileDTO"
+        isRightSwipe:
+          type: "boolean"
+        isMatch:
+          type: "boolean"
+        createdAt:
+          type: "string"
+          format: "date-time"
+      required:
+        - "swipingProfile"
+        - "swipedProfile"
+        - "isRightSwipe"
+        - "isMatch"
+        - "createdAt"
+    SwipeRequest:
+      type: "object"
+      properties:
+        swipingProfileId:
+          type: "integer"
+          format: "int64"
+        swipedProfileId:
+          type: "integer"
+          format: "int64"
+        isRightSwipe:
+          type: "boolean"
+      required:
+        - "swipingProfileId"
+        - "swipedProfileId"
+        - "isRightSwipe"
+    SwipeResponse:
+      type: "object"
+      properties:
+        swipeId:
+          type: "integer"
+          format: "int64"
+        swipingProfile:
+          $ref: "#/components/schemas/ProfileDTO"
+        swipedProfile:
+          $ref: "#/components/schemas/ProfileDTO"
+        isRightSwipe:
+          type: "boolean"
+        isMatch:
+          type: "boolean"
+      required:
+        - "swipeId"
+        - "swipingProfile"
+        - "swipedProfile"
+        - "isRightSwipe"
+        - "isMatch"

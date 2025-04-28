@@ -23,17 +23,17 @@ import kotlin.test.Test
 @Import(SecurityConfig::class, JwtUtils::class) // Import your security config
 class UserControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
+    val jwtUtils: JwtUtils
 ){
-
-    @Autowired
-    lateinit var jwtUtils: JwtUtils
-
-/*      Probably needed later
-    @MockkBean
-    private lateinit var authenticationManager: AuthenticationManager*/
 
     @MockkBean
     lateinit var userService: UserService
+
+    /*      Probably needed later
+        @MockkBean
+        private lateinit var authenticationManager: AuthenticationManager*/
+
+    val jwt = jwtUtils.generateJwtToken("fake@example.com")
 
     @Test
     fun `List all users`() {
@@ -63,8 +63,6 @@ class UserControllerTest @Autowired constructor(
 
         every { userService.findAllMockUsers() } returns listOf(bobJohnson, charlieDavis)
 
-        val jwt = jwtUtils.generateJwtToken("fake@example.com")
-
         mockMvc.perform(get("/api/users/mock").accept(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, "Bearer $jwt"))
         .andExpect(status().isOk)
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -87,8 +85,6 @@ class UserControllerTest @Autowired constructor(
         )
 
         every { userService.findById(1) } returns bobJohnson
-
-        val jwt = jwtUtils.generateJwtToken("bob.johnson@example.com")
 
         mockMvc.perform(get("/api/users/1").accept(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, "Bearer $jwt"))
             .andExpect(status().isOk)

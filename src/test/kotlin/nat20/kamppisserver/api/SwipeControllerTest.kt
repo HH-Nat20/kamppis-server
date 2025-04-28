@@ -27,15 +27,16 @@ import java.time.LocalDate
 class SwipeControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper,
+    val jwtUtils: JwtUtils
 ){
-
-    @Autowired
-    lateinit var jwtUtils: JwtUtils
 
     @MockkBean
     private lateinit var swipeService: SwipeService
+
     @MockkBean
     private lateinit var profileRepository: ProfileRepository
+
+    val jwt = jwtUtils.generateJwtToken("alice.smith@test.com")
 
 /*    Probably needed later
     @MockkBean
@@ -96,8 +97,6 @@ class SwipeControllerTest @Autowired constructor(
         every { profileRepository.findByIdAndStatus(2L, ProfileStatus.ACTIVE)} returns profile2
         every { swipeService.swipe(any(),any(), any()) } returns swipeResponse
         every { swipeService.principalInSwipingProfile(any(), any()) } returns true
-
-        val jwt = jwtUtils.generateJwtToken("alice.smith@test.com")
 
         mockMvc.post("/api/swipes") {
             contentType = MediaType.APPLICATION_JSON

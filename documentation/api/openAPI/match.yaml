@@ -1,0 +1,235 @@
+openapi: "3.1.0"
+info:
+  title: "match API"
+  description: "kamppis_server API for matches"
+  version: "1.0.0"
+servers:
+  - url: "https://kamppis.hellmanstudios.fi"
+paths:
+  /api/matches:
+    post:
+      summary: "Adds a new match"
+      operationId: "addMatch"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatchRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MatchDTO"
+  /api/matches/profiles/{id}:
+    get:
+      summary: "Returns all user's matches"
+      operationId: "findAllMatchesForUser"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/UserProfileDTO"
+  /api/matches/{id}:
+    get:
+      summary: "Returns a match by its id"
+      operationId: "findMatchById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MatchDTO"
+    post:
+      summary: "Removes a user from match"
+      operationId: "removeFromMatch"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatchRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MatchDTO"
+components:
+  schemas:
+    UserSummaryDTO:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        age:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        gender:
+          type: "string"
+          enum:
+            - "MALE"
+            - "FEMALE"
+            - "OTHER"
+            - "NOT_IMPORTANT"
+        lookingFor:
+          type: "string"
+          nullable: true
+          enum:
+            - "OTHER_USER_PROFILES"
+            - "ROOM_PROFILES"
+            - "OTHER_USER_PROFILES_OR_ROOM_PROFILES"
+            - "USER_PROFILES"
+        isOnline:
+          type: "boolean"
+          nullable: true
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "firstName"
+        - "lastName"
+        - "gender"
+    MatchDTO:
+      type: "object"
+      properties:
+        userIds:
+          type: "array"
+          items:
+            type: "integer"
+            format: "int64"
+          uniqueItems: true
+        users:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UserSummaryDTO"
+          uniqueItems: true
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+          nullable: true
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "userIds"
+        - "users"
+        - "createdAt"
+    ProfilePhotoDTO:
+      type: "object"
+      properties:
+        profileId:
+          type: "integer"
+          format: "int64"
+        url:
+          type: "string"
+        isProfilePhoto:
+          type: "boolean"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "profileId"
+        - "url"
+        - "isProfilePhoto"
+    UserProfileDTO:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
+        user:
+          nullable: true
+          $ref: "#/components/schemas/UserSummaryDTO"
+        bio:
+          type: "string"
+        cleanliness:
+          type: "string"
+          nullable: true
+          enum:
+            - "SPOTLESS"
+            - "TIDY"
+            - "CASUAL"
+            - "MESSY"
+            - "CAREFREE"
+        pets:
+          type: "string"
+          nullable: true
+          enum:
+            - "PET_OWNER"
+            - "OK_WITH_PETS"
+            - "PREFER_NO_PETS"
+        lifestyle:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "EARLY_BIRD"
+              - "NIGHT_OWL"
+              - "PARTY_GOER"
+              - "HOMEBODY"
+              - "STUDENT"
+              - "WORKING"
+          uniqueItems: true
+        photos:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ProfilePhotoDTO"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "userId"
+        - "bio"
+        - "photos"
+    MatchRequest:
+      type: "object"
+      properties:
+        userIds:
+          type: "array"
+          items:
+            type: "integer"
+            format: "int64"
+          uniqueItems: true
+      required:
+        - "userIds"

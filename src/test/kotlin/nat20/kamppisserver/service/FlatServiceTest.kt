@@ -1,160 +1,142 @@
 package nat20.kamppisserver.service
 
+import io.mockk.*
 import nat20.kamppisserver.domain.Flat
-import nat20.kamppisserver.domain.FlatDTO
-import nat20.kamppisserver.domain.RoomProfileRequest
-import nat20.kamppisserver.domain.UserProfileRequest
-import nat20.kamppisserver.domain.enums.*
+import nat20.kamppisserver.domain.RoomProfile
 import nat20.kamppisserver.repository.FlatRepository
-import nat20.kamppisserver.repository.UserProfileRepository
+import nat20.kamppisserver.repository.RoomProfileRepository
+import nat20.kamppisserver.setup.StandaloneSetup
+import exception.EntityNotFoundException
+import nat20.kamppisserver.domain.enums.City
+import nat20.kamppisserver.domain.enums.Utilities
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.TestInstance
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.transaction.annotation.Transactional
-import kotlin.test.*
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.assertThrows
+import java.util.*
 
 /**
  * Test class for FlatService.
  */
-@SpringBootTest
-@ActiveProfiles("test")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS )
-@Transactional
-class FlatServiceTest @Autowired constructor(
-    val flatService: FlatService,
-    val flatRepository: FlatRepository,
-    val roomProfileService: RoomProfileService,
-    val userProfileService: UserProfileService,
-    val userProfileRepository: UserProfileRepository
-) {
-    /*
-     * Here we declare variables that are used in every test
-     */
-    lateinit var testFlatRequest: FlatDTO
-    lateinit var testRoomProfileRequest: RoomProfileRequest
-    lateinit var addedFlat: FlatDTO
+class FlatServiceTest {
+
+    private lateinit var flatRepository: FlatRepository
+    private lateinit var roomProfileRepository: RoomProfileRepository
+    private lateinit var flatService: FlatService
+
+    lateinit var flat1: Flat
+    lateinit var roomProfile: RoomProfile
 
     @BeforeEach
-    fun testVariableSetUp() {
-        testFlatRequest = Flat(
-            name = "McMansion",
-            description= "Seinät muovia, aidat muovia, puut muovia.",
-            location = City.ESPOO,
-            totalRoommates = 13,
-            petHousehold = null,
-            flatUtilities = mutableListOf(Utilities.WIFI, Utilities.BALCONY),
-            roomProfiles = null
+    fun setUp() {
+        flatRepository = mockk()
+        roomProfileRepository = mockk()
+        flatService = FlatService(flatRepository, roomProfileRepository)
+
+        StandaloneSetup.setup()
+        flat1 = StandaloneSetup.flat1
+        roomProfile = StandaloneSetup.roomProfile
+    }
+
+    @Test
+    fun `findAll should return list of FlatDTO`() {
+        every { flatRepository.findAll() } returns listOf(flat1)
+
+        val result = flatService.findAll()
+
+        assertEquals(1, result.size)
+        assertEquals("Nice place", result.first().name)
+        verify { flatRepository.findAll() }
+    }
+
+    @Test
+    fun `findById should return FlatDTO when flat exists`() {
+        every { flatRepository.findById(flat1.id!!) } returns Optional.of(flat1)
+
+        val result = flatService.findById(flat1.id!!)
+
+        assertEquals("Nice place", result.name)
+        verify { flatRepository.findById(flat1.id!!) }
+    }
+
+    @Test
+    fun `findById should throw when flat not found`() {
+        every { flatRepository.findById(flat1.id!!) } returns Optional.empty()
+
+        assertThrows<EntityNotFoundException> {
+            flatService.findById(flat1.id!!)
+        }
+        verify { flatRepository.findById(flat1.id!!) }
+    }
+
+    @Test
+    fun `add should save and return FlatDTO`() {
+        val request = flat1.toDTO()
+        every { flatRepository.save(any()) } returns flat1
+
+        val result = flatService.add(request)
+
+        assertEquals(1, result.id)
+        assertEquals("Nice place", result.name)
+        verify { flatRepository.save(any()) }
+    }
+
+    @Test
+    fun `update should modify and return updated FlatDTO`() {
+        val request = Flat(
+            name = "Cozy loft",
+            description = "Downtown",
+            location = City.TAMPERE,
+            totalRoommates = 2,
+            petHousehold = true,
+            flatUtilities = mutableListOf(Utilities.LAUNDRY_MACHINE),
+            roomProfiles = mutableListOf(roomProfile)
         ).toDTO()
 
-        addedFlat = flatService.add(testFlatRequest)
+        every { flatRepository.findById(flat1.id!!) } returns Optional.of(flat1)
+        every { roomProfileRepository.findByIdActive(roomProfile.id!!) } returns roomProfile
+        every { flatRepository.save(any()) } answers { firstArg() }
 
-        testRoomProfileRequest = RoomProfileRequest(
-            userIds = listOf(1L, 2L), // User with id 2 has Pets.PET_OWNER
-            flatId = addedFlat.id!!,
-            rent = 750,
-            isPrivateRoom = true,
-            furnished = true,
-            furnishedInfo = "Heinäpaalisänky",
-            bio = "Kiva lato. Heinäpaalit kullekin."
-        )
+        val result = flatService.update(request, flat1.id!!)
+
+        assertEquals("Cozy loft", result.name)
+        verify { flatRepository.findById(flat1.id!!) }
+        verify { roomProfileRepository.findByIdActive(roomProfile.id!!) }
+        verify { flatRepository.save(any()) }
     }
 
     @Test
-    fun `flat's pet household status should be false by default when added to database`() {
-        val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
+    fun `update should throw when flat not found`() {
+        val request = flat1.toDTO()
+        every { flatRepository.findById(flat1.id!!) } returns Optional.empty()
 
-        assertFalse(petHouseholdStatus!!)
+        assertThrows<EntityNotFoundException> {
+            flatService.update(request, flat1.id!!)
+        }
+        verify { flatRepository.findById(flat1.id!!) }
     }
 
     @Test
-    fun `should update flat's pet household status to true when a room profile with a pet owner user is added to flat`() {
-        roomProfileService.add(testRoomProfileRequest)
-        val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
+    fun `updatePetHouseholdStatus should update petHousehold field`() {
+        every { flatRepository.findById(flat1.id!!) } returns Optional.of(flat1)
+        every { roomProfileRepository.findIfFlatIsPetHousehold(roomProfile.id!!) } returns true
+        every { flatRepository.save(flat1) } returns flat1
 
-        assertTrue(petHouseholdStatus!!)
+        flatService.updatePetHouseholdStatus(flat1.id!!, roomProfile.id!!)
+
+        assertTrue(flat1.petHousehold!!)
+        verify { flatRepository.findById(flat1.id!!) }
+        verify { roomProfileRepository.findIfFlatIsPetHousehold(roomProfile.id!!) }
+        verify { flatRepository.save(flat1) }
     }
 
     @Test
-    fun `should update flat's pet household status to false when a pet owner user is removed from all the room profiles in the flat`() {
-        val updateRoomProfileRequest = RoomProfileRequest(
-            userIds = listOf(1L),
-            flatId = addedFlat.id!!,
-            rent = 750,
-            isPrivateRoom = true,
-            furnished = true,
-            furnishedInfo = "Heinäpaalisänky",
-            bio = "Kiva lato. Kämppis ja koira lähti."
-        )
+    fun `updatePetHouseholdStatus should throw when flat not found`() {
+        every { flatRepository.findById(flat1.id!!) } returns Optional.empty()
 
-        val addedRoomProfile = roomProfileService.add(testRoomProfileRequest)
-        roomProfileService.update(updateRoomProfileRequest, addedRoomProfile.id!!)
-        val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
-
-        assertFalse(petHouseholdStatus!!)
-    }
-
-    @Test
-    fun `should update flat's pet household status to false when a all room profiles are removed from the flat`() {
-        val addedRoomProfile = roomProfileService.add(testRoomProfileRequest)
-        roomProfileService.delete(addedRoomProfile.id!!)
-        val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
-
-        assertFalse(petHouseholdStatus!!)
-    }
-
-    @Test
-    fun `should update flat's pet household status to false when a user profile linked to flat is no longer a pet owner`() {
-        roomProfileService.add(testRoomProfileRequest)
-        val updatePetHousehold = flatRepository.findById(addedFlat.id!!).get()
-        updatePetHousehold.petHousehold = true
-        flatRepository.save(updatePetHousehold)
-
-        val updateUserProfileRequest = UserProfileRequest(
-            userId = 2L,
-            bio = "New bio",
-            cleanliness = Cleanliness.MESSY,
-            lifestyle = mutableSetOf(Lifestyle.NIGHT_OWL),
-            pets = Pets.OK_WITH_PETS
-        )
-
-        val updateUserProfileId = userProfileRepository.findByUserIdAndStatus(updateUserProfileRequest.userId, ProfileStatus.ACTIVE)!!.id!!
-        userProfileService.update(updateUserProfileRequest, updateUserProfileId)
-
-        val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
-
-        assertFalse(petHouseholdStatus!!)
-    }
-
-    @Test
-    fun `should update flat's pet household status to true when a user profile linked to flat becomes a pet owner`() {
-        val updateRoomProfileRequest = RoomProfileRequest(
-            userIds = listOf(1L),
-            flatId = addedFlat.id!!,
-            rent = 750,
-            isPrivateRoom = true,
-            furnished = true,
-            furnishedInfo = "Heinäpaalisänky",
-            bio = "Kiva lato. Kämppis ja koira lähti."
-        )
-
-        val addedRoomProfile = roomProfileService.add(testRoomProfileRequest)
-        roomProfileService.update(updateRoomProfileRequest, addedRoomProfile.id!!)
-
-        val updateUserProfileRequest = UserProfileRequest(
-            userId = 1L,
-            bio = "New bio",
-            cleanliness = Cleanliness.MESSY,
-            lifestyle = mutableSetOf(Lifestyle.NIGHT_OWL),
-            pets = Pets.PET_OWNER
-        )
-
-        val updateUserProfileId = userProfileRepository.findByUserIdAndStatus(updateUserProfileRequest.userId, ProfileStatus.ACTIVE)!!.id!!
-        userProfileService.update(updateUserProfileRequest, updateUserProfileId)
-
-        val petHouseholdStatus = flatService.findById(addedFlat.id!!).petHousehold
-
-        assertTrue(petHouseholdStatus!!)
+        assertThrows<EntityNotFoundException> {
+            flatService.updatePetHouseholdStatus(flat1.id!!, roomProfile.id!!)
+        }
+        verify { flatRepository.findById(flat1.id!!) }
     }
 }
