@@ -137,6 +137,7 @@ docker compose up
 ```bash
 docker compose down
 ```
+Valmis!
 
 <p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
 
