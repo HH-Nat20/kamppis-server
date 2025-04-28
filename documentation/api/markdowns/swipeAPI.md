@@ -4,6 +4,13 @@
 - [findAll](#findall)
 - [swipe](#swipe)
 
+## Notes
+
+- This API is available at `https://kamppis.hellmanstudios.fi`
+- The API follows RESTful principles
+- All data is exchanged in JSON format
+- Most endpoints require authentication via tokens
+
 Base URLs:
 
 * <a href="https://kamppis.hellmanstudios.fi">https://kamppis.hellmanstudios.fi</a>
@@ -35,10 +42,6 @@ Status Code **200**
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |*anonymous*|[[SwipeDTO](#schemaswipedto)]|false|none|none|
-
-<aside class="success">
-This operation does not require authentication
-</aside>
 
 ## swipe
 
@@ -73,10 +76,6 @@ This operation does not require authentication
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[SwipeResponse](#schemaswiperesponse)|
-
-<aside class="success">
-This operation does not require authentication
-</aside>
 
 # Schemas
 
