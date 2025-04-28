@@ -93,24 +93,25 @@ Palvelimelle asennettu sovelluksen back-end päivittää itsensä jokaisen repos
 
 ## API
 
-_Kämppiksen_ API-dokumentaatio on laadittu yaml-tiedostoina OpenAPI 3.1 spesifikaation mukaisena. Dokumentaatio on jaettu endpointien mukaan, ja kaikki API-spesifikaatiot löydät täältä: [API](documentation/api)
+_Kämppiksen_ API-dokumentaatio on laadittu yaml-tiedostoina OpenAPI 3.1 spesifikaation mukaisena. Dokumentaatio on jaettu endpointien mukaan, ja kaikki API-spesifikaatiot löydät täältä: [openAPI](documentation/api/openAPI)
+Spesifikaatioista on laadittu helpommin luettavat markdown-tiedostot, jotka löytyvät alta. Markdown-tiedostojen luonnissa on hyödynnetty [Widdershins](https://www.npmjs.com/package/widdershins)-kirjastoa.
 
 <details>
 <summary>API-dokumentaatio endpointien mukaan</summary>
 
- - [dbHealth](documentation/api/dbHealth.yaml)
- - [feedback](documentation/api/feedback.yaml)
- - [flat](documentation/api/flat)
- - [image](documentation/api/image.yaml)
- - [invite](documentation/api/invite.yaml)
- - [login](documentation/api/login.yaml)
- - [match](documentation/api/match.yaml)
- - [profile](documentation/api/profile)
- - [roomProfile](documentation/api/roomProfile.yaml)
- - [serverHealth](documentation/api/serverHealth.yaml)
- - [swipe](documentation/api/swipe.yaml)
- - [user](documentation/api/user.yaml)
- - [userProfile](documentation/api/userProfile.yaml)
+ - [dbHealth](documentation/api/markdowns/markdowns/dbHealthAPI.md)
+ - [feedback](documentation/api/markdowns/feedbackAPI.md)
+ - [flat](documentation/api/markdowns/flatAPI.md)
+ - [image](documentation/api/markdowns/imageAPI.md)
+ - [invite](documentation/api/markdowns/inviteAPI.md)
+ - [login](documentation/api/markdowns/loginAPI.md)
+ - [match](documentation/api/markdowns/matchAPI.md)
+ - [profile](documentation/api/markdowns/profileAPI.md)
+ - [roomProfile](documentation/api/markdowns/roomProfileAPI.md)
+ - [serverHealth](documentation/api/markdowns/serverHealthAPI.md)
+ - [swipe](documentation/api/markdowns/swipeAPI.md)
+ - [user](documentation/api/markdowns/userAPI.md)
+ - [userProfile](documentation/api/markdowns/userProfileAPI.md)
 
 </details>
 
