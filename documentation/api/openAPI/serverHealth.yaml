@@ -1,0 +1,19 @@
+openapi: "3.1.0"
+info:
+  title: "server health API"
+  description: "kamppis_server API for server health"
+  version: "1.0.0"
+servers:
+  - url: "https://kamppis.hellmanstudios.fi"
+paths:
+  /api/health:
+    get:
+      summary: "Checks server's health status"
+      operationId: "serverHealth"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"

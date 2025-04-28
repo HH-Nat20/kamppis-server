@@ -1,0 +1,118 @@
+openapi: "3.1.0"
+info:
+  title: "login API"
+  description: "kamppis_server API for logins"
+  version: "1.0.0"
+servers:
+  - url: "https://kamppis.hellmanstudios.fi"
+paths:
+  /api/login/mock:
+    post:
+      summary: "Login as a mock user"
+      operationId: "login"
+      parameters:
+        - name: "email"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /api/login/protected:
+    get:
+      summary: "Login as protected"
+      operationId: "getProtectedData"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /api/login/github:
+    post:
+      summary: "Login with GitHub auth"
+      operationId: "loginWithGitHub"
+      parameters:
+        - name: "code"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Object"
+  /api/login/signup:
+    post:
+      summary: "Sign up"
+      operationId: "signup"
+      parameters:
+        - name: "code"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Object"
+components:
+  schemas:
+    Object:
+      type: "object"
+      properties: { }
+    UserRequest:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        email:
+          type: "string"
+        gender:
+          type: "string"
+          enum:
+            - "MALE"
+            - "FEMALE"
+            - "OTHER"
+            - "NOT_IMPORTANT"
+        lookingFor:
+          type: "string"
+          nullable: true
+          enum:
+            - "OTHER_USER_PROFILES"
+            - "ROOM_PROFILES"
+            - "OTHER_USER_PROFILES_OR_ROOM_PROFILES"
+            - "USER_PROFILES"
+        dateOfBirth:
+          type: "string"
+          format: "date"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "firstName"
+        - "lastName"
+        - "email"
+        - "gender"
+        - "dateOfBirth"

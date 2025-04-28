@@ -1,0 +1,268 @@
+openapi: "3.1.0"
+info:
+  title: "user profile API"
+  description: "kamppis_server API for user profiles"
+  version: "1.0.0"
+servers:
+  - url: "https://kamppis.hellmanstudios.fi"
+paths:
+  /api/user-profiles:
+    get:
+      summary: "Returns a list of all user profiles"
+      operationId: "findAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/UserProfileDTO"
+    post:
+      summary: "Adds a new user profile"
+      operationId: "addUserProfile"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserProfileDTO"
+  /api/user-profiles/{id}:
+    get:
+      summary: "Returns a single user profile by its id"
+      operationId: "findById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserProfileDTO"
+    put:
+      summary: "Updates a user profile"
+      operationId: "updateUserProfile"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserProfileDTO"
+  /api/user-profiles/{userId}/query:
+    get:
+      summary: "Finds user profiles based on query initiator's preferences"
+      operationId: "findUserProfilesThatMeetCriteria"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: "0"
+        - name: "size"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserProfileDTO"
+components:
+  schemas:
+    UserSummaryDTO:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        age:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        gender:
+          type: "string"
+          enum:
+            - "MALE"
+            - "FEMALE"
+            - "OTHER"
+            - "NOT_IMPORTANT"
+        lookingFor:
+          type: "string"
+          nullable: true
+          enum:
+            - "OTHER_USER_PROFILES"
+            - "ROOM_PROFILES"
+            - "OTHER_USER_PROFILES_OR_ROOM_PROFILES"
+            - "USER_PROFILES"
+        isOnline:
+          type: "boolean"
+          nullable: true
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "firstName"
+        - "lastName"
+        - "gender"
+    ProfilePhotoDTO:
+      type: "object"
+      properties:
+        profileId:
+          type: "integer"
+          format: "int64"
+        url:
+          type: "string"
+        isProfilePhoto:
+          type: "boolean"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "profileId"
+        - "url"
+        - "isProfilePhoto"
+    UserProfileDTO:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
+        user:
+          nullable: true
+          $ref: "#/components/schemas/UserSummaryDTO"
+        bio:
+          type: "string"
+        cleanliness:
+          type: "string"
+          nullable: true
+          enum:
+            - "SPOTLESS"
+            - "TIDY"
+            - "CASUAL"
+            - "MESSY"
+            - "CAREFREE"
+        pets:
+          type: "string"
+          nullable: true
+          enum:
+            - "PET_OWNER"
+            - "OK_WITH_PETS"
+            - "PREFER_NO_PETS"
+        lifestyle:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "EARLY_BIRD"
+              - "NIGHT_OWL"
+              - "PARTY_GOER"
+              - "HOMEBODY"
+              - "STUDENT"
+              - "WORKING"
+          uniqueItems: true
+        photos:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ProfilePhotoDTO"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "userId"
+        - "bio"
+        - "photos"
+    UserProfileRequest:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
+        bio:
+          type: "string"
+          nullable: true
+          default: "Write bio here"
+        cleanliness:
+          type: "string"
+          nullable: true
+          enum:
+            - "SPOTLESS"
+            - "TIDY"
+            - "CASUAL"
+            - "MESSY"
+            - "CAREFREE"
+        pets:
+          type: "string"
+          nullable: true
+          enum:
+            - "PET_OWNER"
+            - "OK_WITH_PETS"
+            - "PREFER_NO_PETS"
+        lifestyle:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+            enum:
+              - "EARLY_BIRD"
+              - "NIGHT_OWL"
+              - "PARTY_GOER"
+              - "HOMEBODY"
+              - "STUDENT"
+              - "WORKING"
+          uniqueItems: true
+        photos:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ProfilePhotoDTO"
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+      required:
+        - "userId"

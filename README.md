@@ -25,6 +25,9 @@
         <a href="#cicd">CI/CD</a>
     </li>
     <li>
+        <a href="#api">API</a>
+    </li>
+    <li>
         <a href="#serverin-asennus">Serverin asennus</a>
     </li>
     <li>
@@ -85,6 +88,32 @@ _Kämppiksen_ back-endissä on hyödynnetty jatkuvan integraation ja toimituksen
 Testiautomaatiolla voidaan varmistaa sovelluksen toimivuus jatkuvasti muutoksia tehdessä. Lisätietoja automaatiosta löydät [workflow](./.github/workflows/run-tests.yml)-tiedostosta
 
 Palvelimelle asennettu sovelluksen back-end päivittää itsensä jokaisen repositorion dev-haaraan pusketun muutoksen, jotta front-end sovelluksen käyttämä rajapinta on aina ajan tasalla.
+
+<p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
+
+## API
+
+_Kämppiksen_ API-dokumentaatio on laadittu yaml-tiedostoina OpenAPI 3.1 spesifikaation mukaisena. Dokumentaatio on jaettu endpointien mukaan, ja kaikki API-spesifikaatiot löydät täältä: [openAPI](documentation/api/openAPI)
+Spesifikaatioista on laadittu helpommin luettavat markdown-tiedostot, jotka löytyvät alta. Markdown-tiedostojen luonnissa on hyödynnetty [Widdershins](https://www.npmjs.com/package/widdershins)-kirjastoa.
+
+<details>
+<summary>API-dokumentaatio endpointien mukaan</summary>
+
+ - [dbHealth](documentation/api/markdowns/dbHealthAPI.md)
+ - [feedback](documentation/api/markdowns/feedbackAPI.md)
+ - [flat](documentation/api/markdowns/flatAPI.md)
+ - [image](documentation/api/markdowns/imageAPI.md)
+ - [invite](documentation/api/markdowns/inviteAPI.md)
+ - [login](documentation/api/markdowns/loginAPI.md)
+ - [match](documentation/api/markdowns/matchAPI.md)
+ - [profile](documentation/api/markdowns/profileAPI.md)
+ - [roomProfile](documentation/api/markdowns/roomProfileAPI.md)
+ - [serverHealth](documentation/api/markdowns/serverHealthAPI.md)
+ - [swipe](documentation/api/markdowns/swipeAPI.md)
+ - [user](documentation/api/markdowns/userAPI.md)
+ - [userProfile](documentation/api/markdowns/userProfileAPI.md)
+
+</details>
 
 <p align="right">(<a href="#readme-alku">Takaisin alkuun</a>)</p>
 
