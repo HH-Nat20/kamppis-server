@@ -99,7 +99,7 @@ Spesifikaatioista on laadittu helpommin luettavat markdown-tiedostot, jotka löy
 <details>
 <summary>API-dokumentaatio endpointien mukaan</summary>
 
- - [dbHealth](documentation/api/markdowns/markdowns/dbHealthAPI.md)
+ - [dbHealth](documentation/api/markdowns/dbHealthAPI.md)
  - [feedback](documentation/api/markdowns/feedbackAPI.md)
  - [flat](documentation/api/markdowns/flatAPI.md)
  - [image](documentation/api/markdowns/imageAPI.md)
