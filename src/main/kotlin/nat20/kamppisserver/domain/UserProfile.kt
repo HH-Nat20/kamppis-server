@@ -44,6 +44,10 @@ class UserProfile (
         this.id = id
     }
 
+    override fun getUsersFromProfile(): Set<User> {
+        return setOf(user)
+    }
+
     override fun toDTO(includeUserSummary: Boolean): UserProfileDTO {
         return UserProfileDTO(
             userId = user.id!!,

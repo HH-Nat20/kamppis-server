@@ -28,8 +28,8 @@ class SwipeService(
 
         // Identical matches are prevented in the service
         if (isRightSwipe && hasMutualSwipe(swipingProfile, swipedProfile)) {
-            val swipingUsers = getUsersFromProfile(swipingProfile)
-            val swipedUsers = getUsersFromProfile(swipedProfile)
+            val swipingUsers = swipingProfile.getUsersFromProfile()
+            val swipedUsers = swipedProfile.getUsersFromProfile()
             matchService.createMatch(swipingUsers + swipedUsers)
             newSwipe.isMatch = true
         }
@@ -46,7 +46,7 @@ class SwipeService(
     }
 
     fun principalInSwipingProfile(email: String, swipingProfile: Profile): Boolean {
-        return email in getUsersFromProfile(swipingProfile).map { it.email }
+        return email in swipingProfile.getUsersFromProfile().map { it.email }
     }
 
     fun findAll(): List<SwipeDTO> {

@@ -46,6 +46,10 @@ class RoomProfile(
         this.bio = bio
     }
 
+    override fun getUsersFromProfile(): Set<User> {
+        return users.toSet()
+    }
+
     override fun toDTO(includeUserSummary: Boolean): RoomProfileDTO {
         return RoomProfileDTO(
             userIds = users.map { it.id!! },

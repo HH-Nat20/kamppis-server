@@ -44,6 +44,9 @@ abstract class Profile(
     @PastOrPresent(message = "Deletion date cannot be in the future.")
     var deletedAt: LocalDateTime? = null
 
+    // Abstract helper function to get users from any profile, subclasses override this
+    abstract fun getUsersFromProfile(): Set<User>
+
     abstract fun toDTO(includeUserSummary: Boolean = false): ProfileDTO // Abstract function to be implemented by subclasses
 }
 
@@ -56,12 +59,3 @@ abstract class Profile(
     JsonSubTypes.Type(value = RoomProfileDTO::class, name = "roomProfile")
 )
 sealed interface ProfileDTO
-
-// Helper function to get users from any profile
-fun getUsersFromProfile(profile: Profile): Set<User> {
-    return when (profile) {
-        is UserProfile -> setOf(profile.user) // Single user in UserProfile
-        is RoomProfile -> profile.users.toSet() // Multiple users in RoomProfile
-        else -> emptySet()
-    }
-}
