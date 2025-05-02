@@ -842,29 +842,69 @@ class ProfileService(
 <br>
 
 <details>
-<summary>Tässä lista kaikista <i>Single Responsibility</i>-periaatteen mukaan refaktoroiduista luokista</summary>
+<summary>Tässä lista kaikista <i>Single Responsibility</i>-periaatteen mukaan refaktoroiduista luokista.</summary>
+<br>
 
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/api/InviteController.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/service/InviteService.kt`
+Alkuperäinen lähdekoodi haaralla [`dev`](https://github.com/HH-Nat20/kamppis-server/tree/dev), refaktoroitu koodi haaralla [`solidRefactoring`](https://github.com/HH-Nat20/kamppis-server/tree/solidRefactoring).
+<br>
 
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ImageController.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ImageService.kt`
+`ImageController.kt` ja `ImageService.kt`<br>
+- alkuperäiset:<br>
+[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ImageController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/ImageController.kt)<br>
+`ImageService.kt` ei alkuperäisessä lähdekoodissa
+- refaktoroidut:<br>
+[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ImageController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/ImageController.kt)<br>
+[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ImageService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/ImageService.kt)
 
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/api/LoginController.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/service/LoginService.kt`
+`InviteController.kt` ja `InviteService.kt`<br>
+- alkuperäiset:<br>
+[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/InviteController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/InviteController.kt)<br>
+[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/InviteService.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/InviteService.kt)
+- refaktoroidut:<br>
+[kamppis-server/src/main/kotlin/nat20.kamppisserver/api/InviteController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/InviteController.kt)<br>
+[kamppis-server/src/main/kotlin/nat20.kamppisserver/service/InviteService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/InviteService.kt)
 
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/api/MessageController.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/service/MessageService.kt`
+`LoginController.kt` ja `LoginService.kt`<br>
+- alkuperäiset:<br>
+[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/LoginController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/LoginController.kt)<br>
+`LoginService.kt` ei alkuperäisessä lähdekoodissa
+- refaktoroidut:<br>
+[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/LoginController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/LoginController.kt)<br>
+[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/LoginService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/LoginService.kt)
 
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ProfileController.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ProfileService.kt`
+`MessageController.kt` ja `MessageService.kt`<br>
+- alkuperäiset:<br>
+[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/MessageController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/MessageController.kt)<br>
+`MessageService.kt` ei alkuperäisessä lähdekoodissa
+- refaktoroidut:<br>
+[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/MessageController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/MessageController.kt)<br>
+[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/MessageService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/MessageService.kt)
 
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/api/SwipeController.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/service/SwipeService.kt`
+`ProfileController.kt` ja `ProfileService.kt`<br>
+- alkuperäiset:<br>
+[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ProfileController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/ProfileController.kt)<br>
+[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ProfileService.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/ProfileService.kt)
+- refaktoroidut:<br>
+[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ProfileController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/ProfileController.kt)<br>
+[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ProfileService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/ProfileService.kt)
 
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/api/RoomProfileController.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/api/UserProfileController.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/service/QueryService.kt`
+`SwipeController.kt` ja `SwipeService.kt`<br>
+- alkuperäiset:<br>
+[solidRefactoring/dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/SwipeController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/SwipeController.kt)<br>
+[solidRefactoring/dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/SwipeService.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/SwipeService.kt)
+- refaktoroidut:<br>
+[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/SwipeController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/SwipeController.kt)<br>
+[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/SwipeService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/SwipeService.kt)
+
+`RoomProfileController.kt`, `UserProfileController.kt` ja `QueryService.kt`<br>
+- alkuperäiset:<br>
+[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/RoomProfileController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/RoomProfileController.kt)<br>
+[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/UserProfileController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/UserProfileController.kt)<br>
+[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/QueryService.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/QueryService.kt)
+- refaktoroidut:<br>
+[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/RoomProfileController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/RoomProfileController.kt)<br>
+[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/UserProfileController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/UserProfileController.kt)<br>
+[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/QueryService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/QueryService.kt)
 
 </details>
 
@@ -962,13 +1002,17 @@ class FlatProfile(...) : Profile() {
 
 _Kämppis_-sovelluksesta löytyi sekä hyviä että parannettavia esimerkkikohtia SOLID-periaatteiden toteutumisesta. Suurimmat muutokset liittyivät _Single Responsibility_-periaatteen toteutumiseen tilanteissa, joissa ohjelmalogiikkaa vuosi `service`-luokista `controller`-luokkiin, vaikka `controller`-luokkien tehtävänä on vain välittää tietoa eikä toteuttaa itse ohjelmalogiikkaa. Lisäksi löydetty _Open-Closed_-periaatteen vastainen kohta koski tilannetta, jossa ohjelmalogiikkaa ei ollut tarkoitettu laajennettavaksi, mutta se ei myöskään ollut kirjoitettu laajentumisen mahdollistavaksi ilman muutoksia muuhun koodiin.
 
+Etenkin alkuperäisen koodin refaktoroinnissa _Single Responsibility_ -periaatteen mukaisesti oli havaittavissa, että yhden vastuun sisällyttäminen yhteen luokkaan tai metodiin ei aina ole täysin yksiselitteistä. Refaktorointi lienee tämänkin refaktorointikierroksen jälkeen tarpeen, ja seuraavaksi käsittelyyn voisikin ottaa esimerkiksi `service`-luokkiin siirretyn ohjelmalogiikan.
+
+Refaktorointi sisälsi myös lähdekoodien testien muuttamista testaamaan refaktoroitua lähdekoodia. Useat testit oli kirjoitettu testaamaan `controller`-luokkien sisältämää ohjelmalogiikkaa; koska refaktoroinnissa ohjelmalogiikkaa siirrettin pois `controller`-luokista `service`-luokkiin, oli testien muuttaminen uutta `controller`-`service`-jakoa vastaavaksi tarpeellista. Testejä ei kuitenkaan ole raportoitu tässä dokumentissa, sillä ne eivät varsinaisesti kuulu SOLID-periaatteiden mukaiseen refaktorointiin, vaan ovat enemmänkin seurausta refaktoroinnin toteutumisesta.
+
 _Kämppis_-sovelluksen back-endin refaktorointi SOLID-periaatteiden mukaiseksi yksinkertaistaa ohjelmalogiikan toimintaa sekä helpottaa koodin ymmärtämistä. Refaktorointi myös mahdollistaa koodin järkevän laajentamisen jatkossa.
 
 <p align="right">(<a href="#alku">Takaisin alkuun</a>)</p>
 
 ## Lähteet
 
-Martin, R. 2018. Clean architecture: A Craftsman’s Guide to Software Structure and Design. Pearson Education Inc. https://haaga-helia.finna.fi/Record/nelli21.4920000000457179?sid=5003643650
+Martin, R. 2018. Clean architecture: A Craftsman’s Guide to Software Structure and Design. Pearson Education Inc.
 
 Millington, S. 26.3.2025. A Solid Guide to SOLID Principles. Baeldung. Luettavissa: https://www.baeldung.com/solid-principles. Luettu: 25.4.2025.
 
