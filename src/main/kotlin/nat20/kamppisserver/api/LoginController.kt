@@ -14,7 +14,13 @@ class LoginController(
 
     @PostMapping("/mock")
     fun login(@RequestParam email: String): ResponseEntity<Map<String, String>> {
-        return loginService.login(email)
+        val loginResponse = loginService.login(email)
+
+        if (loginResponse.containsKey("error")) {
+            return ResponseEntity.badRequest().body(loginResponse)
+        }
+
+        return ResponseEntity.ok(loginResponse)
     }
 
     @GetMapping("/protected")

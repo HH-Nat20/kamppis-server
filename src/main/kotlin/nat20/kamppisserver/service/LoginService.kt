@@ -29,17 +29,13 @@ class LoginService(
     private val roommatePreferenceRepository: RoommatePreferenceRepository,
     private val jwtUtils: JwtUtils
 ) {
-    fun login(email: String): ResponseEntity<Map<String, String>> {
-        try {
-            userService.findActiveUserByEmail(email)
-            if (email.endsWith("@example.com")) {
-                val token = jwtUtils.generateJwtToken(email)
-                return mapOf("token" to token).let { ResponseEntity.ok(it) }
-            } else {
-                return ResponseEntity.badRequest().body(mapOf("error" to "Invalid email"))
-            }
-        } catch (e: Error) {
-            return ResponseEntity.badRequest().build()
+    fun login(email: String): Map<String, String> {
+        userService.findActiveUserByEmail(email)
+        if (email.endsWith("@example.com")) {
+            val token = jwtUtils.generateJwtToken(email)
+            return mapOf("token" to token)
+        } else {
+            return mapOf("error" to "Invalid email")
         }
     }
 
