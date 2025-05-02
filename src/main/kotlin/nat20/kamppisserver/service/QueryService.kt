@@ -9,7 +9,10 @@ import nat20.kamppisserver.repository.*
 import org.springframework.dao.EmptyResultDataAccessException
 import java.time.LocalDate
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 
 /**
  * Service class for querying user profiles.
@@ -86,7 +89,7 @@ class QueryService(
      * @param userId the id of the user for whom matching room profiles are returned.
      * @return a page of matching room profiles.
      */
-    fun findRoomProfilesThatMeetCriteria(pageable: Pageable, userId: Long): Page<RoomProfileDTO> {
+    fun findRoomProfilesThatMeetCriteria(pageable: Pageable, userId: Long): ResponseEntity<Page<RoomProfileDTO>> {
         /* We first find user's room preferences
         * From the preferences, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in RoomProfileRepository */
@@ -112,9 +115,13 @@ class QueryService(
             locationPreferences
         )
 
+        if (roomProfileList.isEmpty) {
+            return ResponseEntity(HttpStatus.NO_CONTENT)
+        }
+
         val roomProfileDTOList: Page<RoomProfileDTO> = roomProfileList.map {it.toDTO(includeUserSummary = true) }
 
-        return roomProfileDTOList
+        return ResponseEntity(roomProfileDTOList, HttpStatus.OK)
     }
 
     /**
@@ -124,10 +131,15 @@ class QueryService(
      * @param roomProfileId the id of the room profile whose right swipers are returned.
      * @return a page of matching room profiles.
      */
-    fun findUserProfilesThatHaveSwipedRoomProfile(pageable: Pageable, roomProfileId: Long): Page<UserProfileDTO> {
+    fun findUserProfilesThatHaveSwipedRoomProfile(pageable: Pageable, roomProfileId: Long): ResponseEntity<Page<UserProfileDTO>> {
         val userProfileList: Page<UserProfile> = userProfileRepository.findUserProfilesWhoHaveSwipedRoomProfile(pageable, roomProfileId)
+
+        if (userProfileList.isEmpty) {
+            return ResponseEntity(HttpStatus.NO_CONTENT)
+        }
+
         val userProfileDTOList: Page<UserProfileDTO> = userProfileList.map { it.toDTO(includeUserSummary = true) }
 
-        return userProfileDTOList
+        return ResponseEntity(userProfileDTOList, HttpStatus.OK)
     }
 }
