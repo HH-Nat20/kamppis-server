@@ -21,7 +21,9 @@ object StandaloneSetup {
     lateinit var match: Match
     lateinit var roomProfile: RoomProfile
     lateinit var invite: RoomProfileInvite
+    lateinit var inviteResponse: InviteResponse
     lateinit var request: RoomProfileRequest
+    lateinit var loginResponse: Map<String, String>
     lateinit var feedback: Feedback
 
     fun setup() {
@@ -95,6 +97,12 @@ object StandaloneSetup {
             expiresAt = LocalDateTime.now().plusDays(1)
         )
 
+        inviteResponse = InviteResponse(
+            inviteToken = "INV123",
+            expiresAt = LocalDateTime.now().plusDays(1),
+            message = null
+        )
+
         request = RoomProfileRequest(
             userIds = listOf(user1.id!!),
             flatId = flat1.id!!,
@@ -106,6 +114,8 @@ object StandaloneSetup {
             bio = "Chill area",
             id = 1L
         )
+
+        loginResponse = emptyMap()
 
         feedback = Feedback(
             feedback = "Ain't this a surprise"

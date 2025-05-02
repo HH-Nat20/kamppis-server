@@ -17,6 +17,8 @@ class ProfileServiceTest {
     private lateinit var roomProfileRepository: RoomProfileRepository
     private lateinit var userProfileRepository: UserProfileRepository
     private lateinit var profileService: ProfileService
+    private lateinit var userProfileService: UserProfileService
+    private lateinit var roomProfileService: RoomProfileService
 
     lateinit var roomProfile: RoomProfile
     lateinit var userProfile: UserProfile
@@ -25,7 +27,9 @@ class ProfileServiceTest {
     fun setup() {
         roomProfileRepository = mockk()
         userProfileRepository = mockk()
-        profileService = ProfileService(roomProfileRepository, userProfileRepository)
+        userProfileService = mockk()
+        roomProfileService = mockk()
+        profileService = ProfileService(roomProfileRepository, userProfileRepository, userProfileService, roomProfileService)
 
         StandaloneSetup.setup()
         roomProfile = StandaloneSetup.roomProfile

@@ -7,6 +7,7 @@ import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.repository.RoomProfileInviteRepository
 import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserRepository
+import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.setup.StandaloneSetup
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -19,6 +20,8 @@ class InviteServiceTest {
     private lateinit var roomProfileRepository: RoomProfileRepository
     private lateinit var userRepository: UserRepository
     private lateinit var inviteService: InviteService
+    private lateinit var roomProfileService: RoomProfileService
+    private lateinit var jwtUtils: JwtUtils
 
     lateinit var user: User
     lateinit var roomProfile: RoomProfile
@@ -29,7 +32,9 @@ class InviteServiceTest {
         roomProfileInviteRepository = mockk()
         roomProfileRepository = mockk()
         userRepository = mockk()
-        inviteService = InviteService(roomProfileInviteRepository, roomProfileRepository, userRepository)
+        roomProfileService = mockk()
+        jwtUtils = mockk()
+        inviteService = InviteService(roomProfileInviteRepository, roomProfileRepository, userRepository, roomProfileService, jwtUtils)
 
         StandaloneSetup.setup()
         user = StandaloneSetup.user1

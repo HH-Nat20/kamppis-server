@@ -3,19 +3,12 @@ package nat20.kamppisserver.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import nat20.kamppisserver.domain.UserDTO
-import nat20.kamppisserver.domain.enums.Gender
-import nat20.kamppisserver.domain.enums.UserStatus
-import nat20.kamppisserver.repository.ProfileRepository
-import nat20.kamppisserver.repository.RoomPreferenceRepository
-import nat20.kamppisserver.repository.RoommatePreferenceRepository
-import nat20.kamppisserver.repository.UserRepository
-import nat20.kamppisserver.security.AuthService
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.security.SecurityConfig
-import nat20.kamppisserver.security.GitHubAuthService
-import nat20.kamppisserver.service.UserService
+import nat20.kamppisserver.service.LoginService
+import nat20.kamppisserver.setup.StandaloneSetup
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -25,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
-import java.time.LocalDate
 
 @WebMvcTest(LoginController::class)
 @Import(SecurityConfig::class, JwtUtils::class) // Import your security config
@@ -36,25 +28,15 @@ class LoginControllerTest @Autowired constructor(
 ) {
 
     @MockkBean
-    private lateinit var userService: UserService
+    private lateinit var loginService: LoginService
 
-    @MockkBean
-    private lateinit var gitHubAuthService: GitHubAuthService
+    lateinit var loginResponse: Map<String, String>
 
-    @MockkBean
-    private lateinit var authService: AuthService
-
-    @MockkBean
-    private lateinit var userRepository: UserRepository
-
-    @MockkBean
-    private lateinit var profileRepository: ProfileRepository
-
-    @MockkBean
-    private lateinit var roomPreferenceRepository: RoomPreferenceRepository
-
-    @MockkBean
-    private lateinit var roommatePreferenceRepository: RoommatePreferenceRepository
+    @BeforeEach
+    fun init() {
+        StandaloneSetup.setup()
+        loginResponse = StandaloneSetup.loginResponse
+    }
 
     @AfterEach
     fun tearDown() {
@@ -63,21 +45,13 @@ class LoginControllerTest @Autowired constructor(
 
     @Test
     fun `login should return JWT for valid user`() {
-        val mockUserDTO = UserDTO(
-            email = "alice.smith@example.com",
-            firstName = "Alice",
-            lastName = "Smith",
-            dateOfBirth = LocalDate.of(1990, 5, 14),
-            age = 34,
-            gender = Gender.FEMALE,
-            status = UserStatus.ACTIVE,
-            isOnline = false,
-            matchIds = setOf(1, 2)
-        )
+        val email = "alice.smith@example.com"
+        val testToken = jwtUtils.generateJwtToken(email)
+        loginResponse = mapOf("token" to testToken)
 
-        every { userService.findActiveUserByEmail(mockUserDTO.email) } returns mockUserDTO
+        every { loginService.login(email) } returns loginResponse
 
-        mockMvc.post("/api/login/mock?email=${mockUserDTO.email}")
+        mockMvc.post("/api/login/mock?email=${email}")
             .andExpect {
                 status { isOk() }
                 jsonPath("$.token") { isNotEmpty() }
@@ -86,22 +60,14 @@ class LoginControllerTest @Autowired constructor(
 
     @Test
     fun `should access protected endpoint with valid JWT`() {
-        val mockUserDTO = UserDTO(
-            email = "alice.smith@example.com",
-            firstName = "Alice",
-            lastName = "Smith",
-            dateOfBirth = LocalDate.of(1990, 5, 14),
-            age = 34,
-            gender = Gender.FEMALE,
-            status = UserStatus.ACTIVE,
-            isOnline = false,
-            matchIds = setOf(1, 2)
-        )
+        val email = "alice.smith@example.com"
+        val testToken = jwtUtils.generateJwtToken(email)
+        loginResponse = mapOf("token" to testToken)
 
-        every { userService.findActiveUserByEmail(mockUserDTO.email) } returns mockUserDTO
+        every { loginService.login(email) } returns loginResponse
 
         // Step 1: Perform login and extract the token
-        val token = mockMvc.post("/api/login/mock?email=${mockUserDTO.email}")
+        val token = mockMvc.post("/api/login/mock?email=${email}")
             .andExpect {
                 status { isOk() }
                 jsonPath("$.token") { isNotEmpty() }
@@ -115,10 +81,10 @@ class LoginControllerTest @Autowired constructor(
             }
 
         // Step 2: Set authentication in SecurityContext
-        val authentication = UsernamePasswordAuthenticationToken(mockUserDTO.email, null, emptyList())
+        val authentication = UsernamePasswordAuthenticationToken(email, null, emptyList())
         SecurityContextHolder.getContext().authentication = authentication
 
-        // Step 2: Use the extracted token to access the protected endpoint
+        // Step 3: Use the extracted token to access the protected endpoint
         mockMvc.get("/api/login/protected") {
             header("Authorization", "Bearer $token")
         }

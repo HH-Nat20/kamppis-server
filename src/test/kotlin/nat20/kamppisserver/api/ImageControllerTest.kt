@@ -10,6 +10,7 @@ import nat20.kamppisserver.repository.ProfilePhotoRepository
 import nat20.kamppisserver.security.JwtUtils
 import nat20.kamppisserver.storage.FileSystemStorageService
 import nat20.kamppisserver.security.SecurityConfig
+import nat20.kamppisserver.service.ImageService
 import nat20.kamppisserver.setup.StandaloneSetup
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,6 +43,9 @@ class ImageControllerTest @Autowired constructor(
 
     @MockkBean
     private lateinit var storageService: FileSystemStorageService
+
+    @MockkBean
+    private lateinit var imageService: ImageService
 
     val jwt = jwtUtils.generateJwtToken("test@example.com")
 
@@ -95,8 +99,7 @@ class ImageControllerTest @Autowired constructor(
 
         every { user.id?.let { profileRepository.findById(it) } } returns Optional.of(userProfile)
         every { user.id?.let { storageService.store(file, it) } } returns imageUrls
-        every { profilePhotoRepository.save(any()) } answers { firstArg() }
-        every { profileRepository.save(any()) } returns userProfile
+        every { imageService.saveImageMetaData(any(), any(), any()) } just Runs
 
         mockMvc.perform(
             multipart("/api/images/${user.id}")
@@ -118,9 +121,7 @@ class ImageControllerTest @Autowired constructor(
 
         every { user.id?.let { profileRepository.findById(it) } } returns Optional.of(userProfile)
         every { profilePhotoRepository.findById(photoId) } returns Optional.of(photo)
-        every { storageService.delete(user.id!!, photo.url) } just Runs
-        every { profileRepository.save(any()) } returns userProfile
-        every { profilePhotoRepository.delete(photo) } just Runs
+        every { imageService.deleteUserPhoto(any(), any(), any()) } just Runs
 
         mockMvc.perform(
             delete("/api/images/${user.id}/${photo.id}")
@@ -138,7 +139,7 @@ class ImageControllerTest @Autowired constructor(
         every { user.id?.let { profileRepository.findById(it) } } returns Optional.of(userProfile)
         every { profilePhotoRepository.findById(photoId) } returns Optional.of(currentPhoto)
         every { user.id?.let { profilePhotoRepository.findByProfileId(it) } } returns listOf(currentPhoto)
-        every { profilePhotoRepository.save(any()) } answers { firstArg() }
+        every { imageService.updateImage(currentPhoto, any(), any()) } just Runs
 
         mockMvc.perform(
             put("/api/images/${user.id}/$photoId")

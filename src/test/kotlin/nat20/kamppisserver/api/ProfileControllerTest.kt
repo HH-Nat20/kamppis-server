@@ -102,11 +102,8 @@ class ProfileControllerTest @Autowired constructor(
             bio = "Write bio here",
             id = userProfileId
         )
-        val userProfile = mockk<UserProfile>(relaxed = true)
 
-        every { userProfileRepository.findByIdActive(userProfileId) } returns userProfile
-        every { roomProfileRepository.findByIdActive(userProfileId) } returns null
-        every { userProfileService.update(match { it.id == userProfileId }, userProfileId) } returns userProfileDTO
+        every { profileService.updateProfile(userProfileDTO, userProfileId) } returns userProfileDTO
 
         mockMvc.put("/api/profiles/$userProfileId") {
             contentType = MediaType.APPLICATION_JSON
@@ -118,7 +115,7 @@ class ProfileControllerTest @Autowired constructor(
                 jsonPath("$.id") { value(userProfileId) }
             }
 
-        verify { userProfileService.update(any(), userProfileId) }
+        verify { profileService.updateProfile(any(), userProfileId) }
     }
 
     @Test
@@ -144,11 +141,8 @@ class ProfileControllerTest @Autowired constructor(
             bio = "Write bio here",
             id = roomProfileId
         )
-        val roomProfile = mockk<RoomProfile>(relaxed = true)
 
-        every { roomProfileRepository.findByIdActive(roomProfileId) } returns roomProfile
-        every { userProfileRepository.findByIdActive(roomProfileId) } returns null
-        every { roomProfileService.update(match { it.id == roomProfileId }, roomProfileId) } returns roomProfileDTO
+        every { profileService.updateProfile(roomProfileDTO, roomProfileId) } returns roomProfileDTO
 
         mockMvc.put("/api/profiles/$roomProfileId") {
             contentType = MediaType.APPLICATION_JSON
@@ -160,7 +154,7 @@ class ProfileControllerTest @Autowired constructor(
                 jsonPath("$.id") { value(roomProfileId) }
             }
 
-        verify { roomProfileService.update(any(), roomProfileId) }
+        verify { profileService.updateProfile(any(), roomProfileId) }
     }
 
     @Test
@@ -173,8 +167,7 @@ class ProfileControllerTest @Autowired constructor(
             id = profileId
         )
 
-        every { userProfileRepository.findByIdActive(profileId) } returns null
-        every { roomProfileRepository.findByIdActive(profileId) } returns null
+        every { profileService.updateProfile(userProfileDTO, profileId) } returns null
 
         mockMvc.put("/api/profiles/$profileId") {
             contentType = MediaType.APPLICATION_JSON

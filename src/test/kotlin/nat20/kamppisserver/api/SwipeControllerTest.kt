@@ -95,7 +95,7 @@ class SwipeControllerTest @Autowired constructor(
 
         every { profileRepository.findByIdAndStatus(1L, ProfileStatus.ACTIVE)} returns profile1
         every { profileRepository.findByIdAndStatus(2L, ProfileStatus.ACTIVE)} returns profile2
-        every { swipeService.swipe(any(),any(), any()) } returns swipeResponse
+        every { swipeService.validateAndSwipe(any(),any()) } returns swipeResponse
         every { swipeService.principalInSwipingProfile(any(), any()) } returns true
 
         mockMvc.post("/api/swipes") {

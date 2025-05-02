@@ -7,7 +7,7 @@ import nat20.kamppisserver.domain.Swipe
 import nat20.kamppisserver.domain.User
 import nat20.kamppisserver.domain.UserProfile
 import nat20.kamppisserver.domain.enums.*
-import nat20.kamppisserver.domain.getUsersFromProfile
+import nat20.kamppisserver.repository.ProfileRepository
 import nat20.kamppisserver.repository.SwipeRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,6 +17,7 @@ class SwipeServiceTest {
     private lateinit var swipeRepository: SwipeRepository
     private lateinit var matchService: MatchService
     private lateinit var swipeService: SwipeService
+    private lateinit var profileRepository: ProfileRepository
 
     val user1 = User(
         id = 1L,
@@ -55,7 +56,8 @@ class SwipeServiceTest {
     fun setup() {
         swipeRepository = mockk(relaxed = true)
         matchService = mockk(relaxed = true)
-        swipeService = SwipeService(matchService, swipeRepository)
+        profileRepository = mockk(relaxed = true)
+        swipeService = SwipeService(matchService, swipeRepository, profileRepository)
 
         // Mock the save method to return the Swipe object itself with id = 1
         every { swipeRepository.save(any()) } answers {
@@ -73,7 +75,7 @@ class SwipeServiceTest {
         swipeService.swipe(profile1, profile2, true)
 
         // Then
-        verify(exactly = 0) { matchService.createMatch(users = getUsersFromProfile(profile1) + getUsersFromProfile(profile2)) }
+        verify(exactly = 0) { matchService.createMatch(users = profile1.getUsersFromProfile() + profile2.getUsersFromProfile()) }
     }
 
     @Test
@@ -86,7 +88,7 @@ class SwipeServiceTest {
         swipeService.swipe(profile1, profile2, true)
 
         // Then
-        verify(exactly = 1) { matchService.createMatch(users = getUsersFromProfile(profile1) + getUsersFromProfile(profile2))  }
+        verify(exactly = 1) { matchService.createMatch(users = profile1.getUsersFromProfile() + profile2.getUsersFromProfile())  }
     }
 
     @Test
@@ -99,7 +101,7 @@ class SwipeServiceTest {
         swipeService.swipe(profile1, profile2, false)
 
         // Then
-        verify(exactly = 0) { matchService.createMatch(users = getUsersFromProfile(profile1) + getUsersFromProfile(profile2)) }
+        verify(exactly = 0) { matchService.createMatch(users = profile1.getUsersFromProfile() + profile2.getUsersFromProfile()) }
     }
 
 

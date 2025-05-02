@@ -46,18 +46,20 @@ class InviteControllerTest @Autowired constructor(
 
     lateinit var user: User
     lateinit var testInvite: RoomProfileInvite
+    lateinit var testInviteResponse: InviteResponse
 
     @BeforeEach
     fun init() {
         StandaloneSetup.setup()
         user = StandaloneSetup.user1
         testInvite = StandaloneSetup.invite
+        testInviteResponse = StandaloneSetup.inviteResponse
     }
 
     @Test
     fun `generate invite token when not exists`() {
-        every { inviteService.findInviteByRoomProfileId(123L) } returns null
-        every { inviteService.generateAndSaveRoomInvite(123L) } returns testInvite
+        testInviteResponse.message = "Invite created successfully!"
+        every { inviteService.createInviteOrReturnExistingInvite(123L) } returns testInviteResponse
 
         mockMvc.perform(post("/api/invites/generate-invitetoken/123")
             .header("Authorization", "Bearer $jwt")
@@ -69,7 +71,8 @@ class InviteControllerTest @Autowired constructor(
 
     @Test
     fun `generate invite token when one already exists`() {
-        every { inviteService.findInviteByRoomProfileId(123L) } returns testInvite
+        testInviteResponse.message = "Invite already exists, use code INV123"
+        every { inviteService.createInviteOrReturnExistingInvite(123L) } returns testInviteResponse
 
         mockMvc.perform(post("/api/invites/generate-invitetoken/123")
             .header("Authorization", "Bearer $jwt")
@@ -80,14 +83,8 @@ class InviteControllerTest @Autowired constructor(
 
     @Test
     fun `join room with valid invite`() {
-        val roomProfileRequest = mockk<RoomProfileRequest>()
-        val roomProfileDTO = mockk<RoomProfileDTO>()
-
-        every { roomProfileInviteRepository.findInviteByInviteToken("INV123") } returns testInvite
-        every { userRepository.findByEmail("test@example.com") } returns user
-        every { roomProfileService.findUsersRoomProfiles(testInvite.roomProfileId, user.id!!) } returns emptyList()
-        every { inviteService.generateRoomProfileRequest(testInvite.roomProfileId, user.id!!) } returns roomProfileRequest
-        every { roomProfileService.update(roomProfileRequest, testInvite.roomProfileId) } returns roomProfileDTO
+        testInviteResponse.message = "Room joined successfully"
+        every { inviteService.joinRoom("INV123", "Bearer $jwt") } returns testInviteResponse
 
         mockMvc.perform(
             put("/api/invites/join/INV123")
@@ -99,9 +96,10 @@ class InviteControllerTest @Autowired constructor(
 
     @Test
     fun `join room with expired invite`() {
-        testInvite.expiresAt = LocalDateTime.now().minusMinutes(1)
-        val expiredInvite = testInvite
-        every { roomProfileInviteRepository.findInviteByInviteToken("INV123") } returns expiredInvite
+        testInvite.expiresAt = LocalDateTime.now().minusDays(2)
+        val expiredInviteResponse = toInviteResponse(testInvite)
+        expiredInviteResponse.message = "Invite code INV123 has expired"
+        every { inviteService.joinRoom("INV123", "Bearer $jwt") } returns expiredInviteResponse
 
         mockMvc.perform(
             put("/api/invites/join/INV123")
@@ -113,9 +111,8 @@ class InviteControllerTest @Autowired constructor(
 
     @Test
     fun `join room when user already added`() {
-        every { roomProfileInviteRepository.findInviteByInviteToken("INV123") } returns testInvite
-        every { userRepository.findByEmail("test@example.com") } returns user
-        every { roomProfileService.findUsersRoomProfiles(testInvite.roomProfileId, user.id!!) } returns listOf(mockk())
+        testInviteResponse.message = "User already added to the room"
+        every { inviteService.joinRoom("INV123", "Bearer $jwt") } returns testInviteResponse
 
         mockMvc.perform(
             put("/api/invites/join/INV123")
