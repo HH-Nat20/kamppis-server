@@ -4,12 +4,15 @@ import exception.EntityNotFoundException
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserProfileRepository
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
 class ProfileService(
     private val roomProfileRepository: RoomProfileRepository,
-    private val userProfileRepository: UserProfileRepository
+    private val userProfileRepository: UserProfileRepository,
+    private val userProfileService: UserProfileService,
+    private val roomProfileService: RoomProfileService
 ) {
 
     /**
@@ -46,6 +49,42 @@ class ProfileService(
             }
 
             else -> throw EntityNotFoundException("Profile with id $id not found")
+        }
+    }
+
+    fun updateProfile(profile: ProfileDTO, id: Long): ResponseEntity<ProfileDTO> {
+        val userProfile = userProfileRepository.findByIdActive(id)
+        val roomProfile = roomProfileRepository.findByIdActive(id)
+
+        when {
+            userProfile != null && profile is UserProfileDTO -> {
+                val userProfileRequest = UserProfileRequest(
+                    userId = profile.userId,
+                    bio = profile.bio,
+                    cleanliness = profile.cleanliness,
+                    lifestyle = profile.lifestyle,
+                    pets = profile.pets,
+                    photos = profile.photos,
+                    id = profile.id
+                )
+                return ResponseEntity.ok(userProfileService.update(userProfileRequest, id))
+            }
+
+            roomProfile != null && profile is RoomProfileDTO -> {
+                val roomProfileRequest = RoomProfileRequest(
+                    userIds = profile.userIds,
+                    flatId = profile.flat.id!!,
+                    name = profile.name,
+                    rent = profile.rent,
+                    isPrivateRoom = profile.isPrivateRoom,
+                    furnished = profile.furnished,
+                    furnishedInfo = profile.furnishedInfo,
+                    bio = profile.bio,
+                    id = profile.id
+                )
+                return ResponseEntity.ok(roomProfileService.update(roomProfileRequest, id))
+            }
+            else -> return ResponseEntity.notFound().build()
         }
     }
 }
