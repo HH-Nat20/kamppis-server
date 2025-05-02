@@ -20,7 +20,7 @@ class SwipeService(
 ) {
 
     @Transactional
-    fun validateAndSwipe(swipeRequest: SwipeRequest, principal: Principal): ResponseEntity<SwipeResponse> {
+    fun validateAndSwipe(swipeRequest: SwipeRequest, principal: Principal): SwipeResponse {
         val swipingProfile: Profile = profileRepository.findByIdAndStatus(swipeRequest.swipingProfileId, ProfileStatus.ACTIVE)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Profile with id ${swipeRequest.swipingProfileId} not found")
 
@@ -40,7 +40,7 @@ class SwipeService(
             swipedProfile,
             swipeRequest.isRightSwipe
         )
-        return ResponseEntity.status(HttpStatus.CREATED).body(response)
+        return response
     }
 
     fun swipe(swipingProfile: Profile, swipedProfile: Profile, isRightSwipe: Boolean): SwipeResponse {

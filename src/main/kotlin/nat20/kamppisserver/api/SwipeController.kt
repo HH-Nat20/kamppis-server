@@ -3,6 +3,7 @@ package nat20.kamppisserver.api
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.*
 import nat20.kamppisserver.service.SwipeService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
@@ -21,8 +22,9 @@ class SwipeController(
         return ResponseEntity.ok().body(swipes)
     }
 
-    @PostMapping
+    @PostMapping("", "/")
     fun validateAndSwipe(@Valid @RequestBody swipeRequest: SwipeRequest, principal: Principal): ResponseEntity<SwipeResponse> {
-        return swipeService.validateAndSwipe(swipeRequest, principal)
+        val response = swipeService.validateAndSwipe(swipeRequest, principal)
+        return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 }
