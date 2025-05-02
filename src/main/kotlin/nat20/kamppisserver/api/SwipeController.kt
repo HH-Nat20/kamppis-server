@@ -2,23 +2,17 @@ package nat20.kamppisserver.api
 
 import jakarta.validation.Valid
 import nat20.kamppisserver.domain.*
-import nat20.kamppisserver.domain.enums.ProfileStatus
-import nat20.kamppisserver.repository.ProfileRepository
 import nat20.kamppisserver.service.SwipeService
-import org.apache.coyote.Response
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.server.ResponseStatusException
 import java.security.Principal
 
 @RestController
 @RequestMapping("/api/swipes")
 @Validated
-class SwipeController(private val swipeService: SwipeService,
-    private val profileRepository: ProfileRepository
+class SwipeController(
+    private val swipeService: SwipeService,
 ) {
 
     @GetMapping("", "/")
@@ -28,29 +22,7 @@ class SwipeController(private val swipeService: SwipeService,
     }
 
     @PostMapping
-    fun swipe(@Valid @RequestBody swipeRequest: SwipeRequest,
-              principal: Principal): ResponseEntity<SwipeResponse> {
-        val swipingProfile: Profile = profileRepository.findByIdAndStatus(swipeRequest.swipingProfileId, ProfileStatus.ACTIVE)
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Profile with id ${swipeRequest.swipingProfileId} not found")
-
-        val email = principal.name
-        if (!swipeService.principalInSwipingProfile(email, swipingProfile)) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Swiping profile $email cannot swipe on someone else's behalf")
-        }
-
-        val swipedProfile: Profile = profileRepository.findByIdAndStatus(swipeRequest.swipedProfileId, ProfileStatus.ACTIVE)
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Profile with id ${swipeRequest.swipedProfileId} not found")
-
-        if (swipingProfile.id == swipedProfile.id)
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "You cannot swipe yourself you silly goose!")
-
-        val response = swipeService.swipe(
-            swipingProfile,
-            swipedProfile,
-            swipeRequest.isRightSwipe
-        )
-        return ResponseEntity.status(HttpStatus.CREATED).body(response)
+    fun validateAndSwipe(@Valid @RequestBody swipeRequest: SwipeRequest, principal: Principal): ResponseEntity<SwipeResponse> {
+        return swipeService.validateAndSwipe(swipeRequest, principal)
     }
-
-
 }
