@@ -9,7 +9,6 @@ import nat20.kamppisserver.repository.RoomProfileInviteRepository
 import nat20.kamppisserver.repository.RoomProfileRepository
 import nat20.kamppisserver.repository.UserRepository
 import nat20.kamppisserver.security.JwtUtils
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import kotlin.random.Random
@@ -55,23 +54,23 @@ class InviteService(
         return roomProfile.toRoomProfileRequest()
     }
 
-    fun createInviteOrReturnExistingInvite(roomProfileId: Long): Pair<InviteResponse, HttpStatus> {
+    fun createInviteOrReturnExistingInvite(roomProfileId: Long): InviteResponse {
         val existingInvite = findInviteByRoomProfileId(roomProfileId)
 
         // Check if invite already exists
-        return if (existingInvite != null) {
+        if (existingInvite != null) {
             val inviteResponse = toInviteResponse(existingInvite)
             inviteResponse.message = "Invite already exists, use code ${inviteResponse.inviteToken}"
-            Pair(inviteResponse, HttpStatus.CONFLICT)
-        } else {
-            val newInvite = generateAndSaveRoomInvite(roomProfileId)
-            val inviteResponse = toInviteResponse(newInvite)
-            inviteResponse.message = "Invite created successfully!"
-            Pair(inviteResponse, HttpStatus.OK)
+            return inviteResponse
         }
+
+        val newInvite = generateAndSaveRoomInvite(roomProfileId)
+        val inviteResponse = toInviteResponse(newInvite)
+        inviteResponse.message = "Invite created successfully!"
+        return inviteResponse
     }
 
-    fun joinRoom(inviteToken: String, authToken: String): Pair<InviteResponse, HttpStatus> {
+    fun joinRoom(inviteToken: String, authToken: String): InviteResponse {
         val invite = roomProfileInviteRepository.findInviteByInviteToken(inviteToken)
             ?: throw EntityNotFoundException("Invite with token $inviteToken not found")
 
@@ -81,21 +80,23 @@ class InviteService(
         val userIdAddedToRoom = userRepository.findByEmail(email!!)!!.id!!
         val roomProfileId = invite.roomProfileId
 
-        return if (invite.expiresAt.isBefore(LocalDateTime.now())) {
+        if (invite.expiresAt.isBefore(LocalDateTime.now())) {
             // Check if invite is expired
             val inviteResponse = toInviteResponse(invite)
             inviteResponse.message = "Invite code ${invite.roomProfileInviteToken} has expired"
-            Pair(inviteResponse, HttpStatus.GONE)
-        } else if (roomProfileService.findUsersRoomProfiles(roomProfileId, userIdAddedToRoom).isNullOrEmpty()) {
+            return inviteResponse
+        }
+
+        if (roomProfileService.findUsersRoomProfiles(roomProfileId, userIdAddedToRoom).isNullOrEmpty()) {
             val updatedRoom = generateRoomProfileRequest(roomProfileId, userIdAddedToRoom)
             roomProfileService.update(updatedRoom, roomProfileId)
             val inviteResponse = toInviteResponse(invite)
             inviteResponse.message = "Room joined successfully"
-            Pair(inviteResponse, HttpStatus.OK)
-        } else {
-            val inviteResponse = toInviteResponse(invite)
-            inviteResponse.message = "User already added to the room"
-            Pair(inviteResponse, HttpStatus.CONFLICT)
+            return inviteResponse
         }
+
+        val inviteResponse = toInviteResponse(invite)
+        inviteResponse.message = "User already added to the room"
+        return inviteResponse
     }
 }
