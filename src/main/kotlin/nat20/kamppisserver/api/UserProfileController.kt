@@ -71,6 +71,12 @@ class UserProfileController(private val service: UserProfileService,
     @GetMapping("/{userId}/query")
     fun findUserProfilesThatMeetCriteria(@RequestParam(defaultValue = "0") page: Int, @RequestParam size: Int, @PathVariable userId: Long): ResponseEntity<Page<UserProfileDTO>> {
         val pageable = PageRequest.of(page, size)
-        return queryService.findUserProfilesThatMeetCriteria(pageable, userId)
+        val results = queryService.findUserProfilesThatMeetCriteria(pageable, userId)
+
+        return if (results.isEmpty) {
+            ResponseEntity.noContent().build()
+        } else {
+            ResponseEntity.ok(results)
+        }
     }
 }

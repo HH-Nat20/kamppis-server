@@ -49,7 +49,7 @@ class QueryService(
      * @param userId the id of the user for whom matching profiles are returned.
      * @return a page of matching user profiles.
      */
-    fun findUserProfilesThatMeetCriteria(pageable: Pageable, userId: Long): ResponseEntity<Page<UserProfileDTO>> {
+    fun findUserProfilesThatMeetCriteria(pageable: Pageable, userId: Long): Page<UserProfileDTO> {
         /* We first find user's user profile by user's id
         * From the profile, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in UserProfileRepository */
@@ -77,13 +77,7 @@ class QueryService(
             locationPreferences
         )
 
-        if (userProfileList.isEmpty) {
-            return ResponseEntity(HttpStatus.NO_CONTENT)
-        }
-
-        val userProfileDTOList: Page<UserProfileDTO> = userProfileList.map { it.toDTO(includeUserSummary = true) }
-
-        return ResponseEntity(userProfileDTOList, HttpStatus.OK)
+        return userProfileList.map { it.toDTO(includeUserSummary = true) }
     }
 
     /**
@@ -93,7 +87,7 @@ class QueryService(
      * @param userId the id of the user for whom matching room profiles are returned.
      * @return a page of matching room profiles.
      */
-    fun findRoomProfilesThatMeetCriteria(pageable: Pageable, userId: Long): ResponseEntity<Page<RoomProfileDTO>> {
+    fun findRoomProfilesThatMeetCriteria(pageable: Pageable, userId: Long): Page<RoomProfileDTO> {
         /* We first find user's room preferences
         * From the preferences, we set user's search criteria to individual variables
         * Finally, we pass these variables to the SQL query in RoomProfileRepository */
@@ -119,13 +113,7 @@ class QueryService(
             locationPreferences
         )
 
-        if (roomProfileList.isEmpty) {
-            return ResponseEntity(HttpStatus.NO_CONTENT)
-        }
-
-        val roomProfileDTOList: Page<RoomProfileDTO> = roomProfileList.map {it.toDTO(includeUserSummary = true) }
-
-        return ResponseEntity(roomProfileDTOList, HttpStatus.OK)
+        return roomProfileList.map {it.toDTO(includeUserSummary = true) }
     }
 
     /**
@@ -135,15 +123,9 @@ class QueryService(
      * @param roomProfileId the id of the room profile whose right swipers are returned.
      * @return a page of matching room profiles.
      */
-    fun findUserProfilesThatHaveSwipedRoomProfile(pageable: Pageable, roomProfileId: Long): ResponseEntity<Page<UserProfileDTO>> {
+    fun findUserProfilesThatHaveSwipedRoomProfile(pageable: Pageable, roomProfileId: Long): Page<UserProfileDTO> {
         val userProfileList: Page<UserProfile> = userProfileRepository.findUserProfilesWhoHaveSwipedRoomProfile(pageable, roomProfileId)
 
-        if (userProfileList.isEmpty) {
-            return ResponseEntity(HttpStatus.NO_CONTENT)
-        }
-
-        val userProfileDTOList: Page<UserProfileDTO> = userProfileList.map { it.toDTO(includeUserSummary = true) }
-
-        return ResponseEntity(userProfileDTOList, HttpStatus.OK)
+        return userProfileList.map { it.toDTO(includeUserSummary = true) }
     }
 }

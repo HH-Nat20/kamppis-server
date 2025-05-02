@@ -55,7 +55,14 @@ class RoomProfileController(private val service: RoomProfileService,
     @GetMapping("/{userId}/query")
     fun findRoomProfilesThatMeetCriteria(@RequestParam(defaultValue = "0") page: Int, @RequestParam size: Int, @PathVariable userId: Long): ResponseEntity<Page<RoomProfileDTO>> {
         val pageable = PageRequest.of(page, size)
-        return queryService.findRoomProfilesThatMeetCriteria(pageable, userId)
+        val results = queryService.findRoomProfilesThatMeetCriteria(pageable, userId)
+
+        return if (results.isEmpty) {
+            ResponseEntity.noContent().build()
+        } else {
+            ResponseEntity.ok(results)
+        }
+
     }
 
     /**
@@ -66,8 +73,15 @@ class RoomProfileController(private val service: RoomProfileService,
      * @return ResponseEntity with status code 204 NO_CONTENT if no user profiles have swiped the room profile.
      */
     @GetMapping("/{roomProfileId}/swipersquery")
-    fun findUserProfilesWhoHaveSwipedUsersRoom(@RequestParam(defaultValue = "0") page: Int, @RequestParam size: Int, @PathVariable roomProfileId: Long): ResponseEntity<Page<UserProfileDTO>> {
+    fun findUserProfilesWhoHaveSwipedUsersRoom(@RequestParam(defaultValue = "0") page: Int, @RequestParam size: Int, @PathVariable roomProfileId: Long): ResponseEntity<Page<UserProfileDTO>>{
         val pageable = PageRequest.of(page, size)
-        return queryService.findUserProfilesThatHaveSwipedRoomProfile(pageable, roomProfileId)
+        val results = queryService.findUserProfilesThatHaveSwipedRoomProfile(pageable, roomProfileId)
+
+        return if (results.isEmpty) {
+            ResponseEntity.noContent().build()
+        } else {
+            ResponseEntity.ok(results)
+        }
+
     }
 }
