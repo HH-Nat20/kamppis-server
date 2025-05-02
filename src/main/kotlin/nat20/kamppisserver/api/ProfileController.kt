@@ -38,6 +38,11 @@ class ProfileController(
      */
     @PutMapping("/{id}")
     fun updateProfile(@Valid @RequestBody profile: ProfileDTO, @PathVariable id: Long): ResponseEntity<ProfileDTO> {
-        return profileService.updateProfile(profile, id)
+        val profileResponse = profileService.updateProfile(profile, id)
+        if (profileResponse == null) {
+            return ResponseEntity.notFound().build()
+        }
+
+        return ResponseEntity.ok(profileResponse)
     }
 }

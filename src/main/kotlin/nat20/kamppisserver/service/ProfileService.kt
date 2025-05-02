@@ -52,7 +52,7 @@ class ProfileService(
         }
     }
 
-    fun updateProfile(profile: ProfileDTO, id: Long): ResponseEntity<ProfileDTO> {
+    fun updateProfile(profile: ProfileDTO, id: Long): ProfileDTO? {
         val userProfile = userProfileRepository.findByIdActive(id)
         val roomProfile = roomProfileRepository.findByIdActive(id)
 
@@ -67,7 +67,7 @@ class ProfileService(
                     photos = profile.photos,
                     id = profile.id
                 )
-                return ResponseEntity.ok(userProfileService.update(userProfileRequest, id))
+                return userProfileService.update(userProfileRequest, id)
             }
 
             roomProfile != null && profile is RoomProfileDTO -> {
@@ -82,9 +82,10 @@ class ProfileService(
                     bio = profile.bio,
                     id = profile.id
                 )
-                return ResponseEntity.ok(roomProfileService.update(roomProfileRequest, id))
+                return roomProfileService.update(roomProfileRequest, id)
             }
-            else -> return ResponseEntity.notFound().build()
         }
+
+        return null
     }
 }
