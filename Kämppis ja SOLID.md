@@ -72,11 +72,11 @@
 
 ## Johdanto
 
-Tämä dokumentti kuvaa [Ohjelmistoprojekti 2](https://opinto-opas.haaga-helia.fi/course_unit/SOF007AS3A) -kurssilla toteutetun [_Kämppis_](https://github.com/HH-Nat20)-sovelluksen back-endin lähdekoodin toteutusta sellaisena kuin se oli tarkasteluhetkellä (2.5.2025) ja pohtii, miten serveripuolen koodia voisi parantaa SOLID-periaatteiden mukaisesti.
+Tämä dokumentti kuvaa [Ohjelmistoprojekti 2](https://opinto-opas.haaga-helia.fi/course_unit/SOF007AS3A) -kurssilla toteutetun _[Kämppis](https://github.com/HH-Nat20)_-sovelluksen back-endin lähdekoodin toteutusta sellaisena kuin se oli tarkasteluhetkellä (2.5.2025) ja pohtii, miten serveripuolen koodia voisi parantaa SOLID-periaatteiden mukaisesti.
 
 Back-end on rakennettu [Kotlinilla](https://kotlinlang.org/) käyttäen [Spring Boot](https://spring.io/projects/spring-boot) -frameworkia. Koodiblokit, niin teoriaesimerkit, otteet lähdekoodista sekä lähdekoodin parannusehdotukset, on kirjoitettu Kotlinilla. Tämä tarkastelu keskittyy _Kämppis_-sovelluksen back-endiin ([repositorio GitHubissa](https://github.com/HH-Nat20/kamppis-server)) sen sijaan, että tarkastelussa otettaisiin huomioon myös sovelluksen front-end eli _Kämppiksen_ mobiilisovellus. Mobiilisovelluksesta kiinnostuneet voivat tutustua sen [repositorioon GitHubissa](https://github.com/HH-Nat20/kamppis-app).
 
-Tarkastelun aluksi tutustumme SOLID-periaatteisiin, minkä jälkeen analysoimme _Kämppiksen_ back-endin lähdekoodia ja etsimme sekä hyviä että parannettavia esimerkkejä SOLID-periaatteista.
+Tarkastelun aluksi tutustumme SOLID-periaatteisiin, minkä jälkeen analysoimme _Kämppiksen_ back-endin lähdekoodia ja etsimme sekä hyviä että parannettavia esimerkkejä SOLID-periaatteista. Itse refaktorointityö on toistaiseksi säilytetty omassa [`solidRefactoring`](https://github.com/HH-Nat20/kamppis-server/tree/solidRefactoring)-haarassaan, jotta sen vertailu alkuperäiseen lähdekoodiin [`dev`](https://github.com/HH-Nat20/kamppis-server/tree/dev)-haarassa olisi helpompaa.
 
 <p align="right">(<a href="#alku">Takaisin alkuun</a>)</p>
 
@@ -84,7 +84,7 @@ Tarkastelun aluksi tutustumme SOLID-periaatteisiin, minkä jälkeen analysoimme 
 
 SOLID on kehittäjä Robert C. Martiniin yhdistettävä kirjainyhdistelmä, joka kokoaa viisi ohjelmistoarkkitehtuurille ja -suunnittelulle tärkeää periaatetta. Noudattamalla SOLID-periaatteita ohjelmisto osat rakennetaan niin, että ohjelmisto on helposti ymmärrettävissä ja joustavasti ylläpidettävissä. Tarkastelun teoriapohjana on käytetty Martinin teosta _Clean architecture: A Craftsman’s Guide to Software Structure and Design_ (Martin 2018) sekä Baeldungin artikkelia _A Solid Guide to SOLID Principles_ (Millington 2025).
 
-SOLID-periaatteisiin kuuluvat alla esitellyt viisi periaatetta: [Single Responsibility Principle](#1-single-responsibility-principle), [Open-Closed Principle](#2-open-closed-principle), [Liskov Substitution Principle](#3-liskov-substitution-principle), [Interface Segregation Principle](#4-interface-segregation-principle) ja [Dependency Inversion Principle](#5-dependency-inversion-principle).
+SOLID-periaatteisiin kuuluvat alla esitellyt viisi periaatetta: _[Single Responsibility Principle](#1-single-responsibility-principle)_, _[Open-Closed Principle](#2-open-closed-principle)_, _[Liskov Substitution Principle](#3-liskov-substitution-principle)_, _[Interface Segregation Principle](#4-interface-segregation-principle)_ ja _[Dependency Inversion Principle](#5-dependency-inversion-principle)_.
 
 ### 1. Single Responsibility Principle
 
@@ -394,13 +394,13 @@ fun main() {
 
 SOLID-periaatteisiin tutustumisen jälkeen tarkastellaan, millaisia esimerkkejä SOLID-periaatteideiden toteutumisesta tai toteutumattomuudesta voimme löytää _Kämppis_-sovelluksesta ja miten voisimme toteuttaa SOLID-periaatteita paremmin..
 
-Koodiblokeista löytyvät `...` tarkoittavat poistettua osaa koodista, jolla ei ole merkitystä tarkasteltavan tapauksen kannalta. Tällaista tapauksista poistettu koodi voi sisältää esimerkiksi luokkien attribuutteja, metodeja tai riippuvuuksia. Jokaisen periaatteen kohdalla on myös merkitty lähdekoodin sijainti sovelluksen repositoriossa.
+Esimerkkien koodiblokeista löytyvät `...` tarkoittavat poistettua osaa koodista, jolla ei ole merkitystä tarkasteltavan tapauksen kannalta. Tällaista tapauksista poistettu koodi voi sisältää esimerkiksi luokkien attribuutteja, metodeja tai riippuvuuksia. Jokaisen periaatteen kohdalla on myös merkitty lähdekoodin sijainti sovelluksen repositoriossa.
 
 <p align="right">(<a href="#alku">Takaisin alkuun</a>)</p>
 
 ### Hyviä esimerkkejä SOLID-periaatteista _Kämppiksessä_
 
-Alla olevat koodiblokit sisältävät suoraa lähtekoodia Kämppiksen Git-repositoriosta. Koska nämä koodiblokit edustavat SOLID-periaatteiden mukaisia esimerkkejä, on ne merkitty "✅ Periaatteen mukainen toteutus".
+Alla olevat koodiblokit sisältävät suoraa lähtekoodia _Kämppiksen_ Git-repositoriosta. Koska nämä koodiblokit edustavat SOLID-periaatteiden mukaisia esimerkkejä, on ne merkitty "✅ Periaatteen mukainen toteutus".
 
 _Kämppis_-sovelluksen lähdekoodista löytyi neljä hyvää esimerkkiä SOLID-periaatteiden toteutumisesta: _[Single Responsibility Principle](#single-responsibility-principle)_, _[Liskov Substitution Principle](#liskov-substitution-principle)_, _[Interface Segregation Principle](#interface-segregation-principle)_ ja _[Dependency Inversion Principle](#dependency-inversion-principle)_. Sovelluksen lähdekoodista ei löytynyt hyvää esimerkkiä _Open-Closed_ -periaatteen toteutumisesta.
 
@@ -412,7 +412,7 @@ Alla oleva koodiblokki edustaa hyvää esimerkkiä _Single Responsibility_-peria
 <summary>✅ Periaatteen mukainen toteutus</summary>
 
 Lähdekoodi:<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/api/UserController.kt`
+[`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/UserController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/UserController.kt)
 
 ```kotlin
 UserController.kt
@@ -473,7 +473,7 @@ class UserController(
 
 #### Liskov Substitution Principle
 
-_Liskov Substitution_-periaatteen mukaan yläluokan tulee olla korvattavissa aliluokilla ohjelman kohdissa, joissa odotetaan yläluokkaa. _Kämppiksessä_ on yksi ylä-aliluokkarakenne: `Profile`-luokka toimii yläluokkana `UserProfile`- ja `RoomProfile`-aliluokille. _Kämppiksessä_ `Profile`-luokkaa käytetään lähinnä sisältämään `UserProfile`- ja `RoomProfile`-luokkien yhteisiä attribuutteja sekä tarjoamaan `toDTO`-funktio. Aliluokat ylikirjoittavat yläluokan `toDTO`-funktion omilla `toDTO`-funktiollaan käyttämällä `override`-avainsanaa. Lisäksi aliluokilla on omat `ProfileDTO`-rajapintaa implementoivat `UserProfileDTO`- ja `RoomProfileDTO`-luokat. Nimensä mukaisesti `toDTO`-funktio muuttaa kyseisen luokan DTO-luokaksi.
+_Liskov Substitution_ -periaatteen mukaan yläluokan tulee olla korvattavissa aliluokilla ohjelman kohdissa, joissa odotetaan yläluokkaa. _Kämppiksessä_ on yksi ylä-aliluokkarakenne: `Profile`-luokka toimii yläluokkana `UserProfile`- ja `RoomProfile`-aliluokille. _Kämppiksessä_ `Profile`-luokkaa käytetään lähinnä sisältämään `UserProfile`- ja `RoomProfile`-luokkien yhteisiä attribuutteja sekä tarjoamaan `toDTO`-funktio. Aliluokat ylikirjoittavat yläluokan `toDTO`-funktion omilla `toDTO`-funktiollaan käyttämällä `override`-avainsanaa. Lisäksi aliluokilla on omat `ProfileDTO`-rajapintaa implementoivat `UserProfileDTO`- ja `RoomProfileDTO`-luokat. Nimensä mukaisesti `toDTO`-funktio muuttaa kyseisen luokan DTO-luokaksi.
 
 `ProfileService`-luokan `findAll()`-funktio palauttaa `List<ProfileDTO>` eli listan `ProfileDTO`-luokan olioita. Lista voi sisältää `UserProfileDTO`- ja `RoomProfileDTO`-olioita, sillä ne implementoivat `ProfileDTO`-rajapintaa. _Liskov Substitution_-periaate toteutuu, sillä `ProfileDTO`-rajapinta on implementaatioiden ansiosta korvattavissa `UserProfileDTO`- ja `RoomProfileDTO`-olioilla niitä odottavissa kohdissa. `findAll()` myös käsittelee vain `ProfileDTO`-tyyppiä, eli sen ei tarvitse tietää kumpi konkreettinen aliluokka on kyseessä; tämä on tyyppiturvallinen valinta.
 
@@ -481,10 +481,10 @@ _Liskov Substitution_-periaatteen mukaan yläluokan tulee olla korvattavissa ali
 <summary>✅ Periaatteen mukainen toteutus</summary>
 
 Lähdekoodi:<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/Profile.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/UserProfile.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/RoomProfile.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ProfileService.kt`
+[`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/Profile.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/domain/Profile.kt)<br>
+[`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/UserProfile.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/domain/UserProfile.kt)<br>
+[`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/RoomProfile.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/domain/RoomProfile.kt)<br>
+[`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ProfileService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/ProfileService.kt)
 
 ```kotlin
 Profile.kt
@@ -598,15 +598,15 @@ class ProfileService(
 
 #### Interface Segregation Principle
 
-_Interface Segregation_-periaatteen mukaan rajapintaa implementoivien luokkien ei tule joutua toteuttamaan sellaisia metodeja tai tarjoamaan sellasia attribuutteja, joita ne eivät tarvitse. _Kämppiksessä_ tämä toteutuu samoissa rajapinnoissa ja luokissa kuin aiemmassa esimerkissä: `ProfileDTO`, `UserProfileDTO` ja `RoomProfileDTO`. `ProfileDTO`-rajapinta ei pakota sitä implementoivia luokkia `UserProfileDTO` ja `RoomProfileDTO` sisältämään samoja ominaisuuksia, vaan kumpikin DTO-luokka sisältää juuri omiin tarkoituksiinsa tarvitut attribuutit.
+_Interface Segregation_ -periaatteen mukaan rajapintaa implementoivien luokkien ei tule joutua toteuttamaan sellaisia metodeja tai tarjoamaan sellasia attribuutteja, joita ne eivät tarvitse. _Kämppiksessä_ tämä toteutuu samoissa rajapinnoissa ja luokissa kuin aiemmassa esimerkissä: `ProfileDTO`, `UserProfileDTO` ja `RoomProfileDTO`. `ProfileDTO`-rajapinta ei pakota sitä implementoivia luokkia `UserProfileDTO` ja `RoomProfileDTO` sisältämään samoja ominaisuuksia, vaan kumpikin DTO-luokka sisältää juuri omiin tarkoituksiinsa tarvitut attribuutit.
 
 <details>
 <summary>✅ Periaatteen mukainen toteutus</summary>
 
 Lähdekoodi:<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/Profile.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/UserProfile.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/RoomProfile.kt`
+[`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/Profile.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/domain/Profile.kt)<br>
+[`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/UserProfile.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/domain/UserProfile.kt)<br>
+[`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/RoomProfile.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/domain/RoomProfile.kt)
 
 ```kotlin
 Profile.kt
@@ -655,7 +655,7 @@ data class RoomProfileDTO(
 
 #### Dependency Inversion Principle
 
-Alla oleva koodiblokki on hyvä esimerkki _Dependency Inversion_-periaatteen toteutumisesta. Esimerkissä `repository`-rajapinta injektoidaan `service`-luokkaan sen sijaan, että luotaisiin repositoriosta uusi konkreettinen implementaatio (`val feedbackRepository = FeedbackRepository()`). Näin korkean tason moduuli (`FeedbackService`) ei ole suoraan rippuvainen matalan tason moduulista (`FeedbackRepository`) vaan sen injektoidusta abstraktiosta.
+Alla oleva koodiblokki on hyvä esimerkki _Dependency Inversion_ -periaatteen toteutumisesta. Esimerkissä `repository`-rajapinta injektoidaan `service`-luokkaan sen sijaan, että luotaisiin repositoriosta uusi konkreettinen implementaatio (`val feedbackRepository = FeedbackRepository()`). Näin korkean tason moduuli (`FeedbackService`) ei ole suoraan rippuvainen matalan tason moduulista (`FeedbackRepository`) vaan sen injektoidusta abstraktiosta.
 
 _Kämppiksessä_ kaikki `repository`-rajapinnat tarjotaan `service`-luokille injektoimalla `repository`-rajapintojen abstraktiot `service`-luokan käyttöön, eli kaikki nämä noudattavat _Dependency Inversion_-periaatetta.
 
@@ -663,7 +663,7 @@ _Kämppiksessä_ kaikki `repository`-rajapinnat tarjotaan `service`-luokille inj
 <summary>✅ Periaatteen mukainen toteutus</summary>
 
 Lähdekoodi:<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/service/FeedbackService.kt`
+[`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/FeedbackService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/FeedbackService.kt)
 
 ```kotlin
 FeedbackService.kt
@@ -696,19 +696,19 @@ class FeedbackService(
 
 Alla olevat koodiblokit sisältävät suoraa lähtekoodia _Kämppiksen_ Git-repositoriosta sekä parannusehdotuksia parannellun koodin muodossa. Git-repositoriosta peräisin oleva lähdekoodi on merkitty "❌ Kaipaa parannusta", koska halutaan korostaa sitä, mitä lähdekoodissa voisi parantaa. Vastaavasti parannusehdotus on merkitty "✅ Parannusehdotus".
 
-_Kämppis_-sovelluksen lähdekoodista löytyi kaksi parannusehdotusta SOLID-periaatteiden toteutumiseksi: _[Single Responsibility Principle](#single-responsibility-principle-1)_ ja _[Open-Closed Principle](#open-closed-principle)_. Sovelluksen lähdekoodista ei löytynyt _Liskov Substitution_ -, _Interface Segregation_ - ja _Dependency Inversion_ -periaatteta rikkovia kohtia. Tämä johtunee omien rajapintojen (`interface`) käytön vähyydestä osittain Spring Bootin rajapinta-automaation vuoksi sekä riippuvuusinjektioiden runsaasta käytöstä.
+_Kämppis_-sovelluksen lähdekoodista löytyi kaksi parannusehdotusta SOLID-periaatteiden toteutumiseksi: _[Single Responsibility Principle](#single-responsibility-principle-1)_ ja _[Open-Closed Principle](#open-closed-principle)_. Sovelluksen lähdekoodista ei löytynyt _Liskov Substitution_ -, _Interface Segregation_ - ja _Dependency Inversion_ -periaatteta rikkovia kohtia. Tämä johtunee omien rajapintojen (`interface`) käytön vähyydestä osittain Spring Bootin rajapinta-automaation vuoksi (esimerkiksi repositorio-rajapinnoissa) sekä riippuvuusinjektioiden runsaasta käytöstä.
 
 #### Single Responsibility Principle
 
 Alla mainitut tiedostot sisältävät `ProfileController`- ja `ProfileService`-luokat, jotka yhdessä vastaavat käyttäjän tai huoneen profiilin muokkaamisesta. `ProfileController`-luokka sisältää endpointin profiilin muokkaamiseksi. `ProfileController` rikkoo _Single Responsibility_ -periaatetta, sillä se sisältää myös `ProfileService`-luokalle kuuluvaa ohjelmalogiikkaa vaikka kontrollerin tehtävänä on vain välittää pyyntöjä käyttäjältä ja palautuksia käyttäjälle sekä luoda HTTP-vastauksia. Esimerkissä alla on REST API endpoint ja `service`-funktio kutsukoodin luomiseksi.
 
-_Kämppiksessä_ on muitakin `controller`-luokkia, joita vaivaa samanlainen ongelma. Useat kontrollerimme ovat paisuneet sisältämään ohjelmalogiikkaa, jonka kuuluisi olla `service`-luokissa. Alla olevan esimerkin lisäksi esimerkiksi `MessageController.kt` ja `InviteController.kt` ovat tällaisia `controller`-luokkia, joissa _Single Responsibility_-periaate ei toteudu täysin.
+_Kämppiksessä_ on muitakin `controller`-luokkia, joita vaivaa samanlainen ongelma. Useat kontrollerimme ovat paisuneet sisältämään ohjelmalogiikkaa, jonka kuuluisi olla `service`-luokissa. Alla olevan esimerkin lisäksi esimerkiksi `MessageController.kt` ja `InviteController.kt` ovat tällaisia `controller`-luokkia, joissa _Single Responsibility_-periaate ei toteudu täysin. `controller`-luokat on käyty läpi ja tarvittavin osin refaktoroitu, eli siirretty ohjelmalogiikkaa kontrollerista `service`-luokille. Alla on lisäksi lista kaikista `controller`- ja `service`-luokista, joita on refaktoroitu, sekä linkit lähdekoodiin versionhallinnassa.
 
 <details>
 <summary>❌ Kaipaa parannusta</summary>
 
 Lähdekoodi:<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ProfileController.kt`
+[`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ProfileController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/ProfileController.kt)<br>
 
 ```kotlin
 ProfileController.kt
@@ -765,8 +765,8 @@ class ProfileController(
 <summary>✅ Parannusehdotus</summary>
 
 Lähdekoodi:<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ProfileController.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ProfileService.kt`
+[`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ProfileController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/ProfileController.kt)<br>
+[`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ProfileService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/ProfileService.kt)
 
 ```kotlin
 ProfileController.kt
@@ -849,62 +849,69 @@ Alkuperäinen lähdekoodi haaralla [`dev`](https://github.com/HH-Nat20/kamppis-s
 <br>
 
 `ImageController.kt` ja `ImageService.kt`<br>
+
 - alkuperäiset:<br>
-[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ImageController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/ImageController.kt)<br>
-`ImageService.kt` ei alkuperäisessä lähdekoodissa
+  [`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ImageController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/ImageController.kt)<br>
+  `ImageService.kt` ei alkuperäisessä lähdekoodissa
 - refaktoroidut:<br>
-[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ImageController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/ImageController.kt)<br>
-[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ImageService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/ImageService.kt)
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ImageController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/ImageController.kt)<br>
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ImageService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/ImageService.kt)
 
 `InviteController.kt` ja `InviteService.kt`<br>
+
 - alkuperäiset:<br>
-[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/InviteController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/InviteController.kt)<br>
-[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/InviteService.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/InviteService.kt)
+  [`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/InviteController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/InviteController.kt)<br>
+  [`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/InviteService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/InviteService.kt)
 - refaktoroidut:<br>
-[kamppis-server/src/main/kotlin/nat20.kamppisserver/api/InviteController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/InviteController.kt)<br>
-[kamppis-server/src/main/kotlin/nat20.kamppisserver/service/InviteService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/InviteService.kt)
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/InviteController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/InviteController.kt)<br>
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/InviteService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/InviteService.kt)
 
 `LoginController.kt` ja `LoginService.kt`<br>
+
 - alkuperäiset:<br>
-[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/LoginController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/LoginController.kt)<br>
-`LoginService.kt` ei alkuperäisessä lähdekoodissa
+  [`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/LoginController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/LoginController.kt)<br>
+  `LoginService.kt` ei alkuperäisessä lähdekoodissa
 - refaktoroidut:<br>
-[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/LoginController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/LoginController.kt)<br>
-[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/LoginService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/LoginService.kt)
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/LoginController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/LoginController.kt)<br>
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/LoginService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/LoginService.kt)
 
 `MessageController.kt` ja `MessageService.kt`<br>
+
 - alkuperäiset:<br>
-[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/MessageController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/MessageController.kt)<br>
-`MessageService.kt` ei alkuperäisessä lähdekoodissa
+  [`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/MessageController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/MessageController.kt)<br>
+  `MessageService.kt` ei alkuperäisessä lähdekoodissa
 - refaktoroidut:<br>
-[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/MessageController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/MessageController.kt)<br>
-[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/MessageService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/MessageService.kt)
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/MessageController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/MessageController.kt)<br>
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/MessageService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/MessageService.kt)
 
 `ProfileController.kt` ja `ProfileService.kt`<br>
+
 - alkuperäiset:<br>
-[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ProfileController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/ProfileController.kt)<br>
-[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ProfileService.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/ProfileService.kt)
+  [`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ProfileController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/ProfileController.kt)<br>
+  [`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ProfileService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/ProfileService.kt)
 - refaktoroidut:<br>
-[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ProfileController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/ProfileController.kt)<br>
-[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ProfileService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/ProfileService.kt)
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/ProfileController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/ProfileController.kt)<br>
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/ProfileService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/ProfileService.kt)
 
 `SwipeController.kt` ja `SwipeService.kt`<br>
+
 - alkuperäiset:<br>
-[solidRefactoring/dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/SwipeController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/SwipeController.kt)<br>
-[solidRefactoring/dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/SwipeService.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/SwipeService.kt)
+  [`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/SwipeController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/SwipeController.kt)<br>
+  [`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/SwipeService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/SwipeService.kt)
 - refaktoroidut:<br>
-[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/SwipeController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/SwipeController.kt)<br>
-[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/SwipeService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/SwipeService.kt)
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/SwipeController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/SwipeController.kt)<br>
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/SwipeService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/SwipeService.kt)
 
 `RoomProfileController.kt`, `UserProfileController.kt` ja `QueryService.kt`<br>
+
 - alkuperäiset:<br>
-[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/RoomProfileController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/RoomProfileController.kt)<br>
-[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/UserProfileController.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/UserProfileController.kt)<br>
-[dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/QueryService.kt](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/QueryService.kt)
+  [`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/RoomProfileController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/RoomProfileController.kt)<br>
+  [`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/UserProfileController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/api/UserProfileController.kt)<br>
+  [`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/QueryService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/service/QueryService.kt)
 - refaktoroidut:<br>
-[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/RoomProfileController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/RoomProfileController.kt)<br>
-[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/UserProfileController.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/UserProfileController.kt)<br>
-[solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/QueryService.kt](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/QueryService.kt)
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/RoomProfileController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/RoomProfileController.kt)<br>
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/api/UserProfileController.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/api/UserProfileController.kt)<br>
+  [`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/service/QueryService.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/service/QueryService.kt)
 
 </details>
 
@@ -912,13 +919,13 @@ Alkuperäinen lähdekoodi haaralla [`dev`](https://github.com/HH-Nat20/kamppis-s
 
 #### Open-Closed Principle
 
-Tiedostossa on funktio `getUsersFromProfile`, joka palauttaa `set`in profiiliin lisätyistä käyttäjistä. Funktion nykyisen toteutuksen voidaan katsoa rikkovan _Open-Closed_-periaatetta. Sovellus sisältää kahta eri profiilityyppiä: `UserProfile` ja `RoomProfile`. Mikäli sovellukseen haluttaisiin lisätä jokin kolmas profiilityyppi, esimerkiksi `FlatProfile`, tulisi `getUsersFromProfile`-funktiota myös muokata.
+Tiedostossa on funktio `getUsersFromProfile`, joka palauttaa `set`in profiiliin lisätyistä käyttäjistä. Funktion nykyisen toteutuksen voidaan katsoa rikkovan _Open-Closed_ -periaatetta. Sovellus sisältää kahta eri profiilityyppiä: `UserProfile` ja `RoomProfile`. Mikäli sovellukseen haluttaisiin lisätä jokin kolmas profiilityyppi, esimerkiksi `FlatProfile`, tulisi `getUsersFromProfile`-funktiota myös muokata.
 
 <details>
 <summary>❌ Kaipaa parannusta</summary>
 
 Lähdekoodi:<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/Profile.kt`
+[`dev/kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/Profile.kt`](https://github.com/HH-Nat20/kamppis-server/blob/dev/src/main/kotlin/nat20/kamppisserver/domain/Profile.kt)<br>
 
 ```kotlin
 Profile.kt
@@ -945,9 +952,9 @@ fun getUsersFromProfile(profile: Profile): Set<User> {
 <summary>✅ Parannusehdotus</summary>
 
 Lähdekoodi:<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/Profile.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/UserProfile.kt`<br>
-`kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/RoomProfile.kt`
+[`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/Profile.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/domain/Profile.kt)<br>
+[`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/UserProfile.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/domain/UserProfile.kt)<br>
+[`solidRefactoring/kamppis-server/src/main/kotlin/nat20.kamppisserver/domain/RoomProfile.kt`](https://github.com/HH-Nat20/kamppis-server/blob/solidRefactoring/src/main/kotlin/nat20/kamppisserver/domain/RoomProfile.kt)
 
 ```kotlin
 Profile.kt
@@ -1000,7 +1007,7 @@ class FlatProfile(...) : Profile() {
 
 ## Lopuksi
 
-_Kämppis_-sovelluksesta löytyi sekä hyviä että parannettavia esimerkkikohtia SOLID-periaatteiden toteutumisesta. Suurimmat muutokset liittyivät _Single Responsibility_-periaatteen toteutumiseen tilanteissa, joissa ohjelmalogiikkaa vuosi `service`-luokista `controller`-luokkiin, vaikka `controller`-luokkien tehtävänä on vain välittää tietoa eikä toteuttaa itse ohjelmalogiikkaa. Lisäksi löydetty _Open-Closed_-periaatteen vastainen kohta koski tilannetta, jossa ohjelmalogiikkaa ei ollut tarkoitettu laajennettavaksi, mutta se ei myöskään ollut kirjoitettu laajentumisen mahdollistavaksi ilman muutoksia muuhun koodiin.
+_Kämppis_-sovelluksesta löytyi sekä hyviä että parannettavia esimerkkikohtia SOLID-periaatteiden toteutumisesta. Suurimmat muutokset liittyivät _Single Responsibility_ -periaatteen toteutumiseen tilanteissa, joissa ohjelmalogiikkaa vuosi `service`-luokista `controller`-luokkiin, vaikka `controller`-luokkien tehtävänä on vain välittää tietoa eikä toteuttaa itse ohjelmalogiikkaa. Lisäksi löydetty _Open-Closed_ -periaatteen vastainen kohta koski tilannetta, jossa ohjelmalogiikkaa ei ollut tarkoitettu laajennettavaksi, mutta se ei myöskään ollut kirjoitettu laajentumisen mahdollistavaksi ilman muutoksia muuhun koodiin.
 
 Etenkin alkuperäisen koodin refaktoroinnissa _Single Responsibility_ -periaatteen mukaisesti oli havaittavissa, että yhden vastuun sisällyttäminen yhteen luokkaan tai metodiin ei aina ole täysin yksiselitteistä. Refaktorointi lienee tämänkin refaktorointikierroksen jälkeen tarpeen, ja seuraavaksi käsittelyyn voisikin ottaa esimerkiksi `service`-luokkiin siirretyn ohjelmalogiikan.
 
