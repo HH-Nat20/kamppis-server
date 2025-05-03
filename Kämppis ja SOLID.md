@@ -65,6 +65,9 @@
         <a href="#lopuksi">Lopuksi</a>
     </li>
     <li>
+        <a href="#ota-yhteyttä">Ota yhteyttä</a>
+    </li>
+    <li>
         <a href="#lähteet">Lähteet</a>
     </li>
   </ul>
