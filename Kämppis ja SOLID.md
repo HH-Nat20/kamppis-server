@@ -1007,13 +1007,24 @@ class FlatProfile(...) : Profile() {
 
 ## Lopuksi
 
+_Kämppis_-sovelluksen back-endin refaktorointi SOLID-periaatteiden mukaiseksi yksinkertaistaa ohjelmalogiikan toimintaa sekä helpottaa koodin ymmärtämistä. Refaktorointi myös mahdollistaa koodin järkevän laajentamisen jatkossa.
+
 _Kämppis_-sovelluksesta löytyi sekä hyviä että parannettavia esimerkkikohtia SOLID-periaatteiden toteutumisesta. Suurimmat muutokset liittyivät _Single Responsibility_ -periaatteen toteutumiseen tilanteissa, joissa ohjelmalogiikkaa vuosi `service`-luokista `controller`-luokkiin, vaikka `controller`-luokkien tehtävänä on vain välittää tietoa eikä toteuttaa itse ohjelmalogiikkaa. Lisäksi löydetty _Open-Closed_ -periaatteen vastainen kohta koski tilannetta, jossa ohjelmalogiikkaa ei ollut tarkoitettu laajennettavaksi, mutta se ei myöskään ollut kirjoitettu laajentumisen mahdollistavaksi ilman muutoksia muuhun koodiin.
 
 Etenkin alkuperäisen koodin refaktoroinnissa _Single Responsibility_ -periaatteen mukaisesti oli havaittavissa, että yhden vastuun sisällyttäminen yhteen luokkaan tai metodiin ei aina ole täysin yksiselitteistä. Refaktorointi lienee tämänkin refaktorointikierroksen jälkeen tarpeen, ja seuraavaksi käsittelyyn voisikin ottaa esimerkiksi `service`-luokkiin siirretyn ohjelmalogiikan.
 
 Refaktorointi sisälsi myös lähdekoodien testien muuttamista testaamaan refaktoroitua lähdekoodia. Useat testit oli kirjoitettu testaamaan `controller`-luokkien sisältämää ohjelmalogiikkaa; koska refaktoroinnissa ohjelmalogiikkaa siirrettin pois `controller`-luokista `service`-luokkiin, oli testien muuttaminen uutta `controller`-`service`-jakoa vastaavaksi tarpeellista. Testejä ei kuitenkaan ole raportoitu tässä dokumentissa, sillä ne eivät varsinaisesti kuulu SOLID-periaatteiden mukaiseen refaktorointiin, vaan ovat enemmänkin seurausta refaktoroinnin toteutumisesta.
 
-_Kämppis_-sovelluksen back-endin refaktorointi SOLID-periaatteiden mukaiseksi yksinkertaistaa ohjelmalogiikan toimintaa sekä helpottaa koodin ymmärtämistä. Refaktorointi myös mahdollistaa koodin järkevän laajentamisen jatkossa.
+Aihe oli itselleni myös mieluisa toteuttaa, sillä SOLID-periaatteisiin tutustuminen parantaa myös oman koodini laatua tulevaisuudessa. Jos onnistun laatimaan koodista alusta lähtien SOLID-periaatteiden mukaista, on koodia helpompi ymmärtää, ylläpitää ja laajentaa tulevaisuudessa. SOLID-periaatteet antavat myös erinomaisen lähtökohdan muiden kirjoitaman koodin kommentoinnille sekä parannusehdotusten antamiselle muuhun kuin omaan mielipiteeseen tai koodaustapaan perustuen.
+
+
+<p align="right">(<a href="#alku">Takaisin alkuun</a>)</p>
+
+## Ota yhteyttä
+
+Tarkastelun, refaktoroinnin ja dokumentaation on laatinut Janne Airaksinen.
+
+Yhteystiedot GitHub-profiilissa: [devaajanne](https://github.com/devaajanne)
 
 <p align="right">(<a href="#alku">Takaisin alkuun</a>)</p>
 
